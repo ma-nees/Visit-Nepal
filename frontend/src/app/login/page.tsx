@@ -24,7 +24,6 @@ import {
 import { motion, AnimatePresence } from 'framer-motion';
 
 import AuthLeftPanel from '@/components/features/auth/AuthLeftPanel';
-import AuthBackButton from '@/components/features/auth/AuthBackButton';
 import AuthRightLayout from '@/components/features/auth/AuthRightLayout';
 import AuthPillBadge from '@/components/features/auth/AuthPillBadge';
 
@@ -217,10 +216,7 @@ export default function LoginPage() {
 
   return (
     <main className="min-h-screen w-full relative overflow-x-hidden overflow-y-auto lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[#FAF9F5] font-sans">
-      {/* 1. Shared Back Button */}
-      <AuthBackButton label="Back to Home" onClick={() => router.push('/')} />
-
-      {/* 2. Interactive Map of Nepal with Animations (Left Panel) */}
+      {/* 1. Interactive Map of Nepal with Animations (Left Panel) */}
       <AuthLeftPanel
         imageSrc="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200"
         imageAlt="Everest sunrise"

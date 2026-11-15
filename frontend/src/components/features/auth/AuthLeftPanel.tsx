@@ -11,7 +11,7 @@ interface AuthLeftPanelProps {
 
 export default function AuthLeftPanel({}: AuthLeftPanelProps) {
   return (
-    <div className="w-full lg:w-1/2 min-h-0 lg:h-full lg:max-h-screen relative bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 flex flex-col justify-between p-4 sm:p-6 lg:p-8 pt-16 sm:pt-16 lg:pt-20 overflow-hidden select-none border-b lg:border-b-0 lg:border-r border-slate-200/80 shadow-xs">
+    <div className="w-full lg:w-1/2 min-h-0 lg:h-full lg:max-h-screen relative bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 flex flex-col justify-between p-6 sm:p-8 lg:p-10 overflow-hidden select-none border-b lg:border-b-0 lg:border-r border-slate-200/80 shadow-xs">
       
       {/* 1. Light & Clean Editorial Atmosphere */}
       <div className="absolute -top-24 -left-24 w-[320px] sm:w-[420px] h-[320px] sm:h-[420px] rounded-full bg-[#92C4EA]/25 blur-[100px] pointer-events-none" />
