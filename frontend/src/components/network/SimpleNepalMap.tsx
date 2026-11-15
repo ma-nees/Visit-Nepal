@@ -7,21 +7,22 @@ export function SimpleNepalMap() {
   return (
     <svg
       viewBox="15 30 1185 735"
-      className="w-full h-auto filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.4)] select-none"
+      className="w-full h-auto filter drop-shadow-[0_12px_28px_rgba(5,82,162,0.12)] select-none"
     >
       <defs>
-        {/* Soft Royal Blue Fill */}
-        <linearGradient id="simpleNepalFill" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#083B75" stopOpacity="0.9" />
-          <stop offset="60%" stopColor="#0552A2" stopOpacity="0.85" />
-          <stop offset="100%" stopColor="#92C4EA" stopOpacity="0.8" />
+        {/* Soft Sky Blue Fill */}
+        <linearGradient id="simpleNepalFill" x1="0%" y1="10%" x2="100%" y2="90%">
+          <stop offset="0%" stopColor="#A8D4F2" stopOpacity="0.95" />
+          <stop offset="50%" stopColor="#92C4EA" stopOpacity="0.92" />
+          <stop offset="100%" stopColor="#7EBAE3" stopOpacity="0.9" />
         </linearGradient>
 
         {/* Brown Outline Highlight */}
         <linearGradient id="simpleBrownRim" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stopColor="#B37840" />
-          <stop offset="50%" stopColor="#8E5224" />
-          <stop offset="100%" stopColor="#BF854B" />
+          <stop offset="0%" stopColor="#A66732" />
+          <stop offset="35%" stopColor="#874C1E" />
+          <stop offset="70%" stopColor="#9C5C26" />
+          <stop offset="100%" stopColor="#B87B40" />
         </linearGradient>
 
         {/* Mask that captures ONLY the outline of Nepal */}
@@ -40,11 +41,9 @@ export function SimpleNepalMap() {
         {/* Wavy Sheen Gradient - Top to Bottom */}
         <linearGradient id="simpleWavyShineRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
           <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
-          <stop offset="25%" stopColor="#92C4EA" stopOpacity="0.4" />
-          <stop offset="45%" stopColor="#FDB716" stopOpacity="0.95" />
+          <stop offset="25%" stopColor="#FDB716" stopOpacity="0.5" />
           <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-          <stop offset="55%" stopColor="#FDB716" stopOpacity="0.95" />
-          <stop offset="75%" stopColor="#92C4EA" stopOpacity="0.4" />
+          <stop offset="75%" stopColor="#FDB716" stopOpacity="0.75" />
           <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
       </defs>
@@ -54,7 +53,7 @@ export function SimpleNepalMap() {
         d={NEPAL_COUNTRY_PATH}
         fill="url(#simpleNepalFill)"
         stroke="url(#simpleBrownRim)"
-        strokeWidth="2.5"
+        strokeWidth="2.6"
         strokeLinejoin="round"
         strokeLinecap="round"
       />

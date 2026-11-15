@@ -62,7 +62,7 @@ export const NEPAL_LANDMARKS: Landmark[] = [
     x: 505,
     y: 440,
     labelOffsetY: 18,
-    color: '#92C4EA', // Sky Blue
+    color: '#0552A2', // Royal Navy
     temp: '22°C',
     weather: 'Pleasant',
     description: 'Tranquil subtropical lakes mirroring the snow peaks of the Annapurna range.',
@@ -92,7 +92,7 @@ export const NEPAL_LANDMARKS: Landmark[] = [
     x: 655,
     y: 460,
     labelOffsetY: -18,
-    color: '#92C4EA', // Sky Blue
+    color: '#0552A2', // Royal Navy
     temp: '20°C',
     weather: 'Mild',
     description: 'Living heritage of seven UNESCO monuments, historic courtyards, and ancient stupas.',
@@ -135,7 +135,6 @@ export interface NepalKnowledgeMapProps {
 }
 
 export function NepalKnowledgeMap({
-  embedded = false,
   onSelectLandmark,
 }: NepalKnowledgeMapProps) {
   const [selectedLandmark, setSelectedLandmark] = useState<Landmark>(NEPAL_LANDMARKS[0]);
@@ -151,39 +150,31 @@ export function NepalKnowledgeMap({
   return (
     <div className="w-full relative select-none flex flex-col items-center justify-center">
       
-      {/* 1. Pure Aesthetic SVG Map Canvas - Single Solid Silhouette of Nepal */}
+      {/* 1. Pure Aesthetic SVG Map Canvas - Clean Light Editorial Style */}
       <div className="relative w-full max-h-[50vh] aspect-[16/10] flex items-center justify-center">
         <svg
           viewBox="15 30 1185 735"
-          className="w-full h-full max-h-[50vh] object-contain filter drop-shadow-[0_16px_40px_rgba(5,82,162,0.45)]"
+          className="w-full h-full max-h-[50vh] object-contain filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.12)]"
         >
           <defs>
-            {/* Soft Royal Himalayan Blue Gradient Fill */}
-            <linearGradient id="nepalAestheticFill" x1="0%" y1="15%" x2="100%" y2="85%">
-              <stop offset="0%" stopColor="#062F59" stopOpacity="0.95" />
-              <stop offset="45%" stopColor="#0552A2" stopOpacity="0.92" />
-              <stop offset="80%" stopColor="#0B417D" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#125196" stopOpacity="0.88" />
+            {/* Soft Himalayan Sky Blue Gradient Fill from User Brand Palette (#92C4EA) */}
+            <linearGradient id="nepalAestheticFill" x1="0%" y1="10%" x2="100%" y2="90%">
+              <stop offset="0%" stopColor="#A8D4F2" stopOpacity="0.95" />
+              <stop offset="50%" stopColor="#92C4EA" stopOpacity="0.92" />
+              <stop offset="100%" stopColor="#7EBAE3" stopOpacity="0.9" />
             </linearGradient>
 
-            {/* Earthy Warm Brown / Bronze Outline Highlight as requested */}
+            {/* Earthy Warm Brown / Bronze Outline Highlight */}
             <linearGradient id="nepalBrownRim" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#B37840" stopOpacity="0.95" />
-              <stop offset="30%" stopColor="#8E5224" stopOpacity="0.9" />
-              <stop offset="70%" stopColor="#9C5D29" stopOpacity="0.95" />
-              <stop offset="100%" stopColor="#BF854B" stopOpacity="0.9" />
+              <stop offset="0%" stopColor="#A66732" />
+              <stop offset="35%" stopColor="#874C1E" />
+              <stop offset="70%" stopColor="#9C5C26" />
+              <stop offset="100%" stopColor="#B87B40" />
             </linearGradient>
-
-            {/* Soft Ambient Atmosphere Underneath */}
-            <radialGradient id="mountainAtmosphere" cx="50%" cy="45%" r="65%">
-              <stop offset="0%" stopColor="#92C4EA" stopOpacity="0.18" />
-              <stop offset="55%" stopColor="#0552A2" stopOpacity="0.08" />
-              <stop offset="100%" stopColor="#0552A2" stopOpacity="0" />
-            </radialGradient>
 
             {/* Pin Glow Filter */}
             <filter id="hotspotGlow" x="-50%" y="-50%" width="200%" height="200%">
-              <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#FDB716" floodOpacity="0.8" />
+              <feDropShadow dx="0" dy="2" stdDeviation="3.5" floodColor="#0552A2" floodOpacity="0.35" />
             </filter>
 
             {/* MASK THAT CONSTRAINS SHINE STRICTLY TO THE OUTLINE OF NEPAL */}
@@ -202,17 +193,15 @@ export function NepalKnowledgeMap({
             {/* Radiant golden-diamond shine beam for the outline */}
             <linearGradient id="outlineShineBeam" x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
-              <stop offset="25%" stopColor="#92C4EA" stopOpacity="0.5" />
-              <stop offset="45%" stopColor="#FDB716" stopOpacity="0.95" />
+              <stop offset="25%" stopColor="#FDB716" stopOpacity="0.55" />
               <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-              <stop offset="55%" stopColor="#FDB716" stopOpacity="0.95" />
-              <stop offset="75%" stopColor="#92C4EA" stopOpacity="0.5" />
+              <stop offset="75%" stopColor="#FDB716" stopOpacity="0.75" />
               <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
             </linearGradient>
 
             {/* Glowing filter for the outline shine */}
             <filter id="outlineGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
-              <feGaussianBlur stdDeviation="3.5" result="blur" />
+              <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -220,15 +209,12 @@ export function NepalKnowledgeMap({
             </filter>
           </defs>
 
-          {/* Soft Atmospheric Ambient Backlight */}
-          <ellipse cx="600" cy="385" rx="550" ry="280" fill="url(#mountainAtmosphere)" />
-
-          {/* 2. THE SINGLE UNIFIED SILHOUETTE OF NEPAL (Solid fill + base warm brown rim) */}
+          {/* 2. THE SINGLE UNIFIED SILHOUETTE OF NEPAL (Solid soft sky blue + warm brown rim) */}
           <path
             d={NEPAL_COUNTRY_PATH}
             fill="url(#nepalAestheticFill)"
             stroke="url(#nepalBrownRim)"
-            strokeWidth="2.4"
+            strokeWidth="2.6"
             strokeLinejoin="round"
             strokeLinecap="round"
             className="transition-all duration-300"
@@ -263,22 +249,7 @@ export function NepalKnowledgeMap({
             </motion.g>
           </g>
 
-          {/* 3. Subtle Artistic High-Himalayan Crest Line */}
-          <g opacity="0.3" className="pointer-events-none">
-            <path
-              d="M 120 380 Q 280 260 480 290 T 780 230 T 960 320 T 1120 420"
-              fill="none"
-              stroke="#92C4EA"
-              strokeWidth="1.2"
-              strokeDasharray="4 6"
-            />
-            {/* Small summit triangles */}
-            <polygon points="520,360 527,344 534,360" fill="#FFFFFF" opacity="0.7" />
-            <polygon points="815,415 823,395 831,415" fill="#FFFFFF" opacity="0.9" />
-            <polygon points="475,238 482,222 489,238" fill="#FFFFFF" opacity="0.6" />
-          </g>
-
-          {/* 4. High-Altitude Landmark Waypoints */}
+          {/* 3. High-Altitude Landmark Waypoints */}
           <g id="nepal-landmarks">
             {NEPAL_LANDMARKS.map((spot) => {
               const isSelected = selectedLandmark.id === spot.id;
@@ -299,7 +270,7 @@ export function NepalKnowledgeMap({
                     <circle
                       r="14"
                       fill={spot.color}
-                      fillOpacity="0.3"
+                      fillOpacity="0.25"
                       className="animate-ping pointer-events-none"
                       cx="0"
                       cy="0"
@@ -326,29 +297,30 @@ export function NepalKnowledgeMap({
                     cy="0"
                   />
 
-                  {/* Floating Clean Pill Badge */}
+                  {/* Floating Clean Pill Badge (White Glass with Deep Navy Text) */}
                   <g transform={`translate(0, ${spot.labelOffsetY})`}>
                     <rect
-                      x="-42"
+                      x="-44"
                       y="-10"
-                      width="84"
-                      height="19"
-                      rx="9.5"
-                      fill="#031224"
-                      fillOpacity="0.94"
-                      stroke={isPrimary ? '#FDB716' : '#92C4EA'}
-                      strokeOpacity={isPrimary ? 1 : 0.45}
-                      strokeWidth={isPrimary ? '1.5' : '0.8'}
+                      width="88"
+                      height="20"
+                      rx="10"
+                      fill="#FFFFFF"
+                      fillOpacity="0.96"
+                      stroke={isPrimary ? '#0552A2' : '#874C1E'}
+                      strokeOpacity={isPrimary ? 0.9 : 0.4}
+                      strokeWidth={isPrimary ? '1.5' : '0.9'}
+                      filter="drop-shadow(0 2px 4px rgba(0,0,0,0.08))"
                       className="transition-all duration-200"
                     />
                     <text
                       x="0"
-                      y="3"
+                      y="3.5"
                       textAnchor="middle"
-                      fill="#FFFFFF"
+                      fill="#0B2745"
                       fontFamily="system-ui, -apple-system, sans-serif"
                       fontSize="9"
-                      fontWeight="600"
+                      fontWeight="700"
                       letterSpacing="0.01em"
                     >
                       {spot.shortName}
@@ -361,30 +333,30 @@ export function NepalKnowledgeMap({
         </svg>
       </div>
 
-      {/* 5. Sleek Landmark Spotlight (Refined, Compact, No Overflow) */}
-      <div className="w-full pt-3 mt-2 border-t border-white/10 flex items-center justify-between gap-3 text-xs">
+      {/* 4. Sleek Landmark Spotlight (Clean Light Editorial Card) */}
+      <div className="w-full pt-3 mt-2 border-t border-slate-200/90 flex items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5 min-w-0">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0552A2] to-[#92C4EA] text-white shadow-sm">
+          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0552A2] to-[#92C4EA] text-white shadow-xs">
             <MapPin className="h-4 w-4 text-[#FDB716]" />
           </span>
           <div className="min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h4 className="font-semibold text-white text-xs sm:text-sm truncate">
+              <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">
                 {active.name}
               </h4>
-              <span className="text-[10px] font-mono text-[#92C4EA] bg-[#92C4EA]/15 border border-[#92C4EA]/30 px-2 py-0.2 rounded-full shrink-0">
+              <span className="text-[10px] font-mono text-[#0552A2] bg-[#92C4EA]/25 border border-[#92C4EA]/60 px-2 py-0.2 rounded-full shrink-0 font-semibold">
                 {active.elevation}
               </span>
             </div>
-            <p className="text-[11px] text-slate-300 font-light truncate mt-0.5">
+            <p className="text-[11px] text-slate-500 font-normal truncate mt-0.5">
               {active.description}
             </p>
           </div>
         </div>
 
         <div className="shrink-0 flex items-center">
-          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-medium text-emerald-300 bg-emerald-500/15 border border-emerald-500/30 px-2.5 py-1 rounded-full">
-            <Wind className="h-2.5 w-2.5" />
+          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full shadow-2xs">
+            <Wind className="h-2.5 w-2.5 text-emerald-600" />
             {active.temp}
           </span>
         </div>
