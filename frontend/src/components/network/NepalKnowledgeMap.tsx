@@ -151,10 +151,10 @@ export function NepalKnowledgeMap({
     <div className="w-full relative select-none flex flex-col items-center justify-center">
       
       {/* 1. Pure Aesthetic SVG Map Canvas - Clean Light Editorial Style */}
-      <div className="relative w-full max-h-[34vh] sm:max-h-[44vh] lg:max-h-[50vh] aspect-[16/10] flex items-center justify-center">
+      <div className="relative w-full max-h-[38vh] sm:max-h-[46vh] lg:max-h-[50vh] flex items-center justify-center">
         <svg
           viewBox="15 30 1185 735"
-          className="w-full h-full max-h-[34vh] sm:max-h-[44vh] lg:max-h-[50vh] object-contain filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.12)]"
+          className="w-full h-auto max-h-[38vh] sm:max-h-[46vh] lg:max-h-[50vh] filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.12)]"
         >
           <defs>
             {/* Soft Himalayan Sky Blue Gradient Fill from User Brand Palette (#92C4EA) */}
