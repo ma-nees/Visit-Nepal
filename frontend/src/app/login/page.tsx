@@ -25,7 +25,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 import AuthLeftPanel from '@/components/features/auth/AuthLeftPanel';
 import AuthRightLayout from '@/components/features/auth/AuthRightLayout';
-import AuthPillBadge from '@/components/features/auth/AuthPillBadge';
 
 interface QuickRole {
   id: UserRole;
@@ -230,44 +229,6 @@ export default function LoginPage() {
           animate="visible"
           className="w-full flex flex-col gap-5 relative z-10"
         >
-          {/* Header Row: Shared Pill Tag & Sign In / Register Switcher */}
-          <motion.div
-            variants={itemVariants}
-            className="flex items-center justify-between gap-3"
-          >
-            <AuthPillBadge label="Expedition Registry" />
-            <div className="inline-flex rounded-full bg-slate-200/60 p-1 border border-slate-300/50 backdrop-blur-md shadow-2xs">
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('signin');
-                  setErrorMsg('');
-                }}
-                className={`rounded-full px-3.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
-                  authMode === 'signin'
-                    ? 'bg-white text-[#0552A2] shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Sign In
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setAuthMode('register');
-                  setErrorMsg('');
-                }}
-                className={`rounded-full px-3.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
-                  authMode === 'register'
-                    ? 'bg-white text-[#0552A2] shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
-                }`}
-              >
-                Register
-              </button>
-            </div>
-          </motion.div>
-
           {/* Heading */}
           <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
             <h1 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 tracking-tight leading-tight">
