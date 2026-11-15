@@ -8,15 +8,13 @@ interface AuthRightLayoutProps {
 
 export default function AuthRightLayout({ children }: AuthRightLayoutProps) {
   return (
-    <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-10 lg:p-16 relative bg-[#FAF9F5] overflow-y-auto">
-      {/* Subtle topographic atmospheric backdrop */}
-      <div className="absolute inset-0 opacity-[0.04] pointer-events-none bg-[radial-gradient(#0552A2_1px,transparent_1px)] [background-size:24px_24px]" />
-      
-      {/* Glow highlight */}
-      <div className="absolute -top-32 -right-32 w-96 h-96 bg-blue-100/50 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-amber-100/40 rounded-full blur-3xl pointer-events-none" />
+    <div className="w-full lg:w-1/2 min-h-screen flex items-center justify-center p-6 sm:p-10 lg:p-14 relative bg-[#FAF9F5] overflow-y-auto">
+      {/* Silky organic ambient warmth (no dot grid) */}
+      <div className="absolute -top-32 -right-32 w-96 h-96 bg-[#92C4EA]/15 rounded-full blur-[110px] pointer-events-none" />
+      <div className="absolute -bottom-32 -left-32 w-96 h-96 bg-[#FDB716]/10 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/2 -translate-y-1/2 w-80 h-80 bg-blue-50/60 rounded-full blur-[90px] pointer-events-none" />
 
-      <div className="w-full max-w-md my-auto relative z-10">
+      <div className="w-full max-w-md my-auto relative z-10 py-10 lg:py-4">
         {children}
       </div>
     </div>

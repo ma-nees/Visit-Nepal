@@ -237,17 +237,17 @@ export default function LoginPage() {
           {/* Header Row: Shared Pill Tag & Sign In / Register Switcher */}
           <motion.div
             variants={itemVariants}
-            className="flex items-center justify-between"
+            className="flex items-center justify-between gap-3"
           >
             <AuthPillBadge label="Expedition Registry" />
-            <div className="inline-flex rounded-xl bg-slate-200/60 p-1 border border-slate-300/60">
+            <div className="inline-flex rounded-full bg-slate-200/60 p-1 border border-slate-300/50 backdrop-blur-md shadow-2xs">
               <button
                 type="button"
                 onClick={() => {
                   setAuthMode('signin');
                   setErrorMsg('');
                 }}
-                className={`rounded-lg px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
+                className={`rounded-full px-3.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
                   authMode === 'signin'
                     ? 'bg-white text-[#0552A2] shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
@@ -261,7 +261,7 @@ export default function LoginPage() {
                   setAuthMode('register');
                   setErrorMsg('');
                 }}
-                className={`rounded-lg px-3 py-1 text-[11px] font-bold transition-all cursor-pointer ${
+                className={`rounded-full px-3.5 py-1 text-[11px] font-bold transition-all cursor-pointer ${
                   authMode === 'register'
                     ? 'bg-white text-[#0552A2] shadow-xs'
                     : 'text-slate-600 hover:text-slate-900'
@@ -274,20 +274,20 @@ export default function LoginPage() {
 
           {/* Heading */}
           <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-[#0F172A] tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 tracking-tight leading-tight">
               {authMode === 'signin' ? (
                 <>
-                  Welcome <span className="text-[#0552A2]">Back</span>
+                  Welcome <span className="font-serif italic text-[#0552A2]">Back</span>
                 </>
               ) : (
                 <>
-                  Create <span className="text-[#0552A2]">Profile</span>
+                  Begin Your <span className="font-serif italic text-[#0552A2]">Journey</span>
                 </>
               )}
             </h1>
-            <p className="text-xs sm:text-sm text-[#475569] leading-relaxed font-medium">
+            <p className="text-xs sm:text-[13px] text-slate-500 leading-relaxed font-normal">
               {authMode === 'signin'
-                ? 'Sign in to continue your journey and access your custom itineraries, guides, and park permits.'
+                ? 'Sign in to access your curated Himalayan routes, licensed guides, and expedition permits.'
                 : 'Join the official Nepal tourism gateway for verified permits, local guides, and expedition routes.'}
             </p>
           </motion.div>
@@ -295,11 +295,11 @@ export default function LoginPage() {
           {/* Fast Role Demo Switcher */}
           <motion.div variants={itemVariants} className="space-y-1.5">
             <div className="flex items-center justify-between">
-              <label className="text-[9.5px] uppercase font-mono text-[#475569] tracking-wider font-black">
+              <label className="text-[10px] uppercase font-mono text-slate-500 tracking-wider font-bold">
                 Operational Role
               </label>
               <span className="text-[10px] text-[#0552A2] font-semibold">
-                Click any role to autofill demo
+                Quick Demo Autofill
               </span>
             </div>
             <div className="grid grid-cols-5 gap-1.5">
@@ -314,8 +314,8 @@ export default function LoginPage() {
                     onClick={() => handleSelectRole(roleItem)}
                     className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl border text-center transition-all cursor-pointer ${
                       isSelected
-                        ? 'border-[#0552A2] bg-blue-50/80 shadow-xs ring-1 ring-[#0552A2]/30 text-[#0552A2]'
-                        : 'border-slate-200/80 bg-white hover:border-slate-300 text-slate-600'
+                        ? 'border-[#0552A2] bg-gradient-to-b from-blue-50/90 to-blue-50/40 shadow-xs ring-1 ring-[#0552A2]/30 text-[#0552A2]'
+                        : 'border-slate-200/90 bg-white/80 hover:bg-white hover:border-slate-300 text-slate-600 shadow-2xs'
                     }`}
                   >
                     <Icon className="h-3.5 w-3.5 mb-1" />
@@ -346,11 +346,11 @@ export default function LoginPage() {
             {/* Full Name Input (Register mode) */}
             {authMode === 'register' && (
               <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-                <label className="text-[9.5px] uppercase font-mono text-[#475569] tracking-wider font-black">
+                <label className="text-[9.5px] uppercase font-mono text-slate-500 tracking-wider font-bold">
                   Full Legal Name
                 </label>
                 <div className="relative">
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
+                  <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
                     <User className="h-4 w-4" />
                   </div>
                   <input
@@ -358,7 +358,7 @@ export default function LoginPage() {
                     value={regName}
                     onChange={(e) => setRegName(e.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full bg-white border border-[#0552A2]/15 focus:border-[#0552A2] rounded-xl pl-11 pr-4 py-3 text-xs text-[#0F172A] font-semibold focus:outline-none transition-all placeholder-[#94A3B8] shadow-inner focus:ring-2 focus:ring-[#0552A2]/10"
+                    className="w-full bg-white border border-slate-200/90 focus:border-[#0552A2] rounded-xl pl-10 pr-4 py-3 text-xs text-slate-900 font-semibold focus:outline-none transition-all placeholder:text-slate-400 placeholder:font-normal shadow-[0_2px_6px_rgba(0,0,0,0.02)] focus:ring-2 focus:ring-[#0552A2]/10"
                     required
                   />
                 </div>
@@ -367,11 +367,11 @@ export default function LoginPage() {
 
             {/* Email Input */}
             <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-              <label className="text-[9.5px] uppercase font-mono text-[#475569] tracking-wider font-black">
+              <label className="text-[9.5px] uppercase font-mono text-slate-500 tracking-wider font-bold">
                 Email
               </label>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
                   <Mail className="h-4 w-4" />
                 </div>
                 <input
@@ -379,7 +379,7 @@ export default function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
-                  className="w-full bg-white border border-[#0552A2]/15 focus:border-[#0552A2] rounded-xl pl-11 pr-4 py-3 text-xs text-[#0F172A] font-semibold focus:outline-none transition-all placeholder-[#94A3B8] shadow-inner focus:ring-2 focus:ring-[#0552A2]/10"
+                  className="w-full bg-white border border-slate-200/90 focus:border-[#0552A2] rounded-xl pl-10 pr-4 py-3 text-xs text-slate-900 font-semibold focus:outline-none transition-all placeholder:text-slate-400 placeholder:font-normal shadow-[0_2px_6px_rgba(0,0,0,0.02)] focus:ring-2 focus:ring-[#0552A2]/10"
                   required
                 />
               </div>
@@ -391,7 +391,7 @@ export default function LoginPage() {
               className="flex flex-col gap-1.5 relative"
             >
               <div className="flex justify-between items-center">
-                <label className="text-[9.5px] uppercase font-mono text-[#475569] tracking-wider font-black">
+                <label className="text-[9.5px] uppercase font-mono text-slate-500 tracking-wider font-bold">
                   Password
                 </label>
                 {authMode === 'signin' && (
@@ -405,7 +405,7 @@ export default function LoginPage() {
                 )}
               </div>
               <div className="relative">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
+                <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#0552A2] pointer-events-none">
                   <Lock className="h-4 w-4" />
                 </div>
                 <input
@@ -413,7 +413,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full bg-white border border-[#0552A2]/15 focus:border-[#0552A2] rounded-xl pl-11 pr-10 py-3 text-xs text-[#0F172A] font-semibold focus:outline-none transition-all placeholder-[#94A3B8] shadow-inner focus:ring-2 focus:ring-[#0552A2]/10"
+                  className="w-full bg-white border border-slate-200/90 focus:border-[#0552A2] rounded-xl pl-10 pr-10 py-3 text-xs text-slate-900 font-semibold focus:outline-none transition-all placeholder:text-slate-400 placeholder:font-normal shadow-[0_2px_6px_rgba(0,0,0,0.02)] focus:ring-2 focus:ring-[#0552A2]/10"
                   required
                 />
                 <button
@@ -435,11 +435,7 @@ export default function LoginPage() {
               variants={itemVariants}
               type="submit"
               disabled={isSubmitting}
-              style={{
-                background:
-                  'linear-gradient(135deg, #0552A2 0%, #033973 100%)',
-              }}
-              className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white hover:opacity-95 transition-all shadow-[0_4px_14px_rgba(5,82,162,0.3)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-98 group disabled:opacity-50 mt-1"
+              className="w-full py-3.5 rounded-xl text-xs font-bold uppercase tracking-wider text-white bg-gradient-to-r from-[#0552A2] via-[#094B8F] to-[#0552A2] hover:opacity-95 transition-all shadow-[0_6px_18px_rgba(5,82,162,0.25)] flex items-center justify-center gap-2 cursor-pointer hover:scale-[1.01] active:scale-[0.99] group disabled:opacity-50 mt-1 border-t border-white/20"
             >
               {isSubmitting ? (
                 <>
@@ -459,11 +455,11 @@ export default function LoginPage() {
 
             {/* Social Divider */}
             <motion.div variants={itemVariants} className="flex items-center pt-1">
-              <div className="flex-1 border-t border-[#0552A2]/10" />
-              <span className="px-3 text-[10px] uppercase font-mono text-[#64748B] font-bold">
+              <div className="flex-1 border-t border-slate-200" />
+              <span className="px-3 text-[10px] uppercase font-mono text-slate-400 font-bold">
                 Or continue with
               </span>
-              <div className="flex-1 border-t border-[#0552A2]/10" />
+              <div className="flex-1 border-t border-slate-200" />
             </motion.div>
 
             {/* Google & Apple Buttons */}
@@ -475,7 +471,7 @@ export default function LoginPage() {
                   setPassword('NepalTourism2026!');
                   showToast('Google authentication mock linked');
                 }}
-                className="flex items-center justify-center gap-2 rounded-xl border border-[#0552A2]/15 bg-white py-2.5 text-xs font-semibold text-[#0F172A] hover:bg-[#F8FAFC] transition-all cursor-pointer hover:scale-[1.01] active:scale-98"
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 py-2.5 text-xs font-semibold text-slate-800 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99] shadow-2xs"
               >
                 <svg className="h-4 w-4" viewBox="0 0 24 24">
                   <path
@@ -505,9 +501,9 @@ export default function LoginPage() {
                   setPassword('NepalTourism2026!');
                   showToast('Apple ID authentication mock linked');
                 }}
-                className="flex items-center justify-center gap-2 rounded-xl border border-[#0552A2]/15 bg-white py-2.5 text-xs font-semibold text-[#0F172A] hover:bg-[#F8FAFC] transition-all cursor-pointer hover:scale-[1.01] active:scale-98"
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200/90 bg-white hover:bg-slate-50 py-2.5 text-xs font-semibold text-slate-800 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99] shadow-2xs"
               >
-                <svg className="h-4 w-4 fill-current" viewBox="0 0 24 24">
+                <svg className="h-4 w-4 fill-current text-slate-900" viewBox="0 0 24 24">
                   <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.62.72-1.16 1.86-1.02 2.98 1.09.08 2.2-.57 2.95-1.41z" />
                 </svg>
                 <span>Apple</span>
@@ -517,7 +513,7 @@ export default function LoginPage() {
             {/* Back to Login page or switch mode */}
             <motion.div
               variants={itemVariants}
-              className="text-center border-t border-[#0552A2]/10 pt-3.5 text-[11px] text-[#64748B] font-medium"
+              className="text-center border-t border-slate-200 pt-3.5 text-[11px] text-slate-500 font-normal"
             >
               {authMode === 'signin' ? (
                 <>
