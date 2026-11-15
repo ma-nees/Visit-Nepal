@@ -32,27 +32,6 @@ export default function AuthLeftPanel({}: AuthLeftPanelProps) {
         className="absolute top-16 right-16 w-80 h-80 rounded-full bg-[#0552A2]/30 blur-3xl pointer-events-none"
       />
 
-      {/* Wavy Ambient Light Shine Sweeping from Top to Bottom Across Panel */}
-      <motion.div
-        animate={{
-          y: ['-140%', '240%'],
-          opacity: [0, 0.5, 0.85, 0.5, 0],
-        }}
-        transition={{
-          duration: 6.5,
-          repeat: Infinity,
-          ease: 'easeInOut',
-          repeatDelay: 1.2,
-        }}
-        className="absolute -inset-x-20 h-64 pointer-events-none z-10"
-        style={{
-          background:
-            'radial-gradient(ellipse 65% 50% at 50% 50%, rgba(146,196,234,0.18) 0%, rgba(5,82,162,0.08) 50%, transparent 75%)',
-          filter: 'blur(36px)',
-          transform: 'rotate(-5deg)',
-        }}
-      />
-
       {/* 2. Top Header HUD */}
       <div className="relative z-20 space-y-2">
         <div className="flex items-center justify-between gap-3">

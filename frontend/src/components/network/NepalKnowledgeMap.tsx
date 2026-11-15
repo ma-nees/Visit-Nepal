@@ -186,32 +186,33 @@ export function NepalKnowledgeMap({
               <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#FDB716" floodOpacity="0.8" />
             </filter>
 
-            {/* Clip path to constrain the wavy shine strictly within Nepal's silhouette */}
-            <clipPath id="nepalSilhouetteClip">
-              <path d={NEPAL_COUNTRY_PATH} />
-            </clipPath>
+            {/* MASK THAT CONSTRAINS SHINE STRICTLY TO THE OUTLINE OF NEPAL */}
+            <mask id="nepalOutlineOnlyMask" maskUnits="userSpaceOnUse">
+              <rect x="-200" y="-200" width="1600" height="1200" fill="#000000" />
+              <path
+                d={NEPAL_COUNTRY_PATH}
+                fill="none"
+                stroke="#FFFFFF"
+                strokeWidth="4.2"
+                strokeLinejoin="round"
+                strokeLinecap="round"
+              />
+            </mask>
 
-            {/* Wavy Sheen Gradient - Top to Bottom */}
-            <linearGradient id="wavyShineRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#92C4EA" stopOpacity="0" />
-              <stop offset="25%" stopColor="#92C4EA" stopOpacity="0.22" />
-              <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.6" />
-              <stop offset="70%" stopColor="#FDB716" stopOpacity="0.32" />
-              <stop offset="100%" stopColor="#0552A2" stopOpacity="0" />
-            </linearGradient>
-
-            {/* Radiant golden-sky blue crest shimmer */}
-            <linearGradient id="wavyShineCrest" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#92C4EA" stopOpacity="0.1" />
-              <stop offset="20%" stopColor="#92C4EA" stopOpacity="0.85" />
+            {/* Radiant golden-diamond shine beam for the outline */}
+            <linearGradient id="outlineShineBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+              <stop offset="25%" stopColor="#92C4EA" stopOpacity="0.5" />
+              <stop offset="45%" stopColor="#FDB716" stopOpacity="0.95" />
               <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-              <stop offset="80%" stopColor="#FDB716" stopOpacity="0.9" />
-              <stop offset="100%" stopColor="#92C4EA" stopOpacity="0.1" />
+              <stop offset="55%" stopColor="#FDB716" stopOpacity="0.95" />
+              <stop offset="75%" stopColor="#92C4EA" stopOpacity="0.5" />
+              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
             </linearGradient>
 
-            {/* Soft luminous blur for the wave core */}
-            <filter id="wavyWaveGlow" x="-20%" y="-100%" width="140%" height="300%">
-              <feGaussianBlur stdDeviation="7" result="blur" />
+            {/* Glowing filter for the outline shine */}
+            <filter id="outlineGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
+              <feGaussianBlur stdDeviation="3.5" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
                 <feMergeNode in="SourceGraphic" />
@@ -222,7 +223,7 @@ export function NepalKnowledgeMap({
           {/* Soft Atmospheric Ambient Backlight */}
           <ellipse cx="600" cy="385" rx="550" ry="280" fill="url(#mountainAtmosphere)" />
 
-          {/* 2. THE SINGLE UNIFIED SILHOUETTE OF NEPAL */}
+          {/* 2. THE SINGLE UNIFIED SILHOUETTE OF NEPAL (Solid fill + base warm brown rim) */}
           <path
             d={NEPAL_COUNTRY_PATH}
             fill="url(#nepalAestheticFill)"
@@ -233,42 +234,31 @@ export function NepalKnowledgeMap({
             className="transition-all duration-300"
           />
 
-          {/* 2b. WAVY SHINE SWEEPING CONTINUOUSLY FROM TOP TO BOTTOM */}
-          <g clipPath="url(#nepalSilhouetteClip)" className="pointer-events-none">
+          {/* 2b. SHINE STRICTLY ON THE OUTLINE OF NEPAL - SWEEPING FROM TOP TO BOTTOM */}
+          <g mask="url(#nepalOutlineOnlyMask)" filter="url(#outlineGlowFilter)" className="pointer-events-none">
             <motion.g
               animate={{
-                y: [-260, 840],
+                y: [-240, 840],
               }}
               transition={{
-                duration: 4.6,
+                duration: 4.2,
                 repeat: Infinity,
                 ease: 'easeInOut',
-                repeatDelay: 0.9,
+                repeatDelay: 0.8,
               }}
             >
-              {/* Broad luminous wave body */}
-              <path
-                d="M -100 0 Q 200 90, 500 20 T 900 70 T 1350 10 L 1350 150 Q 1050 210, 750 140 T 350 200 T -100 130 Z"
-                fill="url(#wavyShineRibbon)"
+              <animateTransform
+                attributeName="transform"
+                type="translate"
+                values="0,-240; 0,840"
+                keyTimes="0; 1"
+                dur="4.2s"
+                repeatCount="indefinite"
               />
-
-              {/* Radiant glowing wave crest */}
+              {/* Luminous wavy ribbon that passes over and illuminates the border */}
               <path
-                d="M -100 55 Q 220 135, 540 60 T 950 115 T 1350 50"
-                fill="none"
-                stroke="url(#wavyShineCrest)"
-                strokeWidth="5"
-                filter="url(#wavyWaveGlow)"
-                opacity="0.95"
-              />
-
-              {/* Crisp inner diamond light filament */}
-              <path
-                d="M -100 55 Q 220 135, 540 60 T 950 115 T 1350 50"
-                fill="none"
-                stroke="#FFFFFF"
-                strokeWidth="1.6"
-                opacity="0.9"
+                d="M -100 0 Q 200 90, 500 20 T 900 70 T 1350 10 L 1350 160 Q 1050 220, 750 150 T 350 210 T -100 140 Z"
+                fill="url(#outlineShineBeam)"
               />
             </motion.g>
           </g>

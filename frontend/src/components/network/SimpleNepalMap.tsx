@@ -24,18 +24,28 @@ export function SimpleNepalMap() {
           <stop offset="100%" stopColor="#BF854B" />
         </linearGradient>
 
-        {/* Clip path to constrain the wavy shine */}
-        <clipPath id="simpleSilhouetteClip">
-          <path d={NEPAL_COUNTRY_PATH} />
-        </clipPath>
+        {/* Mask that captures ONLY the outline of Nepal */}
+        <mask id="simpleOutlineOnlyMask" maskUnits="userSpaceOnUse">
+          <rect x="-200" y="-200" width="1600" height="1200" fill="#000000" />
+          <path
+            d={NEPAL_COUNTRY_PATH}
+            fill="none"
+            stroke="#FFFFFF"
+            strokeWidth="4"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+        </mask>
 
         {/* Wavy Sheen Gradient - Top to Bottom */}
         <linearGradient id="simpleWavyShineRibbon" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor="#92C4EA" stopOpacity="0" />
-          <stop offset="30%" stopColor="#92C4EA" stopOpacity="0.25" />
-          <stop offset="50%" stopColor="#FFFFFF" stopOpacity="0.6" />
-          <stop offset="70%" stopColor="#FDB716" stopOpacity="0.3" />
-          <stop offset="100%" stopColor="#0552A2" stopOpacity="0" />
+          <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
+          <stop offset="25%" stopColor="#92C4EA" stopOpacity="0.4" />
+          <stop offset="45%" stopColor="#FDB716" stopOpacity="0.95" />
+          <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
+          <stop offset="55%" stopColor="#FDB716" stopOpacity="0.95" />
+          <stop offset="75%" stopColor="#92C4EA" stopOpacity="0.4" />
+          <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
       </defs>
 
@@ -49,27 +59,20 @@ export function SimpleNepalMap() {
         strokeLinecap="round"
       />
 
-      {/* Continuous Wavy Shine from Top to Bottom */}
-      <g clipPath="url(#simpleSilhouetteClip)" className="pointer-events-none">
+      {/* Continuous Wavy Shine ONLY on the Outline of Nepal */}
+      <g mask="url(#simpleOutlineOnlyMask)" className="pointer-events-none">
         <g>
           <animateTransform
             attributeName="transform"
             type="translate"
             values="0,-260; 0,840"
             keyTimes="0; 1"
-            dur="4.5s"
+            dur="4.2s"
             repeatCount="indefinite"
           />
           <path
-            d="M -100 0 Q 200 90, 500 20 T 900 70 T 1350 10 L 1350 150 Q 1050 210, 750 140 T 350 200 T -100 130 Z"
+            d="M -100 0 Q 200 90, 500 20 T 900 70 T 1350 10 L 1350 160 Q 1050 220, 750 150 T 350 210 T -100 140 Z"
             fill="url(#simpleWavyShineRibbon)"
-          />
-          <path
-            d="M -100 55 Q 220 135, 540 60 T 950 115 T 1350 50"
-            fill="none"
-            stroke="#FFFFFF"
-            strokeWidth="2"
-            opacity="0.85"
           />
         </g>
       </g>
