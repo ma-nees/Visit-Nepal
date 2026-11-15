@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Sparkles, Compass } from 'lucide-react';
 import { NepalKnowledgeMap } from '@/components/network/NepalKnowledgeMap';
 
 interface AuthLeftPanelProps {
@@ -30,27 +29,13 @@ export default function AuthLeftPanel({}: AuthLeftPanelProps) {
       />
 
       {/* 2. Top Header HUD */}
-      <div className="relative z-20 space-y-1.5 sm:space-y-2">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/90 px-3 py-0.5 sm:px-3.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-[#0552A2] tracking-wider uppercase shadow-xs">
-            <Sparkles className="h-3 w-3 text-[#FDB716]" />
-            <span>Sacred Geography</span>
-          </div>
-
-          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-[#0552A2]/80 bg-white/80 px-2.5 py-0.5 sm:py-1 rounded-full border border-slate-200/70 shadow-xs">
-            <Compass className="h-3.5 w-3.5 text-[#0552A2]" />
-            <span>Himalayan Realm</span>
-          </div>
-        </div>
-
-        <div>
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-serif font-normal text-slate-900 tracking-tight">
-            Map of the High Himalayas
-          </h2>
-          <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5 max-w-md leading-relaxed">
-            From the 8,848m crest of Everest to sacred alpine monasteries and lush subtropical valleys.
-          </p>
-        </div>
+      <div className="relative z-20 space-y-1">
+        <h2 className="text-xl sm:text-2xl lg:text-3xl font-serif font-normal text-slate-900 tracking-tight">
+          Map of the High Himalayas
+        </h2>
+        <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5 max-w-md leading-relaxed">
+          From the 8,848m crest of Everest to sacred alpine monasteries and lush subtropical valleys.
+        </p>
       </div>
 
       {/* 3. Central Map Stage: Clean Unified Nepal Map */}
