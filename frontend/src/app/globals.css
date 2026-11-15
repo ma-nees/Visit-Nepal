@@ -1,0 +1,316 @@
+@import "tailwindcss";
+
+/* 
+ * ==============================================================================
+ * VISIT NEPAL OFFICIAL COLOR PALETTE SPECIFICATION
+ * ==============================================================================
+ * 1. Sky Glacier Blue:
+ *    HEX #92C4EA | RGB(146, 196, 234) | HSB(206, 38%, 92%) | CMYK(40, 11, 0, 0)
+ *
+ * 2. Royal Nepal Blue (Primary Brand):
+ *    HEX #0552A2 | RGB(5, 82, 162) | HSB(211, 97%, 64%) | CMYK(98, 77, 1, 0)
+ *
+ * 3. Crimson Nepal Red (Secondary Accent):
+ *    HEX #EC1F27 | RGB(236, 31, 39) | HSB(358, 87%, 93%) | CMYK(0, 99, 97, 0)
+ *
+ * 4. Golden Himalayan Yellow (Gold Accent):
+ *    HEX #FDB716 | RGB(253, 183, 22) | HSB(42, 91%, 99%) | CMYK(0, 31, 99, 0)
+ * ==============================================================================
+ */
+
+:root {
+  /* Brand Color Tokens (Hex + RGB Channels) */
+  --sky-glacier-blue: #92C4EA;
+  --sky-glacier-blue-rgb: 146, 196, 234;
+
+  --royal-nepal-blue: #0552A2;
+  --royal-nepal-blue-rgb: 5, 82, 162;
+
+  --crimson-nepal-red: #EC1F27;
+  --crimson-nepal-red-rgb: 236, 31, 39;
+
+  --golden-himalayan-yellow: #FDB716;
+  --golden-himalayan-yellow-rgb: 253, 183, 22;
+
+  /* Semantic UI Tokens */
+  --primary: var(--royal-nepal-blue);
+  --primary-hover: #044182;
+  --secondary: var(--crimson-nepal-red);
+  --secondary-hover: #d11920;
+  --accent: var(--golden-himalayan-yellow);
+  --sky: var(--sky-glacier-blue);
+
+  /* Light Theme (Matches AppTheme.customLightTheme) */
+  --bg-warm: #FFFFFF;
+  --background: #F8FAFC;
+  --card-white: #FFFFFF;
+  --dark-text: #0F172A;
+  --muted-text: #64748B;
+  --subtle-border: rgba(0, 0, 0, 0.06);
+  --card-border: #E2E8F0;
+
+  /* Elevation Shadows & Radius */
+  --shadow-app-card: 0 4px 10px rgba(0, 0, 0, 0.04);
+  --shadow-elevated: 0 10px 25px -5px rgba(5, 82, 162, 0.12);
+  --radius-card: 16px;
+  --radius-button: 12px;
+  --radius-pill: 9999px;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--dark-text);
+
+  /* Brand Utilities: bg-royal, text-royal, bg-crimson, text-crimson, bg-gold, bg-glacier */
+  --color-royal: var(--royal-nepal-blue);
+  --color-crimson: var(--crimson-nepal-red);
+  --color-gold: var(--golden-himalayan-yellow);
+  --color-glacier: var(--sky-glacier-blue);
+
+  --color-primary: var(--royal-nepal-blue);
+  --color-secondary: var(--crimson-nepal-red);
+  --color-accent: var(--golden-himalayan-yellow);
+  --color-sky: var(--sky-glacier-blue);
+
+  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  --font-serif: 'Times New Roman', Times, 'Playfair Display', Georgia, serif;
+  --font-times: 'Times New Roman', Times, Georgia, serif;
+  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+}
+
+.font-times {
+  font-family: 'Times New Roman', Times, Georgia, serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  margin: 0;
+  padding: 0;
+  border: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+body {
+  background: var(--background);
+  color: var(--dark-text);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
+  border: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+/* Remove scrollbar across all elements while keeping full scrolling functionality */
+::-webkit-scrollbar {
+  display: none;
+  width: 0px;
+  height: 0px;
+}
+
+* {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Smooth Tap & Hover Easing */
+button, a {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Flutter AppTypography Exact Font Scale */
+.text-display-large {
+  font-size: 32px;
+  font-weight: 800;
+  letter-spacing: -1.0px;
+  line-height: 1.2;
+}
+
+.text-display-medium {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.8px;
+  line-height: 1.25;
+}
+
+.text-title-large {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.text-title-medium {
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.2px;
+}
+
+.text-body-large {
+  font-size: 15px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.text-body-medium {
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.text-body-small {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.3;
+}
+
+.text-label-large {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.1px;
+}
+
+.text-label-small {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+}
+
+/* Flutter AppCard Component CSS Equivalent */
+.app-card {
+  background-color: var(--card-white);
+  border-radius: var(--radius-card);
+  border: 1px solid var(--subtle-border);
+  box-shadow: var(--shadow-app-card);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.app-card:hover {
+  border-color: rgba(5, 82, 162, 0.25);
+  box-shadow: var(--shadow-elevated);
+}
+
+/* Flutter AppButton Component CSS Equivalent */
+.btn-primary {
+  background-color: var(--royal-nepal-blue);
+  color: #FFFFFF;
+  border-radius: var(--radius-button);
+  font-weight: 700;
+  transition: background-color 0.15s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+}
+
+.btn-secondary {
+  background-color: var(--crimson-nepal-red);
+  color: #FFFFFF;
+  border-radius: var(--radius-button);
+  font-weight: 700;
+  transition: background-color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  background-color: var(--secondary-hover);
+}
+
+/* Hide Scrollbar Behavior */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Butter-Smooth Physics Easing */
+.smooth-card {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s ease;
+  will-change: transform;
+}
+.smooth-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -4px rgba(5, 82, 162, 0.08);
+}
+
+.smooth-btn,
+.btn-press {
+  transition: transform 0.15s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+  will-change: transform;
+}
+.smooth-btn:active,
+.btn-press:active {
+  transform: scale(0.98);
+}
+
+/* Tasteful Image Hover Zoom */
+.img-zoom {
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+.group:hover .img-zoom,
+.img-zoom:hover {
+  transform: scale(1.04);
+}
+
+/* Subtle, non-intrusive entrance animation: visible by default */
+@keyframes subtleFadeUp {
+  0% {
+    opacity: 0.92;
+    transform: translateY(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-subtle-fade-up {
+  animation: subtleFadeUp 0.28s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0.9;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Scroll Reveal Animation Utilities */
+.scroll-reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.scroll-reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Accessibility: Respect Reduced Motion Preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+    transform: none !important;
+  }
+}
