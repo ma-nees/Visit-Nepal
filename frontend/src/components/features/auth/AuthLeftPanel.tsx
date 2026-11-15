@@ -12,12 +12,12 @@ interface AuthLeftPanelProps {
 
 export default function AuthLeftPanel({}: AuthLeftPanelProps) {
   return (
-    <div className="w-full lg:w-1/2 min-h-[560px] lg:h-full lg:max-h-screen relative bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 flex flex-col justify-between p-6 sm:p-8 lg:p-8 pt-20 sm:pt-20 lg:pt-20 overflow-hidden select-none border-b lg:border-b-0 lg:border-r border-slate-200/80 shadow-xs">
+    <div className="w-full lg:w-1/2 min-h-0 lg:h-full lg:max-h-screen relative bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 flex flex-col justify-between p-4 sm:p-6 lg:p-8 pt-16 sm:pt-16 lg:pt-20 overflow-hidden select-none border-b lg:border-b-0 lg:border-r border-slate-200/80 shadow-xs">
       
       {/* 1. Light & Clean Editorial Atmosphere */}
-      <div className="absolute -top-24 -left-24 w-[420px] h-[420px] rounded-full bg-[#92C4EA]/25 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[440px] h-[440px] rounded-full bg-[#0552A2]/08 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-72 h-72 rounded-full bg-[#FDB716]/10 blur-[90px] pointer-events-none" />
+      <div className="absolute -top-24 -left-24 w-[320px] sm:w-[420px] h-[320px] sm:h-[420px] rounded-full bg-[#92C4EA]/25 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[340px] sm:w-[440px] h-[340px] sm:h-[440px] rounded-full bg-[#0552A2]/08 blur-[120px] pointer-events-none" />
+      <div className="absolute top-1/2 right-1/4 w-60 sm:w-72 h-60 sm:h-72 rounded-full bg-[#FDB716]/10 blur-[90px] pointer-events-none" />
 
       {/* Floating subtle ambient pearl orb */}
       <motion.div
@@ -30,31 +30,31 @@ export default function AuthLeftPanel({}: AuthLeftPanelProps) {
       />
 
       {/* 2. Top Header HUD */}
-      <div className="relative z-20 space-y-2">
-        <div className="flex items-center justify-between gap-3">
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/90 px-3.5 py-1 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase shadow-xs">
+      <div className="relative z-20 space-y-1.5 sm:space-y-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div className="inline-flex items-center gap-1.5 sm:gap-2 rounded-full bg-white/90 backdrop-blur-md border border-slate-200/90 px-3 py-0.5 sm:px-3.5 sm:py-1 text-[10px] sm:text-[11px] font-bold text-[#0552A2] tracking-wider uppercase shadow-xs">
             <Sparkles className="h-3 w-3 text-[#FDB716]" />
             <span>Sacred Geography</span>
           </div>
 
-          <div className="flex items-center gap-1.5 text-[11px] font-mono text-[#0552A2]/80 bg-white/80 px-2.5 py-1 rounded-full border border-slate-200/70 shadow-xs">
+          <div className="flex items-center gap-1.5 text-[10px] sm:text-[11px] font-mono text-[#0552A2]/80 bg-white/80 px-2.5 py-0.5 sm:py-1 rounded-full border border-slate-200/70 shadow-xs">
             <Compass className="h-3.5 w-3.5 text-[#0552A2]" />
             <span>Himalayan Realm</span>
           </div>
         </div>
 
         <div>
-          <h2 className="text-2xl sm:text-3xl font-serif font-normal text-slate-900 tracking-tight">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-serif font-normal text-slate-900 tracking-tight">
             Map of the High Himalayas
           </h2>
-          <p className="text-xs text-slate-500 font-normal mt-0.5 max-w-md leading-relaxed">
+          <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5 max-w-md leading-relaxed">
             From the 8,848m crest of Everest to sacred alpine monasteries and lush subtropical valleys.
           </p>
         </div>
       </div>
 
       {/* 3. Central Map Stage: Clean Unified Nepal Map */}
-      <div className="relative z-20 my-auto py-3 flex items-center justify-center flex-1">
+      <div className="relative z-20 my-auto py-2 sm:py-3 flex items-center justify-center flex-1">
         <div className="w-full">
           <NepalKnowledgeMap embedded={true} />
         </div>

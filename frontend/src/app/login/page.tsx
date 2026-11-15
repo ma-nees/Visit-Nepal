@@ -216,7 +216,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="h-screen w-screen relative overflow-hidden flex flex-col lg:flex-row bg-[#FAF9F5] font-sans">
+    <main className="min-h-screen w-full relative overflow-x-hidden overflow-y-auto lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[#FAF9F5] font-sans">
       {/* 1. Shared Back Button */}
       <AuthBackButton label="Back to Home" onClick={() => router.push('/')} />
 
@@ -302,7 +302,7 @@ export default function LoginPage() {
                 Quick Demo Autofill
               </span>
             </div>
-            <div className="grid grid-cols-5 gap-1.5">
+            <div className="grid grid-cols-5 gap-1 sm:gap-1.5">
               {QUICK_ROLES.map((roleItem) => {
                 const Icon = roleItem.icon;
                 const isSelected = selectedRole === roleItem.id;
@@ -312,14 +312,14 @@ export default function LoginPage() {
                     key={roleItem.id}
                     type="button"
                     onClick={() => handleSelectRole(roleItem)}
-                    className={`flex flex-col items-center justify-center py-2 px-1 rounded-xl border text-center transition-all cursor-pointer ${
+                    className={`flex flex-col items-center justify-center py-1.5 sm:py-2 px-0.5 sm:px-1 rounded-xl border text-center transition-all cursor-pointer ${
                       isSelected
                         ? 'border-[#0552A2] bg-gradient-to-b from-blue-50/90 to-blue-50/40 shadow-xs ring-1 ring-[#0552A2]/30 text-[#0552A2]'
                         : 'border-slate-200/90 bg-white/80 hover:bg-white hover:border-slate-300 text-slate-600 shadow-2xs'
                     }`}
                   >
-                    <Icon className="h-3.5 w-3.5 mb-1" />
-                    <span className="text-[9.5px] font-bold truncate max-w-full leading-tight">
+                    <Icon className="h-3.5 w-3.5 mb-0.5 sm:mb-1" />
+                    <span className="text-[8.5px] sm:text-[9.5px] font-bold truncate max-w-full leading-tight">
                       {roleItem.label}
                     </span>
                   </button>
@@ -565,7 +565,7 @@ export default function LoginPage() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-8 shadow-2xl space-y-5 relative"
+              className="w-full max-w-[92vw] sm:max-w-md rounded-2xl sm:rounded-3xl bg-white p-5 sm:p-8 shadow-2xl space-y-4 sm:space-y-5 relative"
             >
               <button
                 onClick={() => setForgotModalOpen(false)}

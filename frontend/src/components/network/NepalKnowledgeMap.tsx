@@ -151,10 +151,10 @@ export function NepalKnowledgeMap({
     <div className="w-full relative select-none flex flex-col items-center justify-center">
       
       {/* 1. Pure Aesthetic SVG Map Canvas - Clean Light Editorial Style */}
-      <div className="relative w-full max-h-[50vh] aspect-[16/10] flex items-center justify-center">
+      <div className="relative w-full max-h-[34vh] sm:max-h-[44vh] lg:max-h-[50vh] aspect-[16/10] flex items-center justify-center">
         <svg
           viewBox="15 30 1185 735"
-          className="w-full h-full max-h-[50vh] object-contain filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.12)]"
+          className="w-full h-full max-h-[34vh] sm:max-h-[44vh] lg:max-h-[50vh] object-contain filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.12)]"
         >
           <defs>
             {/* Soft Himalayan Sky Blue Gradient Fill from User Brand Palette (#92C4EA) */}
@@ -334,12 +334,12 @@ export function NepalKnowledgeMap({
       </div>
 
       {/* 4. Sleek Landmark Spotlight (Clean Light Editorial Card) */}
-      <div className="w-full pt-3 mt-2 border-t border-slate-200/90 flex items-center justify-between gap-3 text-xs">
-        <div className="flex items-center gap-2.5 min-w-0">
+      <div className="w-full pt-2.5 sm:pt-3 mt-1.5 sm:mt-2 border-t border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
+        <div className="flex items-center gap-2.5 min-w-0 w-full sm:w-auto">
           <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0552A2] to-[#92C4EA] text-white shadow-xs">
             <MapPin className="h-4 w-4 text-[#FDB716]" />
           </span>
-          <div className="min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2 flex-wrap">
               <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">
                 {active.name}
@@ -348,14 +348,14 @@ export function NepalKnowledgeMap({
                 {active.elevation}
               </span>
             </div>
-            <p className="text-[11px] text-slate-500 font-normal truncate mt-0.5">
+            <p className="text-[10.5px] sm:text-[11px] text-slate-500 font-normal truncate mt-0.5">
               {active.description}
             </p>
           </div>
         </div>
 
-        <div className="shrink-0 flex items-center">
-          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-1 rounded-full shadow-2xs">
+        <div className="shrink-0 flex items-center self-end sm:self-auto">
+          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 sm:py-1 rounded-full shadow-2xs">
             <Wind className="h-2.5 w-2.5 text-emerald-600" />
             {active.temp}
           </span>
