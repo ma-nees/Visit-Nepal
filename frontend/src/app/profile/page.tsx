@@ -104,57 +104,6 @@ const personaProfiles: PersonaProfile[] = [
   },
 ];
 
-/* Topographic contour lines with Himalayan mountain silhouettes */
-function ContourLines() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <svg
-        aria-hidden="true"
-        viewBox="0 0 1000 480"
-        preserveAspectRatio="xMidYMid slice"
-        className="absolute inset-0 h-full w-full"
-      >
-        <g fill="none" stroke="#92C4EA" strokeWidth="1" opacity="0.14">
-          {[40, 80, 120, 160, 200, 250, 310].map((r, i) => (
-            <ellipse
-              key={`a${i}`}
-              cx="720"
-              cy="100"
-              rx={r * 1.5}
-              ry={r * 0.75}
-              transform="rotate(-14 720 100)"
-            />
-          ))}
-          {[30, 70, 110, 160, 220].map((r, i) => (
-            <ellipse
-              key={`b${i}`}
-              cx="120"
-              cy="360"
-              rx={r * 1.6}
-              ry={r * 0.7}
-              transform="rotate(10 120 360)"
-            />
-          ))}
-        </g>
-        <g fill="none" stroke="#FDB716" strokeWidth="1.2" opacity="0.3">
-          <ellipse cx="720" cy="100" rx="30" ry="16" transform="rotate(-14 720 100)" />
-        </g>
-        {/* Mountain ridge silhouettes at bottom of hero */}
-        <path
-          d="M0 480 L0 390 L120 340 L210 380 L340 310 L480 375 L590 325 L730 400 L860 330 L1000 370 L1000 480 Z"
-          fill="#020e1c"
-          opacity="0.5"
-        />
-        <path
-          d="M0 480 L0 410 L160 360 L280 415 L430 350 L560 405 L710 360 L850 420 L1000 385 L1000 480 Z"
-          fill="#010a14"
-          opacity="0.8"
-        />
-      </svg>
-    </div>
-  );
-}
-
 /* Sharp, realistic vector barcode */
 function BarcodePattern({ value }: { value: string }) {
   const bars = [
@@ -233,25 +182,18 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 font-inter sm:px-6 lg:px-8">
-      {/* Hero Section: Identity + Cool Boarding Pass Ticket + Bottom Highlights Bar */}
-      <section className="relative overflow-hidden rounded-3xl bg-[#031526] text-white shadow-[0_24px_60px_-28px_rgba(3,21,38,0.9)] border border-white/10">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(5,82,162,0.5),transparent_60%)]" />
-        <ContourLines />
-
-        {/* Hero Top Content Grid */}
-        <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-12">
-          {/* Left: User Identity + Interactive Persona Switcher */}
-          <div className="min-w-0 space-y-5">
-            {/* Seamless Persona Switcher Pills (No Cards) */}
-            <div className="flex flex-wrap items-center gap-2">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-slate-200 backdrop-blur-md">
-                <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
-                <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
-              </div>
-
-              {/* Instant Switcher Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 pl-1">
+    <div className="min-h-screen bg-slate-50 py-10 px-4 font-inter sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl">
+        {/* Open, unboxed layout (NO big dark card) */}
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+          {/* Left Column: User Identity & Persona Switcher */}
+          <div className="space-y-6">
+            {/* Seamless Persona Switcher Pills */}
+            <div className="space-y-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                Switch Operational Persona
+              </span>
+              <div className="flex flex-wrap items-center gap-2">
                 {personaProfiles.map((p) => {
                   const isCurrent = p.role === activeRole;
                   const isSwitching = switchingRole === p.role;
@@ -261,10 +203,10 @@ export default function ProfilePage() {
                       type="button"
                       disabled={isSwitching}
                       onClick={() => handleSwitchUser(p.role)}
-                      className={`cursor-pointer rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-all ${
+                      className={`cursor-pointer rounded-full px-3.5 py-1 text-xs font-semibold transition-all ${
                         isCurrent
-                          ? 'bg-[#FDB716] text-[#031526] font-bold shadow-xs'
-                          : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-white/10'
+                          ? 'bg-[#0552A2] text-white shadow-xs'
+                          : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-2xs'
                       }`}
                     >
                       {isSwitching ? '...' : p.label}
@@ -274,60 +216,82 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Avatar & Title */}
-            <div className="flex items-center gap-4 sm:gap-5">
+            {/* Profile Avatar & Title */}
+            <div className="flex items-center gap-5">
               <div className="relative shrink-0">
                 <img
                   src={currentPersona.avatar}
                   alt={activeName}
-                  className="h-20 w-20 rounded-full object-cover ring-2 ring-[#FDB716] ring-offset-4 ring-offset-[#031526] sm:h-24 sm:w-24 shadow-xl"
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-2xl object-cover border-2 border-[#0552A2] shadow-sm"
+                />
+                <span
+                  className="absolute bottom-1 right-1 h-4 w-4 rounded-full border-2 border-white bg-emerald-500"
+                  title="Active Session"
                 />
               </div>
-              <div className="min-w-0">
-                <h1 className="font-poppins text-2xl font-bold leading-tight tracking-tight text-white sm:text-3xl lg:text-4xl">
+
+              <div className="min-w-0 space-y-1">
+                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-xs font-semibold capitalize text-[#0552A2]">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  Active {currentPersona.role}
+                </div>
+                <h1 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 leading-tight">
                   {activeName}
                 </h1>
-                <p className="mt-1 text-sm font-medium text-[#92C4EA] sm:text-base">
+                <p className="text-sm sm:text-base font-medium text-[#0552A2]">
                   {currentPersona.title}
                 </p>
               </div>
             </div>
 
             {/* Description */}
-            <p className="max-w-xl text-xs sm:text-sm leading-relaxed text-slate-300">
+            <p className="max-w-xl text-sm leading-relaxed text-slate-600">
               {currentPersona.description}
             </p>
 
-            {/* Actions: Primary Portal + Sign Out */}
-            <div className="flex flex-col gap-2.5 pt-2 sm:flex-row">
+            {/* Highlights Chips */}
+            <div className="flex flex-wrap gap-2 pt-1">
+              {currentPersona.highlights.map((h) => (
+                <span
+                  key={h}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-2xs"
+                >
+                  <Award className="h-3.5 w-3.5 text-[#FDB716]" />
+                  {h}
+                </span>
+              ))}
+            </div>
+
+            {/* Primary Action Buttons */}
+            <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href={currentPersona.portalLink}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#FDB716] px-5 py-3 text-sm font-semibold text-[#031526] shadow-md transition-all hover:bg-[#ffc944] active:scale-[0.98]"
+                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044182] active:scale-[0.98]"
               >
-                Open {currentPersona.portalLabel}
+                <span>Open {currentPersona.portalLabel}</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
 
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/5 px-5 py-3 text-sm font-medium text-white backdrop-blur-sm transition-all hover:bg-white/10 active:scale-[0.98]"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 active:scale-[0.98]"
               >
-                <LogOut className="h-4 w-4" />
-                Sign out
+                <LogOut className="h-4 w-4 text-slate-500" />
+                <span>Sign out</span>
               </button>
             </div>
           </div>
 
-          {/* Right: The Cool Boarding Pass Ticket */}
-          <div className="relative lg:rotate-[1.5deg] transition-transform duration-300 hover:rotate-0">
-            <div className="relative overflow-hidden rounded-2xl bg-[#F4F8FB] text-slate-900 shadow-2xl border border-white/40">
+          {/* Right Column: The Cool Physical Ticket Boarding Pass */}
+          <div className="relative mx-auto w-full max-w-md lg:rotate-[1.5deg] transition-transform duration-300 hover:rotate-0">
+            <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90">
               {/* Top Himalayan Tricolor Dash Strip */}
               <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
 
-              {/* Physical Ticket Notches (Cutouts on Left & Right) */}
-              <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-[#031526] shadow-inner" />
-              <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-[#031526] shadow-inner" />
+              {/* Physical Ticket Notches (Cutouts revealing page background bg-slate-50) */}
+              <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
+              <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
 
               <div className="p-5 sm:p-6 space-y-4">
                 {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
@@ -404,7 +368,7 @@ export default function ProfilePage() {
                   </dl>
                 </div>
 
-                {/* Barcode & Ledger ID */}
+                {/* Barcode & Monospace Ledger ID */}
                 <div className="border-t border-slate-200/80 pt-3">
                   <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} />
                 </div>
@@ -412,22 +376,7 @@ export default function ProfilePage() {
             </div>
           </div>
         </div>
-
-        {/* Hero Bottom Highlights Strip: 3-column banner */}
-        <div className="grid grid-cols-1 border-t border-white/10 bg-[#020d18]/70 backdrop-blur-xs sm:grid-cols-3">
-          {currentPersona.highlights.map((h, i) => (
-            <div
-              key={h}
-              className={`flex items-center justify-center gap-2 py-3.5 px-4 text-xs font-medium text-slate-200 ${
-                i > 0 ? 'sm:border-l border-white/10' : ''
-              }`}
-            >
-              <Award className="h-4 w-4 text-[#FDB716] shrink-0" />
-              <span>{h}</span>
-            </div>
-          ))}
-        </div>
-      </section>
+      </div>
     </div>
   );
 }
