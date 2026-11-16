@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award,
   Mail,
@@ -23,6 +24,9 @@ import {
   ShieldCheck,
   MapPin,
   Sparkles,
+  Download,
+  Calendar,
+  CheckCircle2,
   type LucideIcon,
 } from 'lucide-react';
 import { useApp, UserRole } from '@/context/AppContext';
@@ -155,11 +159,135 @@ function BarcodePattern({ value, height = 38 }: { value: string; height?: number
   );
 }
 
+/* Realistic Animated Scissors SVG */
+function AnimatedScissors({
+  cutProgress,
+  isSnapping,
+}: {
+  cutProgress: number;
+  isSnapping: boolean;
+}) {
+  return (
+    <motion.div
+      style={{
+        position: 'absolute',
+        left: `${cutProgress * 100}%`,
+        top: '52%',
+        transform: 'translate(-50%, -50%)',
+        zIndex: 40,
+        pointerEvents: 'none',
+      }}
+      initial={{ opacity: 0, scale: 0.7 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.6 }}
+      transition={{ duration: 0.15 }}
+    >
+      <div className="relative h-16 w-16 -ml-4 -mt-8 drop-shadow-[0_10px_15px_rgba(0,0,0,0.35)]">
+        {/* Top Blade & Handle */}
+        <motion.svg
+          viewBox="0 0 100 100"
+          className="absolute inset-0 h-full w-full"
+          animate={{
+            rotate: isSnapping ? [-20, 8, -20] : 0,
+          }}
+          transition={{
+            duration: 0.18,
+            repeat: isSnapping ? Infinity : 0,
+            ease: 'easeInOut',
+          }}
+          style={{ transformOrigin: '32px 48px' }}
+        >
+          <defs>
+            <linearGradient id="bladeGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f8fafc" />
+              <stop offset="50%" stopColor="#cbd5e1" />
+              <stop offset="100%" stopColor="#94a3b8" />
+            </linearGradient>
+            <linearGradient id="handleGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0552A2" />
+              <stop offset="100%" stopColor="#021c38" />
+            </linearGradient>
+          </defs>
+          {/* Blade */}
+          <path
+            d="M32 48 L95 38 L92 46 L32 50 Z"
+            fill="url(#bladeGradTop)"
+            stroke="#64748b"
+            strokeWidth="0.8"
+          />
+          {/* Finger Loop Handle */}
+          <ellipse
+            cx="16"
+            cy="36"
+            rx="14"
+            ry="11"
+            fill="none"
+            stroke="url(#handleGradTop)"
+            strokeWidth="5"
+          />
+        </motion.svg>
+
+        {/* Bottom Blade & Handle */}
+        <motion.svg
+          viewBox="0 0 100 100"
+          className="absolute inset-0 h-full w-full"
+          animate={{
+            rotate: isSnapping ? [20, -8, 20] : 0,
+          }}
+          transition={{
+            duration: 0.18,
+            repeat: isSnapping ? Infinity : 0,
+            ease: 'easeInOut',
+          }}
+          style={{ transformOrigin: '32px 48px' }}
+        >
+          <defs>
+            <linearGradient id="bladeGradBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#f1f5f9" />
+              <stop offset="50%" stopColor="#94a3b8" />
+              <stop offset="100%" stopColor="#64748b" />
+            </linearGradient>
+            <linearGradient id="handleGradBottom" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#0552A2" />
+              <stop offset="100%" stopColor="#021c38" />
+            </linearGradient>
+          </defs>
+          {/* Blade */}
+          <path
+            d="M32 48 L95 58 L92 50 L32 46 Z"
+            fill="url(#bladeGradBottom)"
+            stroke="#64748b"
+            strokeWidth="0.8"
+          />
+          {/* Finger Loop Handle */}
+          <ellipse
+            cx="16"
+            cy="60"
+            rx="14"
+            ry="11"
+            fill="none"
+            stroke="url(#handleGradBottom)"
+            strokeWidth="5"
+          />
+        </motion.svg>
+
+        {/* Pivot Pin / Screw */}
+        <div className="absolute left-[30px] top-[46px] h-2.5 w-2.5 rounded-full bg-amber-400 border border-amber-600 shadow-xs" />
+      </div>
+    </motion.div>
+  );
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
   const [switchingRole, setSwitchingRole] = useState<UserRole | null>(null);
-  const [isTicketExpanded, setIsTicketExpanded] = useState(false);
+
+  // Animation Sequence States: 'idle' | 'scissors-entering' | 'cutting' | 'separated' | 'flying' | 'expanded'
+  const [animStage, setAnimStage] = useState<
+    'idle' | 'scissors-entering' | 'cutting' | 'separated' | 'flying' | 'expanded'
+  >('idle');
+  const [cutProgress, setCutProgress] = useState(0);
 
   const activeRole: UserRole = currentUser?.role || role || 'traveler';
   const activeName = currentUser?.name || 'Aayush Pradhan';
@@ -170,22 +298,70 @@ export default function ProfilePage() {
 
   const bookingCount = Array.isArray(bookings) ? bookings.length : 12;
 
-  // Escape key closes expanded ticket modal
+  // Handle escape key to close modal
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setIsTicketExpanded(false);
+      if (e.key === 'Escape' && animStage === 'expanded') {
+        closeExpandedPass();
+      }
     };
-    if (isTicketExpanded) {
-      window.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'unset';
-    };
-  }, [isTicketExpanded]);
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [animStage]);
+
+  // Cinematic Scissors & Cutting Animation Trigger
+  const triggerTicketCutAnimation = () => {
+    if (animStage !== 'idle') return;
+
+    // Step 1: Scissors Enter from the left
+    setAnimStage('scissors-entering');
+    setCutProgress(0);
+
+    setTimeout(() => {
+      // Step 2: Start cutting across the ticket
+      setAnimStage('cutting');
+
+      const startTime = performance.now();
+      const cutDuration = 900; // ms
+
+      const step = (now: number) => {
+        const elapsed = now - startTime;
+        const p = Math.min(elapsed / cutDuration, 1);
+        setCutProgress(p);
+
+        if (p < 1) {
+          requestAnimationFrame(step);
+        } else {
+          // Step 3: Ticket physically separates into two pieces
+          setAnimStage('separated');
+
+          setTimeout(() => {
+            // Step 4: Flies towards camera / center in 3D
+            setAnimStage('flying');
+
+            setTimeout(() => {
+              // Step 5: Smoothly expands into full digital pass view
+              setAnimStage('expanded');
+            }, 600);
+          }, 350);
+        }
+      };
+
+      requestAnimationFrame(step);
+    }, 300);
+  };
+
+  // Close and smoothly reverse back to initial ticket
+  const closeExpandedPass = () => {
+    setAnimStage('flying');
+    setTimeout(() => {
+      setAnimStage('separated');
+      setTimeout(() => {
+        setAnimStage('idle');
+        setCutProgress(0);
+      }, 300);
+    }, 250);
+  };
 
   const handleLogout = () => {
     logout();
@@ -194,7 +370,7 @@ export default function ProfilePage() {
   };
 
   const handleSwitchUser = async (targetRole: UserRole) => {
-    if (targetRole === activeRole) return;
+    if (targetRole === activeRole || animStage !== 'idle') return;
     setSwitchingRole(targetRole);
     try {
       await setRole(targetRole);
@@ -207,10 +383,43 @@ export default function ProfilePage() {
     }
   };
 
+  // Download QR Code utility
+  const handleDownloadQr = () => {
+    const canvas = document.createElement('canvas');
+    canvas.width = 300;
+    canvas.height = 300;
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, 300, 300);
+      ctx.fillStyle = '#0552A2';
+      ctx.font = 'bold 16px sans-serif';
+      ctx.fillText('VISIT NEPAL TIMS 2026', 45, 40);
+      ctx.fillStyle = '#031526';
+      // Draw grid simulation of QR
+      for (let i = 0; i < 18; i++) {
+        for (let j = 0; j < 18; j++) {
+          if ((i + j) % 2 === 0 || (i * j) % 3 === 0) {
+            ctx.fillRect(50 + i * 11, 60 + j * 11, 10, 10);
+          }
+        }
+      }
+      ctx.font = '12px monospace';
+      ctx.fillStyle = '#64748b';
+      ctx.fillText(`TOKEN: VN-2026-${activeRole.toUpperCase()}`, 50, 280);
+
+      const a = document.createElement('a');
+      a.download = `TIMS-QR-${activeRole.toUpperCase()}.png`;
+      a.href = canvas.toDataURL('image/png');
+      a.click();
+      if (showToast) showToast('QR Code saved to downloads');
+    }
+  };
+
   return (
     <div className="min-h-screen bg-slate-50/70 py-10 px-4 font-inter text-slate-900 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl space-y-8">
-        {/* Top: Seamless Persona Switcher Pills (No Cards) */}
+        {/* Top: Seamless Persona Switcher Pills */}
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
@@ -225,13 +434,13 @@ export default function ProfilePage() {
                   <button
                     key={p.role}
                     type="button"
-                    disabled={isSwitching}
+                    disabled={isSwitching || animStage !== 'idle'}
                     onClick={() => handleSwitchUser(p.role)}
                     className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       isCurrent
                         ? 'bg-[#0552A2] text-white shadow-xs'
                         : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                    }`}
+                    } disabled:opacity-50`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{isSwitching ? '...' : p.label}</span>
@@ -247,11 +456,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {/* Main Content: User Profile Details + Interactive Animated Ticket Pass */}
+        {/* Main Content: Left Identity + Right Interactive Animated Ticket Pass */}
         <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           {/* Left Column: User Identity Showcase */}
           <div className="space-y-6">
-            {/* Avatar & Headings */}
             <div className="flex items-center gap-5">
               <div className="relative shrink-0">
                 <img
@@ -278,12 +486,10 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Description */}
             <p className="max-w-xl text-sm leading-relaxed text-slate-600">
               {currentPersona.description}
             </p>
 
-            {/* Highlights Chips */}
             <div className="flex flex-wrap gap-2 pt-1">
               {currentPersona.highlights.map((h) => (
                 <span
@@ -296,7 +502,6 @@ export default function ProfilePage() {
               ))}
             </div>
 
-            {/* Primary Action Buttons */}
             <div className="flex flex-wrap items-center gap-3 pt-2">
               <Link
                 href={currentPersona.portalLink}
@@ -317,39 +522,64 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Column: Clickable Physical Ticket Boarding Pass (Opens Animated Details) */}
+          {/* Right Column: Physical Ticket with Floating & Scissors Animation */}
           <div className="relative mx-auto w-full max-w-md">
-            {/* Click to expand hover banner */}
-            <div
+            {/* The Floating Ticket Wrapper */}
+            <motion.div
+              animate={
+                animStage === 'idle'
+                  ? {
+                      y: [0, -6, 0],
+                      rotate: 1.5,
+                      transition: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' },
+                    }
+                  : animStage === 'flying'
+                  ? {
+                      scale: 1.35,
+                      y: -40,
+                      rotateX: 20,
+                      rotateY: -10,
+                      opacity: [1, 0.4, 0],
+                      transition: { duration: 0.6, ease: 'easeOut' },
+                    }
+                  : { y: 0, rotate: 0 }
+              }
+              whileHover={animStage === 'idle' ? { scale: 1.02, rotate: 0 } : undefined}
+              onClick={triggerTicketCutAnimation}
               role="button"
               tabIndex={0}
-              onClick={() => setIsTicketExpanded(true)}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
-                  setIsTicketExpanded(true);
-                }
-              }}
-              title="Click to view full pass details"
-              className="group relative cursor-pointer lg:rotate-[1.5deg] hover:rotate-0 hover:scale-[1.02] active:scale-[0.99] transition-all duration-300"
+              aria-label="Click to inspect full digital TIMS ticket details"
+              className="group relative cursor-pointer select-none"
             >
-              {/* Subtle Floating Tooltip Hint */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30">
-                  <Maximize2 className="h-3 w-3" />
-                  Click to inspect full details
-                </span>
-              </div>
+              {/* Interaction Hint: "Click to inspect full details" */}
+              {animStage === 'idle' && (
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40">
+                    <Maximize2 className="h-3 w-3" />
+                    Click to inspect full details
+                  </span>
+                </div>
+              )}
 
-              <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 group-hover:shadow-2xl group-hover:border-[#0552A2]/40 transition-all duration-300">
+              {/* The Physical Ticket Pass Container */}
+              <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 transition-shadow duration-300 group-hover:shadow-2xl">
                 {/* Top Himalayan Tricolor Dash Strip */}
                 <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
 
-                {/* Physical Ticket Notches (Cutouts revealing page background) */}
-                <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
-                <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
+                {/* Left & Right Physical Cutout Notches */}
+                <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
+                <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
 
-                <div className="p-5 sm:p-6 space-y-4">
+                {/* TOP HALF OF TICKET (Separates on cut) */}
+                <motion.div
+                  animate={
+                    animStage === 'separated' || animStage === 'flying'
+                      ? { y: -8, rotate: -1.8, x: -2 }
+                      : { y: 0, rotate: 0, x: 0 }
+                  }
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="p-5 sm:p-6 pb-2 space-y-4"
+                >
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
@@ -366,14 +596,12 @@ export default function ProfilePage() {
                       </div>
                     </div>
 
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1.5">
                       <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
                         <Check className="h-3.5 w-3.5 stroke-[2.5]" />
                         Verified
                       </span>
-                      <span className="p-1 rounded-md text-slate-400 group-hover:text-[#0552A2] transition-colors">
-                        <Maximize2 className="h-3.5 w-3.5" />
-                      </span>
+                      <Maximize2 className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] transition-colors" />
                     </div>
                   </div>
 
@@ -389,227 +617,327 @@ export default function ProfilePage() {
                       {activeRole}
                     </p>
                   </div>
+                </motion.div>
 
-                  {/* Perforated Divider Line */}
-                  <div className="border-t border-dashed border-slate-300 pt-4">
-                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
-                      <div className="flex items-start gap-2.5 sm:col-span-2">
-                        <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div className="min-w-0">
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
-                          <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
-                        </div>
-                      </div>
+                {/* PERFORATED CUTTING LINE */}
+                <div className="relative my-1">
+                  {/* Dashed visual line */}
+                  <div className="border-t border-dashed border-slate-300 mx-3" />
 
-                      <div className="flex items-start gap-2.5">
-                        <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
-                          <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
-                        </div>
-                      </div>
+                  {/* Animated cut progression line (red laser / paper cut slit) */}
+                  {(animStage === 'cutting' || animStage === 'separated') && (
+                    <motion.div
+                      className="absolute top-0 left-0 h-[2px] bg-red-500/80 shadow-[0_0_8px_rgba(236,31,39,0.8)]"
+                      style={{ width: `${cutProgress * 100}%` }}
+                    />
+                  )}
+                </div>
 
-                      <div className="flex items-start gap-2.5">
-                        <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
-                          <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
-                        </div>
+                {/* BOTTOM HALF OF TICKET (Separates on cut) */}
+                <motion.div
+                  animate={
+                    animStage === 'separated' || animStage === 'flying'
+                      ? { y: 8, rotate: 1.5, x: 2 }
+                      : { y: 0, rotate: 0, x: 0 }
+                  }
+                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  className="p-5 sm:p-6 pt-2 space-y-4"
+                >
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
+                    <div className="flex items-start gap-2.5 sm:col-span-2">
+                      <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div className="min-w-0">
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
+                        <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
                       </div>
+                    </div>
 
-                      <div className="flex items-start gap-2.5 sm:col-span-2">
-                        <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
-                          <dd className="font-medium text-slate-800">
-                            {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
-                          </dd>
-                        </div>
+                    <div className="flex items-start gap-2.5">
+                      <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
+                        <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
                       </div>
-                    </dl>
-                  </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5">
+                      <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
+                        <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5 sm:col-span-2">
+                      <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
+                        <dd className="font-medium text-slate-800">
+                          {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
+                        </dd>
+                      </div>
+                    </div>
+                  </dl>
 
                   {/* Barcode & Monospace Ledger ID */}
                   <div className="border-t border-slate-200/80 pt-3">
                     <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} />
                   </div>
-                </div>
+                </motion.div>
+
+                {/* REALISTIC ANIMATED SCISSORS OVERLAY */}
+                {(animStage === 'scissors-entering' || animStage === 'cutting') && (
+                  <AnimatedScissors
+                    cutProgress={cutProgress}
+                    isSnapping={animStage === 'cutting'}
+                  />
+                )}
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </div>
 
-      {/* 3. Interactive Animated Modal: Expands with Full Pass Details */}
-      {isTicketExpanded && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-950/70 backdrop-blur-md animate-in fade-in duration-200"
-          onClick={() => setIsTicketExpanded(false)}
-        >
-          {/* Modal Content Pass Card (Stops bubbling so clicking inside doesn't close) */}
-          <div
-            onClick={(e) => e.stopPropagation()}
-            className="relative w-full max-w-xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200 animate-in zoom-in-95 slide-in-from-bottom-4 duration-300 ease-out text-slate-900"
+      {/* EXPANDED FULL-SCREEN DIGITAL TIMS PASS MODAL */}
+      <AnimatePresence>
+        {animStage === 'expanded' && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.25 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-md"
+            onClick={closeExpandedPass}
           >
-            {/* Top Woven Security Ribbon */}
-            <div className="h-3 bg-[repeating-linear-gradient(90deg,#0552A2_0_30px,#FDB716_30px_60px,#EC1F27_60px_90px,#ffffff_90px_120px)]" />
-
-            {/* Modal Notches */}
-            <span className="absolute -left-4 top-[48%] h-8 w-8 rounded-full bg-slate-950/70 shadow-inner" />
-            <span className="absolute -right-4 top-[48%] h-8 w-8 rounded-full bg-slate-950/70 shadow-inner" />
-
-            {/* Close Button Top-Right */}
-            <button
-              type="button"
-              onClick={() => setIsTicketExpanded(false)}
-              className="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer"
-              aria-label="Close pass details"
+            {/* The Expanded Digital Pass Card */}
+            <motion.div
+              initial={{ scale: 0.88, y: 30, opacity: 0 }}
+              animate={{ scale: 1, y: 0, opacity: 1 }}
+              exit={{ scale: 0.9, y: 20, opacity: 0 }}
+              transition={{ type: 'spring', damping: 25, stiffness: 280 }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200/90 text-slate-900 my-8"
             >
-              <X className="h-5 w-5" />
-            </button>
+              {/* Top Himalayan Tricolor Dash Strip */}
+              <div className="h-3 bg-[repeating-linear-gradient(90deg,#0552A2_0_30px,#FDB716_30px_60px,#EC1F27_60px_90px,#ffffff_90px_120px)]" />
 
-            <div className="p-6 sm:p-8 space-y-6">
-              {/* Official Header */}
-              <div className="flex items-center gap-3">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#031526] text-[#FDB716] shadow-sm">
-                  <Compass className="h-7 w-7" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#0552A2]">
-                      Government of Nepal · NTB &amp; TAAN
-                    </span>
-                    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800">
-                      <Check className="h-3 w-3 stroke-[3]" />
-                      ACTIVE CLEARANCE
-                    </span>
-                  </div>
-                  <h3 className="font-poppins text-lg font-bold text-slate-900 mt-0.5">
-                    Official Digital TIMS &amp; Boarding Pass 2026
-                  </h3>
-                </div>
-              </div>
+              {/* Physical Cutout Notches */}
+              <span className="absolute -left-4 top-[40%] h-8 w-8 rounded-full bg-slate-950/75 shadow-inner" />
+              <span className="absolute -right-4 top-[40%] h-8 w-8 rounded-full bg-slate-950/75 shadow-inner" />
 
-              {/* Pass Holder Spotlight */}
-              <div className="flex items-center justify-between rounded-2xl bg-gradient-to-r from-blue-50/80 to-slate-50 p-4 border border-blue-100">
+              {/* Close Button (X) */}
+              <button
+                type="button"
+                onClick={closeExpandedPass}
+                className="absolute top-5 right-5 flex h-9 w-9 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 transition-colors cursor-pointer z-20"
+                aria-label="Close pass details"
+              >
+                <X className="h-5 w-5" />
+              </button>
+
+              <div className="p-6 sm:p-8 space-y-6">
+                {/* 1. Header: Visit Nepal Official Digital TIMS Pass */}
                 <div className="flex items-center gap-4">
-                  <img
-                    src={currentPersona.avatar}
-                    alt={activeName}
-                    className="h-14 w-14 rounded-xl object-cover border-2 border-[#0552A2] shadow-xs"
-                  />
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[#031526] text-[#FDB716] shadow-sm">
+                    <Compass className="h-7 w-7" />
+                  </div>
                   <div>
-                    <p className="text-[10px] font-bold uppercase text-slate-400">Authorized Holder</p>
-                    <h4 className="font-poppins text-base font-bold text-slate-900">{activeName}</h4>
-                    <p className="text-xs font-semibold text-[#0552A2] capitalize">{activeRole} · Verified Identity</p>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#0552A2]">
+                        Government of Nepal · Ministry of Tourism
+                      </span>
+                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 animate-pulse">
+                        <CheckCircle2 className="h-3 w-3 stroke-[2.5]" />
+                        OFFICIAL VERIFIED
+                      </span>
+                    </div>
+                    <h2 className="font-poppins text-xl sm:text-2xl font-bold text-slate-900">
+                      Visit Nepal Official Digital TIMS Pass
+                    </h2>
                   </div>
                 </div>
 
-                <div className="text-right">
-                  <p className="text-[10px] font-bold uppercase text-slate-400">Pass Identification</p>
-                  <p className="font-mono text-xs font-bold text-[#0552A2]">VN-2026-NPL-8848</p>
-                  <p className="text-[10px] text-emerald-600 font-semibold">Tier 3 Biometrics OK</p>
+                {/* 2. TRAVELER INFORMATION SECTION */}
+                <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                      1. Traveler Information
+                    </span>
+                    <span className="font-mono text-xs font-bold text-slate-500">
+                      Pass ID: VN-2026-{activeRole.toUpperCase()}-8848
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs">
+                    <div>
+                      <span className="text-slate-400 font-medium">Full Name</span>
+                      <p className="font-poppins font-bold text-slate-900 text-sm mt-0.5">{activeName}</p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Traveler Category</span>
+                      <p className="font-semibold text-[#0552A2] capitalize mt-0.5">{currentPersona.title}</p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Verification Status</span>
+                      <p className="font-semibold text-emerald-700 flex items-center gap-1 mt-0.5">
+                        <Check className="h-3.5 w-3.5" /> Biometrics Tier 3 Cleared
+                      </p>
+                    </div>
+
+                    <div className="sm:col-span-2">
+                      <span className="text-slate-400 font-medium">Registered Email</span>
+                      <p className="font-medium text-slate-800 mt-0.5 break-all">{activeEmail}</p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Registration Date</span>
+                      <p className="font-medium text-slate-800 mt-0.5">November 12, 2026</p>
+                    </div>
+
+                    <div className="sm:col-span-3 pt-1">
+                      <span className="text-slate-400 font-medium">Emergency Contacts</span>
+                      <div className="flex flex-wrap items-center gap-4 mt-0.5 font-semibold text-red-600">
+                        <span>Heli Rescue SAR: +977 1 4256909</span>
+                        <span>•</span>
+                        <span>Tourist Police: 1144</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 3. TRAVEL INFORMATION SECTION */}
+                <div className="rounded-2xl border border-slate-200 bg-slate-50/70 p-4 sm:p-5 space-y-3">
+                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                      2. Travel &amp; Expedition Route
+                    </span>
+                    <span className="text-xs font-semibold text-slate-600">
+                      {bookingCount} Confirmed Itineraries
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
+                    <div>
+                      <span className="text-slate-400 font-medium">Authorized Trekking Region</span>
+                      <p className="font-semibold text-slate-900 mt-0.5">
+                        Khumbu / Sagarmatha &amp; Annapurna Sanctuary
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Destination &amp; Maximum Altitude</span>
+                      <p className="font-semibold text-slate-900 mt-0.5">
+                        Everest Base Camp (5,364m) / Kala Patthar (5,644m)
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Trekking Stages / Route</span>
+                      <p className="font-medium text-slate-800 mt-0.5">
+                        Lukla → Phakding → Namche → Dingboche → Lobuche → Gorak Shep
+                      </p>
+                    </div>
+
+                    <div>
+                      <span className="text-slate-400 font-medium">Validity Window</span>
+                      <p className="font-medium text-slate-800 mt-0.5">
+                        Nov 20, 2026 – Dec 10, 2026 (21 Days)
+                      </p>
+                    </div>
+
+                    <div className="sm:col-span-2 pt-1 border-t border-slate-200/60 flex items-center justify-between">
+                      <div>
+                        <span className="text-slate-400 font-medium">Assigned Agency &amp; Guide Ops</span>
+                        <p className="font-semibold text-slate-800">Himalayan Sherpa Expeditions (TAAN Lic #G-4402)</p>
+                      </div>
+                      <span className="rounded-lg bg-blue-100/70 px-2.5 py-1 text-[11px] font-bold text-[#0552A2]">
+                        IFMGA Escorted
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. VERIFICATION SECTION WITH ANIMATED SCANNING LASER */}
+                <div className="relative overflow-hidden rounded-2xl border border-blue-200 bg-gradient-to-r from-blue-50/60 to-slate-50 p-5">
+                  {/* Subtle Blue Scanning Laser Line */}
+                  <motion.div
+                    animate={{ y: [0, 110, 0] }}
+                    transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
+                    className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#0552A2] to-transparent shadow-[0_0_12px_#0552A2] pointer-events-none z-10"
+                  />
+
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
+                    <div className="space-y-2 flex-1">
+                      <div className="flex items-center gap-1.5">
+                        <ShieldCheck className="h-4 w-4 text-[#0552A2]" />
+                        <span className="text-xs font-bold uppercase tracking-wider text-slate-900">
+                          Official Verification &amp; Checkpost Seal
+                        </span>
+                      </div>
+                      <p className="text-xs text-slate-600 leading-relaxed">
+                        Authorized by Nepal Tourism Authority. Present this pass at Lukla, Namche, or Besisahar checkposts.
+                      </p>
+                      <div className="pt-2">
+                        <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} height={42} />
+                      </div>
+                    </div>
+
+                    {/* QR Code */}
+                    <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-3.5 shadow-sm border border-slate-200 shrink-0">
+                      <QrCode className="h-28 w-28 text-[#031526]" />
+                      <span className="mt-1 font-mono text-[9px] font-bold text-slate-500 uppercase tracking-widest">
+                        CHECKPOST SCAN
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 5. INTERACTIVE ACTION BUTTONS */}
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-slate-100">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0552A2] px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-[#044182] transition-colors"
+                    >
+                      <Printer className="h-4 w-4" />
+                      <span>Print Pass</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => window.print()}
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+                    >
+                      <Download className="h-4 w-4 text-slate-500" />
+                      <span>Download PDF</span>
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={handleDownloadQr}
+                      className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+                    >
+                      <QrCode className="h-4 w-4 text-slate-500" />
+                      <span>Download QR</span>
+                    </button>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={closeExpandedPass}
+                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-colors"
+                  >
+                    <span>Back to Ticket</span>
+                  </button>
                 </div>
               </div>
-
-              {/* Perforated Divider */}
-              <div className="relative border-t-2 border-dashed border-slate-300">
-                <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-3 font-mono text-[10px] font-bold uppercase tracking-widest text-slate-400">
-                  Checkpoint Validation Details
-                </span>
-              </div>
-
-              {/* Comprehensive Details Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs pt-1">
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 space-y-1">
-                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
-                    <MapPin className="h-3.5 w-3.5 text-[#0552A2]" />
-                    <span>Permitted Himalayan Zones</span>
-                  </div>
-                  <p className="font-medium text-slate-800 leading-relaxed">
-                    Sagarmatha (Khumbu), Annapurna, Langtang, Manaslu, Mustang
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 space-y-1">
-                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
-                    <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
-                    <span>High-Altitude Insurance</span>
-                  </div>
-                  <p className="font-medium text-slate-800">
-                    Pre-cleared Heli Medevac up to 6,000m ASL ($50,000 policy)
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 space-y-1">
-                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
-                    <Phone className="h-3.5 w-3.5 text-red-600" />
-                    <span>24/7 Mountain Emergency</span>
-                  </div>
-                  <p className="font-bold text-red-600">
-                    +977 1 4256909 <span className="font-normal text-slate-500">| Tourist Police</span> 1144
-                  </p>
-                </div>
-
-                <div className="rounded-xl border border-slate-100 bg-slate-50 p-3 space-y-1">
-                  <div className="flex items-center gap-1.5 text-slate-500 font-semibold text-[11px]">
-                    <Mail className="h-3.5 w-3.5 text-[#0552A2]" />
-                    <span>Registered Account</span>
-                  </div>
-                  <p className="font-medium text-slate-800 truncate">
-                    {activeEmail}
-                  </p>
-                </div>
-              </div>
-
-              {/* Scannable Checkpost QR Code + Barcode */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6 rounded-2xl border border-slate-200 bg-slate-50/60 p-4">
-                <div className="space-y-2 flex-1">
-                  <div className="flex items-center gap-1.5 text-slate-700 text-xs font-bold">
-                    <Sparkles className="h-3.5 w-3.5 text-[#FDB716]" />
-                    <span>Trail Checkpost Telemetry</span>
-                  </div>
-                  <p className="text-xs text-slate-500 leading-relaxed">
-                    Present this barcode at Lukla, Namche Bazaar, or Besisahar checkposts for instant offline verification.
-                  </p>
-                  <div className="pt-1">
-                    <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} height={42} />
-                  </div>
-                </div>
-
-                {/* QR Code Container */}
-                <div className="flex flex-col items-center justify-center rounded-2xl bg-white p-3 shadow-sm border border-slate-200 shrink-0">
-                  <QrCode className="h-24 w-24 text-[#031526]" />
-                  <span className="mt-1 font-mono text-[9px] font-bold text-slate-500 uppercase">
-                    SCAN AT CHECKPOST
-                  </span>
-                </div>
-              </div>
-
-              {/* Footer Controls */}
-              <div className="flex items-center justify-end gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => window.print()}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
-                >
-                  <Printer className="h-4 w-4 text-slate-500" />
-                  <span>Print Pass</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setIsTicketExpanded(false)}
-                  className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0552A2] px-5 py-2.5 text-xs font-semibold text-white hover:bg-[#044182] transition-colors shadow-sm"
-                >
-                  <span>Done</span>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
