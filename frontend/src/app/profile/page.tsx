@@ -9,22 +9,20 @@ import {
   Phone,
   Globe,
   ArrowRight,
-  Shield,
   LogOut,
   Check,
   Compass,
   CalendarCheck,
   Building2,
   ConciergeBell,
-  Repeat,
-  ExternalLink,
-  Radio,
+  Shield,
   type LucideIcon,
 } from 'lucide-react';
 import { useApp, UserRole } from '@/context/AppContext';
 
 interface PersonaProfile {
   role: UserRole;
+  label: string;
   name: string;
   email: string;
   title: string;
@@ -46,6 +44,7 @@ const roleIcon: Record<UserRole, LucideIcon> = {
 const personaProfiles: PersonaProfile[] = [
   {
     role: 'traveler',
+    label: 'Traveler',
     name: 'Aayush Pradhan',
     email: 'aayush.traveler@visitnepal.com',
     title: 'Verified Himalayan trekker & explorer',
@@ -57,6 +56,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'guide',
+    label: 'Guide',
     name: 'Pasang Nuru Sherpa',
     email: 'pasang.sherpa@visitnepal.com',
     title: 'NMA & IFMGA certified lead mountain guide',
@@ -68,6 +68,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'butler',
+    label: 'Butler',
     name: 'Mingma Sherpa',
     email: 'sherpa.butler@visitnepal.com',
     title: 'Dedicated Sherpa butler & VIP concierge',
@@ -79,6 +80,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'business',
+    label: 'Agency',
     name: 'Himalayan Expeditions Enterprise',
     email: 'partner@himalayanexpeditions.com',
     title: 'Licensed tour operator & expedition suite',
@@ -90,6 +92,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'admin',
+    label: 'Admin',
     name: 'Ministry Tourism Officer',
     email: 'officer@ntb.gov.np',
     title: 'Nepal Tourism Board (NTB) government admin desk',
@@ -188,7 +191,7 @@ function BarcodePattern({ value }: { value: string }) {
       >
         {rects}
       </svg>
-      <span className="mt-1 font-mono text-[10px] font-semibold tracking-wider text-slate-500">
+      <span className="mt-1 font-mono text-[10px] font-semibold tracking-wider text-slate-500 uppercase">
         {value}
       </span>
     </div>
@@ -230,20 +233,45 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="mx-auto w-full max-w-7xl space-y-6 px-4 py-8 font-inter sm:px-6 lg:space-y-8 lg:px-8">
-      {/* 1. Hero: Identity + The Cool Tilted Boarding Ticket Pass + Bottom Highlights Bar */}
+    <div className="mx-auto w-full max-w-7xl px-4 py-8 font-inter sm:px-6 lg:px-8">
+      {/* Hero Section: Identity + Cool Boarding Pass Ticket + Bottom Highlights Bar */}
       <section className="relative overflow-hidden rounded-3xl bg-[#031526] text-white shadow-[0_24px_60px_-28px_rgba(3,21,38,0.9)] border border-white/10">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_85%_0%,rgba(5,82,162,0.5),transparent_60%)]" />
         <ContourLines />
 
         {/* Hero Top Content Grid */}
         <div className="relative grid gap-8 p-6 sm:p-10 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-12">
-          {/* Left: User Identity */}
+          {/* Left: User Identity + Interactive Persona Switcher */}
           <div className="min-w-0 space-y-5">
-            {/* Status Pill */}
-            <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-slate-200 backdrop-blur-md">
-              <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
-              <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
+            {/* Seamless Persona Switcher Pills (No Cards) */}
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs text-slate-200 backdrop-blur-md">
+                <span className="h-2 w-2 rounded-full bg-emerald-400 motion-safe:animate-pulse" />
+                <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
+              </div>
+
+              {/* Instant Switcher Pills */}
+              <div className="flex flex-wrap items-center gap-1.5 pl-1">
+                {personaProfiles.map((p) => {
+                  const isCurrent = p.role === activeRole;
+                  const isSwitching = switchingRole === p.role;
+                  return (
+                    <button
+                      key={p.role}
+                      type="button"
+                      disabled={isSwitching}
+                      onClick={() => handleSwitchUser(p.role)}
+                      className={`cursor-pointer rounded-full px-2.5 py-0.5 text-[11px] font-medium transition-all ${
+                        isCurrent
+                          ? 'bg-[#FDB716] text-[#031526] font-bold shadow-xs'
+                          : 'bg-white/10 text-slate-300 hover:bg-white/20 hover:text-white border border-white/10'
+                      }`}
+                    >
+                      {isSwitching ? '...' : p.label}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             {/* Avatar & Title */}
@@ -400,158 +428,6 @@ export default function ProfilePage() {
           ))}
         </div>
       </section>
-
-      {/* 2. Unified Container (NO CARDS): Seamless Persona Switcher + Portals Directory */}
-      <div className="grid gap-6 lg:grid-cols-[1.4fr_1fr] lg:gap-8">
-        {/* Switch Persona: Clean List View (Not Cards) */}
-        <section
-          aria-labelledby="switch-heading"
-          className="rounded-3xl border border-slate-200/90 bg-white p-4 sm:p-6 shadow-sm"
-        >
-          <div className="flex items-start justify-between gap-4 border-b border-slate-100 pb-4">
-            <div>
-              <h2 id="switch-heading" className="font-poppins text-xl font-bold text-slate-900">
-                Switch persona
-              </h2>
-              <p className="mt-0.5 text-xs sm:text-sm text-slate-500">
-                Pick an identity to change your session, portal access and dashboard.
-              </p>
-            </div>
-            <Repeat className="mt-1 hidden h-5 w-5 shrink-0 text-slate-300 sm:block" />
-          </div>
-
-          <ul className="mt-3 divide-y divide-slate-100">
-            {personaProfiles.map((p) => {
-              const isCurrent = p.role === activeRole;
-              const isSwitching = switchingRole === p.role;
-              const Icon = roleIcon[p.role] ?? Compass;
-
-              return (
-                <li key={p.role} className="py-2.5 first:pt-1 last:pb-1">
-                  <div
-                    className={`relative flex flex-wrap items-center gap-3 rounded-2xl p-3 transition-colors sm:flex-nowrap sm:gap-4 ${
-                      isCurrent ? 'bg-[#EAF2FB]' : 'hover:bg-slate-50'
-                    }`}
-                  >
-                    {isCurrent && (
-                      <span className="absolute left-0 top-3 bottom-3 w-1 rounded-r-full bg-[#0552A2]" />
-                    )}
-
-                    <img
-                      src={p.avatar}
-                      alt={p.name}
-                      className="h-12 w-12 shrink-0 rounded-full object-cover border border-slate-200"
-                    />
-
-                    <div className="min-w-0 flex-1">
-                      <div className="flex items-center gap-2">
-                        <h3 className="truncate text-sm font-semibold text-slate-900">{p.name}</h3>
-                        {isCurrent && (
-                          <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-semibold text-emerald-800">
-                            <Check className="h-3 w-3 stroke-[2.5]" />
-                            Active
-                          </span>
-                        )}
-                      </div>
-                      <p className="mt-0.5 flex items-center gap-1.5 text-xs text-[#0552A2]">
-                        <Icon className="h-3.5 w-3.5" />
-                        <span className="capitalize">{p.role}</span>
-                      </p>
-                      <p className="mt-0.5 line-clamp-1 text-xs text-slate-500">{p.email}</p>
-                    </div>
-
-                    {isCurrent ? (
-                      <Link
-                        href={p.portalLink}
-                        className="inline-flex w-full items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] px-4 py-2 text-xs font-semibold text-white transition hover:bg-[#044182] sm:w-auto shadow-xs"
-                      >
-                        Open portal
-                        <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                    ) : (
-                      <button
-                        type="button"
-                        disabled={isSwitching}
-                        onClick={() => handleSwitchUser(p.role)}
-                        className="inline-flex w-full cursor-pointer items-center justify-center gap-1.5 rounded-xl border border-slate-300 bg-white px-4 py-2 text-xs font-medium text-slate-800 transition hover:border-[#0552A2] hover:text-[#0552A2] disabled:cursor-wait disabled:opacity-60 sm:w-auto"
-                      >
-                        {isSwitching ? 'Switching…' : 'Switch'}
-                      </button>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
-          </ul>
-        </section>
-
-        {/* Portals & Operational Desks: Clean List View (Not Cards) */}
-        <section
-          aria-labelledby="portals-heading"
-          className="self-start rounded-3xl border border-slate-200/90 bg-white p-4 sm:p-6 shadow-sm"
-        >
-          <div className="flex items-center justify-between gap-3 border-b border-slate-100 pb-4">
-            <div>
-              <h2 id="portals-heading" className="font-poppins text-xl font-bold text-slate-900">
-                Portals
-              </h2>
-              <p className="mt-0.5 text-xs sm:text-sm text-slate-500">Go straight to any operations desk.</p>
-            </div>
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1 text-xs font-medium text-[#0552A2] hover:underline"
-            >
-              Sign in <ExternalLink className="h-3 w-3" />
-            </Link>
-          </div>
-
-          <ul className="mt-2 divide-y divide-slate-100">
-            {[
-              { href: '/bookings', label: 'Bookings & QR boarding passes', role: 'traveler' as UserRole },
-              { href: '/portals/guide', label: 'Mountain guide operations', role: 'guide' as UserRole },
-              { href: '/portals/butler', label: 'Sherpa butler concierge', role: 'butler' as UserRole },
-              { href: '/portals/business', label: 'Tour operator & agency suite', role: 'business' as UserRole },
-              { href: '/portals/admin', label: 'NTB government admin desk', role: 'admin' as UserRole },
-            ].map((p) => {
-              const Icon = roleIcon[p.role] ?? Compass;
-              const isCurrent = p.role === activeRole;
-
-              return (
-                <li key={p.href}>
-                  <Link
-                    href={p.href}
-                    className="group flex items-center gap-3 py-3.5 text-sm text-slate-800 transition-colors hover:text-[#0552A2]"
-                  >
-                    <span
-                      className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-xl transition-colors ${
-                        isCurrent
-                          ? 'bg-[#0552A2] text-white shadow-xs'
-                          : 'bg-slate-100 text-slate-600 group-hover:bg-[#EAF2FB] group-hover:text-[#0552A2]'
-                      }`}
-                    >
-                      <Icon className="h-4 w-4" />
-                    </span>
-                    <span className="flex-1 font-medium">{p.label}</span>
-                    {isCurrent && (
-                      <span className="rounded-full bg-[#FDB716]/20 px-2 py-0.5 text-[11px] font-semibold text-[#8a6100]">
-                        Yours
-                      </span>
-                    )}
-                    <ArrowRight className="h-4 w-4 text-slate-300 transition-transform group-hover:translate-x-1 group-hover:text-[#0552A2]" />
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-
-          <div className="mt-5 flex items-center gap-3 rounded-2xl bg-slate-50 p-3.5 text-xs text-slate-600 border border-slate-100">
-            <Radio className="h-4 w-4 shrink-0 text-[#0552A2] animate-pulse" />
-            <span>
-              Emergency Dispatch hotline is synchronized with your TIMS digital pass above.
-            </span>
-          </div>
-        </section>
-      </div>
     </div>
   );
 }
