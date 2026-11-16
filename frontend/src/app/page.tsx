@@ -13,11 +13,9 @@ import {
   BookOpen,
   ChevronRight,
   ShieldCheck,
-  Send,
 } from 'lucide-react';
 import ScrollReveal from '@/components/ScrollReveal';
 import InteractiveMap from '@/components/InteractiveMap';
-import { useApp } from '@/context/AppContext';
 
 // 8 Primary Destinations required by specification
 const editorialDestinations = [
@@ -281,10 +279,7 @@ const travelStories = [
 ];
 
 export default function HomePage() {
-  const { showToast } = useApp();
   const [scrollY, setScrollY] = useState(0);
-  const [newsletterEmail, setNewsletterEmail] = useState('');
-  const [subscribed, setSubscribed] = useState(false);
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -307,14 +302,6 @@ export default function HomePage() {
 window.addEventListener('scroll', handleScroll, { passive: true });
 return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-const handleSubscribe = (e: React.FormEvent) => {
-  e.preventDefault();
-  if (!newsletterEmail.trim()) return;
-  setSubscribed(true);
-  showToast('Subscribed to Himalayan Field Dispatches.');
-  setNewsletterEmail('');
-};
 
 return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
@@ -867,54 +854,6 @@ return (
           ))}
         </div>
       </section>
-
-      {/* =========================================================================
-          9. EDITORIAL NEWSLETTER & TRAVEL ADVISORY DESK
-          ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
-        <ScrollReveal direction="up" duration={700} distance={24}>
-          <div className="rounded-3xl bg-[#0552A2] text-white p-8 sm:p-14 lg:p-16 relative overflow-hidden shadow-xl">
-            {/* Soft Ambient Background Pattern */}
-            <div className="absolute inset-0 opacity-10 bg-[radial-gradient(#FFFFFF_1px,transparent_1px)] [background-size:20px_20px]" />
-
-            <div className="relative z-10 max-w-2xl mx-auto text-center space-y-4">
-              <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] block">
-                Stay Connected to the High Peaks
-              </span>
-              <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white">
-                Receive Himalayan Field Dispatches
-              </h2>
-              <p className="text-xs sm:text-sm text-blue-100 font-normal font-inter leading-relaxed max-w-md mx-auto">
-                Real-time seasonal trail conditions, TIMS permit regulation updates, flight schedules into Lukla, and early expedition openings.
-              </p>
-
-              <form onSubmit={handleSubscribe} className="pt-2 flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto">
-                <input
-                  type="email"
-                  value={newsletterEmail}
-                  onChange={(e) => setNewsletterEmail(e.target.value)}
-                  placeholder="Enter your email address..."
-                  required
-                  className="h-12 flex-1 rounded-full bg-white/10 border border-white/25 px-5 text-xs sm:text-sm text-white placeholder:text-blue-200 focus:bg-white focus:text-slate-900 focus:outline-none transition-all font-inter"
-                />
-                <button
-                  type="submit"
-                  className="h-12 inline-flex items-center justify-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 text-xs sm:text-sm font-medium font-inter active:scale-[0.98] transition-all cursor-pointer shadow-md shrink-0"
-                >
-                  <span>Subscribe</span>
-                  <Send className="h-3.5 w-3.5" />
-                </button>
-              </form>
-
-              {subscribed && (
-                <p className="text-xs text-[#FDB716] font-medium pt-1">
-                  ✓ Thank you. You are now subscribed to Visit Nepal official dispatches.
-                </p>
-              )}
-            </div>
-          </div>
-        </ScrollReveal>
-      </section>
-  </div>
-);
+    </div>
+  );
 }
