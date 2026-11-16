@@ -164,9 +164,10 @@ export default function ProfilePage() {
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
   const [switchingRole, setSwitchingRole] = useState<UserRole | null>(null);
 
-  // Modal expand state
+  // Ticket Tearing Animation State
+  type TearState = 'idle' | 'tearing' | 'torn' | 'elevating';
+  const [tearState, setTearState] = useState<TearState>('idle');
   const [isExpanded, setIsExpanded] = useState(false);
-  const [isOpening, setIsOpening] = useState(false);
 
   const activeRole: UserRole = currentUser?.role || role || 'traveler';
   const activeName = currentUser?.name || 'Aayush Pradhan';
@@ -188,19 +189,35 @@ export default function ProfilePage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [isExpanded]);
 
-  // Smooth cinematic pass opening (No scissors)
-  const openExpandedPass = () => {
-    if (isExpanded || isOpening) return;
-    setIsOpening(true);
+  // Realistic Paper Tearing Animation Trigger (NO scissors)
+  const handleTicketClick = () => {
+    if (tearState !== 'idle' || isExpanded) return;
 
+    // Phase 1: Start tearing progressively from left to right along perforated divider
+    setTearState('tearing');
+
+    // Phase 2: After tearing across (~720ms), ticket pieces are fully severed and drift apart
     setTimeout(() => {
-      setIsExpanded(true);
-      setIsOpening(false);
-    }, 280);
+      setTearState('torn');
+
+      // Phase 3: Elevate torn pieces toward camera (~280ms drift)
+      setTimeout(() => {
+        setTearState('elevating');
+
+        // Phase 4: Open full-screen expanded digital TIMS pass modal
+        setTimeout(() => {
+          setIsExpanded(true);
+        }, 280);
+      }, 280);
+    }, 720);
   };
 
   const closeExpandedPass = () => {
     setIsExpanded(false);
+    // Smoothly rejoin ticket and resume infinite floating animation
+    setTimeout(() => {
+      setTearState('idle');
+    }, 350);
   };
 
   const handleLogout = () => {
@@ -210,7 +227,7 @@ export default function ProfilePage() {
   };
 
   const handleSwitchUser = async (targetRole: UserRole) => {
-    if (targetRole === activeRole || isExpanded || isOpening) return;
+    if (targetRole === activeRole || isExpanded || tearState !== 'idle') return;
     setSwitchingRole(targetRole);
     try {
       await setRole(targetRole);
@@ -273,7 +290,7 @@ export default function ProfilePage() {
                   <button
                     key={p.role}
                     type="button"
-                    disabled={isSwitching || isExpanded || isOpening}
+                    disabled={isSwitching || isExpanded || tearState !== 'idle'}
                     onClick={() => handleSwitchUser(p.role)}
                     className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
                       isCurrent
@@ -361,54 +378,126 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Column: Physical Ticket with Fluid Lift & Zoom Animation */}
+          {/* Right Column: Physical Ticket with Infinite Floating & Realistic Paper Tearing Animation */}
           <div className="relative mx-auto w-full max-w-md">
-            {/* The Floating Ticket Wrapper */}
+            {/* Synchronized Ambient Ground Shadow (4s cycle) */}
             <motion.div
               animate={
-                isOpening
+                tearState === 'idle'
                   ? {
-                      scale: 1.15,
-                      y: -20,
-                      rotateX: 10,
-                      opacity: 0.6,
-                      transition: { duration: 0.28, ease: 'easeOut' },
+                      scaleX: [0.92, 1.05],
+                      scaleY: [0.9, 1.04],
+                      opacity: [0.24, 0.38],
                     }
                   : {
-                      y: [0, -6, 0],
-                      rotate: 1.5,
-                      scale: 1,
-                      opacity: 1,
-                      transition: { duration: 4.2, repeat: Infinity, ease: 'easeInOut' },
+                      scaleX: 1,
+                      scaleY: 1,
+                      opacity: 0.28,
                     }
               }
-              whileHover={{ scale: 1.025, rotate: 0, transition: { duration: 0.25 } }}
-              whileTap={{ scale: 0.98 }}
-              onClick={openExpandedPass}
+              transition={
+                tearState === 'idle'
+                  ? {
+                      duration: 4,
+                      repeat: Infinity,
+                      repeatType: 'reverse',
+                      ease: 'easeInOut',
+                    }
+                  : { duration: 0.25 }
+              }
+              className="absolute -bottom-6 left-[8%] right-[8%] h-7 rounded-full bg-slate-900/40 blur-xl pointer-events-none -z-10"
+            />
+
+            {/* The Infinite Floating Ticket Wrapper (4s floating, 6s rotation, seamless reverse loop) */}
+            <motion.div
+              animate={
+                tearState === 'idle'
+                  ? {
+                      y: [-5, 6],
+                      rotate: [-0.6, 0.8],
+                    }
+                  : {
+                      y: 0,
+                      rotate: 0,
+                    }
+              }
+              transition={
+                tearState === 'idle'
+                  ? {
+                      y: {
+                        duration: 4,
+                        repeat: Infinity,
+                        repeatType: 'reverse',
+                        ease: 'easeInOut',
+                      },
+                      rotate: {
+                        duration: 6,
+                        repeat: Infinity,
+                        repeatType: 'reverse',
+                        ease: 'easeInOut',
+                      },
+                    }
+                  : { duration: 0.25, ease: 'easeOut' }
+              }
+              whileHover={tearState === 'idle' ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
+              whileTap={tearState === 'idle' ? { scale: 0.985 } : {}}
+              onClick={handleTicketClick}
               role="button"
               tabIndex={0}
-              aria-label="Click to inspect full digital TIMS ticket details"
+              aria-label="Click to tear ticket and inspect full digital TIMS pass details"
               className="group relative cursor-pointer select-none"
-              style={{ willChange: 'transform, opacity' }}
+              style={{
+                perspective: 1200,
+                transformStyle: 'preserve-3d',
+                willChange: 'transform',
+              }}
             >
               {/* Interaction Hint Badge: "Click to inspect full details" */}
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+              <div
+                className={`absolute -top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-opacity duration-300 ${
+                  tearState !== 'idle' ? 'opacity-0' : 'opacity-100'
+                }`}
+              >
                 <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40 group-hover:scale-105 transition-transform">
                   <Maximize2 className="h-3 w-3" />
                   Click to inspect full details
                 </span>
               </div>
 
-              {/* The Physical Ticket Pass Card */}
-              <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 transition-all duration-300 group-hover:shadow-2xl group-hover:border-[#0552A2]/40">
+              {/* TICKET UPPER SECTION (Tears upward with realistic paper bend & fibrous edge) */}
+              <motion.div
+                animate={
+                  tearState === 'idle'
+                    ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
+                    : tearState === 'tearing'
+                    ? { y: -12, rotate: -2, rotateX: 6, rotateZ: -1.5, scale: 1, opacity: 1 }
+                    : tearState === 'torn'
+                    ? { y: -22, x: -6, rotate: -3.5, rotateX: 8, rotateZ: -2.2, scale: 1, opacity: 1 }
+                    : { y: -36, scale: 1.1, opacity: 0 }
+                }
+                transition={
+                  tearState === 'tearing'
+                    ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
+                    : tearState === 'torn'
+                    ? { duration: 0.28, ease: 'easeOut' }
+                    : tearState === 'elevating'
+                    ? { duration: 0.32, ease: 'easeIn' }
+                    : { duration: 0.35, ease: 'easeOut' }
+                }
+                className="relative z-20 overflow-hidden rounded-t-2xl bg-white text-slate-900 border-t border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
+                style={{
+                  transformOrigin: 'top left',
+                  willChange: 'transform, opacity',
+                }}
+              >
                 {/* Top Himalayan Tricolor Dash Strip */}
                 <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
 
-                {/* Left & Right Physical Cutout Notches */}
-                <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
-                <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
+                {/* Left & Right Physical Cutout Half-Notches at Bottom */}
+                <span className="absolute -left-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
 
-                <div className="p-5 sm:p-6 space-y-4">
+                <div className="p-5 sm:p-6 pb-4 space-y-4">
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
@@ -446,52 +535,126 @@ export default function ProfilePage() {
                       {activeRole}
                     </p>
                   </div>
+                </div>
 
-                  {/* Perforated Divider Line */}
-                  <div className="border-t border-dashed border-slate-300 pt-4">
-                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
-                      <div className="flex items-start gap-2.5 sm:col-span-2">
-                        <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div className="min-w-0">
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
-                          <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-2.5">
-                        <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
-                          <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-2.5">
-                        <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
-                          <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
-                        </div>
-                      </div>
-
-                      <div className="flex items-start gap-2.5 sm:col-span-2">
-                        <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                        <div>
-                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
-                          <dd className="font-medium text-slate-800">
-                            {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
-                          </dd>
-                        </div>
-                      </div>
-                    </dl>
+                {/* Bottom Border: Perforated Dashed Line (Intact) OR Ragged Paper Fiber Edge (Torn) */}
+                {tearState === 'idle' ? (
+                  <div className="border-b border-dashed border-slate-300 w-full" />
+                ) : (
+                  <div className="relative w-full overflow-hidden leading-none z-20">
+                    <svg
+                      viewBox="0 0 500 12"
+                      className="w-full h-3 fill-white text-slate-200 filter drop-shadow-[0_2px_3px_rgba(0,0,0,0.18)]"
+                      preserveAspectRatio="none"
+                    >
+                      <path d="M 0,0 L 500,0 L 500,4 L 485,8 L 470,3 L 455,9 L 440,4 L 425,8 L 410,3 L 395,9 L 380,4 L 365,8 L 350,3 L 335,9 L 320,4 L 305,8 L 290,3 L 275,9 L 260,4 L 245,8 L 230,3 L 215,9 L 200,4 L 185,8 L 170,3 L 155,9 L 140,4 L 125,8 L 110,3 L 95,9 L 80,4 L 65,8 L 50,3 L 35,9 L 20,4 L 0,6 Z" />
+                    </svg>
                   </div>
+                )}
+              </motion.div>
+
+              {/* PROGRESSIVE TEAR RIP LINE (Rips from Left to Right along perforation) */}
+              {tearState === 'tearing' && (
+                <div className="absolute top-[49%] inset-x-3.5 -translate-y-1/2 z-30 pointer-events-none overflow-hidden">
+                  <motion.div
+                    initial={{ width: '0%' }}
+                    animate={{ width: '100%' }}
+                    transition={{ duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="relative h-[2.5px] bg-gradient-to-r from-red-500/80 via-[#FDB716] to-[#0552A2] shadow-[0_0_10px_rgba(253,183,22,0.8)]"
+                  >
+                    {/* Active tearing rip spark at leading tip */}
+                    <span className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white shadow-[0_0_8px_#FDB716] animate-ping" />
+                  </motion.div>
+                </div>
+              )}
+
+              {/* TICKET LOWER SECTION (Tears downward with realistic paper droop & fibrous edge) */}
+              <motion.div
+                animate={
+                  tearState === 'idle'
+                    ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
+                    : tearState === 'tearing'
+                    ? { y: 12, rotate: 1.5, rotateX: -5, rotateZ: 1.2, scale: 1, opacity: 1 }
+                    : tearState === 'torn'
+                    ? { y: 22, x: 6, rotate: 2.5, rotateX: -7, rotateZ: 1.8, scale: 1, opacity: 1 }
+                    : { y: 36, scale: 1.1, opacity: 0 }
+                }
+                transition={
+                  tearState === 'tearing'
+                    ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
+                    : tearState === 'torn'
+                    ? { duration: 0.28, ease: 'easeOut' }
+                    : tearState === 'elevating'
+                    ? { duration: 0.32, ease: 'easeIn' }
+                    : { duration: 0.35, ease: 'easeOut' }
+                }
+                className="relative z-10 overflow-hidden rounded-b-2xl bg-white text-slate-900 border-b border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
+                style={{
+                  transformOrigin: 'bottom right',
+                  willChange: 'transform, opacity',
+                }}
+              >
+                {/* Top Border: Ragged Paper Fiber Edge (Torn) */}
+                {tearState !== 'idle' ? (
+                  <div className="relative w-full overflow-hidden leading-none z-20">
+                    <svg
+                      viewBox="0 0 500 12"
+                      className="w-full h-3 fill-white text-slate-200 filter drop-shadow-[0_-2px_3px_rgba(0,0,0,0.15)]"
+                      preserveAspectRatio="none"
+                    >
+                      <path d="M 0,12 L 500,12 L 500,8 L 485,4 L 470,9 L 455,3 L 440,8 L 425,4 L 410,9 L 395,3 L 380,8 L 365,4 L 350,9 L 335,3 L 320,8 L 305,4 L 290,9 L 275,3 L 260,8 L 245,4 L 230,9 L 215,3 L 200,8 L 185,4 L 170,9 L 155,3 L 140,8 L 125,4 L 110,9 L 95,3 L 80,8 L 65,4 L 50,9 L 35,3 L 20,8 L 0,6 Z" />
+                    </svg>
+                  </div>
+                ) : null}
+
+                {/* Left & Right Physical Cutout Half-Notches at Top */}
+                <span className="absolute -left-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
+
+                <div className="p-5 sm:p-6 pt-4 space-y-4">
+                  {/* Detailed Holder & Travel Metadata */}
+                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
+                    <div className="flex items-start gap-2.5 sm:col-span-2">
+                      <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div className="min-w-0">
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
+                        <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5">
+                      <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
+                        <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5">
+                      <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
+                        <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start gap-2.5 sm:col-span-2">
+                      <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                      <div>
+                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
+                        <dd className="font-medium text-slate-800">
+                          {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
+                        </dd>
+                      </div>
+                    </div>
+                  </dl>
 
                   {/* Barcode & Monospace Ledger ID */}
                   <div className="border-t border-slate-200/80 pt-3">
                     <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             </motion.div>
           </div>
         </div>
