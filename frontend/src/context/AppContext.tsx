@@ -63,13 +63,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [role, setRoleState] = useState<UserRole>('traveler');
-  const [currentUser, setCurrentUser] = useState<CurrentUser | null>({
-    id: 'usr_traveler_1',
-    email: 'aayush.traveler@visitnepal.com',
-    name: 'Aayush Pradhan',
-    role: 'traveler',
-    kycStatus: 'verified',
-  });
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
   const [posts, setPosts] = useState<CommunityPost[]>(initialCommunityPosts);
@@ -163,7 +157,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
   // Initial load
   useEffect(() => {
-    // Check saved token or authenticate as default traveler
+    // Check saved token or authenticate from session
     const initAuth = async () => {
       try {
         const isLoggedOut = typeof window !== 'undefined' && localStorage.getItem('vn_logged_out') === 'true';
@@ -173,14 +167,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
 
         const savedToken = typeof window !== 'undefined' ? localStorage.getItem('vn_auth_token') : null;
-        if (!savedToken) {
-          // Auto-login as traveler
-          await api.auth.login(roleDefaultEmails.traveler, 'NepalTourism2026!', 'traveler');
-        }
-        const me = await api.auth.me().catch(() => null);
-        if (me?.user) {
-          setCurrentUser(me.user);
-          setRoleState(me.user.role);
+        if (savedToken) {
+          const me = await api.auth.me().catch(() => null);
+          if (me?.user) {
+            setCurrentUser(me.user);
+            setRoleState(me.user.role);
+          } else {
+            setCurrentUser(null);
+          }
+        } else {
+          setCurrentUser(null);
         }
       } catch (err) {
         console.warn('[AppContext] Init auth error:', err);

@@ -45,6 +45,11 @@ export default function Navbar() {
 
   const isHome = pathname === '/';
 
+  // Do not render top navigation on dedicated full-screen auth pages
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   // Passive high-performance scroll listener to toggle transparency beyond 70px
   useEffect(() => {
     let ticking = false;
@@ -132,184 +137,203 @@ export default function Navbar() {
           })}
         </nav>
 
-        {/* Right Controls: Chat, Role Badge, Notifications & Profile */}
+        {/* Right Controls: Sign In or Authenticated User Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Messages shortcut (desktop) */}
-          <Link
-            href="/chat"
-            className={`hidden md:flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${
-              isTransparent
-                ? 'text-white/80 hover:text-white hover:bg-white/10'
-                : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
-            }`}
-            title="Concierge & Messages"
-          >
-            <MessageSquare className="h-4 w-4" />
-          </Link>
+          {currentUser ? (
+            <>
+              {/* Messages shortcut (desktop) */}
+              <Link
+                href="/chat"
+                className={`hidden md:flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${
+                  isTransparent
+                    ? 'text-white/80 hover:text-white hover:bg-white/10'
+                    : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
+                }`}
+                title="Concierge & Messages"
+              >
+                <MessageSquare className="h-4 w-4" />
+              </Link>
 
-          {/* Role Badge Indicator */}
-          <Link
-            href="/profile"
-            className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${
-              isTransparent
-                ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
-                : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
-            }`}
-            title="Active Portal / Profile"
-          >
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            <span className="capitalize">{role || 'Traveler'}</span>
-          </Link>
+              {/* Role Badge Indicator */}
+              <Link
+                href="/profile"
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${
+                  isTransparent
+                    ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
+                    : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
+                }`}
+                title="Active Portal / Profile"
+              >
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span className="capitalize">{currentUser.role || role || 'Traveler'}</span>
+              </Link>
 
-          {/* Notifications bell */}
-          <div className="relative hidden sm:block">
-            <button
-              onClick={() => setNotifOpen((v) => !v)}
-              className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-                isTransparent
-                  ? 'text-white/80 hover:text-white hover:bg-white/10'
-                  : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
-              }`}
-              aria-label="Notifications"
-            >
-              <Bell className="h-4 w-4" />
-              {unreadCount > 0 && (
-                <span className="absolute 1 top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#EC1F27] text-[8px] font-bold text-white">
-                  {unreadCount}
-                </span>
-              )}
-            </button>
-
-            {notifOpen && (
-              <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-sm sm:w-96 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
-                <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                    Notifications ({unreadCount})
-                  </h3>
-                  <button
-                    onClick={markAllRead}
-                    className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0552A2] hover:underline"
-                  >
-                    <CheckCheck className="h-3.5 w-3.5" />
-                    Mark read
-                  </button>
-                </div>
-                <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
-                  {notificationsList.map((n) => (
-                    <div
-                      key={n.id}
-                      className={`rounded-lg p-2.5 text-xs border ${
-                        n.read
-                          ? 'border-slate-100 bg-white text-slate-600'
-                          : 'border-blue-100 bg-blue-50/50 text-slate-900'
-                      }`}
-                    >
-                      <div className="flex items-center justify-between gap-2">
-                        <span className="font-bold">{n.title}</span>
-                        <span className="text-[10px] text-slate-400">{n.time}</span>
-                      </div>
-                      <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
-                        {n.body}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* User Profile & Account Dropdown */}
-          <div className="relative">
-            <button
-              type="button"
-              onClick={() => {
-                setProfileOpen((v) => !v);
-                setNotifOpen(false);
-              }}
-              className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-                isTransparent
-                  ? 'text-white/90 hover:text-white hover:bg-white/10'
-                  : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
-              }`}
-              title="User Account & Logout"
-              aria-label="User Account & Logout"
-            >
-              <UserCircle2 className="h-5 w-5" />
-            </button>
-
-            {profileOpen && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
-                {/* User Info Header */}
-                <div className="px-2 py-2 border-b border-slate-100 flex items-center gap-2.5">
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[#0552A2] font-black text-sm">
-                    {currentUser?.name ? currentUser.name.charAt(0) : 'E'}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-xs font-bold text-slate-900 truncate">
-                      {currentUser?.name || 'Explorer'}
-                    </p>
-                    <p className="text-[10px] text-slate-500 truncate">
-                      {currentUser?.email || 'Authenticated User'}
-                    </p>
-                    <span className="inline-block mt-0.5 rounded px-1.5 py-0.2 text-[9px] font-bold uppercase bg-blue-50 text-[#0552A2]">
-                      {role || 'Traveler'}
+              {/* Notifications bell */}
+              <div className="relative hidden sm:block">
+                <button
+                  onClick={() => setNotifOpen((v) => !v)}
+                  className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+                    isTransparent
+                      ? 'text-white/80 hover:text-white hover:bg-white/10'
+                      : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
+                  }`}
+                  aria-label="Notifications"
+                >
+                  <Bell className="h-4 w-4" />
+                  {unreadCount > 0 && (
+                    <span className="absolute 1 top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#EC1F27] text-[8px] font-bold text-white">
+                      {unreadCount}
                     </span>
+                  )}
+                </button>
+
+                {notifOpen && (
+                  <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-sm sm:w-96 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
+                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
+                        Notifications ({unreadCount})
+                      </h3>
+                      <button
+                        onClick={markAllRead}
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0552A2] hover:underline"
+                      >
+                        <CheckCheck className="h-3.5 w-3.5" />
+                        Mark read
+                      </button>
+                    </div>
+                    <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
+                      {notificationsList.map((n) => (
+                        <div
+                          key={n.id}
+                          className={`rounded-lg p-2.5 text-xs border ${
+                            n.read
+                              ? 'border-slate-100 bg-white text-slate-600'
+                              : 'border-blue-100 bg-blue-50/50 text-slate-900'
+                          }`}
+                        >
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="font-bold">{n.title}</span>
+                            <span className="text-[10px] text-slate-400">{n.time}</span>
+                          </div>
+                          <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
+                            {n.body}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-
-                {/* Navigation Options */}
-                <div className="py-1.5 space-y-0.5">
-                  <Link
-                    href="/profile"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                  >
-                    <User className="h-3.5 w-3.5" />
-                    <span>My Profile &amp; Permits</span>
-                  </Link>
-
-                  <Link
-                    href="/bookings"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                  >
-                    <CalendarCheck className="h-3.5 w-3.5" />
-                    <span>My Bookings</span>
-                  </Link>
-
-                  <Link
-                    href="/custom-plan"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                  >
-                    <Compass className="h-3.5 w-3.5" />
-                    <span>Custom Itinerary</span>
-                  </Link>
-
-                  <Link
-                    href="/login"
-                    onClick={() => setProfileOpen(false)}
-                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                  >
-                    <Shield className="h-3.5 w-3.5" />
-                    <span>Switch Role / Portal</span>
-                  </Link>
-                </div>
-
-                {/* Logout Action */}
-                <div className="pt-1.5 border-t border-slate-100">
-                  <button
-                    type="button"
-                    onClick={handleLogout}
-                    className="w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                  >
-                    <LogOut className="h-3.5 w-3.5" />
-                    <span>Sign Out / Log Out</span>
-                  </button>
-                </div>
+                )}
               </div>
-            )}
-          </div>
+
+              {/* User Profile & Account Dropdown */}
+              <div className="relative">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setProfileOpen((v) => !v);
+                    setNotifOpen(false);
+                  }}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+                    isTransparent
+                      ? 'text-white/90 hover:text-white hover:bg-white/10'
+                      : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
+                  }`}
+                  title="User Account & Logout"
+                  aria-label="User Account & Logout"
+                >
+                  <UserCircle2 className="h-5 w-5" />
+                </button>
+
+                {profileOpen && (
+                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
+                    {/* User Info Header */}
+                    <div className="px-2 py-2 border-b border-slate-100 flex items-center gap-2.5">
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[#0552A2] font-black text-sm">
+                        {currentUser?.name ? currentUser.name.charAt(0) : 'U'}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs font-bold text-slate-900 truncate">
+                          {currentUser.name}
+                        </p>
+                        <p className="text-[10px] text-slate-500 truncate">
+                          {currentUser.email}
+                        </p>
+                        <span className="inline-block mt-0.5 rounded px-1.5 py-0.2 text-[9px] font-bold uppercase bg-blue-50 text-[#0552A2]">
+                          {currentUser.role || role || 'Traveler'}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Navigation Options */}
+                    <div className="py-1.5 space-y-0.5">
+                      <Link
+                        href="/profile"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                      >
+                        <User className="h-3.5 w-3.5" />
+                        <span>My Profile &amp; Permits</span>
+                      </Link>
+
+                      <Link
+                        href="/bookings"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                      >
+                        <CalendarCheck className="h-3.5 w-3.5" />
+                        <span>My Bookings</span>
+                      </Link>
+
+                      <Link
+                        href="/custom-plan"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                      >
+                        <Compass className="h-3.5 w-3.5" />
+                        <span>Custom Itinerary</span>
+                      </Link>
+
+                      <Link
+                        href="/login"
+                        onClick={() => setProfileOpen(false)}
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                      >
+                        <Shield className="h-3.5 w-3.5" />
+                        <span>Switch Role / Portal</span>
+                      </Link>
+                    </div>
+
+                    {/* Logout Action */}
+                    <div className="pt-1.5 border-t border-slate-100">
+                      <button
+                        type="button"
+                        onClick={handleLogout}
+                        className="w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      >
+                        <LogOut className="h-3.5 w-3.5" />
+                        <span>Sign Out / Log Out</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Logged Out Visitor State: Sign In Button */}
+              <Link
+                href="/login"
+                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 cursor-pointer ${
+                  isTransparent
+                    ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
+                    : 'bg-white hover:bg-blue-50 text-[#0552A2] border border-blue-200/80 shadow-2xs'
+                }`}
+              >
+                <User className="h-3.5 w-3.5" />
+                <span>Sign In</span>
+              </Link>
+            </>
+          )}
 
           {/* Minimal Elegant "Explore Nepal" CTA */}
           <Link
@@ -396,20 +420,34 @@ export default function Navbar() {
               <ArrowRight className="h-3.5 w-3.5 text-[#0552A2]" />
             </Link>
 
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                handleLogout();
-              }}
-              className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
-            >
-              <span className="flex items-center gap-2">
-                <LogOut className="h-4 w-4" />
-                <span>Sign Out / Log Out</span>
-              </span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </button>
+            {currentUser ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  handleLogout();
+                }}
+                className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
+              >
+                <span className="flex items-center gap-2">
+                  <LogOut className="h-4 w-4" />
+                  <span>Sign Out / Log Out</span>
+                </span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                onClick={() => setMobileOpen(false)}
+                className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
+              >
+                <span className="flex items-center gap-2">
+                  <User className="h-4 w-4" />
+                  <span>Sign In to Portal</span>
+                </span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            )}
           </div>
 
           <div className="pt-3 space-y-2">
