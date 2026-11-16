@@ -4,9 +4,13 @@ import { AuthRequest, requireAuth } from '../middleware/auth';
 
 const router = Router();
 
-// GET /api/bookings (Role-aware listing)
+// GET /api/bookings (Role-aware listing with search & filters)
 router.get('/', requireAuth, (req: AuthRequest, res) => {
-  const { status } = req.query as { status?: string };
+  const { status, bookingType, q } = req.query as {
+    status?: string;
+    bookingType?: string;
+    q?: string;
+  };
   const user = req.user!;
   const state = db.getState();
 
@@ -27,8 +31,25 @@ router.get('/', requireAuth, (req: AuthRequest, res) => {
     results = state.bookings.filter((b) => b.assignedButlerId === butler?.id || b.assignedButlerName?.includes(user.name));
   }
 
-  if (status && status !== 'All') {
+  // Filter by status if requested
+  if (status && status !== 'All' && status !== 'all') {
     results = results.filter((b) => b.status.toLowerCase() === status.toLowerCase());
+  }
+
+  // Filter by bookingType ('standard' | 'custom')
+  if (bookingType && bookingType !== 'All' && bookingType !== 'all') {
+    results = results.filter((b) => (b.bookingType || 'standard').toLowerCase() === bookingType.toLowerCase());
+  }
+
+  // Search by query (booking id, traveler name, or title)
+  if (q && q.trim()) {
+    const term = q.trim().toLowerCase();
+    results = results.filter((b) =>
+      b.id.toLowerCase().includes(term) ||
+      b.userName.toLowerCase().includes(term) ||
+      b.title.toLowerCase().includes(term) ||
+      (b.invoiceNumber && b.invoiceNumber.toLowerCase().includes(term))
+    );
   }
 
   res.json({ count: results.length, bookings: results });
@@ -74,6 +95,12 @@ router.post('/', requireAuth, (req: AuthRequest, res) => {
     businessId,
     meetingPoint,
     contactPhone,
+    bookingType = 'standard',
+    customTripId,
+    optionsAndAddons = [],
+    priceBreakdown,
+    travelerDetails,
+    initialStatus = 'pending',
   } = req.body as {
     title?: string;
     provider?: string;
@@ -86,6 +113,27 @@ router.post('/', requireAuth, (req: AuthRequest, res) => {
     businessId?: string;
     meetingPoint?: string;
     contactPhone?: string;
+    bookingType?: 'standard' | 'custom';
+    customTripId?: string;
+    optionsAndAddons?: Array<{ name: string; costNpr: number; note?: string }>;
+    priceBreakdown?: {
+      baseAmountNpr: number;
+      addonsAmountNpr?: number;
+      serviceChargeNpr: number;
+      vatNpr: number;
+      totalNpr: number;
+    };
+    travelerDetails?: {
+      leadTravelerName: string;
+      leadEmail: string;
+      leadPhone: string;
+      leadNationality?: string;
+      passportNumber?: string;
+      emergencyContactName?: string;
+      emergencyContactPhone?: string;
+      dietaryOrMedicalNotes?: string;
+    };
+    initialStatus?: Booking['status'];
   };
 
   if (!title) {
@@ -93,49 +141,95 @@ router.post('/', requireAuth, (req: AuthRequest, res) => {
     return;
   }
 
-  const numericAmount = typeof amount === 'string' ? parseFloat(amount.replace(/[^0-9.]/g, '')) || 50000 : Number(amount) || 50000;
-  const bookingId = `BKG-${Math.floor(10000 + Math.random() * 89999)}`;
+  const numericAmount = typeof amount === 'string'
+    ? parseFloat(amount.replace(/[^0-9.]/g, '')) || 50000
+    : Number(amount) || 50000;
+
+  const randomSuffix = Math.floor(10000 + Math.random() * 89999);
+  const bookingId = `VN-BKG-2026-${randomSuffix}`;
+  const invoiceNumber = `VN-INV-2026-${randomSuffix}`;
   const user = req.user!;
   const state = db.getState();
 
-  // Availability & double booking check
-  const existingConflict = state.bookings.find(
-    (b) =>
-      b.userId === user.id &&
-      b.serviceId === serviceId &&
-      b.date === date &&
-      b.status !== 'cancelled' &&
-      b.status !== 'rejected'
-  );
+  // Availability & double booking check (only if serviceId is provided)
+  if (serviceId) {
+    const existingConflict = state.bookings.find(
+      (b) =>
+        b.userId === user.id &&
+        b.serviceId === serviceId &&
+        b.date === date &&
+        b.status !== 'cancelled' &&
+        b.status !== 'rejected'
+    );
 
-  if (existingConflict) {
-    res.status(409).json({
-      error: 'You already have an active reservation for this service and date.',
-      existingBookingId: existingConflict.id,
-    });
-    return;
+    if (existingConflict) {
+      res.status(409).json({
+        error: 'You already have an active reservation for this service and date.',
+        existingBookingId: existingConflict.id,
+      });
+      return;
+    }
   }
 
   const now = new Date().toISOString();
+  const effectiveStatus = initialStatus;
+  const isConfirmed = effectiveStatus === 'confirmed';
+
   const newBooking: Booking = {
     id: bookingId,
     userId: user.id,
-    userName: user.name,
-    userEmail: user.email,
+    userName: (travelerDetails as any)?.leadTravelerName || (travelerDetails as any)?.fullName || user.name,
+    userEmail: (travelerDetails as any)?.leadEmail || (travelerDetails as any)?.email || user.email,
     businessId: businessId || 'biz_1',
     serviceId,
+    bookingType: bookingType || 'standard',
+    customTripId,
+    invoiceNumber,
     title,
     provider: provider || 'Himalayan Sherpa Expeditions',
     category: category || 'Trek',
     date: date || 'Spring Expedition 2026',
     participantsCount: Math.max(1, participantsCount),
-    participants: participants.length > 0 ? participants : [{ fullName: user.name, nationality: 'Nepal' }],
+    participants: participants.length > 0
+      ? participants
+      : [{ fullName: (travelerDetails as any)?.leadTravelerName || user.name, nationality: (travelerDetails as any)?.leadNationality || 'Nepal' }],
+    optionsAndAddons: optionsAndAddons?.map((o: any) => ({
+      name: o.name,
+      priceNpr: Number(o.priceNpr || o.costNpr || 0),
+    })) || [],
+    priceBreakdown: priceBreakdown ? {
+      basePriceNpr: Number((priceBreakdown as any).basePriceNpr ?? (priceBreakdown as any).baseAmountNpr ?? numericAmount),
+      addOnsNpr: Number((priceBreakdown as any).addOnsNpr ?? (priceBreakdown as any).addonsAmountNpr ?? 0),
+      taxVatNpr: Number((priceBreakdown as any).taxVatNpr ?? (priceBreakdown as any).vatNpr ?? Math.round(numericAmount * 0.13)),
+      serviceChargeNpr: Number(priceBreakdown.serviceChargeNpr ?? Math.round(numericAmount * 0.05)),
+      totalAmountNpr: Number((priceBreakdown as any).totalAmountNpr ?? (priceBreakdown as any).totalNpr ?? Math.round(numericAmount * 1.18)),
+    } : {
+      basePriceNpr: numericAmount,
+      addOnsNpr: 0,
+      taxVatNpr: Math.round(numericAmount * 0.13),
+      serviceChargeNpr: Math.round(numericAmount * 0.05),
+      totalAmountNpr: Math.round(numericAmount * 1.18),
+    },
+    travelerDetails: travelerDetails ? {
+      fullName: (travelerDetails as any).fullName || (travelerDetails as any).leadTravelerName || user.name,
+      email: (travelerDetails as any).email || (travelerDetails as any).leadEmail || user.email,
+      phone: (travelerDetails as any).phone || (travelerDetails as any).leadPhone || contactPhone || '+977-1-4412345',
+      nationality: (travelerDetails as any).nationality || (travelerDetails as any).leadNationality || 'Nepal',
+      passportNumber: travelerDetails.passportNumber,
+      emergencyContact: (travelerDetails as any).emergencyContact || (travelerDetails as any).emergencyContactPhone,
+      dietaryNotes: (travelerDetails as any).dietaryNotes || (travelerDetails as any).dietaryOrMedicalNotes,
+    } : {
+      fullName: user.name,
+      email: user.email,
+      phone: contactPhone || '+977-1-4412345',
+      nationality: 'Nepal',
+    },
     totalAmountNpr: numericAmount,
-    status: 'pending',
-    paymentStatus: 'unpaid',
-    qrCode: `VN-PASS-${bookingId}-PENDING`,
-    meetingPoint: meetingPoint || 'Kathmandu Departure Base',
-    contactPhone: contactPhone || '+977-1-4412345',
+    status: effectiveStatus,
+    paymentStatus: isConfirmed ? 'successful' : 'unpaid',
+    qrCode: isConfirmed ? `VN-PASS-${bookingId}-VERIFIED-2026` : `VN-PASS-${bookingId}-PENDING`,
+    meetingPoint: meetingPoint || 'Kathmandu Departure Base (TIA Terminal 2 / Thamel)',
+    contactPhone: travelerDetails?.leadPhone || contactPhone || '+977-1-4412345',
     createdAt: now,
     updatedAt: now,
   };
@@ -147,9 +241,9 @@ router.post('/', requireAuth, (req: AuthRequest, res) => {
     id: `notif_${Date.now()}`,
     userId: user.id,
     title: 'Booking Request Received',
-    body: `Your reservation request #${bookingId} for "${title}" has been submitted to the provider.`,
+    body: `Your reservation request #${bookingId} for "${title}" has been submitted. Invoice #${invoiceNumber} issued.`,
     type: 'booking',
-    link: '/bookings',
+    link: '/dashboard',
     isRead: false,
     createdAt: now,
   });
@@ -161,7 +255,7 @@ router.post('/', requireAuth, (req: AuthRequest, res) => {
       id: `notif_${Date.now() + 1}`,
       userId: businessUser.id,
       title: 'Incoming Booking Request',
-      body: `New booking request #${bookingId} received from ${user.name} for ${title}.`,
+      body: `New booking #${bookingId} (${bookingType.toUpperCase()}) received from ${user.name} for ${title}.`,
       type: 'booking',
       link: '/portals/business',
       isRead: false,

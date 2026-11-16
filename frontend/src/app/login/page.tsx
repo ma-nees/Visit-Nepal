@@ -259,11 +259,10 @@ export default function LoginPage() {
                     key={roleItem.id}
                     type="button"
                     onClick={() => handleSelectRole(roleItem)}
-                    className={`flex flex-col items-center justify-center py-1 sm:py-1.5 px-0.5 rounded-xl border text-center transition-all cursor-pointer ${
-                      isSelected
-                        ? 'border-[#0552A2] bg-gradient-to-b from-blue-50/90 to-blue-50/40 shadow-xs ring-1 ring-[#0552A2]/30 text-[#0552A2]'
-                        : 'border-slate-200/90 bg-white/80 hover:bg-white hover:border-slate-300 text-slate-600 shadow-2xs'
-                    }`}
+                    className={`flex flex-col items-center justify-center py-1 sm:py-1.5 px-0.5 rounded-xl border text-center transition-all cursor-pointer ${isSelected
+                      ? 'border-[#0552A2] bg-gradient-to-b from-blue-50/90 to-blue-50/40 shadow-xs ring-1 ring-[#0552A2]/30 text-[#0552A2]'
+                      : 'border-slate-200/90 bg-white/80 hover:bg-white hover:border-slate-300 text-slate-600 shadow-2xs'
+                      }`}
                   >
                     <Icon className="h-3.5 w-3.5 mb-0.5" />
                     <span className="text-[8px] sm:text-[9px] font-inter font-semibold truncate max-w-full leading-tight">

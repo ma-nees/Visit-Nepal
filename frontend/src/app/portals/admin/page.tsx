@@ -30,6 +30,7 @@ export default function AdminPortalPage() {
   const [verifications, setVerifications] = useState<any[]>([]);
   const [permitQueue, setPermitQueue] = useState<any[]>([]);
   const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [customPlans, setCustomPlans] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchAdminData = async () => {
@@ -40,6 +41,7 @@ export default function AdminPortalPage() {
         if (res.verificationQueue) setVerifications(res.verificationQueue);
         if (res.permitOfficerQueue) setPermitQueue(res.permitOfficerQueue);
         if (res.recentAuditLogs) setAuditLogs(res.recentAuditLogs);
+        if (res.customPlans) setCustomPlans(res.customPlans);
       }
     } catch (err) {
       console.warn('[AdminPortal] Offline/mock fallback:', err);
@@ -240,6 +242,57 @@ export default function AdminPortalPage() {
           </div>
         </div>
       </div>
+
+      {/* Custom Expeditions Oversight */}
+      {customPlans.length > 0 && (
+        <div className="rounded-xl border border-slate-200 bg-white p-5 space-y-3.5 shadow-xs">
+          <div className="flex items-center justify-between">
+            <h2 className="text-sm font-extrabold text-slate-900">
+              Custom Expedition Inquiries &amp; Quotation Oversight
+            </h2>
+            <span className="text-xs font-mono font-bold text-slate-400">
+              {customPlans.length} Requests
+            </span>
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-slate-50 border-b border-slate-200 text-[10px] uppercase font-bold text-slate-400">
+                <tr>
+                  <th className="py-2.5 px-3">Trip ID</th>
+                  <th className="py-2.5 px-3">Traveler</th>
+                  <th className="py-2.5 px-3">Custom Route</th>
+                  <th className="py-2.5 px-3">Duration</th>
+                  <th className="py-2.5 px-3">Budget</th>
+                  <th className="py-2.5 px-3 text-right">Status</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-100 text-slate-700">
+                {customPlans.map((cp: any) => (
+                  <tr key={cp.id}>
+                    <td className="py-2.5 px-3 font-mono font-bold text-[#0552A2]">{cp.id}</td>
+                    <td className="py-2.5 px-3 font-semibold">{cp.travelerContact?.fullName || cp.userName}</td>
+                    <td className="py-2.5 px-3 max-w-[200px] truncate">{cp.title}</td>
+                    <td className="py-2.5 px-3">{cp.durationDays} Days</td>
+                    <td className="py-2.5 px-3 font-mono font-semibold">NPR {(cp.estimatedBudgetNpr || 0).toLocaleString()}</td>
+                    <td className="py-2.5 px-3 text-right">
+                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase ${
+                        cp.status === 'CONFIRMED'
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : cp.status === 'QUOTED'
+                          ? 'bg-purple-100 text-purple-800'
+                          : 'bg-amber-100 text-amber-800'
+                      }`}>
+                        {cp.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
 
       {/* Audit Logs */}
       {auditLogs.length > 0 && (

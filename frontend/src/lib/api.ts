@@ -3,8 +3,13 @@
  * Connects frontend UI components to the Express + TypeScript REST API.
  */
 
-const API_BASE_URL =
-  process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api';
+function getApiBaseUrl(): string {
+  if (process.env.NEXT_PUBLIC_API_URL) return process.env.NEXT_PUBLIC_API_URL;
+  if (typeof window !== 'undefined' && window.location.hostname && window.location.hostname !== 'localhost') {
+    return `http://${window.location.hostname}:8080/api`;
+  }
+  return 'http://localhost:8080/api';
+}
 
 function getAuthHeader(): Record<string, string> {
   if (typeof window === 'undefined') return {};
@@ -16,7 +21,7 @@ async function request<T>(
   endpoint: string,
   options: RequestInit = {}
 ): Promise<T> {
-  const url = `${API_BASE_URL}${endpoint}`;
+  const url = `${getApiBaseUrl()}${endpoint}`;
   const headers = {
     'Content-Type': 'application/json',
     ...getAuthHeader(),
@@ -33,7 +38,10 @@ async function request<T>(
     }
     return (await res.json()) as T;
   } catch (err: any) {
-    console.warn(`[API Info] ${endpoint}: ${err.message || 'Network request unreachable (offline fallback active)'}`);
+    // Graceful offline fallback: suppress noisy console warning when backend is offline or unauthenticated
+    if (process.env.NODE_ENV === 'development' && err.message !== 'Failed to fetch' && !err.message.includes('401')) {
+      console.debug(`[API Info] ${endpoint}:`, err.message);
+    }
     throw err;
   }
 }
@@ -164,14 +172,7 @@ export const api = {
   // ============================================================================
 
   customPlans: {
-    async calculate(data: {
-      destinations: string[];
-      durationDays: number;
-      guideRequested?: boolean;
-      transportRequested?: boolean;
-      butlerRequested?: boolean;
-      accommodationTier?: string;
-    }): Promise<{ estimatedBudgetNpr: number; budgetBreakdown: any; currency: string; disclaimer: string }> {
+    async calculate(data: any): Promise<{ estimatedBudgetNpr: number; budgetBreakdown: any; detectedPermits?: any[]; currency: string; disclaimer: string }> {
       return request('/custom-plans/calculate', {
         method: 'POST',
         body: JSON.stringify(data),
@@ -182,10 +183,46 @@ export const api = {
       return request('/custom-plans');
     },
 
+    async get(id: string): Promise<{ customPlan: any }> {
+      return request(`/custom-plans/${id}`);
+    },
+
     async save(data: any): Promise<{ customPlan: any }> {
       return request('/custom-plans', {
         method: 'POST',
         body: JSON.stringify(data),
+      });
+    },
+
+    async quote(id: string, quotationData: {
+      quotedAmountNpr: number;
+      remarks?: string;
+      alternativeRouteNotes?: string;
+      itemizedBreakdown?: any;
+    }): Promise<{ quotation: any; customPlan: any }> {
+      return request(`/custom-plans/${id}/quote`, {
+        method: 'POST',
+        body: JSON.stringify(quotationData),
+      });
+    },
+
+    async acceptQuote(id: string, quoteId: string): Promise<{ success: boolean; customPlan: any; booking: any }> {
+      return request(`/custom-plans/${id}/quotations/${quoteId}/accept`, {
+        method: 'POST',
+      });
+    },
+
+    async rejectQuote(id: string, quoteId: string, feedback?: string): Promise<{ success: boolean; customPlan: any }> {
+      return request(`/custom-plans/${id}/quotations/${quoteId}/reject`, {
+        method: 'POST',
+        body: JSON.stringify({ feedback }),
+      });
+    },
+
+    async reject(id: string, reason?: string): Promise<{ success: boolean; customPlan: any }> {
+      return request(`/custom-plans/${id}/reject`, {
+        method: 'POST',
+        body: JSON.stringify({ reason }),
       });
     },
 
@@ -201,8 +238,16 @@ export const api = {
   // ============================================================================
 
   bookings: {
-    async list(status?: string): Promise<{ count: number; bookings: any[] }> {
-      return request(`/bookings${status ? `?status=${status}` : ''}`);
+    async list(params?: { status?: string; bookingType?: string; q?: string } | string): Promise<{ count: number; bookings: any[] }> {
+      if (typeof params === 'string') {
+        return request(`/bookings?status=${encodeURIComponent(params)}`);
+      }
+      const query = new URLSearchParams();
+      if (params?.status) query.append('status', params.status);
+      if (params?.bookingType) query.append('bookingType', params.bookingType);
+      if (params?.q) query.append('q', params.q);
+      const qs = query.toString();
+      return request(`/bookings${qs ? `?${qs}` : ''}`);
     },
 
     async get(id: string): Promise<{ booking: any }> {
@@ -221,6 +266,27 @@ export const api = {
       businessId?: string;
       meetingPoint?: string;
       contactPhone?: string;
+      bookingType?: 'standard' | 'custom';
+      customTripId?: string;
+      optionsAndAddons?: Array<{ name: string; priceNpr?: number; costNpr?: number; note?: string }>;
+      priceBreakdown?: {
+        baseAmountNpr: number;
+        addonsAmountNpr?: number;
+        serviceChargeNpr: number;
+        vatNpr: number;
+        totalNpr: number;
+      };
+      travelerDetails?: {
+        leadTravelerName: string;
+        leadEmail: string;
+        leadPhone: string;
+        leadNationality?: string;
+        passportNumber?: string;
+        emergencyContactName?: string;
+        emergencyContactPhone?: string;
+        dietaryOrMedicalNotes?: string;
+      };
+      initialStatus?: string;
     }): Promise<{ booking: any }> {
       return request('/bookings', {
         method: 'POST',

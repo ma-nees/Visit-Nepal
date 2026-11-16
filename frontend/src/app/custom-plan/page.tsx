@@ -1,7 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import {
   Compass,
   Calendar,
@@ -12,532 +13,1637 @@ import {
   ShieldCheck,
   Sparkles,
   ArrowRight,
+  ArrowLeft,
   PlusCircle,
   Trash2,
+  MoveUp,
+  MoveDown,
+  Clock,
+  MapPin,
+  CheckCircle2,
+  AlertCircle,
+  FileText,
+  DollarSign,
+  Info,
+  Luggage,
+  PhoneCall,
+  Search,
 } from 'lucide-react';
-import { hotels, guides, butlers } from '@/data/mockData';
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
 
-interface CustomDay {
+// Region and destination catalog for Step 1
+const REGIONS_CATALOG = [
+  {
+    id: 'everest',
+    regionName: 'Everest (Khumbu)',
+    name: 'Everest Base Camp & Gokyo Lakes',
+    altitude: '5,364m - 5,545m (Kala Patthar)',
+    difficulty: 'Challenging',
+    bestSeason: 'Mar - May / Oct - Dec',
+    highlights: ['Mt. Everest, Lhotse, Ama Dablam', 'Tengboche Monastery', 'Sherpa Capital of Namche Bazaar'],
+    requiredPermits: ['tims', 'snp'],
+    defaultDays: 14,
+  },
+  {
+    id: 'annapurna',
+    regionName: 'Annapurna Conservation Area',
+    name: 'Annapurna Circuit & Sanctuary',
+    altitude: '4,130m (ABC) / 5,416m (Thorong La)',
+    difficulty: 'Moderate to Challenging',
+    bestSeason: 'Sep - Nov / Mar - May',
+    highlights: ['Thorong La Pass', 'Poon Hill Sunrise', 'Sacred Muktinath Temple'],
+    requiredPermits: ['tims', 'acap'],
+    defaultDays: 12,
+  },
+  {
+    id: 'langtang',
+    regionName: 'Langtang & Helambu',
+    name: 'Langtang Valley & Gosainkunda Lakes',
+    altitude: '4,984m (Tsergo Ri) / 4,380m (Lakes)',
+    difficulty: 'Moderate',
+    bestSeason: 'Mar - May / Sep - Nov',
+    highlights: ['Tamang Heritage Culture', 'Glacial Lakes of Gosainkunda', 'Kyanjin Gompa Cheese Factory'],
+    requiredPermits: ['tims', 'lnp'],
+    defaultDays: 9,
+  },
+  {
+    id: 'manaslu',
+    regionName: 'Manaslu Restricted Zone',
+    name: 'Manaslu Circuit & Tsum Valley',
+    altitude: '5,106m (Larkya La Pass)',
+    difficulty: 'Challenging',
+    bestSeason: 'Oct - Nov / Mar - May',
+    highlights: ['Wild Tibetan Border Crossings', 'Pristine Larkya La Pass', 'Ancient Buddhist Tsum Valley'],
+    requiredPermits: ['tims', 'mrap', 'acap'],
+    defaultDays: 14,
+  },
+  {
+    id: 'mustang',
+    regionName: 'Upper Mustang (Kingdom of Lo)',
+    name: 'Upper Mustang & Walled City of Lo Manthang',
+    altitude: '3,840m (Lo Manthang)',
+    difficulty: 'Moderate',
+    bestSeason: 'Apr - Nov (Rain-Shadow Zone)',
+    highlights: ['Walled Capital of Lo Manthang', 'Centuries-old Sky Caves', 'Tibetan Red Cliffs & Monasteries'],
+    requiredPermits: ['mustang_rap', 'acap'],
+    defaultDays: 10,
+  },
+  {
+    id: 'dolpo',
+    regionName: 'Dolpo & Far West',
+    name: 'Upper Dolpo & Shey Phoksundo Lake',
+    altitude: '5,115m (Kang La Pass)',
+    difficulty: 'Strenuous / Alpine',
+    bestSeason: 'May - Oct',
+    highlights: ['Deep Turquoise Lake Phoksundo', 'Bonpo Shamanic Monasteries', 'Untouched Himalayan Solitude'],
+    requiredPermits: ['tims', 'dolpo_rap'],
+    defaultDays: 16,
+  },
+];
+
+export interface ItineraryStage {
   day: number;
-  title: string;
+  stageName: string;
+  startPoint: string;
+  endPoint: string;
   altitude: string;
+  distanceKm: number;
+  walkingHours: number;
+  isRestDay: boolean;
   notes: string;
 }
 
+const DEFAULT_STAGES: Record<string, ItineraryStage[]> = {
+  everest: [
+    { day: 1, stageName: 'Lukla Arrival to Phakding', startPoint: 'Lukla (2,840m)', endPoint: 'Phakding (2,610m)', altitude: '2,610m', distanceKm: 8, walkingHours: 3.5, isRestDay: false, notes: 'Scenic mountain flight from Kathmandu; gentle acclimatization descent.' },
+    { day: 2, stageName: 'Ascent through Sagarmatha NP to Namche', startPoint: 'Phakding (2,610m)', endPoint: 'Namche Bazaar (3,440m)', altitude: '3,440m', distanceKm: 11, walkingHours: 6, isRestDay: false, notes: 'Cross Hillary Suspension Bridge; first view of Mt. Everest.' },
+    { day: 3, stageName: 'Acclimatization & Everest View Hike', startPoint: 'Namche (3,440m)', endPoint: 'Hotel Everest View (3,880m)', altitude: '3,880m', distanceKm: 5, walkingHours: 4, isRestDay: true, notes: 'Climb high, sleep low protocol. Explore Sherpa Museum.' },
+    { day: 4, stageName: 'Trek to Tengboche Monastery', startPoint: 'Namche Bazaar', endPoint: 'Tengboche (3,860m)', altitude: '3,860m', distanceKm: 10, walkingHours: 5, isRestDay: false, notes: 'Receive traditional juniper blessing from resident Rinpoche.' },
+    { day: 5, stageName: 'Alpine Meadows to Dingboche', startPoint: 'Tengboche', endPoint: 'Dingboche (4,410m)', altitude: '4,410m', distanceKm: 11, walkingHours: 5.5, isRestDay: false, notes: 'Pass mani walls and treeline into glaciated valley.' },
+    { day: 6, stageName: 'Acclimatization & Nangkartshang Peak', startPoint: 'Dingboche', endPoint: 'Dingboche Ridge (5,080m)', altitude: '5,080m', distanceKm: 4, walkingHours: 4.5, isRestDay: true, notes: 'Important staging day before high-altitude moraine trek.' },
+    { day: 7, stageName: 'Lobuche & Memorial Ridge', startPoint: 'Dingboche', endPoint: 'Lobuche (4,940m)', altitude: '4,940m', distanceKm: 8, walkingHours: 5, isRestDay: false, notes: 'Pay tribute at climbers memorial crest near Thokla Pass.' },
+    { day: 8, stageName: 'Everest Base Camp & Gorak Shep', startPoint: 'Lobuche', endPoint: 'EBC (5,364m) / Gorak Shep', altitude: '5,364m', distanceKm: 13, walkingHours: 7.5, isRestDay: false, notes: 'Reach historic Everest Base Camp on Khumbu Glacier.' },
+  ],
+  annapurna: [
+    { day: 1, stageName: 'Pokhara to Tikhedhungga', startPoint: 'Pokhara (820m)', endPoint: 'Ulleri / Tikhedhungga (1,960m)', altitude: '1,960m', distanceKm: 9, walkingHours: 4.5, isRestDay: false, notes: 'Drive to Birethanti trailhead; trek stone stairs through rhododendron.' },
+    { day: 2, stageName: 'Ascent to Ghorepani', startPoint: 'Tikhedhungga', endPoint: 'Ghorepani (2,860m)', altitude: '2,860m', distanceKm: 11, walkingHours: 5.5, isRestDay: false, notes: 'Dense ancient moss forest; panoramic views of Dhaulagiri.' },
+    { day: 3, stageName: 'Poon Hill Sunrise to Tadapani', startPoint: 'Ghorepani', endPoint: 'Tadapani (2,630m)', altitude: '3,210m (Poon Hill)', distanceKm: 10, walkingHours: 5, isRestDay: false, notes: 'Pre-dawn climb to Poon Hill 360-degree Himalayan sunrise.' },
+    { day: 4, stageName: 'Tadapani to Chhomrong', startPoint: 'Tadapani', endPoint: 'Chhomrong (2,170m)', altitude: '2,170m', distanceKm: 9, walkingHours: 4.5, isRestDay: false, notes: 'Gateway village beneath towering peaks of Machhapuchhre (Fishtail).' },
+    { day: 5, stageName: 'Chhomrong to Dovan', startPoint: 'Chhomrong', endPoint: 'Dovan (2,600m)', altitude: '2,600m', distanceKm: 9, walkingHours: 5, isRestDay: false, notes: 'Descend to Chhomrong Khola river and climb through bamboo grove.' },
+    { day: 6, stageName: 'Deurali to Machhapuchhre Base Camp', startPoint: 'Dovan', endPoint: 'MBC (3,700m)', altitude: '3,700m', distanceKm: 10, walkingHours: 5.5, isRestDay: false, notes: 'Enter alpine sanctuary gorge between Hiunchuli and Fishtail.' },
+    { day: 7, stageName: 'Annapurna Base Camp Sanctuary', startPoint: 'MBC', endPoint: 'ABC (4,130m)', altitude: '4,130m', distanceKm: 4, walkingHours: 3, isRestDay: true, notes: 'Glacial amphitheater surrounded by Annapurna I, South, and Gangapurna.' },
+  ],
+};
+
 export default function CustomTripPlannerPage() {
-  const { addBooking } = useApp();
+  const router = useRouter();
+  const { createCustomTrip, currentUser } = useApp();
 
-  // Step 1: Destination & Duration
-  const [region, setRegion] = useState('Everest (Solukhumbu)');
-  const [durationDays, setDurationDays] = useState(10);
-  const [travelersCount, setTravelersCount] = useState(2);
-  const [startDate, setStartDate] = useState('2026-11-20');
+  // Wizard Step (1 to 7)
+  const [currentStep, setCurrentStep] = useState<number>(1);
 
-  // Step 2: Selected Custom Services
-  const [selectedHotel, setSelectedHotel] = useState<string>(hotels[0].id);
-  const [selectedGuide, setSelectedGuide] = useState<string>(guides[0].id);
-  const [includeButler, setIncludeButler] = useState<boolean>(true);
-  const [selectedButler, setSelectedButler] = useState<string>(butlers[0].id);
-  const [transportType, setTransportType] = useState<string>('Domestic Mountain Flight (Buddha Air)');
-  const [needPermits, setNeedPermits] = useState<boolean>(true);
+  // STEP 1: Destination
+  const [destinationSearch, setDestinationSearch] = useState('');
+  const [selectedRegionId, setSelectedRegionId] = useState('everest');
 
-  // Step 3: Custom Itinerary Days
-  const [customDays, setCustomDays] = useState<CustomDay[]>([
-    { day: 1, title: 'Arrival in Kathmandu & Gear Check', altitude: '1,400m', notes: 'Hotel check-in and briefing with lead guide' },
-    { day: 2, title: 'Scenic Mountain Flight & Trailhead Start', altitude: '2,610m', notes: 'Fly to mountain airstrip and begin gentle trek' },
-    { day: 3, title: 'Acclimatization & Ridge Exploration', altitude: '3,440m', notes: 'Hike to panoramic viewpoint for Everest and Ama Dablam' },
-    { day: 4, title: 'Monastery Visit & High Alpine Trek', altitude: '3,860m', notes: 'Receive traditional blessing and teahouse rest' },
-  ]);
+  // STEP 2: Travel Details
+  const [startDate, setStartDate] = useState('2026-05-10');
+  const [adultsCount, setAdultsCount] = useState(2);
+  const [childrenCount, setChildrenCount] = useState(0);
+  const [experienceLevel, setExperienceLevel] = useState<'Beginner' | 'Intermediate' | 'Advanced' | 'Technical'>('Intermediate');
+  const [travelStyle, setTravelStyle] = useState<'Luxury Lodge' | 'Classic Teahouse' | 'Wilderness Camping' | 'Fastpacking Alpine'>('Classic Teahouse');
 
-  const [newDayTitle, setNewDayTitle] = useState('');
-  const [newDayAlt, setNewDayAlt] = useState('');
-  const [booked, setBooked] = useState(false);
+  // STEP 3: Custom Itinerary Stages
+  const [itineraryStages, setItineraryStages] = useState<ItineraryStage[]>(DEFAULT_STAGES['everest']);
+  const [editingStageIndex, setEditingStageIndex] = useState<number | null>(null);
 
-  const addCustomDay = () => {
-    if (!newDayTitle.trim()) return;
-    const nextDayNum = customDays.length + 1;
-    setCustomDays((prev) => [
+  // New stage form state
+  const [newStageName, setNewStageName] = useState('');
+  const [newStageStart, setNewStageStart] = useState('');
+  const [newStageEnd, setNewStageEnd] = useState('');
+  const [newStageAlt, setNewStageAlt] = useState('3,500m');
+  const [newStageDist, setNewStageDist] = useState(10);
+  const [newStageHours, setNewStageHours] = useState(5);
+  const [newStageRest, setNewStageRest] = useState(false);
+  const [newStageNotes, setNewStageNotes] = useState('');
+
+  // STEP 4: Services
+  const [guideRequested, setGuideRequested] = useState(true);
+  const [porterCount, setPorterCount] = useState(1);
+  const [sherpaButlerRequested, setSherpaButlerRequested] = useState(false);
+  const [accommodationTier, setAccommodationTier] = useState<'5-Star Himalayan Lodge' | 'Boutique Teahouse' | 'Traditional Mountain Lodge' | 'Alpine Expedition Camp'>('Boutique Teahouse');
+  const [transportMode, setTransportMode] = useState<'Domestic Flights (Lukla/Pokhara)' | 'Private 4WD Expedition Jeep' | 'Tourist Express Bus' | 'Private Helicopter Charter'>('Domestic Flights (Lukla/Pokhara)');
+  const [mealPlan, setMealPlan] = useState<'All-Inclusive 3 Meals/Day' | 'Bed & Breakfast Only' | 'Self-Catered'>('All-Inclusive 3 Meals/Day');
+  const [selectedGear, setSelectedGear] = useState<string[]>(['-20°C Down Jacket', '4-Season Sleeping Bag']);
+  const [emergencySupport, setEmergencySupport] = useState<string[]>(['Satellite InReach Dispatch', 'Emergency Heli-Medevac Guarantee']);
+
+  // STEP 5: Permits
+  const [permitAcknowledged, setPermitAcknowledged] = useState(true);
+
+  // STEP 6: Dynamic Pricing Calculation State
+  const [calculatedPricing, setCalculatedPricing] = useState<any>(null);
+  const [calculatingPrice, setCalculatingPrice] = useState(false);
+
+  // STEP 7: Traveler Contact Form
+  const [leadName, setLeadName] = useState(currentUser?.name || 'Aayush Pradhan');
+  const [leadEmail, setLeadEmail] = useState(currentUser?.email || 'aayush.traveler@visitnepal.com');
+  const [leadPhone, setLeadPhone] = useState('+977-9801234567');
+  const [leadNationality, setLeadNationality] = useState('Nepal / International');
+  const [passportNumber, setPassportNumber] = useState('NP-9982341A');
+  const [emergencyContact, setEmergencyContact] = useState('Dr. S. Pradhan (+977-9841239876)');
+  const [specialRequests, setSpecialRequests] = useState('');
+
+  // Submission State
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedTrip, setSubmittedTrip] = useState<any>(null);
+
+  // Active Region Record
+  const activeRegion = useMemo(() => {
+    return REGIONS_CATALOG.find((r) => r.id === selectedRegionId) || REGIONS_CATALOG[0];
+  }, [selectedRegionId]);
+
+  // Handle region switch and prefill default stages
+  const handleSelectRegion = (regionId: string) => {
+    setSelectedRegionId(regionId);
+    if (DEFAULT_STAGES[regionId]) {
+      setItineraryStages(DEFAULT_STAGES[regionId]);
+    } else {
+      setItineraryStages([
+        { day: 1, stageName: 'Arrival & Trailhead Briefing', startPoint: 'Kathmandu Base', endPoint: 'Initial Lodge', altitude: '2,200m', distanceKm: 8, walkingHours: 4, isRestDay: false, notes: 'Expedition kickoff and gear check.' },
+        { day: 2, stageName: 'High Mountain Ascent', startPoint: 'Initial Lodge', endPoint: 'High Camp', altitude: '3,800m', distanceKm: 12, walkingHours: 6, isRestDay: false, notes: 'Alpine ascent through pine forest.' },
+        { day: 3, stageName: 'Acclimatization Day', startPoint: 'High Camp', endPoint: 'Panoramic Viewpoint', altitude: '4,400m', distanceKm: 5, walkingHours: 3.5, isRestDay: true, notes: 'Active rest day for altitude adaptation.' },
+      ]);
+    }
+  };
+
+  // Reorder itinerary stages
+  const moveStage = (index: number, direction: 'up' | 'down') => {
+    const targetIndex = direction === 'up' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= itineraryStages.length) return;
+    const updated = [...itineraryStages];
+    const [moved] = updated.splice(index, 1);
+    updated.splice(targetIndex, 0, moved);
+    // Renumber days
+    const renumbered = updated.map((stage, idx) => ({ ...stage, day: idx + 1 }));
+    setItineraryStages(renumbered);
+  };
+
+  const removeStage = (index: number) => {
+    const updated = itineraryStages.filter((_, idx) => idx !== index).map((s, idx) => ({ ...s, day: idx + 1 }));
+    setItineraryStages(updated);
+  };
+
+  const addStage = () => {
+    if (!newStageName.trim()) return;
+    const nextDay = itineraryStages.length + 1;
+    setItineraryStages((prev) => [
       ...prev,
       {
-        day: nextDayNum,
-        title: newDayTitle.trim(),
-        altitude: newDayAlt.trim() || '3,000m',
-        notes: 'Custom planned day',
+        day: nextDay,
+        stageName: newStageName.trim(),
+        startPoint: newStageStart.trim() || 'Previous Camp',
+        endPoint: newStageEnd.trim() || 'Next Lodge',
+        altitude: newStageAlt.trim() || '3,500m',
+        distanceKm: Number(newStageDist) || 10,
+        walkingHours: Number(newStageHours) || 5,
+        isRestDay: newStageRest,
+        notes: newStageNotes.trim() || 'Custom trekking stage',
       },
     ]);
-    setNewDayTitle('');
-    setNewDayAlt('');
+    setNewStageName('');
+    setNewStageStart('');
+    setNewStageEnd('');
+    setNewStageNotes('');
+    setNewStageRest(false);
   };
 
-  const removeCustomDay = (dayNum: number) => {
-    setCustomDays((prev) =>
-      prev.filter((d) => d.day !== dayNum).map((d, idx) => ({ ...d, day: idx + 1 }))
-    );
-  };
+  // Stats calculation
+  const totalDurationDays = itineraryStages.length;
+  const totalDistanceKm = itineraryStages.reduce((acc, s) => acc + (s.distanceKm || 0), 0);
+  const totalWalkingHours = itineraryStages.reduce((acc, s) => acc + (s.walkingHours || 0), 0);
+  const totalRestDays = itineraryStages.filter((s) => s.isRestDay).length;
 
-  // Cost calculation
-  const chosenHotel = hotels.find((h) => h.id === selectedHotel) || hotels[0];
-  const chosenGuide = guides.find((g) => g.id === selectedGuide) || guides[0];
-  const chosenButler = butlers.find((b) => b.id === selectedButler) || butlers[0];
+  // STEP 6: Live Dynamic Price Calculation with Backend Formula
+  useEffect(() => {
+    const fetchCalculation = async () => {
+      setCalculatingPrice(true);
+      try {
+        const res = await api.customPlans.calculate({
+          destinations: [activeRegion.id],
+          durationDays: totalDurationDays,
+          travelersCount: adultsCount + childrenCount,
+          guideRequested,
+          porterRequested: porterCount > 0,
+          butlerRequested: sherpaButlerRequested,
+          accommodationTier,
+          transportRequested: transportMode.includes('Flight') || transportMode.includes('Jeep'),
+        });
+        if (res) {
+          setCalculatedPricing(res);
+        }
+      } catch (err) {
+        // Local calculation fallback
+        const travelers = adultsCount + childrenCount;
+        const accommodationRate = accommodationTier.includes('5-Star') ? 14000 : accommodationTier.includes('Boutique') ? 7000 : 3500;
+        const guideDailyRate = guideRequested ? 6500 : 0;
+        const porterDailyRate = porterCount * 3500;
+        const butlerDailyRate = sherpaButlerRequested ? 8500 : 0;
+        const transportTotal = transportMode.includes('Flight') ? 30000 * travelers : transportMode.includes('Helicopter') ? 180000 : 15000;
+        const mealDaily = mealPlan.includes('All-Inclusive') ? 4500 * travelers : 1500 * travelers;
+        const gearTotal = selectedGear.length * 1500 * travelers;
+        const permitTotal = activeRegion.requiredPermits.includes('mustang_rap') ? 70000 * travelers : 5000 * travelers;
 
-  const hotelCost = chosenHotel.priceNum * 3;
-  const guideCost = chosenGuide.rateNum * durationDays;
-  const butlerCost = includeButler ? 45 * durationDays : 0;
-  const transportCost = transportType.includes('Flight') ? 115 * travelersCount : 120 * 2;
-  const permitsCost = needPermits ? 40 * travelersCount : 0;
-  const baseTrekLogistics = 400 * travelersCount;
+        const subtotal = (accommodationRate * totalDurationDays) +
+          (guideDailyRate * totalDurationDays) +
+          (porterDailyRate * totalDurationDays) +
+          (butlerDailyRate * totalDurationDays) +
+          transportTotal +
+          (mealDaily * totalDurationDays) +
+          gearTotal +
+          permitTotal;
 
-  const totalEstimatedCost = (
-    hotelCost +
-    guideCost +
-    butlerCost +
-    transportCost +
-    permitsCost +
-    baseTrekLogistics
-  );
+        const serviceCharge = Math.round(subtotal * 0.05);
+        const vat = Math.round((subtotal + serviceCharge) * 0.13);
+        const total = subtotal + serviceCharge + vat;
 
-  const handleCreateAndBook = async () => {
-    const totalNpr = totalEstimatedCost * 135; // Convert USD base to NPR
-    await addBooking({
-      title: `Custom Expedition: ${region} (${durationDays} Days)`,
-      provider: 'Himalayan Sherpa Expeditions',
-      category: 'Trek',
-      date: `${startDate} (${durationDays} Days)`,
-      status: 'Confirmed',
-      amount: `NPR ${totalNpr.toLocaleString()}`,
-      color: '#0552A2',
-      meetingPoint: 'Tribhuvan International Airport (TIA) Terminal 2',
-      assignedGuide: `${chosenGuide.name} (IFMGA)`,
-      contactPhone: '+977 1 4412345',
-    });
+        setCalculatedPricing({
+          estimatedBudgetNpr: total,
+          currency: 'NPR',
+          budgetBreakdown: {
+            accommodation: accommodationRate * totalDurationDays,
+            guideAndFieldStaff: (guideDailyRate + porterDailyRate + butlerDailyRate) * totalDurationDays,
+            transportation: transportTotal,
+            meals: mealDaily * totalDurationDays,
+            equipmentRental: gearTotal,
+            governmentPermits: permitTotal,
+            serviceChargeNpr: serviceCharge,
+            vatNpr: vat,
+            totalEstimatedNpr: total,
+          },
+        });
+      } finally {
+        setCalculatingPrice(false);
+      }
+    };
 
-    // Also persist custom plan to backend
-    try {
-      await api.customPlans.save({
-        title: `Custom Expedition: ${region} (${durationDays} Days)`,
-        destinations: [region.toLowerCase().replace(/[^a-z0-9]/g, '-')],
-        startDate,
-        durationDays,
-        trekkingDifficulty: 'Moderate',
-        estimatedBudgetNpr: totalNpr,
-        accommodationPreference: chosenHotel.name,
-        guideRequested: true,
-        transportRequested: true,
-        butlerRequested: includeButler,
-        itinerary: customDays.map((d) => ({
-          day: d.day,
-          destination: region,
-          activity: d.title,
-          elevation: d.altitude,
-        })),
-        status: 'submitted',
-      });
-    } catch (err) {
-      console.warn('Custom plan saved to local state');
-    }
+    fetchCalculation();
+  }, [
+    activeRegion,
+    totalDurationDays,
+    adultsCount,
+    childrenCount,
+    guideRequested,
+    porterCount,
+    sherpaButlerRequested,
+    accommodationTier,
+    transportMode,
+    mealPlan,
+    selectedGear,
+  ]);
 
-    setBooked(true);
+  // Submit Custom Booking Request
+  const handleSubmitCustomTrip = async () => {
+    setSubmitting(true);
+    const totalTravelers = adultsCount + childrenCount;
+    const finalAmountNpr = calculatedPricing?.estimatedBudgetNpr || 280000;
+
+    const payload = {
+      title: `Custom Expedition: ${activeRegion.name} (${totalDurationDays} Days)`,
+      destinations: [activeRegion.id],
+      startDate,
+      durationDays: totalDurationDays,
+      travelersCount: totalTravelers,
+      adultsCount,
+      childrenCount,
+      experienceLevel,
+      travelStyle,
+      trekkingDifficulty: activeRegion.difficulty,
+      estimatedBudgetNpr: finalAmountNpr,
+      accommodationPreference: accommodationTier,
+      guideRequested,
+      porterRequested: porterCount > 0,
+      butlerRequested: sherpaButlerRequested,
+      transportRequested: transportMode.includes('Flight') || transportMode.includes('Jeep'),
+      mealsPlan: mealPlan,
+      equipmentRental: selectedGear,
+      emergencyServices: emergencySupport,
+      detectedPermits: activeRegion.requiredPermits.map((pid) => ({
+        id: pid,
+        name: pid === 'tims' ? 'TIMS Permit' : pid === 'snp' ? 'Sagarmatha NP Permit' : pid === 'acap' ? 'ACAP Permit' : pid.toUpperCase(),
+        feeNpr: pid.includes('rap') ? 67500 : 3000,
+        feeUsd: pid.includes('rap') ? 500 : 30,
+        isRestrictedArea: pid.includes('rap'),
+      })),
+      itinerary: itineraryStages.map((s) => ({
+        day: s.day,
+        title: s.stageName,
+        destination: activeRegion.regionName,
+        activity: `${s.startPoint} to ${s.endPoint} (${s.notes})`,
+        elevation: s.altitude,
+        distanceKm: s.distanceKm,
+        walkingHours: s.walkingHours,
+        isRestDay: s.isRestDay,
+      })),
+      travelerContact: {
+        fullName: leadName,
+        email: leadEmail,
+        phone: leadPhone,
+        nationality: leadNationality,
+        passportNumber,
+        emergencyContact,
+        dietaryNotes: specialRequests,
+      },
+      status: 'PENDING_REVIEW',
+    };
+
+    const saved = await createCustomTrip(payload);
+    setSubmittedTrip(saved);
+    setSubmitting(false);
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* Header Banner: Compact, clean */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#0552A2] via-[#064385] to-slate-900 p-6 sm:p-8 text-white border border-white/10">
-        <div className="max-w-2xl space-y-2.5">
+    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
+      {/* 1. Header Hero Banner */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] p-6 sm:p-8 text-white border border-white/10 shadow-lg">
+        <div className="relative z-10 max-w-2xl space-y-2">
           <div className="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#92C4EA]">
-            <Sparkles className="h-3.5 w-3.5 text-[#FDB716]" />
-            <span>Tailor-Made Himalayan Journeys 2026</span>
+            <Sparkles className="h-4 w-4 text-[#FDB716]" />
+            <span>Interactive Custom Expedition Studio 2026</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight">
-            Build Your Custom Nepal Trip Plan
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-poppins">
+            Build Your Own Himalayan Journey
           </h1>
-          <p className="text-xs sm:text-sm text-blue-100 leading-relaxed max-w-xl">
-            Choose your preferred region, handpick certified mountain guides, select luxury heritage hotels or authentic teahouses, and build your own daily trail milestones.
+          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
+            Design a custom itinerary across Everest, Annapurna, Manaslu, or Mustang. Select your IFMGA guide, Sherpa butler, preferred accommodation, and route-detected permits.
           </p>
         </div>
       </div>
 
+      {/* 2. Wizard Stepper Bar */}
+      <div className="rounded-xl border border-slate-200 bg-white p-2 sm:p-3 shadow-xs">
+        <div className="flex items-center justify-between overflow-x-auto text-xs font-semibold gap-2 py-1 scrollbar-none">
+          {[
+            { num: 1, label: 'Destination' },
+            { num: 2, label: 'Travel Details' },
+            { num: 3, label: 'Itinerary' },
+            { num: 4, label: 'Services' },
+            { num: 5, label: 'Permits' },
+            { num: 6, label: 'Pricing' },
+            { num: 7, label: 'Review & Submit' },
+          ].map((s) => {
+            const isActive = currentStep === s.num;
+            const isCompleted = currentStep > s.num;
+            return (
+              <button
+                key={s.num}
+                type="button"
+                onClick={() => setCurrentStep(s.num)}
+                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                  isActive
+                    ? 'bg-[#0552A2] text-white shadow-xs font-bold'
+                    : isCompleted
+                    ? 'text-emerald-700 bg-emerald-50 hover:bg-emerald-100 font-semibold'
+                    : 'text-slate-500 hover:bg-slate-100'
+                }`}
+              >
+                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
+                  isActive
+                    ? 'bg-white text-[#0552A2]'
+                    : isCompleted
+                    ? 'bg-emerald-600 text-white'
+                    : 'bg-slate-200 text-slate-600'
+                }`}>
+                  {isCompleted ? '✓' : s.num}
+                </span>
+                <span className="hidden md:inline">{s.label}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* 3. Wizard Content Area */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Left: Interactive Form */}
+        {/* Main Step Form (Left 2 cols) */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Step 1: Region & General Scope */}
-          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 space-y-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <Compass className="h-4 w-4 text-[#0552A2]" />
-              <h2 className="text-base font-extrabold text-slate-900">
-                1. Region, Dates &amp; Travelers
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Destination / Trekking Region
-                </label>
-                <select
-                  value={region}
-                  onChange={(e) => setRegion(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 bg-white p-2 text-xs font-semibold text-slate-800"
-                >
-                  <option value="Everest (Solukhumbu)">Everest Region (Solukhumbu)</option>
-                  <option value="Annapurna Circuit & Sanctuary">Annapurna Circuit & Sanctuary</option>
-                  <option value="Upper Mustang Forbidden Kingdom">Upper Mustang Forbidden Kingdom</option>
-                  <option value="Langtang Valley & Glaciers">Langtang Valley & Glaciers</option>
-                  <option value="Chitwan Wildlife & Jungle">Chitwan Wildlife & Jungle</option>
-                  <option value="Manaslu Circuit (Restricted)">Manaslu Circuit (Restricted)</option>
-                </select>
+          {/* ================================================================= */}
+          {/* STEP 1: DESTINATION SELECTION & AUTOCOMPLETE */}
+          {/* ================================================================= */}
+          {currentStep === 1 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <Compass className="h-4 w-4" /> Step 1 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Choose Himalayan Region or Route
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Filter by region, maximum altitude, and technical grading.
+                </p>
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Start Date
-                </label>
+              {/* Destination Search Box */}
+              <div className="relative">
+                <Search className="absolute left-3.5 top-3 h-4 w-4 text-slate-400" />
                 <input
-                  type="date"
-                  value={startDate}
-                  onChange={(e) => setStartDate(e.target.value)}
-                  className="w-full rounded-lg border border-slate-200 p-2 text-xs"
+                  type="text"
+                  placeholder="Search Everest, Annapurna, Manaslu, Mustang, Dolpo, Langtang..."
+                  value={destinationSearch}
+                  onChange={(e) => setDestinationSearch(e.target.value)}
+                  className="w-full rounded-xl border border-slate-200 pl-10 pr-4 py-2.5 text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
                 />
               </div>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Trip Duration ({durationDays} Days)
-                </label>
-                <input
-                  type="range"
-                  min={3}
-                  max={25}
-                  value={durationDays}
-                  onChange={(e) => setDurationDays(Number(e.target.value))}
-                  className="w-full accent-[#0552A2]"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-1">
-                  Number of Travelers ({travelersCount} Pax)
-                </label>
-                <div className="flex items-center gap-1.5">
-                  {[1, 2, 4, 6, 8].map((count) => (
-                    <button
-                      key={count}
-                      type="button"
-                      onClick={() => setTravelersCount(count)}
-                      className={`flex-1 rounded-lg py-1.5 text-xs font-bold transition-colors ${travelersCount === count
-                        ? 'bg-[#0552A2] text-white'
-                        : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
-                        }`}
+              {/* Region Cards Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
+                {REGIONS_CATALOG.filter((r) =>
+                  destinationSearch
+                    ? r.name.toLowerCase().includes(destinationSearch.toLowerCase()) ||
+                      r.regionName.toLowerCase().includes(destinationSearch.toLowerCase())
+                    : true
+                ).map((r) => {
+                  const isSelected = selectedRegionId === r.id;
+                  return (
+                    <div
+                      key={r.id}
+                      onClick={() => handleSelectRegion(r.id)}
+                      className={`p-4 rounded-xl border cursor-pointer transition-all ${
+                        isSelected
+                          ? 'border-[#0552A2] bg-blue-50/60 ring-2 ring-[#0552A2]/20 shadow-xs'
+                          : 'border-slate-200 hover:border-slate-300 hover:bg-slate-50/70 bg-white'
+                      }`}
                     >
-                      {count}
+                      <div className="flex justify-between items-start">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#0552A2]">
+                          {r.regionName}
+                        </span>
+                        <span className={`text-[10px] font-semibold px-2 py-0.5 rounded ${
+                          r.difficulty === 'Challenging'
+                            ? 'bg-red-50 text-red-700 border border-red-200'
+                            : r.difficulty === 'Moderate'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                            : 'bg-purple-50 text-purple-700 border border-purple-200'
+                        }`}>
+                          {r.difficulty}
+                        </span>
+                      </div>
+                      <h3 className="text-sm font-bold text-slate-900 mt-1 line-clamp-1">
+                        {r.name}
+                      </h3>
+                      <div className="mt-2.5 flex items-center gap-3 text-[11px] text-slate-600">
+                        <span className="flex items-center gap-1">
+                          <Mountain className="h-3.5 w-3.5 text-[#EC1F27]" />
+                          {r.altitude}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3.5 w-3.5 text-emerald-600" />
+                          {r.bestSeason.split('/')[0]}
+                        </span>
+                      </div>
+                      <ul className="mt-2.5 space-y-0.5 border-t border-slate-100 pt-2 text-[10.5px] text-slate-500">
+                        {r.highlights.map((h, i) => (
+                          <li key={i} className="flex items-center gap-1.5 truncate">
+                            <span className="h-1 w-1 rounded-full bg-[#0552A2]" />
+                            <span>{h}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  );
+                })}
+              </div>
+
+              {/* Navigation button */}
+              <div className="flex justify-end pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(2)}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+                >
+                  <span>Proceed to Travel Details</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================= */}
+          {/* STEP 2: TRAVEL DETAILS (Dates, Group, Style) */}
+          {/* ================================================================= */}
+          {currentStep === 2 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <Calendar className="h-4 w-4" /> Step 2 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Dates, Group Size &amp; Travel Preferences
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Configure expedition party makeup and preferred alpine lodging style.
+                </p>
+              </div>
+
+              {/* Dates & Travelers */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Expedition Start Date
+                  </label>
+                  <input
+                    type="date"
+                    value={startDate}
+                    onChange={(e) => setStartDate(e.target.value)}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Adult Travelers (12+ yrs)
+                  </label>
+                  <div className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-1.5">
+                    <span className="text-xs font-bold text-slate-800">{adultsCount} Adults</span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setAdultsCount((v) => Math.max(1, v - 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAdultsCount((v) => Math.min(16, v + 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Children (Under 12)
+                  </label>
+                  <div className="flex items-center justify-between rounded-xl border border-slate-200 px-3 py-1.5">
+                    <span className="text-xs font-bold text-slate-800">{childrenCount} Kids</span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setChildrenCount((v) => Math.max(0, v - 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setChildrenCount((v) => Math.min(8, v + 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Experience Level */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Himalayan Experience Level
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {(['Beginner', 'Intermediate', 'Advanced', 'Technical'] as const).map((lvl) => (
+                    <button
+                      key={lvl}
+                      type="button"
+                      onClick={() => setExperienceLevel(lvl)}
+                      className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                        experienceLevel === lvl
+                          ? 'border-[#0552A2] bg-blue-50/60 font-bold text-[#0552A2] ring-1 ring-[#0552A2]/30'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-600 text-xs'
+                      }`}
+                    >
+                      <p className="text-xs font-bold">{lvl}</p>
+                      <p className="text-[10px] text-slate-400 mt-0.5">
+                        {lvl === 'Beginner' ? '< 3,000m' : lvl === 'Intermediate' ? '3,000m - 4,500m' : lvl === 'Advanced' ? 'High Passes 5,000m+' : 'Crampons & Ropes'}
+                      </p>
                     </button>
                   ))}
                 </div>
               </div>
-            </div>
-          </section>
 
-          {/* Step 2: Custom Service Add-ons */}
-          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 space-y-4 shadow-xs">
-            <div className="flex items-center gap-2">
-              <UserCheck className="h-4 w-4 text-[#0552A2]" />
-              <h2 className="text-base font-extrabold text-slate-900">
-                2. Select Dedicated Guide, Stay &amp; Services
-              </h2>
-            </div>
-
-            {/* Guide Pick */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                Certified Mountain Guide
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                {guides.map((g) => {
-                  const active = selectedGuide === g.id;
-                  return (
-                    <button
-                      key={g.id}
-                      type="button"
-                      onClick={() => setSelectedGuide(g.id)}
-                      className={`rounded-xl border p-2.5 text-left transition-colors ${active
-                        ? 'border-[#0552A2] bg-blue-50/70 ring-1 ring-[#0552A2]'
-                        : 'border-slate-200 hover:border-slate-300'
-                        }`}
+              {/* Travel Style */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Preferred Travel Style
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {(['Luxury Lodge', 'Classic Teahouse', 'Wilderness Camping', 'Fastpacking Alpine'] as const).map((style) => (
+                    <label
+                      key={style}
+                      onClick={() => setTravelStyle(style)}
+                      className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${
+                        travelStyle === style
+                          ? 'border-[#0552A2] bg-blue-50/60 ring-1 ring-[#0552A2]/30'
+                          : 'border-slate-200 hover:bg-slate-50'
+                      }`}
                     >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={g.avatar}
-                          alt={g.name}
-                          loading="lazy"
-                          decoding="async"
-                          className="h-8 w-8 rounded-full object-cover"
-                        />
-                        <div className="min-w-0 flex-1">
-                          <p className="truncate text-xs font-bold text-slate-900">
-                            {g.name}
+                      <input
+                        type="radio"
+                        checked={travelStyle === style}
+                        onChange={() => setTravelStyle(style)}
+                        className="mt-1 text-[#0552A2] focus:ring-[#0552A2]"
+                      />
+                      <div>
+                        <p className="text-xs font-bold text-slate-900">{style}</p>
+                        <p className="text-[11px] text-slate-500 mt-0.5">
+                          {style === 'Luxury Lodge' && 'En-suite heated rooms, electric blankets & hot showers.'}
+                          {style === 'Classic Teahouse' && 'Traditional Sherpa hospitality and shared dining hall stove.'}
+                          {style === 'Wilderness Camping' && '4-season alpine tents, private camp cook & dining tent.'}
+                          {style === 'Fastpacking Alpine' && 'Ultralight mountain staging with rapid elevation profile.'}
+                        </p>
+                      </div>
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(1)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                >
+                  <span>Build Custom Itinerary</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================= */}
+          {/* STEP 3: CUSTOM DAY-BY-DAY ITINERARY BUILDER */}
+          {/* ================================================================= */}
+          {currentStep === 3 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                <div>
+                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                    <Clock className="h-4 w-4" /> Step 3 of 7
+                  </div>
+                  <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                    Interactive Day-by-Day Route Builder
+                  </h2>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    Add trekking stages, insert rest/acclimatization days, reorder, and review hours.
+                  </p>
+                </div>
+                {/* Route Metrics Summary Pill */}
+                <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-700">
+                  <span>{totalDurationDays} Days</span>
+                  <span>•</span>
+                  <span>{totalDistanceKm} km</span>
+                  <span>•</span>
+                  <span>{totalWalkingHours} Walking Hrs</span>
+                </div>
+              </div>
+
+              {/* Day Stages List */}
+              <div className="space-y-3">
+                {itineraryStages.map((stage, idx) => (
+                  <div
+                    key={stage.day}
+                    className={`p-3.5 rounded-xl border transition-all ${
+                      stage.isRestDay
+                        ? 'border-purple-200 bg-purple-50/40'
+                        : 'border-slate-200 bg-white hover:border-slate-300'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start gap-3">
+                        <div className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg text-xs font-extrabold ${
+                          stage.isRestDay ? 'bg-purple-600 text-white' : 'bg-[#0552A2] text-white'
+                        }`}>
+                          D{stage.day}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <h4 className="text-xs font-bold text-slate-900">{stage.stageName}</h4>
+                            {stage.isRestDay && (
+                              <span className="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded">
+                                Acclimatization / Rest Day
+                              </span>
+                            )}
+                            <span className="text-[10px] font-mono font-bold text-[#0552A2] bg-blue-50 px-1.5 py-0.5 rounded">
+                              {stage.altitude}
+                            </span>
+                          </div>
+                          <p className="text-[11px] text-slate-500 mt-0.5">
+                            {stage.startPoint} ➔ {stage.endPoint} • {stage.distanceKm} km • ~{stage.walkingHours} hrs
                           </p>
-                          <p className="text-[10px] text-slate-500">{g.rate}</p>
+                          {stage.notes && (
+                            <p className="text-[11px] text-slate-600 mt-1 italic">
+                              "{stage.notes}"
+                            </p>
+                          )}
                         </div>
                       </div>
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
 
-            {/* Hotel / Stay Pick */}
-            <div>
-              <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                Base Camp &amp; Valley Stays
-              </label>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {hotels.map((h) => {
-                  const active = selectedHotel === h.id;
-                  return (
-                    <button
-                      key={h.id}
-                      type="button"
-                      onClick={() => setSelectedHotel(h.id)}
-                      className={`flex items-center gap-2.5 rounded-xl border p-2.5 text-left transition-colors ${active
-                        ? 'border-[#0552A2] bg-blue-50/70 ring-1 ring-[#0552A2]'
-                        : 'border-slate-200 hover:border-slate-300'
-                        }`}
-                    >
-                      <img
-                        src={h.imageUrl}
-                        alt={h.name}
-                        loading="lazy"
-                        decoding="async"
-                        className="h-10 w-10 rounded-lg object-cover"
-                      />
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-xs font-bold text-slate-900">
-                          {h.name}
-                        </p>
-                        <p className="text-[10px] text-slate-500">{h.location}</p>
-                        <p className="text-xs font-extrabold text-[#0552A2]">{h.price}</p>
+                      {/* Reorder and Delete Controls */}
+                      <div className="flex items-center gap-1 shrink-0">
+                        <button
+                          type="button"
+                          disabled={idx === 0}
+                          onClick={() => moveStage(idx, 'up')}
+                          title="Move Day Up"
+                          className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
+                        >
+                          <MoveUp className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          disabled={idx === itineraryStages.length - 1}
+                          onClick={() => moveStage(idx, 'down')}
+                          title="Move Day Down"
+                          className="p-1 rounded text-slate-400 hover:text-slate-700 hover:bg-slate-100 disabled:opacity-30 cursor-pointer"
+                        >
+                          <MoveDown className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeStage(idx)}
+                          title="Remove Stage"
+                          className="p-1 rounded text-red-400 hover:text-red-700 hover:bg-red-50 cursor-pointer ml-1"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
                       </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Add Custom Stage Accordion */}
+              <div className="rounded-xl border border-dashed border-slate-300 p-4 bg-slate-50/60 space-y-3">
+                <h4 className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <PlusCircle className="h-4 w-4 text-[#0552A2]" />
+                  Add Custom Trekking Stage or Rest Day
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 text-xs">
+                  <div className="sm:col-span-2">
+                    <input
+                      type="text"
+                      placeholder="Stage Title (e.g. Dingboche to Chhukung Valley)"
+                      value={newStageName}
+                      onChange={(e) => setNewStageName(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Max Altitude (e.g. 4,730m)"
+                      value={newStageAlt}
+                      onChange={(e) => setNewStageAlt(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Start point"
+                      value={newStageStart}
+                      onChange={(e) => setNewStageStart(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="End destination"
+                      value={newStageEnd}
+                      onChange={(e) => setNewStageEnd(e.target.value)}
+                      className="w-full rounded-lg border border-slate-300 px-3 py-1.5 bg-white text-slate-800"
+                    />
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <label className="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                      <input
+                        type="checkbox"
+                        checked={newStageRest}
+                        onChange={(e) => setNewStageRest(e.target.checked)}
+                        className="rounded text-[#0552A2]"
+                      />
+                      <span>Rest Day</span>
+                    </label>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={addStage}
+                  disabled={!newStageName.trim()}
+                  className="rounded-lg bg-[#0552A2] px-3.5 py-1.5 text-xs font-bold text-white hover:bg-[#044182] disabled:opacity-50 cursor-pointer"
+                >
+                  Append Stage to Itinerary
+                </button>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(2)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(4)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                >
+                  <span>Select Expedition Services</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================= */}
+          {/* STEP 4: SERVICES SELECTION (Guide, Porter, Butler, Accom, Transport) */}
+          {/* ================================================================= */}
+          {currentStep === 4 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <Luggage className="h-4 w-4" /> Step 4 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Customize Services &amp; Field Staff
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Select IFMGA mountain guides, high-altitude porters, Sherpa butlers, and gear rentals.
+                </p>
+              </div>
+
+              {/* Staff Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                {/* IFMGA Lead Guide */}
+                <label className={`p-3.5 rounded-xl border cursor-pointer transition-all ${guideRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold text-slate-900">Lead IFMGA Guide</span>
+                    <input
+                      type="checkbox"
+                      checked={guideRequested}
+                      onChange={(e) => setGuideRequested(e.target.checked)}
+                      className="rounded text-[#0552A2]"
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#0552A2] font-semibold">NPR 6,500/day</p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    Certified route navigator, avalanche &amp; high-altitude first responder.
+                  </p>
+                </label>
+
+                {/* Porters */}
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-white space-y-1">
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-bold text-slate-900">High Altitude Porters</span>
+                    <span className="text-[10px] font-bold text-[#0552A2]">NPR 3,500/day</span>
+                  </div>
+                  <div className="flex items-center justify-between pt-1">
+                    <span className="text-xs font-semibold text-slate-700">{porterCount} Porter(s)</span>
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => setPorterCount((v) => Math.max(0, v - 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        -
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPorterCount((v) => Math.min(6, v + 1))}
+                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                  <p className="text-[10px] text-slate-400">Up to 25kg duffle capacity each.</p>
+                </div>
+
+                {/* Sherpa Butler */}
+                <label className={`p-3.5 rounded-xl border cursor-pointer transition-all ${sherpaButlerRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
+                  <div className="flex items-center justify-between mb-1">
+                    <span className="text-xs font-bold text-slate-900">Sherpa Butler VIP</span>
+                    <input
+                      type="checkbox"
+                      checked={sherpaButlerRequested}
+                      onChange={(e) => setSherpaButlerRequested(e.target.checked)}
+                      className="rounded text-[#0552A2]"
+                    />
+                  </div>
+                  <p className="text-[10px] text-[#0552A2] font-semibold">NPR 8,500/day</p>
+                  <p className="text-[11px] text-slate-500 mt-1">
+                    White-glove tea ceremonies, heated beds &amp; bespoke concierge.
+                  </p>
+                </label>
+              </div>
+
+              {/* Accommodation Tier */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Accommodation Category
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  {([
+                    '5-Star Himalayan Lodge',
+                    'Boutique Teahouse',
+                    'Traditional Mountain Lodge',
+                    'Alpine Expedition Camp',
+                  ] as const).map((tier) => (
+                    <label
+                      key={tier}
+                      onClick={() => setAccommodationTier(tier)}
+                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer ${
+                        accommodationTier === tier
+                          ? 'border-[#0552A2] bg-blue-50/60 font-bold text-[#0552A2]'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      <span>{tier}</span>
+                      <input
+                        type="radio"
+                        checked={accommodationTier === tier}
+                        onChange={() => setAccommodationTier(tier)}
+                        className="text-[#0552A2]"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Transportation Mode */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Domestic Transportation
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  {([
+                    'Domestic Flights (Lukla/Pokhara)',
+                    'Private 4WD Expedition Jeep',
+                    'Tourist Express Bus',
+                    'Private Helicopter Charter',
+                  ] as const).map((mode) => (
+                    <label
+                      key={mode}
+                      onClick={() => setTransportMode(mode)}
+                      className={`flex items-center justify-between p-3 rounded-xl border cursor-pointer ${
+                        transportMode === mode
+                          ? 'border-[#0552A2] bg-blue-50/60 font-bold text-[#0552A2]'
+                          : 'border-slate-200 hover:bg-slate-50 text-slate-700'
+                      }`}
+                    >
+                      <span>{mode}</span>
+                      <input
+                        type="radio"
+                        checked={transportMode === mode}
+                        onChange={() => setTransportMode(mode)}
+                        className="text-[#0552A2]"
+                      />
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Meal Plan */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Meal Plan
+                </label>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  {([
+                    'All-Inclusive 3 Meals/Day',
+                    'Bed & Breakfast Only',
+                    'Self-Catered',
+                  ] as const).map((m) => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => setMealPlan(m)}
+                      className={`p-2.5 rounded-xl border text-center transition-all cursor-pointer ${
+                        mealPlan === m
+                          ? 'border-[#0552A2] bg-blue-50/60 font-bold text-[#0552A2]'
+                          : 'border-slate-200 text-slate-600 hover:bg-slate-50'
+                      }`}
+                    >
+                      {m}
                     </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Equipment Rental Checkboxes */}
+              <div className="space-y-1.5">
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600">
+                  Trekking Equipment Rental (Optional)
+                </label>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-xs">
+                  {['-20°C Down Jacket', '4-Season Sleeping Bag', 'Trekking Carbon Poles', 'Microspikes & Crampons'].map((gear) => {
+                    const isChecked = selectedGear.includes(gear);
+                    return (
+                      <label
+                        key={gear}
+                        className={`flex items-center gap-2 p-2.5 rounded-xl border cursor-pointer transition-all ${
+                          isChecked ? 'border-[#0552A2] bg-blue-50/50 font-bold text-[#0552A2]' : 'border-slate-200 hover:bg-slate-50 text-slate-600'
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={isChecked}
+                          onChange={(e) => {
+                            if (e.target.checked) setSelectedGear((prev) => [...prev, gear]);
+                            else setSelectedGear((prev) => prev.filter((g) => g !== gear));
+                          }}
+                          className="rounded text-[#0552A2]"
+                        />
+                        <span className="text-[11px]">{gear}</span>
+                      </label>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(3)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(5)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                >
+                  <span>Review Required Permits</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* ================================================================= */}
+          {/* STEP 5: ROUTE-BASED PERMIT AUTO-DETECTION & COMPLIANCE */}
+          {/* ================================================================= */}
+          {currentStep === 5 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <ShieldCheck className="h-4 w-4" /> Step 5 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Route-Detected Permits &amp; Government Regulations
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Automatically identified permits required by the Department of Immigration &amp; National Parks.
+                </p>
+              </div>
+
+              {/* Permits List */}
+              <div className="space-y-3">
+                {activeRegion.requiredPermits.map((pid) => {
+                  const isTIMS = pid === 'tims';
+                  const isSNP = pid === 'snp';
+                  const isACAP = pid === 'acap';
+                  const isMRAP = pid === 'mrap';
+                  const isMustang = pid === 'mustang_rap';
+                  const isLNP = pid === 'lnp';
+
+                  const title = isTIMS
+                    ? 'TIMS (Trekkers’ Information Management System) Card'
+                    : isSNP
+                    ? 'Sagarmatha National Park Conservation Entry Permit'
+                    : isACAP
+                    ? 'Annapurna Conservation Area Project (ACAP) Permit'
+                    : isMRAP
+                    ? 'Manaslu Restricted Area Special Entry Permit'
+                    : isMustang
+                    ? 'Upper Mustang Restricted Area Permit (RAP)'
+                    : 'Langtang National Park Entry Permit';
+
+                  const feeNpr = isMustang ? 67500 : isMRAP ? 13500 : isTIMS ? 2000 : 3000;
+                  const feeUsd = isMustang ? 500 : isMRAP ? 100 : isTIMS ? 20 : 30;
+
+                  return (
+                    <div key={pid} className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-1.5">
+                      <div className="flex items-start justify-between">
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <span className="font-bold text-xs text-slate-900">{title}</span>
+                            {(isMustang || isMRAP) && (
+                              <span className="bg-red-100 text-red-800 text-[9.5px] font-bold px-1.5 py-0.5 rounded uppercase">
+                                Restricted Area
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-500 mt-0.5">
+                            Authority: Government of Nepal • Department of Immigration &amp; NTB
+                          </p>
+                        </div>
+                        <div className="text-right">
+                          <span className="text-xs font-extrabold text-[#0552A2]">
+                            NPR {feeNpr.toLocaleString()}
+                          </span>
+                          <span className="block text-[10px] text-slate-400">
+                            (~${feeUsd} USD)
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   );
                 })}
               </div>
-            </div>
 
-            {/* Sherpa Butler & Transport Toggles */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
-              <div
-                onClick={() => setIncludeButler((v) => !v)}
-                className={`cursor-pointer rounded-xl border p-3 transition-colors ${includeButler
-                  ? 'border-purple-600 bg-purple-50/70'
-                  : 'border-slate-200 bg-white'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <ConciergeBell className="h-4 w-4 text-purple-700" />
-                    <span className="text-xs font-bold text-slate-900">
-                      Include Sherpa Butler
-                    </span>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={includeButler}
-                    onChange={() => { }}
-                    className="h-3.5 w-3.5 accent-purple-600"
-                  />
+              {/* Government Compliance Warning Box */}
+              <div className="rounded-xl bg-amber-50 border border-amber-200 p-4 text-xs text-amber-900 space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold">
+                  <AlertCircle className="h-4 w-4 text-amber-600" />
+                  Official Statutory Notice
                 </div>
-                <p className="mt-1 text-[11px] text-slate-500">
-                  Luggage handling, teahouse room reservations, hot tea service.
+                <p className="text-[11px] leading-relaxed text-amber-800">
+                  Government-issued permits are distinct from tour operator packages and agency coordination fees. In accordance with Nepal Tourism Act 2035, permits are processed through official immigration checkpoints and national park desks. Visit Nepal never fabricates or auto-approves state documents.
                 </p>
               </div>
 
-              <div
-                onClick={() => setNeedPermits((v) => !v)}
-                className={`cursor-pointer rounded-xl border p-3 transition-colors ${needPermits
-                  ? 'border-emerald-600 bg-emerald-50/70'
-                  : 'border-slate-200 bg-white'
-                  }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-1.5">
-                    <ShieldCheck className="h-4 w-4 text-emerald-700" />
-                    <span className="text-xs font-bold text-slate-900">
-                      Trek Permits Included
-                    </span>
-                  </div>
-                  <input
-                    type="checkbox"
-                    checked={needPermits}
-                    onChange={() => { }}
-                    className="h-3.5 w-3.5 accent-emerald-600"
-                  />
-                </div>
-                <p className="mt-1 text-[11px] text-slate-500">
-                  Auto-process TIMS &amp; National Park passes through NTB Admin.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* Step 3: Custom Itinerary Builder */}
-          <section className="rounded-xl border border-slate-200 bg-white p-4 sm:p-5 space-y-3 shadow-xs">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-[#0552A2]" />
-                <h2 className="text-base font-extrabold text-slate-900">
-                  3. Customize Your Daily Itinerary
-                </h2>
-              </div>
-              <span className="text-xs font-semibold text-slate-500">
-                {customDays.length} Planned Days
-              </span>
-            </div>
-
-            <div className="space-y-2">
-              {customDays.map((d) => (
-                <div
-                  key={d.day}
-                  className="flex items-start justify-between gap-2.5 rounded-lg border border-slate-100 bg-slate-50/70 p-2.5"
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(4)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
                 >
-                  <div className="flex items-center gap-2.5">
-                    <div className="flex h-7 w-7 items-center justify-center rounded bg-[#0552A2] text-xs font-extrabold text-white">
-                      D{d.day}
-                    </div>
-                    <div>
-                      <p className="text-xs font-bold text-slate-900">{d.title}</p>
-                      <p className="text-[11px] text-slate-500">
-                        Target Altitude: <span className="font-semibold text-blue-700">{d.altitude}</span> • {d.notes}
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => removeCustomDay(d.day)}
-                    className="text-slate-400 hover:text-red-500 p-1"
-                    title="Remove day"
-                  >
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                </div>
-              ))}
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(6)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                >
+                  <span>Calculate Dynamic Quotation</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
+          )}
 
-            {/* Add New Custom Milestone */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-2 border-t border-slate-100">
-              <input
-                type="text"
-                placeholder="Day Milestone (e.g. Summit Kala Patthar)"
-                value={newDayTitle}
-                onChange={(e) => setNewDayTitle(e.target.value)}
-                className="flex-1 rounded-lg border border-slate-200 p-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#0552A2]"
-              />
-              <input
-                type="text"
-                placeholder="Altitude (e.g. 5,545m)"
-                value={newDayAlt}
-                onChange={(e) => setNewDayAlt(e.target.value)}
-                className="w-full sm:w-32 rounded-lg border border-slate-200 p-2 text-xs focus:outline-none focus:ring-1 focus:ring-[#0552A2]"
-              />
-              <button
-                type="button"
-                onClick={addCustomDay}
-                className="inline-flex items-center justify-center gap-1 rounded-lg bg-slate-900 px-3 py-1.5 text-xs font-bold text-white hover:bg-slate-800 active:scale-[0.98] transition-all"
-              >
-                <PlusCircle className="h-3.5 w-3.5" />
-                <span>Add Day</span>
-              </button>
+          {/* ================================================================= */}
+          {/* STEP 6: DYNAMIC PRICING BREAKDOWN */}
+          {/* ================================================================= */}
+          {currentStep === 6 && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <DollarSign className="h-4 w-4" /> Step 6 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Itemized Dynamic Cost Calculation
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Real-time formula accounting for field staff, accommodation tier, permits, and VAT.
+                </p>
+              </div>
+
+              {/* Price Breakdown Table */}
+              <div className="rounded-xl border border-slate-200 overflow-hidden text-xs">
+                <table className="w-full text-left">
+                  <thead className="bg-slate-100 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+                    <tr>
+                      <th className="py-2.5 px-4">Cost Category</th>
+                      <th className="py-2.5 px-4 text-right">Estimated NPR</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 text-slate-700">
+                    <tr>
+                      <td className="py-2.5 px-4 font-semibold">
+                        Lodging &amp; Accommodation ({accommodationTier})
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.accommodation || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4">
+                        Field Staff (Guide: {guideRequested ? 'Yes' : 'No'}, Porters: {porterCount}, Butler: {sherpaButlerRequested ? 'Yes' : 'No'})
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.guideAndFieldStaff || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4">
+                        Transportation ({transportMode})
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.transportation || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4">
+                        Meals &amp; Rations ({mealPlan})
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.meals || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4">
+                        Gear Rental ({selectedGear.length} Items)
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.equipmentRental || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-2.5 px-4">
+                        Official Government Permits &amp; Checkpoint Fees
+                      </td>
+                      <td className="py-2.5 px-4 text-right">
+                        NPR {(calculatedPricing?.budgetBreakdown?.governmentPermits || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="bg-slate-50 font-semibold text-slate-800">
+                      <td className="py-2 px-4">Subtotal Logistics</td>
+                      <td className="py-2 px-4 text-right">
+                        NPR {((calculatedPricing?.estimatedBudgetNpr || 0) - (calculatedPricing?.budgetBreakdown?.vatNpr || 0) - (calculatedPricing?.budgetBreakdown?.serviceChargeNpr || 0)).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-4 text-slate-500">
+                        Nepal Tourism Development Service Charge (5%)
+                      </td>
+                      <td className="py-1.5 px-4 text-right text-slate-600">
+                        NPR {(calculatedPricing?.budgetBreakdown?.serviceChargeNpr || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr>
+                      <td className="py-1.5 px-4 text-slate-500">
+                        Nepal Inland Revenue VAT (13%)
+                      </td>
+                      <td className="py-1.5 px-4 text-right text-slate-600">
+                        NPR {(calculatedPricing?.budgetBreakdown?.vatNpr || 0).toLocaleString()}
+                      </td>
+                    </tr>
+                    <tr className="bg-blue-50/80 font-extrabold text-sm text-[#0552A2] border-t-2 border-[#0552A2]/30">
+                      <td className="py-3 px-4">Total Estimated Budget</td>
+                      <td className="py-3 px-4 text-right text-base">
+                        NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
+                        <span className="block text-[10px] font-normal text-slate-500">
+                          (~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD)
+                        </span>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Navigation */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(5)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(7)}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                >
+                  <span>Review &amp; Submit Request</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
             </div>
-          </section>
+          )}
+
+          {/* ================================================================= */}
+          {/* STEP 7: REVIEW, TRAVELER INFO & SUBMIT */}
+          {/* ================================================================= */}
+          {currentStep === 7 && !submittedTrip && (
+            <div className="rounded-2xl border border-slate-200 bg-white p-6 space-y-5 shadow-xs">
+              <div className="border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#0552A2]">
+                  <FileText className="h-4 w-4" /> Step 7 of 7
+                </div>
+                <h2 className="text-xl font-bold font-poppins text-slate-900 mt-1">
+                  Review &amp; Submit Custom Expedition Request
+                </h2>
+                <p className="text-xs text-slate-500 mt-0.5">
+                  Your custom plan will be submitted to licensed operators with initial status <span className="font-mono font-bold text-[#0552A2]">PENDING_REVIEW</span>.
+                </p>
+              </div>
+
+              {/* Traveler Contact Form */}
+              <div className="space-y-3">
+                <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
+                  Lead Traveler Contact &amp; Identity
+                </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Full Legal Name *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={leadName}
+                      onChange={(e) => setLeadName(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Email Address *
+                    </label>
+                    <input
+                      type="email"
+                      required
+                      value={leadEmail}
+                      onChange={(e) => setLeadEmail(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Phone / WhatsApp *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      value={leadPhone}
+                      onChange={(e) => setLeadPhone(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Passport / ID Number *
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={passportNumber}
+                      onChange={(e) => setPassportNumber(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 font-mono uppercase"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                      Special Route Instructions or Dietary Notes
+                    </label>
+                    <textarea
+                      rows={2}
+                      placeholder="e.g., We would like to add a side trek to Gokyo Ri if weather permits..."
+                      value={specialRequests}
+                      onChange={(e) => setSpecialRequests(e.target.value)}
+                      className="w-full rounded-xl border border-slate-300 p-2.5 text-xs text-slate-800"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Approval Workflow Explanation */}
+              <div className="rounded-xl bg-blue-50/70 border border-blue-200/80 p-4 text-xs text-slate-700 space-y-1.5">
+                <div className="flex items-center gap-1.5 font-bold text-[#0552A2]">
+                  <Info className="h-4 w-4" /> Custom Trip Approval Workflow
+                </div>
+                <p className="text-[11px] leading-relaxed">
+                  Upon submission, your custom itinerary is broadcast to verified NTB tour operators. Operators review route viability, guide availability, and furnish an official binding quotation. You may review, adjust, or accept the quotation directly in your <span className="font-semibold text-[#0552A2]">Traveler Dashboard</span>.
+                </p>
+              </div>
+
+              {/* Navigation & Submit Button */}
+              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep(6)}
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                </button>
+                <button
+                  type="button"
+                  disabled={submitting || !leadName || !leadEmail || !leadPhone}
+                  onClick={handleSubmitCustomTrip}
+                  className="inline-flex items-center gap-2 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-md cursor-pointer disabled:opacity-50 active:scale-[0.98] transition-all"
+                >
+                  {submitting ? (
+                    <span>Submitting Custom Plan...</span>
+                  ) : (
+                    <>
+                      <span>Submit Custom Plan (PENDING_REVIEW)</span>
+                      <ArrowRight className="h-4 w-4" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* SUCCESS SCREEN AFTER SUBMISSION */}
+          {submittedTrip && (
+            <div className="rounded-2xl border border-emerald-200 bg-white p-6 sm:p-8 space-y-5 text-center shadow-md">
+              <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
+                <CheckCircle2 className="h-10 w-10" />
+              </div>
+              <div className="space-y-1">
+                <span className="rounded bg-amber-100 text-amber-800 font-bold text-[10px] px-2.5 py-0.5 uppercase tracking-wider">
+                  Status: PENDING_REVIEW
+                </span>
+                <h3 className="text-2xl font-bold font-poppins text-slate-900 mt-2">
+                  Custom Trip Request Submitted!
+                </h3>
+                <p className="text-xs text-slate-600 max-w-md mx-auto">
+                  Your custom expedition request #{submittedTrip.id} has been transmitted to authorized tour operators for route safety verification and quotation.
+                </p>
+              </div>
+
+              <div className="rounded-xl bg-slate-50 border border-slate-200 p-4 text-left max-w-md mx-auto text-xs space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Trip Reference ID:</span>
+                  <span className="font-mono font-bold text-[#0552A2]">{submittedTrip.id}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Duration:</span>
+                  <span className="font-semibold">{totalDurationDays} Days ({itineraryStages.length} Stages)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span className="text-slate-500">Estimated Total:</span>
+                  <span className="font-bold text-emerald-700">NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 justify-center max-w-md mx-auto pt-2">
+                <Link
+                  href="/dashboard"
+                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182]"
+                >
+                  <span>Go to Traveler Dashboard</span>
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSubmittedTrip(null);
+                    setCurrentStep(1);
+                  }}
+                  className="flex-1 rounded-xl border border-slate-300 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                >
+                  Plan Another Trip
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
-        {/* Right: Live Price Breakdown & Checkout */}
-        <div>
-          <div className="sticky top-20 rounded-xl border border-slate-200 bg-white p-4 sm:p-5 shadow-xs space-y-4">
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                Custom Plan Summary
+        {/* Live Trip Summary & Calculation Sidebar (Right Col) */}
+        <div className="space-y-4">
+          <div className="sticky top-20 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
+                Custom Trip Overview
               </span>
-              <h3 className="text-base font-extrabold text-slate-900 mt-0.5">
-                {region}
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {durationDays} Days • {travelersCount} {travelersCount === 1 ? 'Traveler' : 'Travelers'} • Starts {startDate}
-              </p>
+              <span className="text-[10px] font-bold text-[#0552A2] bg-blue-50 px-2 py-0.5 rounded">
+                Live Calculator
+              </span>
             </div>
 
-            {/* Itemized Calculation */}
-            <div className="space-y-2 border-t border-b border-slate-100 py-3 text-xs">
-              <div className="flex justify-between text-slate-600">
-                <span>Selected Guide ({chosenGuide.name}):</span>
-                <span className="font-semibold">${guideCost}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>Valley / Teahouse Stays ({chosenHotel.name}):</span>
-                <span className="font-semibold">${hotelCost}</span>
-              </div>
-              {includeButler && (
-                <div className="flex justify-between text-purple-700 font-medium">
-                  <span>Sherpa Butler Service:</span>
-                  <span>${butlerCost}</span>
-                </div>
-              )}
-              {needPermits && (
-                <div className="flex justify-between text-emerald-700 font-medium">
-                  <span>Digital Trekking Permits:</span>
-                  <span>${permitsCost}</span>
-                </div>
-              )}
-              <div className="flex justify-between text-slate-600">
-                <span>Domestic Flights / Transport:</span>
-                <span className="font-semibold">${transportCost}</span>
-              </div>
-              <div className="flex justify-between text-slate-600">
-                <span>Porters &amp; Trail Logistics:</span>
-                <span className="font-semibold">${baseTrekLogistics}</span>
-              </div>
-            </div>
-
-            {/* Total */}
-            <div className="flex items-baseline justify-between">
+            <div className="space-y-2 text-xs">
               <div>
-                <span className="text-[10px] text-slate-400">Total Custom Package</span>
-                <p className="text-2xl font-extrabold text-[#0552A2]">
-                  ${totalEstimatedCost.toLocaleString()}
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Route</span>
+                <p className="font-bold text-slate-900 text-sm">{activeRegion.name}</p>
+                <p className="text-[11px] text-slate-500">{activeRegion.regionName}</p>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 border-t border-slate-100 pt-2 text-[11px]">
+                <div>
+                  <span className="text-slate-400">Start Date:</span>
+                  <p className="font-semibold text-slate-800">{startDate}</p>
+                </div>
+                <div>
+                  <span className="text-slate-400">Duration:</span>
+                  <p className="font-semibold text-slate-800">{totalDurationDays} Days</p>
+                </div>
+                <div>
+                  <span className="text-slate-400">Travelers:</span>
+                  <p className="font-semibold text-slate-800">{adultsCount + childrenCount} Person(s)</p>
+                </div>
+                <div>
+                  <span className="text-slate-400">Style:</span>
+                  <p className="font-semibold text-slate-800">{travelStyle}</p>
+                </div>
+              </div>
+
+              {/* Service Highlights */}
+              <div className="border-t border-slate-100 pt-2 space-y-1 text-[11px] text-slate-600">
+                <div className="flex justify-between">
+                  <span>Lead Guide:</span>
+                  <span className="font-semibold text-slate-800">{guideRequested ? 'IFMGA Licensed' : 'None'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Porters:</span>
+                  <span className="font-semibold text-slate-800">{porterCount} Porter(s)</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Sherpa Butler:</span>
+                  <span className="font-semibold text-slate-800">{sherpaButlerRequested ? 'VIP Concierge' : 'None'}</span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Lodging:</span>
+                  <span className="font-semibold text-slate-800">{accommodationTier}</span>
+                </div>
+              </div>
+
+              {/* Estimated Budget Box */}
+              <div className="rounded-xl bg-slate-900 p-4 text-white space-y-1 mt-3">
+                <span className="text-[10px] uppercase font-bold text-slate-400">
+                  Estimated Total
+                </span>
+                <p className="text-xl font-extrabold text-[#FDB716]">
+                  NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
+                </p>
+                <p className="text-[11px] text-slate-300">
+                  ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD • Includes 13% VAT &amp; 5% SC
                 </p>
               </div>
-              <span className="text-xs font-semibold text-slate-500">
-                ~${Math.round(totalEstimatedCost / travelersCount).toLocaleString()} / person
-              </span>
             </div>
 
-            {booked ? (
-              <div className="space-y-2">
-                <div className="rounded-lg bg-emerald-50 border border-emerald-200 p-2 text-xs font-semibold text-emerald-800 text-center">
-                  Custom trip booked! Check your itinerary in Bookings.
-                </div>
-                <Link
-                  href="/bookings"
-                  prefetch={true}
-                  className="block w-full rounded-lg bg-slate-900 py-2.5 text-center text-xs font-bold text-white hover:bg-slate-800"
-                >
-                  View My Custom Booking
-                </Link>
-              </div>
-            ) : (
+            {/* Quick jump to step button if not on review */}
+            {currentStep < 7 && (
               <button
                 type="button"
-                onClick={handleCreateAndBook}
-                className="w-full rounded-lg bg-[#EC1F27] py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#d11920] active:scale-[0.98] transition-all flex items-center justify-center gap-1.5"
+                onClick={() => setCurrentStep(7)}
+                className="w-full rounded-xl border border-[#0552A2] py-2 text-xs font-bold text-[#0552A2] hover:bg-blue-50 transition-colors cursor-pointer"
               >
-                <span>Confirm Custom Plan &amp; Book</span>
-                <ArrowRight className="h-3.5 w-3.5" />
+                Skip Directly to Review &amp; Submit
               </button>
             )}
-
-            <p className="text-center text-[10px] text-slate-400">
-              Includes safety gear check, insurance coordination, and NTB compliance.
-            </p>
           </div>
         </div>
       </div>

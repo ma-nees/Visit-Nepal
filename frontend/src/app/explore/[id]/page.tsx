@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { destinations } from '@/data/mockData';
 import { useApp } from '@/context/AppContext';
+import StandardBookingModal from '@/components/features/booking/StandardBookingModal';
 
 function PackageDetailContent({
   params,
@@ -25,6 +26,7 @@ function PackageDetailContent({
   const [travelers, setTravelers] = useState(2);
   const [startDate, setStartDate] = useState('2026-11-15');
   const [booked, setBooked] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const dest = destinations.find((d) => d.id === id);
 
@@ -48,19 +50,7 @@ function PackageDetailContent({
   const totalAmount = dest.price * travelers;
 
   const handleBook = () => {
-    addBooking({
-      title: `${dest.title} (${dest.duration})`,
-      provider: 'Himalayan Sherpa Expeditions',
-      category: 'Trek',
-      date: startDate,
-      status: 'Confirmed',
-      amount: `NPR ${(totalAmount * 135).toLocaleString()}`,
-      color: '#2563EB',
-      meetingPoint: `${dest.location}: 08:30 AM Briefing`,
-      assignedGuide: 'Pasang Nuru Sherpa (IFMGA)',
-      contactPhone: '+977 1 4412345',
-    });
-    setBooked(true);
+    setIsModalOpen(true);
   };
 
   return (
@@ -278,7 +268,7 @@ function PackageDetailContent({
             ) : (
               <button
                 onClick={handleBook}
-                className="w-full rounded-lg bg-[#0552A2] py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#044182] active:scale-[0.98] transition-all"
+                className="w-full rounded-lg bg-[#0552A2] py-2.5 text-xs font-bold text-white shadow-xs hover:bg-[#044182] active:scale-[0.98] transition-all cursor-pointer"
               >
                 Book Expedition Now
               </button>
@@ -286,6 +276,26 @@ function PackageDetailContent({
           </div>
         </div>
       </div>
+
+      {/* Production Standard Booking Modal */}
+      {dest && (
+        <StandardBookingModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          pkg={{
+            id: dest.id,
+            title: dest.title,
+            category: 'Trek',
+            provider: 'Himalayan Sherpa Expeditions',
+            duration: dest.duration,
+            durationDays: parseInt(dest.duration) || 12,
+            location: dest.location,
+            basePriceNpr: dest.price * 135,
+            basePriceUsd: dest.price,
+            imageUrl: dest.imageUrl,
+          }}
+        />
+      )}
     </div>
   );
 }

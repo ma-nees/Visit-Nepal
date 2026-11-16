@@ -21,11 +21,12 @@ import { useApp } from '@/context/AppContext';
 
 const navLinks = [
   { href: '/destinations', label: 'Destinations' },
+  { href: '/custom-plan', label: 'Custom Trip' },
   { href: '/experiences', label: 'Experiences' },
-  { href: '/culture', label: 'Culture' },
   { href: '/services', label: 'Services' },
+  { href: '/dashboard', label: 'Dashboard' },
+  { href: '/culture', label: 'Culture' },
   { href: '/stories', label: 'Stories' },
-  { href: '/about', label: 'About' },
 ];
 
 export default function Navbar() {
@@ -215,11 +216,10 @@ export default function Navbar() {
               {/* User Profile: Direct redirect to /profile */}
               <Link
                 href="/profile"
-                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-                  isTransparent
-                    ? 'text-white/90 hover:text-white hover:bg-white/10'
-                    : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
-                }`}
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
+                  ? 'text-white/90 hover:text-white hover:bg-white/10'
+                  : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
+                  }`}
                 title="My Profile & Switch User"
                 aria-label="My Profile & Switch User"
               >

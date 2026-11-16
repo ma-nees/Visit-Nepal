@@ -70,8 +70,13 @@ interface AppContextType {
   currentUser: CurrentUser | null;
   setCurrentUser: (user: CurrentUser | null) => void;
   bookings: Booking[];
-  addBooking: (booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'>) => Promise<void>;
+  addBooking: (booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'> & Partial<Booking>) => Promise<Booking>;
   cancelBooking: (id: string) => Promise<void>;
+  customPlans: any[];
+  refreshCustomPlans: () => Promise<void>;
+  createCustomTrip: (data: any) => Promise<any>;
+  acceptQuotation: (planId: string, quoteId: string) => Promise<any>;
+  rejectQuotation: (planId: string, quoteId: string, feedback?: string) => Promise<any>;
   posts: CommunityPost[];
   addPost: (content: string, location: string, mediaUrl?: string) => Promise<void>;
   toggleLike: (postId: string) => Promise<void>;
@@ -95,6 +100,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
 
   const [bookings, setBookings] = useState<Booking[]>(initialBookings);
+  const [customPlans, setCustomPlans] = useState<any[]>([]);
   const [posts, setPosts] = useState<CommunityPost[]>(initialCommunityPosts);
   const [conversations, setConversations] =
     useState<Conversation[]>(initialConversations);
@@ -109,8 +115,20 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setTimeout(() => setToast(null), 3500);
   };
 
+  const refreshCustomPlans = async () => {
+    try {
+      const res = await api.customPlans.list();
+      if (res && Array.isArray(res.customPlans)) {
+        setCustomPlans(res.customPlans);
+      }
+    } catch (err) {
+      console.debug('[AppContext] Custom plans offline fallback');
+    }
+  };
+
   // Sync with real backend REST API
   const refreshData = async () => {
+    refreshCustomPlans();
     try {
       // 1. Fetch bookings
       const bRes = await api.bookings.list().catch(() => null);
@@ -125,16 +143,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           status: (b.status === 'confirmed'
             ? 'Confirmed'
             : b.status === 'completed'
-            ? 'Completed'
-            : b.status === 'cancelled'
-            ? 'Cancelled'
-            : 'Confirmed') as any,
+              ? 'Completed'
+              : b.status === 'cancelled'
+                ? 'Cancelled'
+                : b.status === 'paid'
+                  ? 'Paid'
+                  : b.status === 'quoted'
+                    ? 'Quoted'
+                    : 'Confirmed') as any,
           amount: `NPR ${(b.totalAmountNpr || 50000).toLocaleString()}`,
           qrCode: b.qrCode || `VN-PASS-${b.id}`,
           color: '#0552A2',
           meetingPoint: b.meetingPoint || 'Kathmandu Rendezvous Base',
           assignedGuide: b.assignedGuideName || 'Pasang Nuru Sherpa (IFMGA)',
           contactPhone: b.contactPhone || '+977-1-4412345',
+          bookingType: b.bookingType || 'standard',
+          customTripId: b.customTripId,
+          invoiceNumber: b.invoiceNumber,
+          optionsAndAddons: b.optionsAndAddons,
+          priceBreakdown: b.priceBreakdown,
+          travelerDetails: b.travelerDetails,
         }));
         setBookings(mappedBookings);
       }
@@ -288,14 +316,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const addBooking = async (
-    booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'>
-  ) => {
-    const id = `BKG-${Math.floor(10000 + Math.random() * 89999)}`;
+    booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'> & Partial<Booking>
+  ): Promise<Booking> => {
+    const randomSuffix = Math.floor(10000 + Math.random() * 89999);
+    const id = booking.id || `VN-BKG-2026-${randomSuffix}`;
+    const invoiceNumber = booking.invoiceNumber || `VN-INV-2026-${randomSuffix}`;
+    const isConfirmed = booking.status === 'Confirmed' || booking.status === 'Paid';
+
     const newBooking: Booking = {
       ...booking,
       id,
-      bookedBy: currentUser?.name || 'Aayush Pradhan',
-      qrCode: `VN-PASS-${id}-VERIFIED-2026`,
+      bookedBy: booking.bookedBy || currentUser?.name || 'Aayush Pradhan',
+      qrCode: booking.qrCode || (isConfirmed ? `VN-PASS-${id}-VERIFIED-2026` : `VN-PASS-${id}-PENDING`),
+      invoiceNumber,
+      status: booking.status || 'Confirmed',
+      color: booking.color || '#0552A2',
+      category: booking.category || 'Trek',
+      provider: booking.provider || 'Himalayan Sherpa Expeditions',
+      meetingPoint: booking.meetingPoint || 'Kathmandu Rendezvous Base (TIA Terminal 2)',
+      assignedGuide: booking.assignedGuide || 'Pasang Nuru Sherpa (IFMGA)',
+      contactPhone: booking.contactPhone || '+977-1-4412345',
     };
 
     setBookings((prev) => [newBooking, ...prev]);
@@ -303,7 +343,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
     // Call real backend
     try {
-      await api.bookings.create({
+      const res = await api.bookings.create({
         title: booking.title,
         provider: booking.provider,
         category: booking.category,
@@ -311,9 +351,73 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         amount: booking.amount,
         meetingPoint: booking.meetingPoint,
         contactPhone: booking.contactPhone,
+        bookingType: booking.bookingType || 'standard',
+        customTripId: booking.customTripId,
+        optionsAndAddons: booking.optionsAndAddons,
+        priceBreakdown: booking.priceBreakdown,
+        travelerDetails: booking.travelerDetails,
+        initialStatus: isConfirmed ? 'confirmed' : 'pending',
       });
+      if (res?.booking) {
+        return {
+          ...newBooking,
+          id: res.booking.id,
+          invoiceNumber: res.booking.invoiceNumber || newBooking.invoiceNumber,
+          qrCode: res.booking.qrCode || newBooking.qrCode,
+        };
+      }
     } catch (err) {
       console.warn('[addBooking] Synced locally:', err);
+    }
+    return newBooking;
+  };
+
+  const createCustomTrip = async (data: any) => {
+    try {
+      const res = await api.customPlans.save(data);
+      if (res?.customPlan) {
+        setCustomPlans((prev) => [res.customPlan, ...prev]);
+        showToast(`Custom trip #${res.customPlan.id} submitted for agency review.`);
+        return res.customPlan;
+      }
+    } catch (err: any) {
+      const id = `VN-TRIP-${Math.floor(10000 + Math.random() * 89999)}`;
+      const newPlan = {
+        ...data,
+        id,
+        userId: currentUser?.id || 'usr-traveler',
+        userName: currentUser?.name || 'Aayush Pradhan',
+        status: 'PENDING_REVIEW',
+        createdAt: new Date().toISOString(),
+      };
+      setCustomPlans((prev) => [newPlan, ...prev]);
+      showToast(`Custom trip #${id} submitted for review.`);
+      return newPlan;
+    }
+  };
+
+  const acceptQuotation = async (planId: string, quoteId: string) => {
+    try {
+      const res = await api.customPlans.acceptQuote(planId, quoteId);
+      showToast(`Quotation accepted! Reservation #${res.booking?.id || ''} confirmed.`);
+      refreshData();
+      refreshCustomPlans();
+      return res;
+    } catch (err: any) {
+      showToast(`Failed to accept quotation: ${err.message}`);
+      throw err;
+    }
+  };
+
+  const rejectQuotation = async (planId: string, quoteId: string, feedback?: string) => {
+    try {
+      const res = await api.customPlans.rejectQuote(planId, quoteId, feedback);
+      showToast(`Quotation declined. Feedback transmitted to operator.`);
+      refreshCustomPlans();
+      return res;
+    } catch (err: any) {
+      showToast(`Failed: ${err.message}`);
+      throw err;
     }
   };
 
@@ -322,11 +426,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       prev.map((b) =>
         b.id === id
           ? {
-              ...b,
-              status: 'Cancelled',
-              qrCode: `VN-PASS-${id}-VOID`,
-              color: '#EF4444',
-            }
+            ...b,
+            status: 'Cancelled',
+            qrCode: `VN-PASS-${id}-VOID`,
+            color: '#EF4444',
+          }
           : b
       )
     );
@@ -402,22 +506,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       prev.map((p) =>
         p.id === postId
           ? {
-              ...p,
-              commentsCount: p.commentsCount + 1,
-              comments: [
-                ...p.comments,
-                {
-                  id: `c_${Date.now()}`,
-                  author: currentUser?.name || 'Aayush Pradhan',
-                  avatar:
-                    currentUser?.avatarUrl ||
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
-                  text,
-                  timeAgo: 'Just now',
-                  likes: 0,
-                },
-              ],
-            }
+            ...p,
+            commentsCount: p.commentsCount + 1,
+            comments: [
+              ...p.comments,
+              {
+                id: `c_${Date.now()}`,
+                author: currentUser?.name || 'Aayush Pradhan',
+                avatar:
+                  currentUser?.avatarUrl ||
+                  'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+                text,
+                timeAgo: 'Just now',
+                likes: 0,
+              },
+            ],
+          }
           : p
       )
     );
@@ -440,21 +544,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       prev.map((c) =>
         c.id === chatId
           ? {
-              ...c,
-              lastMessage: text,
-              lastTime: now,
-              unread: 0,
-              messages: [
-                ...c.messages,
-                {
-                  id: `m_${Date.now()}`,
-                  sender: currentUser?.name.split(' ')[0] || 'Me',
-                  text,
-                  time: now,
-                  isMe: true,
-                },
-              ],
-            }
+            ...c,
+            lastMessage: text,
+            lastTime: now,
+            unread: 0,
+            messages: [
+              ...c.messages,
+              {
+                id: `m_${Date.now()}`,
+                sender: currentUser?.name.split(' ')[0] || 'Me',
+                text,
+                time: now,
+                isMe: true,
+              },
+            ],
+          }
           : c
       )
     );
@@ -494,6 +598,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         bookings,
         addBooking,
         cancelBooking,
+        customPlans,
+        refreshCustomPlans,
+        createCustomTrip,
+        acceptQuotation,
+        rejectQuotation,
         posts,
         addPost,
         toggleLike,

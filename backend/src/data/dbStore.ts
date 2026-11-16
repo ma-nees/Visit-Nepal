@@ -124,35 +124,120 @@ export interface ServiceListing {
   availability: string[];
 }
 
+export interface Quotation {
+  id: string;
+  customTripId: string;
+  agencyId: string;
+  agencyName: string;
+  quotedAmountNpr: number;
+  breakdown: {
+    accommodationNpr: number;
+    guideNpr: number;
+    porterNpr: number;
+    permitsNpr: number;
+    transportNpr: number;
+    mealsNpr: number;
+    equipmentNpr: number;
+    serviceChargeNpr: number;
+    taxVatNpr: number;
+  };
+  agencyNotes: string;
+  alternativeRoutesSuggested?: string;
+  status: 'PENDING' | 'ACCEPTED' | 'REJECTED';
+  createdAt: string;
+  respondedAt?: string;
+}
+
+export interface CustomItineraryDay {
+  day: number;
+  title: string;
+  destination: string;
+  activity: string;
+  elevation: string;
+  distanceKm?: number;
+  walkingHours?: number;
+  isRestDay?: boolean;
+  notes?: string;
+}
+
 export interface CustomPlan {
   id: string;
   userId: string;
   userName: string;
+  userEmail?: string;
   title: string;
   destinations: string[];
   startDate: string;
+  endDate?: string;
   durationDays: number;
+  travelersCount?: number;
+  adultsCount?: number;
+  childrenCount?: number;
+  experienceLevel?: 'Beginner' | 'Intermediate' | 'Experienced Trekker' | 'Technical Mountaineer';
+  travelStyle?: 'Ultra-Luxury Heritage' | 'Boutique Comfort' | 'Authentic Teahouse' | 'Alpine Expedition Camp';
   trekkingDifficulty: string;
   estimatedBudgetNpr: number;
   budgetBreakdown: {
     accommodationNpr: number;
     guideNpr: number;
+    porterNpr?: number;
     permitsNpr: number;
     transportNpr: number;
     activitiesNpr: number;
+    mealsNpr?: number;
+    equipmentNpr?: number;
     butlerNpr: number;
+    serviceChargeNpr?: number;
+    taxVatNpr?: number;
   };
   accommodationPreference: string;
   guideRequested: boolean;
+  porterRequested?: boolean;
   transportRequested: boolean;
   butlerRequested: boolean;
-  itinerary: Array<{ day: number; destination: string; activity: string; elevation: string }>;
-  status: 'draft' | 'submitted' | 'approved' | 'converted_to_booking';
+  mealsPlan?: 'All-Inclusive (3 Meals/Day)' | 'Breakfast Only' | 'Pay As You Go';
+  equipmentRental?: string[];
+  emergencyServices?: string[];
+  detectedPermits?: Array<{
+    id: string;
+    name: string;
+    feeNpr: number;
+    authority: string;
+    required: boolean;
+  }>;
+  itinerary: CustomItineraryDay[];
+  travelerContact?: {
+    fullName: string;
+    email: string;
+    phone: string;
+    nationality: string;
+    passportNumber?: string;
+    emergencyContact?: string;
+    dietaryNotes?: string;
+  };
+  quotations?: Quotation[];
+  status:
+    | 'DRAFT'
+    | 'PENDING_REVIEW'
+    | 'QUOTED'
+    | 'CONFIRMED'
+    | 'REJECTED'
+    | 'CANCELLED'
+    | 'draft'
+    | 'submitted'
+    | 'approved'
+    | 'converted_to_booking';
+  rejectionReason?: string;
+  bookingId?: string;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface Booking {
   id: string;
+  bookingType?: 'standard' | 'custom';
+  customTripId?: string;
+  invoiceNumber?: string;
   userId: string;
   userName: string;
   userEmail: string;
@@ -164,8 +249,33 @@ export interface Booking {
   date: string;
   participantsCount: number;
   participants: Array<{ fullName: string; nationality: string; passportNumber?: string }>;
+  travelerDetails?: {
+    fullName: string;
+    email: string;
+    phone: string;
+    nationality: string;
+    passportNumber?: string;
+    emergencyContact?: string;
+    dietaryNotes?: string;
+  };
+  optionsAndAddons?: Array<{ name: string; priceNpr: number }>;
+  priceBreakdown?: {
+    basePriceNpr: number;
+    addOnsNpr: number;
+    taxVatNpr: number;
+    serviceChargeNpr: number;
+    totalAmountNpr: number;
+  };
   totalAmountNpr: number;
   status:
+    | 'PENDING'
+    | 'PENDING_REVIEW'
+    | 'QUOTED'
+    | 'CONFIRMED'
+    | 'PAID'
+    | 'COMPLETED'
+    | 'CANCELLED'
+    | 'REFUNDED'
     | 'draft'
     | 'pending'
     | 'accepted'
@@ -954,36 +1064,159 @@ function getInitialSeedData(): DatabaseState {
       id: 'PLN-2026-88',
       userId: 'usr_traveler_1',
       userName: 'Aayush Pradhan',
+      userEmail: 'aayush.traveler@visitnepal.com',
       title: 'Trans-Himalayan Lo Manthang & Sky Caves Expedition',
       destinations: ['mustang-kingdom', 'pokhara-valley'],
       startDate: '2026-05-10',
+      endDate: '2026-05-18',
       durationDays: 8,
+      travelersCount: 2,
+      adultsCount: 2,
+      childrenCount: 0,
+      experienceLevel: 'Experienced Trekker',
+      travelStyle: 'Boutique Comfort',
       trekkingDifficulty: 'Moderate',
       estimatedBudgetNpr: 285000,
       budgetBreakdown: {
         accommodationNpr: 48000,
-        guideNpr: 96000,
+        guideNpr: 64000,
+        porterNpr: 24000,
         permitsNpr: 65000,
         transportNpr: 45000,
         activitiesNpr: 15000,
-        butlerNpr: 16000,
+        mealsNpr: 24000,
+        butlerNpr: 0,
+        taxVatNpr: 32500,
+        serviceChargeNpr: 12500,
       },
       accommodationPreference: 'Boutique Heritage Lodges',
       guideRequested: true,
+      porterRequested: true,
       transportRequested: true,
       butlerRequested: false,
-      itinerary: [
-        { day: 1, destination: 'Pokhara', activity: 'Pre-expedition gear inspection & orientation', elevation: '822m' },
-        { day: 2, destination: 'Jomsom to Kagbeni', activity: 'Enter restricted gateway along Kali Gandaki', elevation: '2,810m' },
-        { day: 3, destination: 'Kagbeni to Chele', activity: 'Climb through red clay canyons', elevation: '3,050m' },
-        { day: 4, destination: 'Chele to Syangboche', activity: 'Cross high passes facing Nilgiri', elevation: '3,800m' },
-        { day: 5, destination: 'Syangboche to Ghami', activity: 'Longest Mani wall in Nepal', elevation: '3,520m' },
-        { day: 6, destination: 'Ghami to Tsarang', activity: 'Ancient library and monastery', elevation: '3,560m' },
-        { day: 7, destination: 'Tsarang to Lo Manthang', activity: 'Enter the walled capital of Lo', elevation: '3,840m' },
-        { day: 8, destination: 'Lo Manthang to Chhoser Caves', activity: 'Explore 2,500-year-old rock-cut dwellings', elevation: '3,900m' },
+      mealsPlan: 'All-Inclusive (3 Meals/Day)',
+      equipmentRental: ['Down Sleeping Bag (-20C)', 'Trekking Poles (Pair)'],
+      emergencyServices: ['Helicopter Rescue Authorization', 'Satellite Beacon'],
+      detectedPermits: [
+        { id: 'RAP-MUSTANG', name: 'Upper Mustang Special Restricted Area Permit (RAP)', feeNpr: 65000, authority: 'Department of Immigration, Nepal', required: true },
+        { id: 'ACAP-ENTRY', name: 'Annapurna Conservation Area Entry Permit (ACAP)', feeNpr: 3000, authority: 'National Trust for Nature Conservation (NTNC)', required: true },
       ],
-      status: 'submitted',
+      itinerary: [
+        { day: 1, title: 'Pokhara Rendezvous', destination: 'Pokhara', activity: 'Pre-expedition gear inspection & orientation', elevation: '822m', distanceKm: 0, walkingHours: 0, isRestDay: true },
+        { day: 2, title: 'Flight to Jomsom & Trek to Kagbeni', destination: 'Jomsom to Kagbeni', activity: 'Enter restricted gateway along Kali Gandaki valley', elevation: '2,810m', distanceKm: 11, walkingHours: 3.5 },
+        { day: 3, title: 'Kagbeni to Chele Red Gorges', destination: 'Kagbeni to Chele', activity: 'Climb through red clay canyons and rock bridges', elevation: '3,050m', distanceKm: 15, walkingHours: 5.5 },
+        { day: 4, title: 'Chele to Syangboche Passes', destination: 'Chele to Syangboche', activity: 'Cross high pass facing Nilgiri and Damodar Himal', elevation: '3,800m', distanceKm: 14, walkingHours: 6 },
+        { day: 5, title: 'Syangboche to Ghami Valley', destination: 'Syangboche to Ghami', activity: 'Pass Mani wall and red cliff formations', elevation: '3,520m', distanceKm: 12, walkingHours: 5 },
+        { day: 6, title: 'Ghami to Tsarang Fortress', destination: 'Ghami to Tsarang', activity: 'Ancient library, White Palace & Red Monastery', elevation: '3,560m', distanceKm: 11, walkingHours: 4.5 },
+        { day: 7, title: 'Tsarang to Walled Lo Manthang', destination: 'Tsarang to Lo Manthang', activity: 'Enter the walled capital of the Kings of Lo', elevation: '3,840m', distanceKm: 13, walkingHours: 5 },
+        { day: 8, title: 'Chhoser Sky Caves & Monasteries', destination: 'Lo Manthang to Chhoser Caves', activity: 'Explore 2,500-year-old rock-cut dwellings', elevation: '3,900m', distanceKm: 8, walkingHours: 3.5, isRestDay: false },
+      ],
+      travelerContact: {
+        fullName: 'Aayush Pradhan',
+        email: 'aayush.traveler@visitnepal.com',
+        phone: '+977-9801234567',
+        nationality: 'Nepali',
+        passportNumber: '09812401',
+        emergencyContact: 'Sita Pradhan (+977-9811234567)',
+        dietaryNotes: 'Standard Himalayan / Vegetarian Friendly',
+      },
+      quotations: [
+        {
+          id: 'QUO-2026-001',
+          customTripId: 'PLN-2026-88',
+          agencyId: 'biz_1',
+          agencyName: 'Himalayan Sherpa Expeditions',
+          quotedAmountNpr: 275000,
+          breakdown: {
+            accommodationNpr: 45000,
+            guideNpr: 60000,
+            porterNpr: 22000,
+            permitsNpr: 68000,
+            transportNpr: 40000,
+            mealsNpr: 22000,
+            equipmentNpr: 5000,
+            serviceChargeNpr: 10000,
+            taxVatNpr: 3000,
+          },
+          agencyNotes: 'Approved with licensed IFMGA Mustang lead guide Pasang Nuru Sherpa. Includes flight Pokhara-Jomsom-Pokhara and Mustang Special Permit fast-track clearance.',
+          alternativeRoutesSuggested: 'Recommended adding 1 additional acclimatization afternoon in Lo Manthang for Chhoser cave meditation.',
+          status: 'PENDING',
+          createdAt: '2026-02-13T10:00:00Z',
+        },
+      ],
+      status: 'QUOTED',
       createdAt: '2026-02-12T09:00:00Z',
+    },
+    {
+      id: 'PLN-2026-89',
+      userId: 'usr_traveler_1',
+      userName: 'Aayush Pradhan',
+      userEmail: 'aayush.traveler@visitnepal.com',
+      title: 'Manaslu Circuit & Larkya La High Alpine Traverse',
+      destinations: ['manaslu', 'annapurna'],
+      startDate: '2026-06-01',
+      endDate: '2026-06-14',
+      durationDays: 14,
+      travelersCount: 3,
+      adultsCount: 3,
+      childrenCount: 0,
+      experienceLevel: 'Technical Mountaineer',
+      travelStyle: 'Alpine Expedition Camp',
+      trekkingDifficulty: 'Challenging',
+      estimatedBudgetNpr: 410000,
+      budgetBreakdown: {
+        accommodationNpr: 60000,
+        guideNpr: 112000,
+        porterNpr: 45000,
+        permitsNpr: 55000,
+        transportNpr: 50000,
+        activitiesNpr: 20000,
+        mealsNpr: 42000,
+        equipmentNpr: 14000,
+        butlerNpr: 0,
+        taxVatNpr: 40000,
+        serviceChargeNpr: 18000,
+      },
+      accommodationPreference: 'Authentic Teahouse / High Camp',
+      guideRequested: true,
+      porterRequested: true,
+      transportRequested: true,
+      butlerRequested: false,
+      mealsPlan: 'All-Inclusive (3 Meals/Day)',
+      equipmentRental: ['Crampons & Microspikes', 'Expedition Down Jacket', 'Trekking Poles'],
+      emergencyServices: ['High-Altitude Medical Oxygen', 'Helicopter Evacuation Registration'],
+      detectedPermits: [
+        { id: 'RAP-MANASLU', name: 'Manaslu Restricted Area Permit (MRAP)', feeNpr: 18000, authority: 'Department of Immigration', required: true },
+        { id: 'MCAP-ENTRY', name: 'Manaslu Conservation Area Permit (MCAP)', feeNpr: 3000, authority: 'NTNC', required: true },
+        { id: 'ACAP-ENTRY', name: 'Annapurna Conservation Area Permit (ACAP)', feeNpr: 3000, authority: 'NTNC', required: true },
+      ],
+      itinerary: [
+        { day: 1, title: 'Drive Kathmandu to Soti Khola', destination: 'Soti Khola', activity: 'Private 4WD Scorpio transfer along Budhi Gandaki', elevation: '710m', distanceKm: 140, walkingHours: 0 },
+        { day: 2, title: 'Soti Khola to Machha Khola', destination: 'Machha Khola', activity: 'Trek along rocky cliff paths and suspension bridges', elevation: '870m', distanceKm: 14, walkingHours: 5.5 },
+        { day: 3, title: 'Machha Khola to Jagat Gateway', destination: 'Jagat', activity: 'Enter Restricted Manaslu Conservation Area checkpoint', elevation: '1,340m', distanceKm: 16, walkingHours: 6 },
+        { day: 4, title: 'Jagat to Deng Pine Trails', destination: 'Deng', activity: 'Bamboo groves and dramatic valley waterfalls', elevation: '1,860m', distanceKm: 15, walkingHours: 6 },
+        { day: 5, title: 'Deng to Namrung Tibetan Culture', destination: 'Namrung', activity: 'Witness Mani stones and high Tibetan architecture', elevation: '2,630m', distanceKm: 14, walkingHours: 5.5 },
+        { day: 6, title: 'Namrung to Samagaon Village', destination: 'Samagaon', activity: 'Breathtaking open view of Mt. Manaslu (8,163m)', elevation: '3,530m', distanceKm: 16, walkingHours: 6.5 },
+        { day: 7, title: 'Samagaon Acclimatization & Pungyen Gompa', destination: 'Samagaon', activity: 'Acclimatization hike to ancient glacial monastery', elevation: '4,050m', distanceKm: 8, walkingHours: 4, isRestDay: true },
+        { day: 8, title: 'Samagaon to Samdo Border Village', destination: 'Samdo', activity: 'High alpine Yak pastures near Tibet border', elevation: '3,860m', distanceKm: 9, walkingHours: 3.5 },
+        { day: 9, title: 'Samdo to Dharmasala High Base', destination: 'Dharmasala', activity: 'Final high camp preparation for pass crossing', elevation: '4,460m', distanceKm: 12, walkingHours: 4.5 },
+        { day: 10, title: 'Cross Larkya La Pass to Bhimthang', destination: 'Larkya La (5,106m) to Bhimthang', activity: 'Glacier crossing over Larkya La summit with panoramic peaks', elevation: '5,106m', distanceKm: 17, walkingHours: 8.5 },
+        { day: 11, title: 'Bhimthang to Tilije Rhododendron Forest', destination: 'Tilije', activity: 'Descend through Dudh Khola alpine forests', elevation: '2,300m', distanceKm: 15, walkingHours: 5.5 },
+        { day: 12, title: 'Tilije to Dharapani Junction', destination: 'Dharapani', activity: 'Connect with classic Annapurna circuit trail', elevation: '1,860m', distanceKm: 9, walkingHours: 3.5 },
+        { day: 13, title: 'Drive to Besisahar & Pokhara', destination: 'Pokhara', activity: 'Scenic mountain highway transfer', elevation: '822m', distanceKm: 110, walkingHours: 0 },
+        { day: 14, title: 'Return Transfer to Kathmandu', destination: 'Kathmandu', activity: 'Celebratory farewell dinner in Thamel', elevation: '1,400m', distanceKm: 200, walkingHours: 0, isRestDay: true },
+      ],
+      travelerContact: {
+        fullName: 'Aayush Pradhan',
+        email: 'aayush.traveler@visitnepal.com',
+        phone: '+977-9801234567',
+        nationality: 'Nepali',
+        passportNumber: '09812401',
+        emergencyContact: 'Sita Pradhan (+977-9811234567)',
+      },
+      quotations: [],
+      status: 'PENDING_REVIEW',
+      createdAt: '2026-02-15T11:00:00Z',
     },
   ];
 

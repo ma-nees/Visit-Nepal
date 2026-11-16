@@ -106,16 +106,37 @@ export interface Booking {
   id: string;
   title: string;
   provider: string;
-  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport';
+  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Expedition' | 'Guide' | 'Butler' | 'Tour';
   date: string;
   bookedBy: string;
-  status: 'Confirmed' | 'Completed' | 'Cancelled';
+  status: 'Confirmed' | 'Completed' | 'Cancelled' | 'Pending' | 'Quoted' | 'Paid';
   amount: string;
   qrCode: string;
   color: string;
   meetingPoint: string;
   assignedGuide: string;
   contactPhone: string;
+  bookingType?: 'standard' | 'custom';
+  customTripId?: string;
+  invoiceNumber?: string;
+  optionsAndAddons?: Array<{ name: string; priceNpr?: number; costNpr?: number; note?: string }>;
+  priceBreakdown?: {
+    baseAmountNpr: number;
+    addonsAmountNpr?: number;
+    serviceChargeNpr: number;
+    vatNpr: number;
+    totalNpr: number;
+  };
+  travelerDetails?: {
+    leadTravelerName: string;
+    leadEmail: string;
+    leadPhone: string;
+    leadNationality?: string;
+    passportNumber?: string;
+    emergencyContactName?: string;
+    emergencyContactPhone?: string;
+    dietaryOrMedicalNotes?: string;
+  };
 }
 
 export interface PostComment {

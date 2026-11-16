@@ -24,6 +24,7 @@ router.get('/business/dashboard', requireAuth, requireRole('business', 'admin'),
     .reduce((acc, b) => acc + b.totalAmountNpr, 0);
 
   const pendingBookings = bookings.filter((b) => b.status === 'pending');
+  const customPlans = state.customPlans || [];
 
   res.json({
     business,
@@ -31,10 +32,12 @@ router.get('/business/dashboard', requireAuth, requireRole('business', 'admin'),
       activePackagesCount: packages.length,
       totalBookingsCount: bookings.length,
       pendingRequestsCount: pendingBookings.length,
+      pendingCustomPlansCount: customPlans.filter((p) => p.status === 'PENDING_REVIEW').length,
       totalRevenueNpr,
     },
     packages,
     bookings,
+    customPlans,
     availableGuides: state.guides.filter((g) => g.isAvailable && g.verificationStatus === 'verified'),
     availableButlers: state.butlers.filter((bt) => bt.isAvailable && bt.verificationStatus === 'verified'),
   });
@@ -182,6 +185,7 @@ router.get('/admin/dashboard', requireAuth, requireRole('admin'), (_req, res) =>
       pendingBookingsCount: state.bookings.filter((b) => b.status === 'pending').length,
       pendingPermitsCount: state.permits.filter((p) => p.status === 'submitted' || p.status === 'under_review').length,
       pendingKycCount: pendingKyc,
+      pendingCustomPlansCount: state.customPlans.filter((p) => p.status === 'PENDING_REVIEW').length,
       totalBookingsVolumeNpr,
     },
     verificationQueue: state.businesses.map((b) => ({
@@ -191,6 +195,7 @@ router.get('/admin/dashboard', requireAuth, requireRole('admin'), (_req, res) =>
       pan: b.panNumber,
       status: b.status === 'verified' ? 'Approved' : 'Pending',
     })),
+    customPlans: state.customPlans || [],
     permitOfficerQueue: state.permits.map((p) => ({
       id: p.id,
       applicant: p.travelerName,
