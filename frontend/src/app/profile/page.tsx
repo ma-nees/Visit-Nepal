@@ -569,21 +569,6 @@ export default function ProfilePage() {
                 )}
               </motion.div>
 
-              {/* PROGRESSIVE TEAR RIP LINE (Rips from Left to Right along perforation) */}
-              {tearState === 'tearing' && (
-                <div className="absolute top-[49%] inset-x-3.5 -translate-y-1/2 z-30 pointer-events-none overflow-hidden">
-                  <motion.div
-                    initial={{ width: '0%' }}
-                    animate={{ width: '100%' }}
-                    transition={{ duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }}
-                    className="relative h-[2.5px] bg-gradient-to-r from-red-500/80 via-[#FDB716] to-[#0552A2] shadow-[0_0_10px_rgba(253,183,22,0.8)]"
-                  >
-                    {/* Active tearing rip spark at leading tip */}
-                    <span className="absolute right-0 top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white shadow-[0_0_8px_#FDB716] animate-ping" />
-                  </motion.div>
-                </div>
-              )}
-
               {/* TICKET LOWER SECTION */}
               <motion.div
                 animate={
