@@ -330,20 +330,6 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Minimal Elegant "Explore Nepal" CTA */}
-          <Link
-            href="/explore"
-            prefetch={true}
-            className={`inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${
-              isTransparent
-                ? 'bg-white/15 hover:bg-white/25 text-white border border-white/30 backdrop-blur-sm'
-                : 'bg-[#0552A2] hover:bg-[#044182] text-white shadow-xs'
-            }`}
-          >
-            <span>Explore Nepal</span>
-            <ArrowRight className="h-3 w-3" />
-          </Link>
-
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
@@ -445,17 +431,8 @@ export default function Navbar() {
             )}
           </div>
 
-          <div className="pt-3 space-y-2">
-            <Link
-              href="/explore"
-              onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] text-white py-3 text-xs font-bold shadow-sm"
-            >
-              <span>Explore Nepal</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-
-            <div className="grid grid-cols-2 gap-2 pt-1 text-center text-xs">
+          <div className="pt-2">
+            <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <Link
                 href="/custom-plan"
                 onClick={() => setMobileOpen(false)}
