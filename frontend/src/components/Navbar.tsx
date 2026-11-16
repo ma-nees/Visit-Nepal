@@ -107,12 +107,11 @@ export default function Navbar() {
               <Link
                 key={item.href}
                 href={item.href}
-                className={`relative py-1 text-[13px] font-medium tracking-wide transition-colors duration-200 outline-none ${
-                  isTransparent
-                    ? active
-                      ? 'text-white font-medium'
-                      : 'text-white/80 hover:text-white'
-                    : active
+                className={`relative py-1 text-[13px] font-medium tracking-wide transition-colors duration-200 outline-none ${isTransparent
+                  ? active
+                    ? 'text-white font-medium'
+                    : 'text-white/80 hover:text-white'
+                  : active
                     ? 'text-[#0552A2] font-medium'
                     : 'text-[#10243A]/80 hover:text-[#0552A2]'
                   }`}
@@ -232,11 +231,10 @@ export default function Navbar() {
               {/* Logged Out Visitor State: Sign In Button */}
               <Link
                 href="/login"
-                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium font-inter tracking-wide transition-all active:scale-95 cursor-pointer ${
-                  isTransparent
-                    ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
-                    : 'bg-white hover:bg-blue-50 text-[#0552A2] border border-blue-200/80 shadow-2xs'
-                }`}
+                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium font-inter tracking-wide transition-all active:scale-95 cursor-pointer ${isTransparent
+                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
+                  : 'bg-white hover:bg-blue-50 text-[#0552A2] border border-blue-200/80 shadow-2xs'
+                  }`}
               >
                 <User className="h-3.5 w-3.5" />
                 <span>Sign In</span>

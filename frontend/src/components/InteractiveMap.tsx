@@ -279,70 +279,71 @@ export default function InteractiveMap() {
   ];
 
   const getPinColor = (type: DestinationCategory, isSelected: boolean) => {
-    if (isSelected) return '#FDB716'; // Gold for selected
+    if (isSelected) return '#EC1F27'; // Crimson highlight for active waypoint
     switch (type) {
       case 'Summit & Trek':
-        return '#FDB716';
+        return '#FDB716'; // Gold
       case 'Culture & City':
-        return '#92C4EA';
+        return '#0552A2'; // Deep Royal Navy
       case 'Lakes & Wilderness':
-        return '#38BDF8';
+        return '#92C4EA'; // Soft Sky Blue
       case 'Wildlife Safari':
-        return '#EC1F27';
+        return '#EC1F27'; // Crimson
       default:
-        return '#FFFFFF';
+        return '#0552A2';
     }
   };
 
   return (
-    <div className="w-full bg-[#031526] text-white rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden border border-white/10 shadow-2xl font-inter">
+    <div className="w-full bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 rounded-2xl sm:rounded-3xl p-5 sm:p-8 lg:p-10 relative overflow-hidden border border-slate-200/90 shadow-[0_16px_48px_rgba(5,82,162,0.08)] font-inter select-none">
       {/* Topographic subtle background pattern */}
-      <div className="absolute inset-0 opacity-10 pointer-events-none bg-[radial-gradient(#92C4EA_1px,transparent_1px)] [background-size:24px_24px]" />
+      <div className="absolute inset-0 opacity-[0.07] pointer-events-none bg-[radial-gradient(#0552A2_1px,transparent_1px)] [background-size:24px_24px]" />
 
-      {/* Atmospheric Soft Lighting Glares */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#0552A2]/25 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-10 w-80 h-80 bg-[#92C4EA]/10 blur-[100px] rounded-full pointer-events-none" />
+      {/* Atmospheric Soft Lighting Glares with User Brand Colors */}
+      <div className="absolute -top-24 -left-24 w-96 h-96 bg-[#92C4EA]/30 blur-[110px] rounded-full pointer-events-none" />
+      <div className="absolute top-1/2 right-0 w-96 h-96 bg-[#0552A2]/10 blur-[120px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-0 left-1/3 w-80 h-80 bg-[#FDB716]/15 blur-[100px] rounded-full pointer-events-none" />
 
       {/* =========================================================================
           1. HEADER & INTERACTIVE FILTER PILLS (IMPROVED)
           ========================================================================= */}
-      <div className="relative z-10 space-y-6 pb-6 border-b border-white/10">
+      <div className="relative z-10 space-y-6 pb-6 border-b border-slate-200/90">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
           {/* Title & Description Block */}
           <div className="space-y-3 max-w-2xl">
             {/* Elegant HUD Eyebrow Badge */}
-            <div className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full bg-white/5 border border-white/15 text-[11px] font-medium font-inter text-[#92C4EA] tracking-wider uppercase backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716] animate-pulse" />
+            <div className="inline-flex items-center gap-2.5 px-3.5 py-1 rounded-full bg-white border border-slate-200/90 text-[11px] font-semibold font-inter text-[#0552A2] tracking-wider uppercase shadow-2xs">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#EC1F27] animate-pulse" />
               <span>Cartographic Discovery</span>
-              <span className="text-white/30">•</span>
-              <span className="text-slate-300 font-mono text-[10px]">27°N – 30°N · 80°E – 88°E</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-500 font-mono text-[10px]">27°N – 30°N · 80°E – 88°E</span>
             </div>
 
             {/* Main Section Heading: Poppins Medium */}
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white leading-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-slate-900 leading-tight">
               Map of the High Himalayas
             </h2>
 
             {/* Body Text / Description: Inter Regular */}
-            <p className="font-inter font-normal text-slate-300 text-sm sm:text-base leading-relaxed max-w-2xl">
+            <p className="font-inter font-normal text-slate-600 text-sm sm:text-base leading-relaxed max-w-2xl">
               From the 8,000-meter glaciated crests of the Great Himalayan Trail to subtropical southern plains. Select any destination pin to explore elevation and seasonal field notes.
             </p>
           </div>
 
           {/* Quick Elevation Telemetry Counters */}
-          <div className="hidden sm:flex items-center gap-4 bg-white/5 border border-white/10 rounded-2xl p-3 px-4 shrink-0 backdrop-blur-md">
+          <div className="hidden sm:flex items-center gap-4 bg-white border border-slate-200/90 rounded-2xl p-3 px-4 shrink-0 shadow-xs">
             <div className="space-y-0.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Apex Summit</span>
-              <span className="text-sm font-semibold text-white font-inter flex items-center gap-1.5">
+              <span className="text-sm font-semibold text-slate-900 font-inter flex items-center gap-1.5">
                 <Mountain className="h-3.5 w-3.5 text-[#FDB716]" />
                 8,848.86m
               </span>
             </div>
-            <div className="h-7 w-[1px] bg-white/15" />
+            <div className="h-7 w-[1px] bg-slate-200" />
             <div className="space-y-0.5">
               <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">Surveyed Hotspots</span>
-              <span className="text-sm font-semibold text-white font-inter flex items-center gap-1.5">
-                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-400" />
+              <span className="text-sm font-semibold text-slate-900 font-inter flex items-center gap-1.5">
+                <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
                 9 Waypoints
               </span>
             </div>
@@ -368,22 +369,22 @@ export default function InteractiveMap() {
                 }}
                 className={`group inline-flex items-center gap-2 px-3.5 py-2 rounded-full text-xs font-medium font-inter transition-all duration-200 shrink-0 cursor-pointer border ${
                   isActive
-                    ? 'bg-white text-[#0552A2] border-white shadow-md shadow-white/10 font-medium scale-[1.02]'
-                    : 'bg-white/5 hover:bg-white/10 text-slate-200 hover:text-white border-white/10'
+                    ? 'bg-[#0552A2] text-white border-[#0552A2] shadow-sm shadow-[#0552A2]/25 font-semibold scale-[1.02]'
+                    : 'bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 border-slate-200/90 shadow-2xs'
                 }`}
                 aria-pressed={isActive}
               >
                 <Icon
                   className={`h-3.5 w-3.5 transition-colors ${
-                    isActive ? 'text-[#0552A2]' : 'text-slate-300 group-hover:text-white'
+                    isActive ? 'text-[#FDB716]' : 'text-[#0552A2]'
                   }`}
                 />
                 <span>{filter.label}</span>
                 <span
                   className={`text-[10.5px] font-mono px-1.5 py-0.2 rounded-full transition-colors ${
                     isActive
-                      ? 'bg-blue-50 text-[#0552A2] font-semibold'
-                      : 'bg-white/10 text-slate-300 group-hover:text-white'
+                      ? 'bg-white/20 text-white font-semibold'
+                      : 'bg-slate-100 text-slate-600 group-hover:text-slate-800'
                   }`}
                 >
                   {filter.count}
@@ -400,50 +401,49 @@ export default function InteractiveMap() {
       <div className="relative z-10 mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
         {/* Left: Authentic Vector Map Canvas (Col 1 to 7) */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] rounded-2xl bg-[#020D18] border border-white/15 overflow-hidden p-2 sm:p-4 flex items-center justify-center select-none shadow-inner flex-1">
+          <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] rounded-2xl bg-white border border-slate-200/90 overflow-hidden p-2 sm:p-4 flex items-center justify-center select-none shadow-xs flex-1">
             {/* Top Compass Coordinates HUD */}
-            <div className="absolute top-3.5 left-4 z-20 flex items-center gap-2 text-[10px] tracking-wider text-slate-400 font-mono bg-slate-950/70 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-md">
-              <Compass className="h-3.5 w-3.5 text-[#FDB716] animate-spin-slow" />
+            <div className="absolute top-3.5 left-4 z-20 flex items-center gap-2 text-[10px] tracking-wider text-slate-600 font-mono bg-white/90 border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs backdrop-blur-md">
+              <Compass className="h-3.5 w-3.5 text-[#0552A2] animate-spin-slow" />
               <span>Himalayan Geo-Datum · WGS84</span>
             </div>
 
             {/* Scale Bar HUD */}
-            <div className="absolute top-3.5 right-4 z-20 hidden sm:flex items-center gap-1.5 text-[10px] font-mono text-slate-400 bg-slate-950/70 border border-white/10 px-2.5 py-1 rounded-full backdrop-blur-md">
+            <div className="absolute top-3.5 right-4 z-20 hidden sm:flex items-center gap-1.5 text-[10px] font-mono text-slate-600 bg-white/90 border border-slate-200 px-2.5 py-1 rounded-full shadow-2xs backdrop-blur-md">
               <span>0</span>
-              <span className="w-10 h-[2px] bg-white/40 block" />
+              <span className="w-10 h-[2px] bg-slate-400 block" />
               <span>150 km</span>
             </div>
 
             {/* SVG Cartographic Projection of Nepal */}
             <svg
               viewBox="15 30 1185 735"
-              className="w-full h-full object-contain filter drop-shadow-[0_12px_32px_rgba(5,82,162,0.3)]"
+              className="w-full h-full object-contain filter drop-shadow-[0_12px_28px_rgba(5,82,162,0.12)]"
             >
               <defs>
-                {/* Elevation Gradient Fill matching High Himalayas to Southern Plains */}
-                <linearGradient id="nepalTerrainFill" x1="0%" y1="0%" x2="0%" y2="100%">
-                  <stop offset="0%" stopColor="#1E3A5F" stopOpacity="0.95" />
-                  <stop offset="35%" stopColor="#0B2745" stopOpacity="0.95" />
-                  <stop offset="70%" stopColor="#082038" stopOpacity="0.95" />
-                  <stop offset="100%" stopColor="#031628" stopOpacity="0.95" />
+                {/* Soft Himalayan Sky Blue Gradient Fill from User Brand Palette (#92C4EA) */}
+                <linearGradient id="nepalTerrainFill" x1="0%" y1="10%" x2="100%" y2="90%">
+                  <stop offset="0%" stopColor="#A8D4F2" stopOpacity="0.95" />
+                  <stop offset="50%" stopColor="#92C4EA" stopOpacity="0.92" />
+                  <stop offset="100%" stopColor="#7EBAE3" stopOpacity="0.9" />
                 </linearGradient>
 
-                {/* Golden & Blue Rim Outline */}
+                {/* Earthy Warm Brown / Bronze Outline Highlight */}
                 <linearGradient id="nepalRimStroke" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%" stopColor="#92C4EA" />
-                  <stop offset="45%" stopColor="#FDB716" />
-                  <stop offset="75%" stopColor="#92C4EA" />
-                  <stop offset="100%" stopColor="#0552A2" />
+                  <stop offset="0%" stopColor="#A66732" />
+                  <stop offset="35%" stopColor="#874C1E" />
+                  <stop offset="70%" stopColor="#9C5C26" />
+                  <stop offset="100%" stopColor="#B87B40" />
                 </linearGradient>
 
                 {/* High Altitude Glow Filter */}
                 <filter id="himalayaPinGlow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feDropShadow dx="0" dy="2" stdDeviation="4" floodColor="#FDB716" floodOpacity="0.45" />
+                  <feDropShadow dx="0" dy="2" stdDeviation="3.5" floodColor="#0552A2" floodOpacity="0.35" />
                 </filter>
               </defs>
 
               {/* Topographic Coordinate Lat/Long Grid Lines */}
-              <g stroke="rgba(255,255,255,0.06)" strokeWidth="0.8" strokeDasharray="3 4">
+              <g stroke="rgba(5,82,162,0.08)" strokeWidth="0.8" strokeDasharray="3 4">
                 <line x1="200" y1="50" x2="200" y2="700" />
                 <line x1="450" y1="50" x2="450" y2="700" />
                 <line x1="700" y1="50" x2="700" y2="700" />
@@ -454,7 +454,7 @@ export default function InteractiveMap() {
               </g>
 
               {/* Latitude / Longitude Subtle Labels */}
-              <g fill="rgba(255,255,255,0.22)" fontFamily="monospace" fontSize="10">
+              <g fill="rgba(5,82,162,0.35)" fontFamily="monospace" fontSize="10">
                 <text x="205" y="70">81°E</text>
                 <text x="455" y="70">83°E</text>
                 <text x="705" y="70">85°E</text>
@@ -469,14 +469,14 @@ export default function InteractiveMap() {
                 d={NEPAL_COUNTRY_PATH}
                 fill="url(#nepalTerrainFill)"
                 stroke="url(#nepalRimStroke)"
-                strokeWidth="2.2"
+                strokeWidth="2.6"
                 strokeLinejoin="round"
                 strokeLinecap="round"
-                className="transition-all duration-300"
+                className="transition-all duration-300 filter drop-shadow-[0_8px_20px_rgba(5,82,162,0.14)]"
               />
 
               {/* 2. Stylized Mountain Ridges in Northern Great Himalayan Arc */}
-              <g stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" fill="none" strokeDasharray="4 3">
+              <g stroke="rgba(5,82,162,0.25)" strokeWidth="1.2" fill="none" strokeDasharray="4 3">
                 <path d="M 260 300 Q 380 260 560 250 T 800 380 T 1000 450" />
                 <path d="M 520 270 Q 640 230 760 330 T 960 440" />
               </g>
@@ -500,7 +500,7 @@ export default function InteractiveMap() {
                       onMouseEnter={() => setHoveredId(dest.id)}
                       onMouseLeave={() => setHoveredId(null)}
                       className={`cursor-pointer transition-all duration-300 ${
-                        isMatchingFilter ? 'opacity-100' : 'opacity-20'
+                        isMatchingFilter ? 'opacity-100' : 'opacity-25'
                       }`}
                     >
                       {/* Outer Pulse Wave for Selected/Active Waypoint */}
@@ -529,7 +529,7 @@ export default function InteractiveMap() {
                       <circle
                         r={isPrimary ? '8.5' : '6'}
                         fill={pinColor}
-                        stroke="#031526"
+                        stroke="#FFFFFF"
                         strokeWidth="2.2"
                         filter="url(#himalayaPinGlow)"
                         cx="0"
@@ -556,21 +556,23 @@ export default function InteractiveMap() {
                           width="100"
                           height="22"
                           rx="11"
-                          fill={isPrimary ? '#FFFFFF' : '#031526'}
-                          fillOpacity={isPrimary ? 0.98 : 0.85}
-                          stroke={isPrimary ? pinColor : 'rgba(255,255,255,0.2)'}
-                          strokeWidth={isPrimary ? '1.8' : '0.8'}
+                          fill="#FFFFFF"
+                          fillOpacity={0.98}
+                          stroke={isPrimary ? pinColor : '#874C1E'}
+                          strokeOpacity={isPrimary ? 1 : 0.45}
+                          strokeWidth={isPrimary ? '1.8' : '0.9'}
+                          filter="drop-shadow(0 2px 5px rgba(0,0,0,0.08))"
                           className="transition-all duration-200"
                         />
                         <text
                           x="0"
                           y="3.5"
                           textAnchor="middle"
-                          fill={isPrimary ? '#031526' : '#FFFFFF'}
+                          fill="#0B2745"
                           fontFamily="var(--font-inter), system-ui, sans-serif"
                           fontSize="9.5"
-                          fontWeight={isPrimary ? '700' : '500'}
-                          letterSpacing="0.02em"
+                          fontWeight={isPrimary ? '700' : '600'}
+                          letterSpacing="0.01em"
                         >
                           {dest.shortName}
                         </text>
@@ -582,22 +584,22 @@ export default function InteractiveMap() {
             </svg>
 
             {/* Bottom Telemetry Legend */}
-            <div className="absolute bottom-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-300 font-mono bg-slate-950/80 border border-white/10 px-3 py-1.5 rounded-xl backdrop-blur-md">
+            <div className="absolute bottom-3 left-4 right-4 z-20 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-700 font-mono bg-white/95 border border-slate-200/90 px-3 py-1.5 rounded-xl shadow-xs backdrop-blur-md">
               <div className="flex items-center gap-3">
-                <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1.5 font-medium">
                   <span className="h-2 w-2 rounded-full bg-[#FDB716]" /> Summit &amp; Trek
                 </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#92C4EA]" /> Culture
+                <span className="inline-flex items-center gap-1.5 font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#0552A2]" /> Culture
                 </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <span className="h-2 w-2 rounded-full bg-[#38BDF8]" /> Lakes
+                <span className="inline-flex items-center gap-1.5 font-medium">
+                  <span className="h-2 w-2 rounded-full bg-[#92C4EA]" /> Lakes
                 </span>
-                <span className="inline-flex items-center gap-1.5">
+                <span className="inline-flex items-center gap-1.5 font-medium">
                   <span className="h-2 w-2 rounded-full bg-[#EC1F27]" /> Wildlife
                 </span>
               </div>
-              <span className="text-[#92C4EA] font-semibold">
+              <span className="text-[#0552A2] font-semibold">
                 Active: {selectedDest.name}
               </span>
             </div>
@@ -606,33 +608,33 @@ export default function InteractiveMap() {
 
         {/* Right: Rich Editorial Waypoint Card (Col 8 to 12) */}
         <div className="lg:col-span-5 flex flex-col justify-between">
-          <div className="rounded-2xl bg-white/5 border border-white/15 p-5 sm:p-7 backdrop-blur-xl transition-all duration-300 space-y-4 flex flex-col justify-between h-full shadow-xl">
+          <div className="rounded-2xl bg-white border border-slate-200/90 p-5 sm:p-7 transition-all duration-300 space-y-4 flex flex-col justify-between h-full shadow-lg shadow-slate-900/5">
             {/* Top Region & Category Header */}
-            <div className="flex items-center justify-between border-b border-white/10 pb-3">
-              <span className="text-[10px] font-bold uppercase tracking-widest text-[#92C4EA] inline-flex items-center gap-1.5 font-inter">
+            <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+              <span className="text-[10.5px] font-bold uppercase tracking-wider text-[#0552A2] inline-flex items-center gap-1.5 font-inter">
                 <Sparkles className="h-3.5 w-3.5 text-[#FDB716]" />
                 {selectedDest.region}
               </span>
-              <span className="text-[11px] font-medium font-inter rounded-full bg-white/10 border border-white/15 px-3 py-0.5 text-slate-200">
+              <span className="text-[11px] font-semibold font-inter rounded-full bg-blue-50 border border-blue-200/70 px-3 py-0.5 text-[#0552A2]">
                 {selectedDest.type}
               </span>
             </div>
 
             {/* High-Resolution Landscape Photography Preview */}
-            <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden group shadow-md">
+            <div className="relative h-44 sm:h-52 w-full rounded-xl overflow-hidden group shadow-xs">
               <img
                 src={selectedDest.imageUrl}
                 alt={selectedDest.name}
                 className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/20 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
 
               {/* Weather & Temp Pill */}
-              <div className="absolute top-3 right-3 inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-mono text-white border border-white/15">
+              <div className="absolute top-3 right-3 inline-flex items-center gap-1.5 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-mono text-white border border-white/20">
                 <Wind className="h-3 w-3 text-cyan-300" />
                 <span>{selectedDest.temp}</span>
                 <span className="text-white/40">•</span>
-                <span className="text-slate-300">{selectedDest.weather}</span>
+                <span className="text-slate-200">{selectedDest.weather}</span>
               </div>
 
               {/* Product Name: Inter SemiBold */}
@@ -644,27 +646,27 @@ export default function InteractiveMap() {
             </div>
 
             {/* Description: Inter Regular */}
-            <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
               {selectedDest.description}
             </p>
 
             {/* Elevation & Season Specs Grid */}
             <div className="grid grid-cols-2 gap-3 pt-1">
-              <div className="rounded-xl bg-white/5 border border-white/10 p-2.5">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block flex items-center gap-1">
+              <div className="rounded-xl bg-slate-50 border border-slate-200/80 p-2.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block flex items-center gap-1 font-medium">
                   <Mountain className="h-3 w-3 text-[#FDB716]" />
                   Elevation
                 </span>
-                <span className="text-xs font-semibold text-white mt-1 block font-inter">
+                <span className="text-xs font-semibold text-slate-900 mt-1 block font-inter">
                   {selectedDest.altitude}
                 </span>
               </div>
-              <div className="rounded-xl bg-white/5 border border-white/10 p-2.5">
-                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block flex items-center gap-1">
-                  <Calendar className="h-3 w-3 text-[#92C4EA]" />
+              <div className="rounded-xl bg-slate-50 border border-slate-200/80 p-2.5">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block flex items-center gap-1 font-medium">
+                  <Calendar className="h-3 w-3 text-[#0552A2]" />
                   Optimal Season
                 </span>
-                <span className="text-xs font-semibold text-white mt-1 block font-inter">
+                <span className="text-xs font-semibold text-slate-900 mt-1 block font-inter">
                   {selectedDest.bestSeason}
                 </span>
               </div>
@@ -672,14 +674,14 @@ export default function InteractiveMap() {
 
             {/* Field Waypoint Highlights */}
             <div className="space-y-1.5 pt-1">
-              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
+              <span className="text-[10px] font-mono uppercase tracking-wider text-slate-500 block font-medium">
                 Field Highlights
               </span>
               <div className="flex flex-wrap gap-1.5">
                 {selectedDest.highlights.map((h) => (
                   <span
                     key={h}
-                    className="text-[11px] font-medium font-inter bg-white/10 text-white/90 rounded-md px-2.5 py-0.5 border border-white/10"
+                    className="text-[11px] font-medium font-inter bg-slate-100 text-slate-700 rounded-md px-2.5 py-0.5 border border-slate-200/80"
                   >
                     {h}
                   </span>
@@ -692,7 +694,7 @@ export default function InteractiveMap() {
               <Link
                 href={selectedDest.link}
                 prefetch={true}
-                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-white text-[#0552A2] hover:bg-slate-100 font-medium font-inter text-xs sm:text-sm py-3 transition-all active:scale-[0.98] shadow-md shadow-black/20"
+                className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] to-[#044384] hover:opacity-95 text-white font-medium font-inter text-xs sm:text-sm py-3 transition-all active:scale-[0.98] shadow-md shadow-[#0552A2]/20 cursor-pointer"
               >
                 <span>Discover {selectedDest.shortName} Itineraries</span>
                 <ArrowRight className="h-3.5 w-3.5" />
