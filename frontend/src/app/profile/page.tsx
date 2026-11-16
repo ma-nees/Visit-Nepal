@@ -159,6 +159,63 @@ function BarcodePattern({ value, height = 38 }: { value: string; height?: number
   );
 }
 
+/* Authentic Nepal Tourism Board Checkpost Red Rubber Stamp */
+function OfficialCheckpostStamp() {
+  return (
+    <div className="pointer-events-none select-none absolute right-3 bottom-3 rotate-[-12deg] opacity-75 mix-blend-multiply z-20">
+      <div className="relative flex h-[78px] w-[78px] items-center justify-center rounded-full border-2 border-dashed border-red-600/85 p-0.5 text-center shadow-2xs">
+        <div className="flex h-full w-full flex-col items-center justify-center rounded-full border border-red-600/75 p-1 bg-red-50/15">
+          <span className="text-[6px] font-black uppercase tracking-widest text-red-700 leading-none">
+            NEPAL TOURISM BOARD
+          </span>
+          <div className="my-0.5 rounded-xs bg-red-600 px-1.5 py-[1px] text-[7px] font-black uppercase text-white tracking-wider shadow-2xs">
+            TIMS 2026
+          </div>
+          <span className="text-[5.5px] font-extrabold uppercase tracking-widest text-red-700 leading-tight">
+            CHECKPOST VERIFIED
+          </span>
+          <span className="text-[5px] font-mono font-bold text-red-600/90 mt-0.5 tracking-tighter">
+            SEAL № KTM-8848
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* Subtle Security Guilloche Watermark Pattern */
+function SecurityGuillochePattern() {
+  return (
+    <svg
+      className="absolute inset-0 h-full w-full opacity-[0.032] pointer-events-none select-none"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 300 300"
+      preserveAspectRatio="none"
+    >
+      <defs>
+        <pattern id="guilloche" width="40" height="40" patternUnits="userSpaceOnUse">
+          <path
+            d="M0,20 Q10,0 20,20 T40,20 M0,10 Q10,30 20,10 T40,10 M0,30 Q10,10 20,30 T40,30"
+            fill="none"
+            stroke="#0552A2"
+            strokeWidth="0.75"
+          />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill="url(#guilloche)" />
+    </svg>
+  );
+}
+
+/* Microscopic Holographic Foil Security Thread */
+function HolographicSecurityStrip() {
+  return (
+    <div className="relative w-full h-[3.5px] overflow-hidden bg-gradient-to-r from-emerald-400 via-sky-400 via-amber-300 via-purple-400 to-rose-400 opacity-65">
+      <div className="absolute inset-0 bg-[linear-gradient(90deg,transparent_0%,rgba(255,255,255,0.7)_50%,transparent_100%)] animate-[pulse_2.5s_infinite]" />
+    </div>
+  );
+}
+
 export default function ProfilePage() {
   const router = useRouter();
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
@@ -470,10 +527,10 @@ export default function ProfilePage() {
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: -12, rotate: -2, rotateX: 6, rotateZ: -1.5, scale: 1, opacity: 1 }
+                    ? { y: -14, rotate: -2.2, rotateX: 7, rotateZ: -1.8, scale: 1, opacity: 1 }
                     : tearState === 'torn'
-                    ? { y: -22, x: -6, rotate: -3.5, rotateX: 8, rotateZ: -2.2, scale: 1, opacity: 1 }
-                    : { y: -36, scale: 1.1, opacity: 0 }
+                    ? { y: -24, x: -6, rotate: -3.8, rotateX: 9, rotateZ: -2.5, scale: 1, opacity: 1 }
+                    : { y: -38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
@@ -484,51 +541,70 @@ export default function ProfilePage() {
                     ? { duration: 0.32, ease: 'easeIn' }
                     : { duration: 0.35, ease: 'easeOut' }
                 }
-                className="relative z-20 overflow-hidden rounded-t-2xl bg-white text-slate-900 border-t border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
+                className="relative z-20 overflow-hidden rounded-t-2xl bg-[#FCFCFD] text-slate-900 border-t border-x border-slate-300/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.03),0_20px_40px_-15px_rgba(15,23,42,0.18)] transition-shadow group-hover:shadow-2xl"
                 style={{
                   transformOrigin: 'top left',
                   willChange: 'transform, opacity',
                 }}
               >
+                {/* Security Guilloche Watermark */}
+                <SecurityGuillochePattern />
+
                 {/* Top Himalayan Tricolor Dash Strip */}
-                <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
+                <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)] shadow-2xs" />
 
-                {/* Left & Right Physical Cutout Half-Notches at Bottom */}
-                <span className="absolute -left-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
-                <span className="absolute -right-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
+                {/* Holographic Security Thread */}
+                <HolographicSecurityStrip />
 
-                <div className="p-5 sm:p-6 pb-4 space-y-4">
+                {/* Left & Right Physical Cutout Half-Notches at Bottom with Punch Bevel */}
+                <span className="absolute -left-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
+
+                <div className="p-5 sm:p-6 pb-3 space-y-3.5 relative z-10">
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#031526] text-[#FDB716] shadow-xs">
+                      <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#031526] text-[#FDB716] shadow-sm border border-slate-800">
                         <Compass className="h-5 w-5" />
                       </div>
                       <div>
-                        <h4 className="font-poppins text-sm font-bold text-slate-900 leading-none">
-                          Visit Nepal
-                        </h4>
-                        <p className="mt-1 text-[11px] font-medium text-slate-500">
+                        <div className="flex items-center gap-1.5">
+                          <h4 className="font-poppins text-sm font-bold text-slate-900 leading-none">
+                            Visit Nepal
+                          </h4>
+                          <span className="rounded-xs bg-red-100 px-1 py-0.2 text-[8px] font-black text-red-700 tracking-wider">
+                            OFFICIAL
+                          </span>
+                        </div>
+                        <p className="mt-1 text-[11px] font-semibold text-slate-500 font-mono tracking-tight">
                           Digital TIMS pass
                         </p>
                       </div>
                     </div>
 
                     <div className="flex items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-semibold text-emerald-800">
+                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100/90 border border-emerald-300/60 px-2.5 py-1 text-xs font-semibold text-emerald-800 shadow-2xs">
                         <Check className="h-3.5 w-3.5 stroke-[2.5]" />
                         Verified
+                      </span>
+                      <span className="hidden sm:inline-flex rounded-xs bg-slate-100 border border-slate-200 px-1.5 py-0.5 text-[9px] font-mono font-bold text-slate-600">
+                        № 8848
                       </span>
                       <Maximize2 className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] transition-colors" />
                     </div>
                   </div>
 
                   {/* Holder Identity */}
-                  <div className="pt-1">
-                    <p className="text-[11px] font-medium uppercase tracking-wider text-slate-400">
-                      Holder
-                    </p>
-                    <p className="font-poppins text-base font-bold text-slate-900">
+                  <div className="pt-0.5 border-t border-slate-100">
+                    <div className="flex items-center justify-between">
+                      <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                        Himalayan Permit Holder
+                      </p>
+                      <span className="text-[8px] font-mono text-slate-400">
+                        PASS ID: VN-2026-NTA
+                      </span>
+                    </div>
+                    <p className="font-poppins text-base font-bold text-slate-900 tracking-tight mt-0.5">
                       {activeName}
                     </p>
                     <p className="text-xs font-semibold text-[#0552A2] capitalize">
@@ -537,17 +613,29 @@ export default function ProfilePage() {
                   </div>
                 </div>
 
-                {/* Bottom Border: Perforated Dashed Line (Intact) OR Ragged Paper Fiber Edge (Torn) */}
+                {/* Bottom Border: Die-Cut Perforation Line (Intact) OR Ragged Paper Fiber Edge (Torn) */}
                 {tearState === 'idle' ? (
-                  <div className="border-b border-dashed border-slate-300 w-full" />
+                  <div className="relative w-full py-1.5 px-4 bg-slate-50/60 border-t border-slate-200/70 flex items-center justify-center">
+                    <div className="w-full flex items-center justify-between gap-1 overflow-hidden opacity-50">
+                      {Array.from({ length: 30 }).map((_, i) => (
+                        <span
+                          key={i}
+                          className="h-1 w-1 rounded-full bg-slate-400 shadow-[inset_0_1px_1px_rgba(0,0,0,0.4)] shrink-0"
+                        />
+                      ))}
+                    </div>
+                    <span className="absolute bg-[#FCFCFD] px-2.5 text-[7.5px] font-mono font-bold tracking-widest text-slate-400 select-none uppercase">
+                      TEAR ALONG PERFORATION
+                    </span>
+                  </div>
                 ) : (
                   <div className="relative w-full overflow-hidden leading-none z-20">
                     <svg
-                      viewBox="0 0 500 12"
-                      className="w-full h-3 fill-white text-slate-200 filter drop-shadow-[0_2px_3px_rgba(0,0,0,0.18)]"
+                      viewBox="0 0 500 14"
+                      className="w-full h-3.5 fill-[#FCFCFD] text-slate-300 filter drop-shadow-[0_2.5px_3px_rgba(0,0,0,0.22)]"
                       preserveAspectRatio="none"
                     >
-                      <path d="M 0,0 L 500,0 L 500,4 L 485,8 L 470,3 L 455,9 L 440,4 L 425,8 L 410,3 L 395,9 L 380,4 L 365,8 L 350,3 L 335,9 L 320,4 L 305,8 L 290,3 L 275,9 L 260,4 L 245,8 L 230,3 L 215,9 L 200,4 L 185,8 L 170,3 L 155,9 L 140,4 L 125,8 L 110,3 L 95,9 L 80,4 L 65,8 L 50,3 L 35,9 L 20,4 L 0,6 Z" />
+                      <path d="M 0,0 L 500,0 L 500,3 L 490,8 L 480,2 L 470,9 L 460,4 L 450,10 L 440,3 L 430,8 L 420,2 L 410,9 L 400,4 L 390,10 L 380,3 L 370,8 L 360,2 L 350,9 L 340,4 L 330,10 L 320,3 L 310,8 L 300,2 L 290,9 L 280,4 L 270,10 L 260,3 L 250,8 L 240,2 L 230,9 L 220,4 L 210,10 L 200,3 L 190,8 L 180,2 L 170,9 L 160,4 L 150,10 L 140,3 L 130,8 L 120,2 L 110,9 L 100,4 L 90,10 L 80,3 L 70,8 L 60,2 L 50,9 L 40,4 L 30,10 L 20,3 L 10,8 L 0,4 Z" />
                     </svg>
                   </div>
                 )}
@@ -574,10 +662,10 @@ export default function ProfilePage() {
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: 12, rotate: 1.5, rotateX: -5, rotateZ: 1.2, scale: 1, opacity: 1 }
+                    ? { y: 14, rotate: 1.8, rotateX: -5.5, rotateZ: 1.4, scale: 1, opacity: 1 }
                     : tearState === 'torn'
-                    ? { y: 22, x: 6, rotate: 2.5, rotateX: -7, rotateZ: 1.8, scale: 1, opacity: 1 }
-                    : { y: 36, scale: 1.1, opacity: 0 }
+                    ? { y: 24, x: 6, rotate: 2.8, rotateX: -7.5, rotateZ: 2, scale: 1, opacity: 1 }
+                    : { y: 38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
@@ -588,30 +676,36 @@ export default function ProfilePage() {
                     ? { duration: 0.32, ease: 'easeIn' }
                     : { duration: 0.35, ease: 'easeOut' }
                 }
-                className="relative z-10 overflow-hidden rounded-b-2xl bg-white text-slate-900 border-b border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
+                className="relative z-10 overflow-hidden rounded-b-2xl bg-[#FCFCFD] text-slate-900 border-b border-x border-slate-300/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.03),0_20px_40px_-15px_rgba(15,23,42,0.18)] transition-shadow group-hover:shadow-2xl"
                 style={{
                   transformOrigin: 'bottom right',
                   willChange: 'transform, opacity',
                 }}
               >
+                {/* Security Guilloche Watermark */}
+                <SecurityGuillochePattern />
+
                 {/* Top Border: Ragged Paper Fiber Edge (Torn) */}
                 {tearState !== 'idle' ? (
                   <div className="relative w-full overflow-hidden leading-none z-20">
                     <svg
-                      viewBox="0 0 500 12"
-                      className="w-full h-3 fill-white text-slate-200 filter drop-shadow-[0_-2px_3px_rgba(0,0,0,0.15)]"
+                      viewBox="0 0 500 14"
+                      className="w-full h-3.5 fill-[#FCFCFD] text-slate-300 filter drop-shadow-[0_-2.5px_3px_rgba(0,0,0,0.18)]"
                       preserveAspectRatio="none"
                     >
-                      <path d="M 0,12 L 500,12 L 500,8 L 485,4 L 470,9 L 455,3 L 440,8 L 425,4 L 410,9 L 395,3 L 380,8 L 365,4 L 350,9 L 335,3 L 320,8 L 305,4 L 290,9 L 275,3 L 260,8 L 245,4 L 230,9 L 215,3 L 200,8 L 185,4 L 170,9 L 155,3 L 140,8 L 125,4 L 110,9 L 95,3 L 80,8 L 65,4 L 50,9 L 35,3 L 20,8 L 0,6 Z" />
+                      <path d="M 0,14 L 500,14 L 500,11 L 490,6 L 480,12 L 470,5 L 460,10 L 450,4 L 440,11 L 430,6 L 420,12 L 410,5 L 400,10 L 390,4 L 380,11 L 370,6 L 360,12 L 350,5 L 340,10 L 330,4 L 320,11 L 310,6 L 300,12 L 290,5 L 280,10 L 270,4 L 260,11 L 250,6 L 240,12 L 230,5 L 220,10 L 210,4 L 200,11 L 190,6 L 180,12 L 170,5 L 160,10 L 150,4 L 140,11 L 130,6 L 120,12 L 110,5 L 100,10 L 90,4 L 80,11 L 70,6 L 60,12 L 50,5 L 40,10 L 30,4 L 20,11 L 10,6 L 0,10 Z" />
                     </svg>
                   </div>
                 ) : null}
 
-                {/* Left & Right Physical Cutout Half-Notches at Top */}
-                <span className="absolute -left-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
-                <span className="absolute -right-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-inner z-30 pointer-events-none" />
+                {/* Left & Right Physical Cutout Half-Notches at Top with Punch Bevel */}
+                <span className="absolute -left-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
 
-                <div className="p-5 sm:p-6 pt-4 space-y-4">
+                {/* Official Red Ink Checkpost Stamp */}
+                <OfficialCheckpostStamp />
+
+                <div className="p-5 sm:p-6 pt-4 space-y-4 relative z-10">
                   {/* Detailed Holder & Travel Metadata */}
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
                     <div className="flex items-start gap-2.5 sm:col-span-2">
@@ -652,6 +746,9 @@ export default function ProfilePage() {
                   {/* Barcode & Monospace Ledger ID */}
                   <div className="border-t border-slate-200/80 pt-3">
                     <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} />
+                    <div className="text-[7.5px] font-mono tracking-widest text-slate-400 uppercase select-none opacity-60 text-center pt-1.5">
+                      OFFICIAL TREKKER&apos;S INFORMATION MANAGEMENT SYSTEM • GOVT OF NEPAL
+                    </div>
                   </div>
                 </div>
               </motion.div>
