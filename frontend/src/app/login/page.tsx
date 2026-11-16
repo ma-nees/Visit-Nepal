@@ -115,16 +115,6 @@ export default function LoginPage() {
     }
   }, [searchParams]);
 
-  // Redirect if already authenticated
-  useEffect(() => {
-    if (currentUser?.loggedIn && currentUser?.otpVerified) {
-      const activeRoleConfig = QUICK_ROLES.find(
-        (r) => r.id === (currentUser.role?.toLowerCase() as UserRole)
-      );
-      router.push(activeRoleConfig ? activeRoleConfig.target : '/dashboard');
-    }
-  }, [currentUser, router]);
-
   // Handle Quick Demo role selection
   const handleSelectRole = (r: QuickRole) => {
     setSelectedRole(r.id);

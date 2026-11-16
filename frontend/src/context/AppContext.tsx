@@ -14,6 +14,7 @@ import {
   notifications as initialNotifications,
 } from '@/data/mockData';
 import { api } from '@/lib/api';
+import { resetGlobalAuth } from '@/store/useTravelStore';
 
 export type UserRole = 'traveler' | 'business' | 'guide' | 'butler' | 'admin';
 
@@ -196,6 +197,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     } catch {
       // Ignore
     }
+    resetGlobalAuth();
     setCurrentUser(null);
     showToast('Signed out of Visit Nepal portal.');
   };

@@ -22,11 +22,23 @@ const DEFAULT_USER: TravelUser = {
 };
 
 // Global state singleton for components using useTravelStore
-let globalUser: TravelUser = { ...DEFAULT_USER };
+let globalUser: TravelUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
 const listeners = new Set<(user: TravelUser) => void>();
 
 function notify() {
   listeners.forEach((listener) => listener({ ...globalUser }));
+}
+
+export function resetGlobalAuth() {
+  globalUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
+  try {
+    localStorage.removeItem('vn_user');
+    localStorage.removeItem('vn_auth_token');
+    localStorage.setItem('vn_logged_out', 'true');
+  } catch {
+    // Ignore
+  }
+  notify();
 }
 
 export function useTravelStore() {
@@ -35,6 +47,12 @@ export function useTravelStore() {
   useEffect(() => {
     // Sync with localStorage on client mount if available
     try {
+      const isLoggedOut = localStorage.getItem('vn_logged_out') === 'true';
+      if (isLoggedOut) {
+        globalUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
+        setCurrentUser({ ...globalUser });
+        return;
+      }
       const stored = localStorage.getItem('vn_user');
       if (stored) {
         const parsed = JSON.parse(stored);
@@ -47,6 +65,9 @@ export function useTravelStore() {
           otpVerified: true,
           avatarUrl: parsed.avatarUrl,
         };
+        setCurrentUser({ ...globalUser });
+      } else {
+        globalUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
         setCurrentUser({ ...globalUser });
       }
     } catch {
