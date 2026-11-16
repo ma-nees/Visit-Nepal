@@ -5,7 +5,6 @@ import {
   ShieldCheck,
   Mountain,
   Compass,
-  PhoneCall,
   Mail,
   ArrowUpRight,
   MapPin,
@@ -134,29 +133,18 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Travel Desk & SOS Emergency (Col 10 to 12) */}
+          {/* Official Tourism Contact Desk (Col 10 to 12) */}
           <div className="lg:col-span-3 space-y-3">
-            <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#EC1F27] flex items-center gap-1.5">
-              <PhoneCall className="h-3.5 w-3.5" />
-              <span>24/7 Mountain Emergency</span>
+            <h4 className="text-[11px] font-bold uppercase tracking-[0.18em] text-[#92C4EA]">
+              Official Tourism Desk
             </h4>
-            <div className="rounded-xl border border-red-500/30 bg-red-950/20 p-3 text-xs space-y-1.5">
-              <div className="flex justify-between text-slate-300">
-                <span className="font-light">Tourist Police Desk:</span>
-                <strong className="text-white font-mono">1144</strong>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span className="font-light">Heli Rescue Dispatch:</span>
-                <strong className="text-white font-mono">+977 1 4256909</strong>
-              </div>
-            </div>
 
-            <div className="space-y-1 pt-1 text-xs text-slate-400">
-              <div className="flex items-center gap-1.5">
+            <div className="space-y-2 pt-1 text-xs text-slate-300">
+              <div className="flex items-center gap-2">
                 <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                 <span>Bhrikutimandap, Kathmandu, Nepal</span>
               </div>
-              <div className="flex items-center gap-1.5">
+              <div className="flex items-center gap-2">
                 <Mail className="h-3.5 w-3.5 text-slate-400 shrink-0" />
                 <a href="mailto:info@visitnepal.ai" className="hover:text-white transition-colors">
                   info@visitnepal.ai
