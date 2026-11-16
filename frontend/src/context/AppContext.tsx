@@ -36,6 +36,34 @@ const roleDefaultEmails: Record<UserRole, string> = {
   admin: 'officer@ntb.gov.np',
 };
 
+export const personaDefaults: Record<UserRole, { name: string; email: string; title: string }> = {
+  traveler: {
+    name: 'Aayush Pradhan',
+    email: 'aayush.traveler@visitnepal.com',
+    title: 'Verified Himalayan Trekker',
+  },
+  business: {
+    name: 'Himalayan Expeditions Partner',
+    email: 'partner@himalayanexpeditions.com',
+    title: 'Licensed Tour Operator Agency',
+  },
+  guide: {
+    name: 'Pasang Nuru Sherpa',
+    email: 'pasang.sherpa@visitnepal.com',
+    title: 'NMA & IFMGA Certified Lead Mountain Guide',
+  },
+  butler: {
+    name: 'Mingma Sherpa',
+    email: 'sherpa.butler@visitnepal.com',
+    title: 'VIP Sherpa Butler & Concierge',
+  },
+  admin: {
+    name: 'Ministry Tourism Officer',
+    email: 'officer@ntb.gov.np',
+    title: 'Nepal Tourism Board (NTB) Government Admin Desk',
+  },
+};
+
 interface AppContextType {
   role: UserRole;
   setRole: (role: UserRole) => void;
@@ -168,19 +196,30 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
 
         const savedToken = typeof window !== 'undefined' ? localStorage.getItem('vn_auth_token') : null;
+        const savedUserStr = typeof window !== 'undefined' ? localStorage.getItem('vn_user') : null;
+
         if (savedToken) {
           const me = await api.auth.me().catch(() => null);
           if (me?.user) {
             setCurrentUser(me.user);
             setRoleState(me.user.role);
-          } else {
-            // If token is invalid or backend unreachable, clear stale token and keep logged out
+          } else if (savedUserStr) {
             try {
-              localStorage.removeItem('vn_auth_token');
-              localStorage.removeItem('vn_user');
+              const parsed = JSON.parse(savedUserStr);
+              setCurrentUser(parsed);
+              setRoleState(parsed.role || 'traveler');
             } catch {
-              // Ignore
+              setCurrentUser(null);
             }
+          } else {
+            setCurrentUser(null);
+          }
+        } else if (savedUserStr) {
+          try {
+            const parsed = JSON.parse(savedUserStr);
+            setCurrentUser(parsed);
+            setRoleState(parsed.role || 'traveler');
+          } catch {
             setCurrentUser(null);
           }
         } else {
@@ -209,23 +248,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     showToast('Signed out of Visit Nepal portal.');
   };
 
-  // Role Switcher with Server-Side Authentication
+  // Role Switcher with Server-Side & Local Fallback Authentication
   const setRole = async (newRole: UserRole) => {
+    const persona = personaDefaults[newRole];
+    const localUser: CurrentUser = {
+      id: `usr-${newRole}`,
+      email: persona.email,
+      name: persona.name,
+      role: newRole,
+    };
+
     try {
       localStorage.removeItem('vn_logged_out');
+      localStorage.setItem('vn_user', JSON.stringify(localUser));
+      localStorage.setItem('vn_auth_token', `token-${newRole}`);
     } catch {
       // Ignore
     }
+
     setRoleState(newRole);
+    setCurrentUser(localUser);
+
     try {
       const email = roleDefaultEmails[newRole];
       const res = await api.auth.login(email, 'NepalTourism2026!', newRole);
       setCurrentUser(res.user);
-      showToast(`Switched active portal identity to ${newRole.toUpperCase()}: ${res.user.name}`);
+      try {
+        localStorage.setItem('vn_user', JSON.stringify(res.user));
+        localStorage.setItem('vn_auth_token', res.token);
+      } catch {
+        // Ignore
+      }
+      showToast(`Switched active user to ${persona.name} (${newRole.toUpperCase()})`);
       refreshData();
     } catch (err: any) {
-      console.error('[AppContext] Failed to authenticate role switch:', err);
-      showToast(`Switched to ${newRole}`);
+      console.warn('[AppContext] Offline/local role switch:', err.message);
+      showToast(`Switched active user to ${persona.name} (${newRole.toUpperCase()})`);
     }
   };
 

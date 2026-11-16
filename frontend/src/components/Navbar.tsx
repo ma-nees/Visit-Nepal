@@ -34,11 +34,9 @@ export default function Navbar() {
   const { role, currentUser, logout, notificationsList, markAllRead } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
-  const [profileOpen, setProfileOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
 
   const handleLogout = () => {
-    setProfileOpen(false);
     logout();
     router.push('/login');
   };
@@ -215,97 +213,19 @@ export default function Navbar() {
                 )}
               </div>
 
-              {/* User Profile & Account Dropdown */}
-              <div className="relative">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setProfileOpen((v) => !v);
-                    setNotifOpen(false);
-                  }}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
+              {/* User Profile: Direct redirect to /profile */}
+              <Link
+                href="/profile"
+                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+                  isTransparent
                     ? 'text-white/90 hover:text-white hover:bg-white/10'
                     : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
-                    }`}
-                  title="User Account & Logout"
-                  aria-label="User Account & Logout"
-                >
-                  <UserCircle2 className="h-5 w-5" />
-                </button>
-
-                {profileOpen && (
-                  <div className="absolute right-0 mt-2 w-64 rounded-2xl border border-slate-200 bg-white p-3 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
-                    {/* User Info Header */}
-                    <div className="px-2 py-2 border-b border-slate-100 flex items-center gap-2.5">
-                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-blue-50 text-[#0552A2] font-black text-sm">
-                        {currentUser?.name ? currentUser.name.charAt(0) : 'U'}
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs font-bold text-slate-900 truncate">
-                          {currentUser.name}
-                        </p>
-                        <p className="text-[10px] text-slate-500 truncate">
-                          {currentUser.email}
-                        </p>
-                        <span className="inline-block mt-0.5 rounded px-1.5 py-0.2 text-[9px] font-bold uppercase bg-blue-50 text-[#0552A2]">
-                          {currentUser.role || role || 'Traveler'}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Navigation Options */}
-                    <div className="py-1.5 space-y-0.5 font-inter">
-                      <Link
-                        href="/profile"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                      >
-                        <User className="h-3.5 w-3.5" />
-                        <span>My Profile &amp; Permits</span>
-                      </Link>
-
-                      <Link
-                        href="/bookings"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                      >
-                        <CalendarCheck className="h-3.5 w-3.5" />
-                        <span>My Bookings</span>
-                      </Link>
-
-                      <Link
-                        href="/custom-plan"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                      >
-                        <Compass className="h-3.5 w-3.5" />
-                        <span>Custom Itinerary</span>
-                      </Link>
-
-                      <Link
-                        href="/login"
-                        onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
-                      >
-                        <Shield className="h-3.5 w-3.5" />
-                        <span>Switch Role / Portal</span>
-                      </Link>
-                    </div>
-
-                    {/* Logout Action */}
-                    <div className="pt-1.5 border-t border-slate-100">
-                      <button
-                        type="button"
-                        onClick={handleLogout}
-                        className="w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
-                      >
-                        <LogOut className="h-3.5 w-3.5" />
-                        <span>Sign Out / Log Out</span>
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
+                }`}
+                title="My Profile & Switch User"
+                aria-label="My Profile & Switch User"
+              >
+                <UserCircle2 className="h-5 w-5" />
+              </Link>
             </>
           ) : (
             <>
