@@ -7,7 +7,7 @@ import { NepalKnowledgeMap } from '@/components/network/NepalKnowledgeMap';
 
 export default function NepalMapPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 pt-24 pb-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       {/* Light & Clean Editorial Atmosphere */}
       <div className="absolute -top-24 -left-24 w-[500px] h-[500px] rounded-full bg-[#92C4EA]/25 blur-[120px] pointer-events-none" />
       <div className="absolute top-1/3 right-0 w-[450px] h-[450px] rounded-full bg-[#0552A2]/08 blur-[120px] pointer-events-none" />
@@ -54,6 +54,6 @@ export default function NepalMapPage() {
         </div>
 
       </div>
-    </main>
+    </div>
   );
 }

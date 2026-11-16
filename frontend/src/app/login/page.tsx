@@ -214,7 +214,7 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-screen w-full relative overflow-x-hidden overflow-y-auto lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[#FAF9F5] font-sans">
+    <div className="min-h-screen w-full relative overflow-x-hidden overflow-y-auto lg:h-screen lg:overflow-hidden flex flex-col lg:flex-row bg-[#FAF9F5] font-sans">
       {/* 1. Interactive Map of Nepal with Animations (Left Panel) */}
       <AuthLeftPanel
         imageSrc="https://images.unsplash.com/photo-1544735716-392fe2489ffa?q=80&w=1200"
@@ -597,6 +597,6 @@ export default function LoginPage() {
           </motion.div>
         )}
       </AnimatePresence>
-    </main>
+    </div>
   );
 }

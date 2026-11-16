@@ -45,11 +45,6 @@ export default function Navbar() {
 
   const isHome = pathname === '/';
 
-  // Do not render top navigation on dedicated full-screen auth pages
-  if (pathname === '/login' || pathname === '/signup') {
-    return null;
-  }
-
   // Passive high-performance scroll listener to toggle transparency beyond 70px
   useEffect(() => {
     let ticking = false;
