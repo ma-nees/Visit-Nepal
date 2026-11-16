@@ -226,6 +226,32 @@ export default function ProfilePage() {
   const [tearState, setTearState] = useState<TearState>('idle');
   const [isExpanded, setIsExpanded] = useState(false);
 
+  // 3D Card Interactive Tilt & Specular Glare on Hover
+  const [tilt, setTilt] = useState({ x: 0, y: 0, glareX: 50, glareY: 50 });
+  const [isHovered, setIsHovered] = useState(false);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (tearState !== 'idle') return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5; // -0.5 to 0.5
+    const y = (e.clientY - rect.top) / rect.height - 0.5; // -0.5 to 0.5
+    setTilt({
+      x: -y * 10, // rotateX
+      y: x * 10,  // rotateY
+      glareX: ((e.clientX - rect.left) / rect.width) * 100,
+      glareY: ((e.clientY - rect.top) / rect.height) * 100,
+    });
+  };
+
+  const handleMouseEnter = () => {
+    if (tearState === 'idle') setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovered(false);
+    setTilt({ x: 0, y: 0, glareX: 50, glareY: 50 });
+  };
+
   const activeRole: UserRole = currentUser?.role || role || 'traveler';
   const activeName = currentUser?.name || 'Aayush Pradhan';
   const activeEmail = currentUser?.email || 'aayush.traveler@visitnepal.com';
@@ -349,11 +375,10 @@ export default function ProfilePage() {
                     type="button"
                     disabled={isSwitching || isExpanded || tearState !== 'idle'}
                     onClick={() => handleSwitchUser(p.role)}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      isCurrent
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${isCurrent
                         ? 'bg-[#0552A2] text-white shadow-xs'
                         : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                    } disabled:opacity-50`}
+                      } disabled:opacity-50`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{isSwitching ? '...' : p.label}</span>
@@ -435,52 +460,58 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Column: Physical Ticket with Infinite Floating & Realistic Paper Tearing Animation */}
+          {/* Right Column: Physical Ticket with Interactive 3D Physics & Realistic Paper Tearing Animation */}
           <div className="relative mx-auto w-full max-w-md">
-            {/* Synchronized Ambient Ground Shadow (4s cycle) */}
+            {/* Synchronized Ambient Ground Occlusion Shadow */}
             <motion.div
               animate={
                 tearState === 'idle'
                   ? {
-                      scaleX: [0.92, 1.05],
-                      scaleY: [0.9, 1.04],
-                      opacity: [0.24, 0.38],
-                    }
+                    scaleX: [0.9, 1.06],
+                    scaleY: [0.88, 1.05],
+                    opacity: [0.22, 0.36],
+                  }
                   : {
-                      scaleX: 1,
-                      scaleY: 1,
-                      opacity: 0.28,
-                    }
+                    scaleX: 1,
+                    scaleY: 1,
+                    opacity: 0.25,
+                  }
               }
               transition={
                 tearState === 'idle'
                   ? {
-                      duration: 4,
-                      repeat: Infinity,
-                      repeatType: 'reverse',
-                      ease: 'easeInOut',
-                    }
+                    duration: 4,
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
+                  }
                   : { duration: 0.25 }
               }
               className="absolute -bottom-6 left-[8%] right-[8%] h-7 rounded-full bg-slate-900/40 blur-xl pointer-events-none -z-10"
             />
 
-            {/* The Infinite Floating Ticket Wrapper (4s floating, 6s rotation, seamless reverse loop) */}
+            {/* The Floating & Interactive 3D Tilt Ticket Wrapper */}
             <motion.div
               animate={
                 tearState === 'idle'
                   ? {
-                      y: [-5, 6],
-                      rotate: [-0.6, 0.8],
-                    }
+                    y: isHovered ? 0 : [-5, 6],
+                    rotate: isHovered ? 0 : [-0.6, 0.8],
+                    rotateX: isHovered ? tilt.x : 0,
+                    rotateY: isHovered ? tilt.y : 0,
+                  }
                   : {
-                      y: 0,
-                      rotate: 0,
-                    }
+                    y: 0,
+                    rotate: 0,
+                    rotateX: 0,
+                    rotateY: 0,
+                  }
               }
               transition={
                 tearState === 'idle'
-                  ? {
+                  ? isHovered
+                    ? { duration: 0.15, ease: 'easeOut' }
+                    : {
                       y: {
                         duration: 4,
                         repeat: Infinity,
@@ -496,7 +527,9 @@ export default function ProfilePage() {
                     }
                   : { duration: 0.25, ease: 'easeOut' }
               }
-              whileHover={tearState === 'idle' ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
+              onMouseMove={handleMouseMove}
+              onMouseEnter={handleMouseEnter}
+              onMouseLeave={handleMouseLeave}
               whileTap={tearState === 'idle' ? { scale: 0.985 } : {}}
               onClick={handleTicketClick}
               role="button"
@@ -511,39 +544,38 @@ export default function ProfilePage() {
             >
               {/* Interaction Hint Badge: "Click to inspect full details" */}
               <div
-                className={`absolute -top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-opacity duration-300 ${
-                  tearState !== 'idle' ? 'opacity-0' : 'opacity-100'
-                }`}
+                className={`absolute -top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-300 ${tearState !== 'idle' ? 'opacity-0 -translate-y-2' : 'opacity-100'
+                  }`}
               >
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40 group-hover:scale-105 transition-transform">
-                  <Maximize2 className="h-3 w-3" />
-                  Click to inspect full details
-                </span>
+
               </div>
 
-              {/* TICKET UPPER SECTION (Tears upward with realistic paper bend & fibrous edge) */}
+              {/* TICKET UPPER SECTION */}
               <motion.div
                 animate={
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: -14, rotate: -2.2, rotateX: 7, rotateZ: -1.8, scale: 1, opacity: 1 }
-                    : tearState === 'torn'
-                    ? { y: -24, x: -6, rotate: -3.8, rotateX: 9, rotateZ: -2.5, scale: 1, opacity: 1 }
-                    : { y: -38, scale: 1.1, opacity: 0 }
+                      ? { y: -16, rotate: -2.5, rotateX: 10, rotateZ: -2, scale: 1, opacity: 1 }
+                      : tearState === 'torn'
+                        ? { y: -26, x: -7, rotate: -3.8, rotateX: 11, rotateZ: -2.5, scale: 1, opacity: 1 }
+                        : { y: -38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
                     ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
                     : tearState === 'torn'
-                    ? { duration: 0.28, ease: 'easeOut' }
-                    : tearState === 'elevating'
-                    ? { duration: 0.32, ease: 'easeIn' }
-                    : { duration: 0.35, ease: 'easeOut' }
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : tearState === 'elevating'
+                        ? { duration: 0.32, ease: 'easeIn' }
+                        : { duration: 0.35, ease: 'easeOut' }
                 }
-                className="relative z-20 overflow-hidden rounded-t-2xl bg-[#FCFCFD] text-slate-900 border-t border-x border-slate-300/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.03),0_20px_40px_-15px_rgba(15,23,42,0.18)] transition-shadow group-hover:shadow-2xl"
+                className={`relative z-20 overflow-hidden rounded-t-2xl bg-[#FCFCFD] text-slate-900 border-t border-x border-slate-300/80 transition-shadow ${tearState === 'idle'
+                    ? 'shadow-none'
+                    : 'shadow-[0_15px_30px_-10px_rgba(15,23,42,0.25)]'
+                  }`}
                 style={{
-                  transformOrigin: 'top left',
+                  transformOrigin: 'left bottom',
                   willChange: 'transform, opacity',
                 }}
               >
@@ -556,11 +588,11 @@ export default function ProfilePage() {
                 {/* Holographic Security Thread */}
                 <HolographicSecurityStrip />
 
-                {/* Left & Right Physical Cutout Half-Notches at Bottom with Punch Bevel */}
-                <span className="absolute -left-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
-                <span className="absolute -right-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
+                {/* Left & Right Physical Cutout Half-Notches (Upper Quadrants) */}
+                <span className="absolute -left-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.14)] border border-slate-300/80 z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -bottom-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.14)] border border-slate-300/80 z-30 pointer-events-none" />
 
-                <div className="p-5 sm:p-6 pb-3 space-y-3.5 relative z-10">
+                <div className="p-5 sm:p-6 pb-3.5 space-y-3.5 relative z-10">
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
@@ -656,29 +688,32 @@ export default function ProfilePage() {
                 </div>
               )}
 
-              {/* TICKET LOWER SECTION (Tears downward with realistic paper droop & fibrous edge) */}
+              {/* TICKET LOWER SECTION */}
               <motion.div
                 animate={
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, rotateX: 0, rotateZ: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: 14, rotate: 1.8, rotateX: -5.5, rotateZ: 1.4, scale: 1, opacity: 1 }
-                    : tearState === 'torn'
-                    ? { y: 24, x: 6, rotate: 2.8, rotateX: -7.5, rotateZ: 2, scale: 1, opacity: 1 }
-                    : { y: 38, scale: 1.1, opacity: 0 }
+                      ? { y: 16, rotate: 2, rotateX: -7, rotateZ: 1.6, scale: 1, opacity: 1 }
+                      : tearState === 'torn'
+                        ? { y: 26, x: 7, rotate: 2.8, rotateX: -8, rotateZ: 2, scale: 1, opacity: 1 }
+                        : { y: 38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
                     ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
                     : tearState === 'torn'
-                    ? { duration: 0.28, ease: 'easeOut' }
-                    : tearState === 'elevating'
-                    ? { duration: 0.32, ease: 'easeIn' }
-                    : { duration: 0.35, ease: 'easeOut' }
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : tearState === 'elevating'
+                        ? { duration: 0.32, ease: 'easeIn' }
+                        : { duration: 0.35, ease: 'easeOut' }
                 }
-                className="relative z-10 overflow-hidden rounded-b-2xl bg-[#FCFCFD] text-slate-900 border-b border-x border-slate-300/80 shadow-[inset_0_1.5px_0_rgba(255,255,255,1),inset_0_-1px_0_rgba(0,0,0,0.03),0_20px_40px_-15px_rgba(15,23,42,0.18)] transition-shadow group-hover:shadow-2xl"
+                className={`relative z-10 overflow-hidden rounded-b-2xl bg-[#FCFCFD] text-slate-900 border-b border-x border-slate-300/80 transition-shadow ${tearState === 'idle'
+                    ? 'shadow-2xl shadow-slate-900/10'
+                    : 'shadow-[0_15px_30px_-10px_rgba(15,23,42,0.25)]'
+                  }`}
                 style={{
-                  transformOrigin: 'bottom right',
+                  transformOrigin: 'right top',
                   willChange: 'transform, opacity',
                 }}
               >
@@ -698,12 +733,22 @@ export default function ProfilePage() {
                   </div>
                 ) : null}
 
-                {/* Left & Right Physical Cutout Half-Notches at Top with Punch Bevel */}
-                <span className="absolute -left-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
-                <span className="absolute -right-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50/95 shadow-[inset_0_2px_4px_rgba(0,0,0,0.16)] border border-slate-300/70 z-30 pointer-events-none" />
+                {/* Left & Right Physical Cutout Half-Notches (Lower Quadrants) */}
+                <span className="absolute -left-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.14)] border border-slate-300/80 z-30 pointer-events-none" />
+                <span className="absolute -right-3.5 -top-3.5 h-7 w-7 rounded-full bg-slate-50 shadow-[inset_0_2px_4px_rgba(0,0,0,0.14)] border border-slate-300/80 z-30 pointer-events-none" />
 
                 {/* Official Red Ink Checkpost Stamp */}
                 <OfficialCheckpostStamp />
+
+                {/* Dynamic Specular Glare Sheen on Mouse Hover */}
+                {isHovered && tearState === 'idle' && (
+                  <div
+                    className="pointer-events-none absolute inset-0 z-30 opacity-40 transition-opacity"
+                    style={{
+                      background: `radial-gradient(circle 280px at ${tilt.glareX}% ${tilt.glareY}%, rgba(255,255,255,0.85), transparent 70%)`,
+                    }}
+                  />
+                )}
 
                 <div className="p-5 sm:p-6 pt-4 space-y-4 relative z-10">
                   {/* Detailed Holder & Travel Metadata */}
