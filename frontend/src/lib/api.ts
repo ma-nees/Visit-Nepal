@@ -33,7 +33,7 @@ async function request<T>(
     }
     return (await res.json()) as T;
   } catch (err: any) {
-    console.error(`[API Error] ${endpoint}:`, err.message);
+    console.warn(`[API Info] ${endpoint}: ${err.message || 'Network request unreachable (offline fallback active)'}`);
     throw err;
   }
 }

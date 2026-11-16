@@ -174,6 +174,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             setCurrentUser(me.user);
             setRoleState(me.user.role);
           } else {
+            // If token is invalid or backend unreachable, clear stale token and keep logged out
+            try {
+              localStorage.removeItem('vn_auth_token');
+              localStorage.removeItem('vn_user');
+            } catch {
+              // Ignore
+            }
             setCurrentUser(null);
           }
         } else {
