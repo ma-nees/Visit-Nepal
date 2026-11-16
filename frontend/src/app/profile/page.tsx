@@ -56,7 +56,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'guide',
-    label: 'Guide',
+    label: 'Mountain Guide',
     name: 'Pasang Nuru Sherpa',
     email: 'pasang.sherpa@visitnepal.com',
     title: 'NMA & IFMGA certified lead mountain guide',
@@ -68,7 +68,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'butler',
-    label: 'Butler',
+    label: 'Sherpa Butler',
     name: 'Mingma Sherpa',
     email: 'sherpa.butler@visitnepal.com',
     title: 'Dedicated Sherpa butler & VIP concierge',
@@ -80,7 +80,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'business',
-    label: 'Agency',
+    label: 'Tour Agency',
     name: 'Himalayan Expeditions Enterprise',
     email: 'partner@himalayanexpeditions.com',
     title: 'Licensed tour operator & expedition suite',
@@ -92,7 +92,7 @@ const personaProfiles: PersonaProfile[] = [
   },
   {
     role: 'admin',
-    label: 'Admin',
+    label: 'NTB Admin',
     name: 'Ministry Tourism Officer',
     email: 'officer@ntb.gov.np',
     title: 'Nepal Tourism Board (NTB) government admin desk',
@@ -182,41 +182,50 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-10 px-4 font-inter sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl">
-        {/* Open, unboxed layout (NO big dark card) */}
-        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
-          {/* Left Column: User Identity & Persona Switcher */}
-          <div className="space-y-6">
-            {/* Seamless Persona Switcher Pills */}
-            <div className="space-y-2">
-              <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
-                Switch Operational Persona
-              </span>
-              <div className="flex flex-wrap items-center gap-2">
-                {personaProfiles.map((p) => {
-                  const isCurrent = p.role === activeRole;
-                  const isSwitching = switchingRole === p.role;
-                  return (
-                    <button
-                      key={p.role}
-                      type="button"
-                      disabled={isSwitching}
-                      onClick={() => handleSwitchUser(p.role)}
-                      className={`cursor-pointer rounded-full px-3.5 py-1 text-xs font-semibold transition-all ${
-                        isCurrent
-                          ? 'bg-[#0552A2] text-white shadow-xs'
-                          : 'bg-white text-slate-600 border border-slate-200 hover:border-slate-300 hover:text-slate-900 shadow-2xs'
-                      }`}
-                    >
-                      {isSwitching ? '...' : p.label}
-                    </button>
-                  );
-                })}
-              </div>
+    <div className="min-h-screen bg-slate-50/70 py-10 px-4 font-inter text-slate-900 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-8">
+        {/* Top: Seamless Persona Switcher Pills (No Cards) */}
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+              Switch Persona:
+            </span>
+            <div className="flex flex-wrap items-center gap-1.5">
+              {personaProfiles.map((p) => {
+                const isCurrent = p.role === activeRole;
+                const isSwitching = switchingRole === p.role;
+                const Icon = roleIcon[p.role] || Compass;
+                return (
+                  <button
+                    key={p.role}
+                    type="button"
+                    disabled={isSwitching}
+                    onClick={() => handleSwitchUser(p.role)}
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                      isCurrent
+                        ? 'bg-[#0552A2] text-white shadow-xs'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
+                    }`}
+                  >
+                    <Icon className="h-3.5 w-3.5" />
+                    <span>{isSwitching ? '...' : p.label}</span>
+                  </button>
+                );
+              })}
             </div>
+          </div>
 
-            {/* Profile Avatar & Title */}
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-800">
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
+          </div>
+        </div>
+
+        {/* Main Content: User Profile Details + The Cool Physical Ticket */}
+        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+          {/* Left Column: User Identity Showcase */}
+          <div className="space-y-6">
+            {/* Avatar & Headings */}
             <div className="flex items-center gap-5">
               <div className="relative shrink-0">
                 <img
@@ -231,15 +240,14 @@ export default function ProfilePage() {
               </div>
 
               <div className="min-w-0 space-y-1">
-                <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-200 px-2.5 py-0.5 text-xs font-semibold capitalize text-[#0552A2]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  Active {currentPersona.role}
-                </div>
                 <h1 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 leading-tight">
                   {activeName}
                 </h1>
-                <p className="text-sm sm:text-base font-medium text-[#0552A2]">
+                <p className="text-sm sm:text-base font-semibold text-[#0552A2]">
                   {currentPersona.title}
+                </p>
+                <p className="text-xs text-slate-500 font-mono">
+                  {activeEmail}
                 </p>
               </div>
             </div>
@@ -275,7 +283,7 @@ export default function ProfilePage() {
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-50 active:scale-[0.98]"
+                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 active:scale-[0.98]"
               >
                 <LogOut className="h-4 w-4 text-slate-500" />
                 <span>Sign out</span>
@@ -289,7 +297,7 @@ export default function ProfilePage() {
               {/* Top Himalayan Tricolor Dash Strip */}
               <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
 
-              {/* Physical Ticket Notches (Cutouts revealing page background bg-slate-50) */}
+              {/* Physical Ticket Notches (Cutouts revealing page background) */}
               <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
               <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner" />
 
