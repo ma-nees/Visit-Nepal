@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import {
   Menu,
   X,
@@ -16,6 +16,8 @@ import {
   Shield,
   CalendarCheck,
   Compass,
+  ShieldCheck,
+  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
@@ -36,6 +38,22 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const notifRef = useRef<HTMLDivElement>(null);
+
+  // Close notifications dropdown on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
+        setNotifOpen(false);
+      }
+    };
+    if (notifOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [notifOpen]);
 
   const handleLogout = () => {
     logout();
@@ -177,37 +195,121 @@ export default function Navbar() {
                 </button>
 
                 {notifOpen && (
-                  <div className="absolute right-0 mt-2 w-[calc(100vw-24px)] max-w-sm sm:w-96 rounded-2xl border border-slate-200 bg-white p-4 shadow-xl z-50 text-slate-900 animate-subtle-fade-up">
-                    <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                      <h3 className="text-xs font-bold uppercase tracking-wider text-slate-800">
-                        Notifications ({unreadCount})
-                      </h3>
+                  <div
+                    ref={notifRef}
+                    className="absolute right-0 mt-2.5 w-[calc(100vw-24px)] max-w-sm sm:w-[380px] rounded-2xl border border-slate-200/90 bg-white/98 backdrop-blur-xl shadow-[0_20px_50px_-10px_rgba(3,21,38,0.20),0_0_0_1px_rgba(3,21,38,0.04)] z-50 text-slate-900 animate-subtle-fade-up overflow-hidden font-inter"
+                  >
+                    {/* Header: Clean, balanced typography with pill count and action */}
+                    <div className="flex items-center justify-between px-4.5 py-3 border-b border-slate-100 bg-slate-50/60">
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-bold text-slate-900 font-poppins uppercase tracking-wider">
+                          Notifications
+                        </span>
+                        {unreadCount > 0 && (
+                          <span className="bg-[#0552A2]/10 text-[#0552A2] text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            {unreadCount} new
+                          </span>
+                        )}
+                      </div>
                       <button
+                        type="button"
                         onClick={markAllRead}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#0552A2] hover:underline"
+                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-[#0552A2] transition-colors cursor-pointer"
                       >
-                        <CheckCheck className="h-3.5 w-3.5" />
-                        Mark read
+                        <CheckCheck className="h-3.5 w-3.5 text-[#0552A2]" />
+                        <span>Mark read</span>
                       </button>
                     </div>
-                    <div className="mt-3 space-y-2 max-h-64 overflow-y-auto">
-                      {notificationsList.map((n) => (
-                        <div
-                          key={n.id}
-                          className={`rounded-lg p-2.5 text-xs border ${n.read
-                            ? 'border-slate-100 bg-white text-slate-600'
-                            : 'border-blue-100 bg-blue-50/50 text-slate-900'
-                            }`}
-                        >
-                          <div className="flex items-center justify-between gap-2">
-                            <span className="font-bold">{n.title}</span>
-                            <span className="text-[10px] text-slate-400">{n.time}</span>
-                          </div>
-                          <p className="mt-1 text-[11px] text-slate-500 leading-relaxed">
-                            {n.body}
-                          </p>
+
+                    {/* Seamless Notification List (NO separated cards) */}
+                    <div className="divide-y divide-slate-100/90 max-h-[320px] overflow-y-auto scrollbar-thin">
+                      {notificationsList.length === 0 ? (
+                        <div className="py-8 text-center text-xs text-slate-400">
+                          No notifications at this time
                         </div>
-                      ))}
+                      ) : (
+                        notificationsList.map((n) => {
+                          const isPermit = n.title.toLowerCase().includes('permit');
+                          const isBooking =
+                            n.title.toLowerCase().includes('booking') ||
+                            n.title.toLowerCase().includes('reservation') ||
+                            n.title.toLowerCase().includes('confirmed');
+                          const isWeather =
+                            n.title.toLowerCase().includes('weather') ||
+                            n.title.toLowerCase().includes('advisory');
+
+                          return (
+                            <div
+                              key={n.id}
+                              className={`group flex items-start gap-3 px-4.5 py-3 transition-colors duration-150 hover:bg-slate-50/80 cursor-pointer ${
+                                !n.read ? 'bg-blue-50/30' : 'bg-transparent'
+                              }`}
+                            >
+                              {/* Visual Circle Indicator */}
+                              <div
+                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full mt-0.5 ${
+                                  isPermit
+                                    ? 'bg-emerald-50 text-emerald-600'
+                                    : isBooking
+                                    ? 'bg-blue-50 text-[#0552A2]'
+                                    : isWeather
+                                    ? 'bg-amber-50 text-amber-600'
+                                    : 'bg-slate-100 text-slate-600'
+                                }`}
+                              >
+                                {isPermit ? (
+                                  <ShieldCheck className="h-4 w-4" />
+                                ) : isBooking ? (
+                                  <CalendarCheck className="h-4 w-4" />
+                                ) : isWeather ? (
+                                  <Compass className="h-4 w-4" />
+                                ) : (
+                                  <Bell className="h-4 w-4" />
+                                )}
+                              </div>
+
+                              {/* Notification Body Text */}
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-baseline justify-between gap-2">
+                                  <span
+                                    className={`text-xs font-semibold truncate ${
+                                      !n.read ? 'text-slate-900 font-bold' : 'text-slate-800'
+                                    }`}
+                                  >
+                                    {n.title}
+                                  </span>
+                                  <span className="text-[10px] text-slate-400 shrink-0 font-medium">
+                                    {n.time}
+                                  </span>
+                                </div>
+                                <p className="mt-0.5 text-[11px] text-slate-500 leading-relaxed font-normal">
+                                  {n.body}
+                                </p>
+                              </div>
+
+                              {/* Tiny Unread Accent Dot */}
+                              {!n.read && (
+                                <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2] ring-2 ring-blue-100 shrink-0 mt-2" />
+                              )}
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+
+                    {/* Aesthetic Bottom Action Bar */}
+                    <div className="border-t border-slate-100 bg-slate-50/60 px-4.5 py-2.5 flex items-center justify-between">
+                      <Link
+                        href="/dashboard"
+                        onClick={() => setNotifOpen(false)}
+                        className="text-[11px] font-semibold text-slate-600 hover:text-[#0552A2] flex items-center gap-1 transition-colors"
+                      >
+                        <span>View all in Dashboard</span>
+                        <ArrowRight className="h-3 w-3" />
+                      </Link>
+                      <span className="text-[10px] text-slate-400 font-medium">
+                        Live NTB Sync
+                      </span>
                     </div>
                   </div>
                 )}

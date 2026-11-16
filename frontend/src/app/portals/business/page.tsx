@@ -240,11 +240,10 @@ export default function BusinessPortalPage() {
         <button
           type="button"
           onClick={() => setActiveTab('bookings')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'bookings'
-              ? 'bg-[#0552A2] text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'bookings'
+            ? 'bg-[#0552A2] text-white shadow-xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
         >
           <CalendarCheck className="h-4 w-4" />
           <span>All Reservations ({allBookings.length})</span>
@@ -253,11 +252,10 @@ export default function BusinessPortalPage() {
         <button
           type="button"
           onClick={() => setActiveTab('custom-trips')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-            activeTab === 'custom-trips'
-              ? 'bg-[#0552A2] text-white shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-          }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'custom-trips'
+            ? 'bg-[#0552A2] text-white shadow-xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
         >
           <Compass className="h-4 w-4" />
           <span>Custom Itinerary Requests ({customPlans.length})</span>
@@ -341,9 +339,8 @@ export default function BusinessPortalPage() {
                           {b.id}
                         </td>
                         <td className="py-3 px-3">
-                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${
-                            b.bookingType === 'custom' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'
-                          }`}>
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${b.bookingType === 'custom' ? 'bg-purple-50 text-purple-700' : 'bg-blue-50 text-blue-700'
+                            }`}>
                             {b.bookingType || 'standard'}
                           </span>
                         </td>
@@ -374,13 +371,12 @@ export default function BusinessPortalPage() {
                           NPR {(b.totalAmountNpr || 0).toLocaleString()}
                         </td>
                         <td className="py-3 px-3">
-                          <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${
-                            b.status === 'confirmed' || b.status === 'paid'
-                              ? 'bg-emerald-100 text-emerald-800'
-                              : b.status === 'pending'
+                          <span className={`rounded px-2 py-0.5 text-[10px] font-bold uppercase ${b.status === 'confirmed' || b.status === 'paid'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : b.status === 'pending'
                               ? 'bg-amber-100 text-amber-800'
                               : 'bg-slate-100 text-slate-700'
-                          }`}>
+                            }`}>
                             {b.status}
                           </span>
                         </td>
@@ -454,13 +450,12 @@ export default function BusinessPortalPage() {
                         <span className="font-mono font-bold text-[#0552A2] bg-blue-50 px-2 py-0.5 rounded text-[10px]">
                           {trip.id}
                         </span>
-                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
-                          isConfirmed
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : isQuoted
+                        <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${isConfirmed
+                          ? 'bg-emerald-100 text-emerald-800'
+                          : isQuoted
                             ? 'bg-purple-100 text-purple-800 ring-1 ring-purple-300'
                             : 'bg-amber-100 text-amber-800'
-                        }`}>
+                          }`}>
                           {trip.status}
                         </span>
                       </div>

@@ -646,10 +646,10 @@ export default function TravelerDashboardPage() {
 
       {/* TAB 7: NOTIFICATIONS */}
       {activeTab === 'notifications' && (
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 space-y-4">
-          <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+        <div className="rounded-2xl border border-slate-200 bg-white overflow-hidden shadow-xs">
+          <div className="flex justify-between items-center border-b border-slate-100 p-5 bg-slate-50/50">
             <h2 className="text-base font-bold font-poppins text-slate-900">
-              System &amp; Booking Notifications
+              System &amp; Expedition Notifications
             </h2>
             <button
               onClick={markAllRead}
@@ -658,23 +658,60 @@ export default function TravelerDashboardPage() {
               Mark all as read
             </button>
           </div>
-          <div className="space-y-2">
-            {notificationsList.map((n) => (
-              <div
-                key={n.id}
-                className={`p-3 rounded-xl border transition-all ${
-                  n.read ? 'border-slate-100 bg-white' : 'border-blue-200 bg-blue-50/50'
-                }`}
-              >
-                <div className="flex items-start justify-between">
-                  <div className="space-y-0.5">
-                    <p className="text-xs font-bold text-slate-900">{n.title}</p>
-                    <p className="text-[11px] text-slate-600">{n.body}</p>
+          <div className="divide-y divide-slate-100">
+            {notificationsList.map((n) => {
+              const isPermit = n.title.toLowerCase().includes('permit');
+              const isBooking =
+                n.title.toLowerCase().includes('booking') ||
+                n.title.toLowerCase().includes('reservation') ||
+                n.title.toLowerCase().includes('confirmed');
+              const isWeather =
+                n.title.toLowerCase().includes('weather') ||
+                n.title.toLowerCase().includes('advisory');
+
+              return (
+                <div
+                  key={n.id}
+                  className={`flex items-start gap-3.5 px-5 py-3.5 transition-colors hover:bg-slate-50/80 ${
+                    !n.read ? 'bg-blue-50/25' : 'bg-transparent'
+                  }`}
+                >
+                  <div
+                    className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full mt-0.5 ${
+                      isPermit
+                        ? 'bg-emerald-50 text-emerald-600'
+                        : isBooking
+                        ? 'bg-blue-50 text-[#0552A2]'
+                        : isWeather
+                        ? 'bg-amber-50 text-amber-600'
+                        : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {isPermit ? (
+                      <ShieldCheck className="h-4 w-4" />
+                    ) : isBooking ? (
+                      <Calendar className="h-4 w-4" />
+                    ) : isWeather ? (
+                      <Compass className="h-4 w-4" />
+                    ) : (
+                      <Bell className="h-4 w-4" />
+                    )}
                   </div>
-                  <span className="text-[10px] text-slate-400 whitespace-nowrap">{n.time}</span>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-baseline justify-between gap-2">
+                      <span className={`text-xs font-semibold ${!n.read ? 'text-slate-900 font-bold' : 'text-slate-800'}`}>
+                        {n.title}
+                      </span>
+                      <span className="text-[10px] text-slate-400 shrink-0 font-medium">{n.time}</span>
+                    </div>
+                    <p className="mt-0.5 text-xs text-slate-500 leading-relaxed font-normal">{n.body}</p>
+                  </div>
+                  {!n.read && (
+                    <span className="h-2 w-2 rounded-full bg-[#0552A2] ring-2 ring-blue-100 shrink-0 mt-2" />
+                  )}
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       )}
