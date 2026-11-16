@@ -81,7 +81,7 @@ export default function GuidePortalPage() {
             <Compass className="h-3.5 w-3.5" />
             <span>NMA &amp; IFMGA Certified Lead Mountaineer 2026</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-serif">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white font-poppins">
             Mountain Guide Operations Desk
           </h1>
           <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">

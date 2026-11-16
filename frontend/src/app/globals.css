@@ -72,14 +72,65 @@
   --color-accent: var(--golden-himalayan-yellow);
   --color-sky: var(--sky-glacier-blue);
 
-  --font-sans: var(--font-jakarta), 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-  --font-serif: 'Times New Roman', Times, 'Playfair Display', Georgia, serif;
-  --font-times: 'Times New Roman', Times, Georgia, serif;
-  --font-serif: var(--font-playfair), 'Playfair Display', Georgia, serif;
+  /* Typography Font Families per Design Specification */
+  --font-poppins: var(--font-poppins), 'Poppins', sans-serif;
+  --font-inter: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-sans: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  --font-heading: var(--font-poppins), 'Poppins', sans-serif;
+  --font-serif: var(--font-poppins), 'Poppins', sans-serif;
 }
 
-.font-times {
-  font-family: 'Times New Roman', Times, Georgia, serif;
+/* Explicit Utility Classes */
+.font-poppins {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+}
+
+.font-inter {
+  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* 
+ * ==============================================================================
+ * TYPOGRAPHY HIERARCHY SPECIFICATION
+ * ==============================================================================
+ * Main headings:          Poppins SemiBold (font-weight: 600)
+ * Section headings:       Poppins Medium   (font-weight: 500)
+ * Product names:          Inter SemiBold   (font-weight: 600)
+ * Body text / desc:       Inter Regular    (font-weight: 400)
+ * Buttons / navigation:   Inter Medium     (font-weight: 500)
+ * ==============================================================================
+ */
+
+.main-heading,
+.font-main-heading {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600;
+}
+
+.section-heading,
+.font-section-heading {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.product-name,
+.product-title,
+.card-title,
+.font-product-name {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 600;
+}
+
+.body-text,
+.font-body {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 400;
+}
+
+.font-button,
+.font-navigation {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 500;
 }
 
 html {
@@ -97,13 +148,40 @@ html {
 body {
   background: var(--background);
   color: var(--dark-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-inter), 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 400; /* Inter Regular by default */
   overflow-x: hidden;
   margin: 0;
   padding: 0;
   border: none;
   -ms-overflow-style: none; /* IE and Edge */
   scrollbar-width: none; /* Firefox */
+}
+
+/* Headings base rules */
+h1 {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 600; /* Poppins SemiBold */
+}
+
+h2 {
+  font-family: var(--font-poppins), 'Poppins', sans-serif;
+  font-weight: 500; /* Poppins Medium */
+}
+
+/* Buttons and Navigation base rules */
+button,
+.btn-primary,
+.btn-secondary {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 500; /* Inter Medium */
+}
+
+nav a,
+nav button,
+.nav-link {
+  font-family: var(--font-inter), 'Inter', sans-serif;
+  font-weight: 500; /* Inter Medium */
 }
 
 /* Remove scrollbar across all elements while keeping full scrolling functionality */

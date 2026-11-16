@@ -87,10 +87,10 @@ export default function AboutPage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Official Country Overview
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
             About Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-light max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Where Earth’s highest glaciated pinnacles rise above sacred ancient kingdoms and subtropical wilderness. Discover our geography, people, and environmental stewardship.
           </p>
         </div>
@@ -102,13 +102,13 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {geographicalFacts.map((fact) => (
               <div key={fact.title} className="space-y-1.5">
-                <span className="text-3xl sm:text-4xl font-serif text-[#0552A2] block">
+                <span className="text-3xl sm:text-4xl font-inter font-semibold text-[#0552A2] block">
                   {fact.metric}
                 </span>
-                <h3 className="text-xs font-bold uppercase tracking-wider text-[#10243A]">
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-[#10243A] font-inter">
                   {fact.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-500 font-normal font-inter leading-relaxed">
                   {fact.desc}
                 </p>
               </div>
@@ -147,10 +147,10 @@ export default function AboutPage() {
                   <span className="text-xs font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
                     Dimension {String(idx + 1).padStart(2, '0')}
                   </span>
-                  <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#10243A] tracking-tight">
+                  <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] tracking-tight">
                     {pillar.title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
                     {pillar.text}
                   </p>
                 </div>
@@ -167,7 +167,7 @@ export default function AboutPage() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Planning Essentials
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#10243A]">
+            <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A]">
               Practical Information for Travelers
             </h2>
           </div>
@@ -175,24 +175,24 @@ export default function AboutPage() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
               <span className="text-xs font-mono uppercase tracking-wider text-[#0552A2] font-bold">Entry &amp; Visas</span>
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">On-Arrival Tourist Visas</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">On-Arrival Tourist Visas</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Most nationalities can obtain a tourist visa upon arrival at Tribhuvan International Airport (TIA) in Kathmandu for 15, 30, or 90 days with online pre-application.
               </p>
             </div>
 
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
               <span className="text-xs font-mono uppercase tracking-wider text-[#0552A2] font-bold">Currency &amp; Payments</span>
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">Nepali Rupee (NPR)</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Nepali Rupee (NPR)</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Major credit cards are accepted in Kathmandu and Pokhara hotels. Carry sufficient cash rupees when trekking in high alpine tea house regions.
               </p>
             </div>
 
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
               <span className="text-xs font-mono uppercase tracking-wider text-[#EC1F27] font-bold">Safety &amp; Emergency</span>
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">24/7 Tourist Police: 1144</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">24/7 Tourist Police: 1144</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Dedicated emergency and tourist protection assistance desk with immediate medical helicopter dispatch coordination across all mountain trails.
               </p>
             </div>

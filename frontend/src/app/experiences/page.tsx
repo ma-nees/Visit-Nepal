@@ -251,10 +251,10 @@ export default function ExperiencesPage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Experiential Catalogue
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
             Experience Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-light max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Eight iconic ways to encounter the heart of the Himalayas. From glaciated alpine passes to sacred living traditions and subtropical jungles.
           </p>
 
@@ -264,9 +264,9 @@ export default function ExperiencesPage() {
               <button
                 key={exp.id}
                 onClick={() => setActiveTab(exp.id)}
-                className={`text-xs font-semibold px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
                   activeTab === exp.id
-                    ? 'bg-white text-[#0552A2] shadow-sm font-bold'
+                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -294,7 +294,7 @@ export default function ExperiencesPage() {
                   <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
                     {activeExp.tag} · {activeExp.altitudeRange}
                   </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal leading-tight">
+                  <h3 className="font-inter text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
                     {activeExp.title}
                   </h3>
                 </div>
@@ -307,16 +307,16 @@ export default function ExperiencesPage() {
                 <span className="text-[11px] font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
                   Featured Experience Profile
                 </span>
-                <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#10243A] mt-1">
+                <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] mt-1">
                   {activeExp.subtitle}
                 </h2>
               </div>
 
-              <p className="text-sm sm:text-base text-slate-700 font-light leading-relaxed">
+              <p className="text-sm sm:text-base text-slate-700 font-normal font-inter leading-relaxed">
                 {activeExp.leadParagraph}
               </p>
 
-              <p className="text-xs sm:text-sm text-slate-500 font-light leading-relaxed">
+              <p className="text-xs sm:text-sm text-slate-500 font-normal font-inter leading-relaxed">
                 {activeExp.deepDescription}
               </p>
 
@@ -385,10 +385,10 @@ export default function ExperiencesPage() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Complete Directory
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
               Eight Ways to Encounter Nepal
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
               Explore the spectrum of experiences, from high-altitude technical climbs to peaceful living heritage retreats.
             </p>
           </div>
@@ -422,7 +422,7 @@ export default function ExperiencesPage() {
 
                   <div className="p-6 flex flex-col flex-1 space-y-3">
                     <div>
-                      <h3 className="font-serif text-xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                      <h3 className="font-inter text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors">
                         {exp.title}
                       </h3>
                       <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono mt-1">
@@ -432,11 +432,11 @@ export default function ExperiencesPage() {
                       </div>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed flex-1 line-clamp-3">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
                       {exp.leadParagraph}
                     </p>
 
-                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-[#0552A2] group-hover:underline">
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
                       <span>View Experience Details</span>
                       <ArrowRight className="h-3 w-3" />
                     </div>

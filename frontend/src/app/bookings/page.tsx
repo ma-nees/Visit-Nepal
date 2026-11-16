@@ -79,10 +79,10 @@ export default function BookingsPage() {
             <QrCode className="h-3.5 w-3.5" />
             <span>Digital Boarding Passes &amp; Trail Check-In 2026</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-serif">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white font-poppins">
             My Expeditions &amp; Digital Passes
           </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed font-normal font-inter">
             Instant offline QR access for checkpoint authorities, hotel check-ins, licensed guide assignments, and helicopter rescue registration.
           </p>
         </div>
@@ -90,7 +90,7 @@ export default function BookingsPage() {
 
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
-          <h2 className="text-lg font-bold text-slate-900">Active Itinerary Passes</h2>
+          <h2 className="text-lg font-medium text-slate-900 font-poppins">Active Itinerary Passes</h2>
           <p className="text-xs text-slate-500">Showing {filtered.length} reservations</p>
         </div>
 

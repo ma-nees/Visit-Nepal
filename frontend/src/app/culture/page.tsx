@@ -92,10 +92,10 @@ export default function CulturePage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Cultural Anthology
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
             Culture &amp; Living Heritage
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-light max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia. Explore the spiritual and artistic soul of Nepal.
           </p>
         </div>
@@ -132,12 +132,12 @@ export default function CulturePage() {
                     <span className="text-xs font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
                       Heritage Dimension {String(idx + 1).padStart(2, '0')}
                     </span>
-                    <h2 className="font-serif text-3xl sm:text-4xl font-normal text-[#10243A] tracking-tight mt-1">
+                    <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] tracking-tight mt-1">
                       {pillar.title}
                     </h2>
                   </div>
 
-                  <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+                  <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
                     {pillar.description}
                   </p>
 
@@ -147,7 +147,7 @@ export default function CulturePage() {
                     </span>
                     <ul className="space-y-2">
                       {pillar.sites.map((site) => (
-                        <li key={site} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700 font-light">
+                        <li key={site} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700 font-normal font-inter">
                           <span className="text-[#FDB716] text-base leading-none mt-0.5">•</span>
                           <span>{site}</span>
                         </li>
@@ -158,7 +158,7 @@ export default function CulturePage() {
                   <div className="pt-2">
                     <Link
                       href="/explore?cat=Cultural"
-                      className="inline-flex items-center gap-2 text-xs font-semibold text-[#0552A2] hover:underline"
+                      className="inline-flex items-center gap-2 text-xs font-medium font-inter text-[#0552A2] hover:underline"
                     >
                       <span>Explore cultural routes &amp; temple tours</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -178,27 +178,27 @@ export default function CulturePage() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Responsible Travel
             </span>
-            <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#10243A]">
+            <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A]">
               Respecting Sacred Traditions &amp; Shrines
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">Clockwise Circumambulation</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Clockwise Circumambulation</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Always walk clockwise around Buddhist stupas, chortens, and mani prayer walls to honor centuries of sacred custom.
               </p>
             </div>
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">Temple Attire &amp; Footwear</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Temple Attire &amp; Footwear</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Remove footwear and leather items before entering sacred shrines. Dress modestly with shoulders and knees respectfully covered.
               </p>
             </div>
             <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
-              <h3 className="font-serif text-lg font-normal text-[#10243A]">Fair Artisan Trade</h3>
-              <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Fair Artisan Trade</h3>
+              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Support traditional craft communities by purchasing certified hand-painted Thangkas and singing bowls directly from master workshops.
               </p>
             </div>

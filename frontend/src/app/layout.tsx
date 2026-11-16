@@ -1,21 +1,23 @@
 import type { Metadata } from 'next';
 import { Suspense } from 'react';
-import { Plus_Jakarta_Sans, Playfair_Display } from 'next/font/google';
+import { Poppins, Inter } from 'next/font/google';
 import './globals.css';
 import { AppProvider } from '@/context/AppContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
-const jakarta = Plus_Jakarta_Sans({
+const poppins = Poppins({
   subsets: ['latin'],
-  variable: '--font-jakarta',
-  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-poppins',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
-const playfair = Playfair_Display({
+const inter = Inter({
   subsets: ['latin'],
-  variable: '--font-playfair',
-  weight: ['600', '700', '800', '900'],
+  variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
 });
 
 export const runtime = 'edge';
@@ -40,7 +42,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-scroll-behavior="smooth" className={`${jakarta.variable} ${playfair.variable} h-full antialiased bg-[#031526]`}>
+    <html lang="en" data-scroll-behavior="smooth" className={`${poppins.variable} ${inter.variable} h-full antialiased bg-[#031526]`}>
       <body className="min-h-full flex flex-col bg-[#031526] text-slate-900 m-0 p-0 border-none">
         <AppProvider>
           <Suspense

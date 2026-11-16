@@ -40,7 +40,7 @@ export default function NepalMapPage() {
 
         {/* Page Title */}
         <div className="space-y-2">
-          <h1 className="text-3xl sm:text-5xl font-serif font-normal text-slate-900 tracking-tight">
+          <h1 className="text-3xl sm:text-5xl font-poppins font-semibold text-slate-900 tracking-tight">
             Map of the High Himalayas
           </h1>
           <p className="text-sm sm:text-base text-slate-600 font-normal max-w-2xl leading-relaxed">

@@ -221,14 +221,14 @@ export default function LoginPage() {
         >
           {/* Heading */}
           <motion.div variants={itemVariants} className="flex flex-col gap-1.5">
-            <h1 className="text-3xl sm:text-4xl font-serif font-normal text-slate-900 tracking-tight leading-tight">
+            <h1 className="text-3xl sm:text-4xl font-poppins font-semibold text-slate-900 tracking-tight leading-tight">
               {authMode === 'signin' ? (
                 <>
-                  Welcome <span className="font-serif italic text-[#0552A2]">Back</span>
+                  Welcome <span className="font-poppins font-semibold text-[#0552A2]">Back</span>
                 </>
               ) : (
                 <>
-                  Begin Your <span className="font-serif italic text-[#0552A2]">Journey</span>
+                  Begin Your <span className="font-poppins font-semibold text-[#0552A2]">Journey</span>
                 </>
               )}
             </h1>
@@ -527,7 +527,7 @@ export default function LoginPage() {
                   <KeyRound className="h-5 w-5" />
                 </div>
                 <div>
-                  <h3 className="font-serif text-xl font-normal text-slate-900">
+                  <h3 className="font-poppins text-xl font-medium text-slate-900">
                     Reset Password
                   </h3>
                   <p className="text-xs text-slate-500 font-light">

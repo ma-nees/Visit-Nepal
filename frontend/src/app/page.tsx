@@ -345,12 +345,12 @@ return (
                 </div>
 
                 {/* Main Heading: Discover Nepal */}
-                <h1 className="font-serif text-5xl sm:text-7xl lg:text-8xl font-normal tracking-tight text-white leading-[1.04]">
+                <h1 className="font-poppins text-5xl sm:text-7xl lg:text-8xl font-semibold tracking-tight text-white leading-[1.04]">
                   Discover Nepal
                 </h1>
 
                 {/* Supporting Text */}
-                <p className="text-base sm:text-xl text-slate-200/90 font-light leading-relaxed max-w-xl">
+                <p className="text-base sm:text-xl text-slate-200/90 font-normal font-inter leading-relaxed max-w-xl">
                   Where the Himalayas meet extraordinary experiences.
                 </p>
 
@@ -359,14 +359,14 @@ return (
               <Link
                 href="/explore"
                 prefetch={true}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-7 py-3.5 text-xs sm:text-sm font-semibold tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-md shadow-[#0552A2]/30 min-h-[46px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-7 py-3.5 text-xs sm:text-sm font-medium font-inter tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-md shadow-[#0552A2]/30 min-h-[46px]"
               >
                 <span>Explore Nepal</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="#experiences"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 px-6 py-3.5 text-xs sm:text-sm font-semibold tracking-wide text-white active:scale-[0.98] transition-all min-h-[46px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 px-6 py-3.5 text-xs sm:text-sm font-medium font-inter tracking-wide text-white active:scale-[0.98] transition-all min-h-[46px]"
               >
                 <span>Discover Experiences</span>
               </Link>
@@ -448,10 +448,10 @@ return (
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
             Iconic Destinations
           </span>
-          <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight">
+          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
             Explore the Extraordinary
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+          <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
             From the world&apos;s highest mountains to ancient cities and peaceful landscapes.
           </p>
         </ScrollReveal>
@@ -477,13 +477,13 @@ return (
                   <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
                     {editorialDestinations[0].tag} · {editorialDestinations[0].altitude}
                   </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal tracking-tight text-white group-hover:text-slate-100 transition-colors">
+                  <h3 className="font-inter text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
                     {editorialDestinations[0].name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-200/90 font-light max-w-lg leading-relaxed line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter max-w-lg leading-relaxed line-clamp-2">
                     {editorialDestinations[0].description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-semibold text-white group-hover:text-[#FDB716] transition-colors">
+                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-medium font-inter text-white group-hover:text-[#FDB716] transition-colors">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -511,13 +511,13 @@ return (
                   <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
                     {editorialDestinations[1].tag} · {editorialDestinations[1].altitude}
                   </span>
-                  <h3 className="font-serif text-2xl sm:text-3xl font-normal tracking-tight text-white group-hover:text-slate-100 transition-colors">
+                  <h3 className="font-inter text-2xl sm:text-3xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
                     {editorialDestinations[1].name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-200/90 font-light leading-relaxed line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter leading-relaxed line-clamp-2">
                     {editorialDestinations[1].description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-semibold text-white group-hover:text-[#FDB716] transition-colors">
+                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-medium font-inter text-white group-hover:text-[#FDB716] transition-colors">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -549,7 +549,7 @@ return (
                   <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
                     {dest.region}
                   </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                  <h3 className="font-inter text-xl sm:text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                     {dest.name}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mt-1 line-clamp-2">
@@ -587,13 +587,13 @@ return (
                   <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
                     {dest.region}
                   </span>
-                  <h3 className="font-serif text-xl sm:text-2xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                  <h3 className="font-inter text-xl sm:text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                     {dest.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mt-1 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed mt-1 line-clamp-2">
                     {dest.description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
+                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
@@ -614,10 +614,10 @@ return (
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Himalayan Encounters
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
               Experience Nepal
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
               Eight distinct visual journeys into the high mountains, living spiritualities, and untouched wilderness.
             </p>
           </ScrollReveal>
@@ -643,7 +643,7 @@ return (
 
                   <div className="p-6 flex flex-col flex-1 space-y-3">
                     <div>
-                      <h3 className="font-serif text-xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                      <h3 className="font-inter text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors">
                         {exp.title}
                       </h3>
                       <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono mt-1">
@@ -653,12 +653,12 @@ return (
                       </div>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed flex-1">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
                       {exp.description}
                     </p>
 
                     <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
                         <span>Explore itineraries</span>
                         <ChevronRight className="h-3 w-3" />
                       </span>
@@ -682,7 +682,7 @@ return (
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
                 About Nepal
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight leading-tight">
+              <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight leading-tight">
                 A Land of Extreme Geography &amp; Timeless Spirit
               </h2>
             </ScrollReveal>
@@ -703,15 +703,15 @@ return (
             <ScrollReveal direction="up" delay={140} duration={650} distance={20}>
               <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100">
                 <div>
-                  <span className="text-2xl sm:text-3xl font-serif text-[#0552A2] block">60m to 8,848m</span>
+                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">60m to 8,848m</span>
                   <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Elevation Rise</span>
                 </div>
                 <div>
-                  <span className="text-2xl sm:text-3xl font-serif text-[#0552A2] block">12 Zones</span>
+                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">12 Zones</span>
                   <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Bioclimates</span>
                 </div>
                 <div>
-                  <span className="text-2xl sm:text-3xl font-serif text-[#0552A2] block">125+</span>
+                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">125+</span>
                   <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Ethnic Cultures</span>
                 </div>
               </div>
@@ -732,7 +732,7 @@ return (
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
                     Sacred Monasteries of the High Valley
                   </span>
-                  <p className="font-serif text-lg font-normal text-slate-100">
+                  <p className="font-inter text-lg font-normal text-slate-100">
                     &ldquo;In the silence of the high peaks, the soul discovers its native home.&rdquo;
                   </p>
                 </div>
@@ -752,10 +752,10 @@ return (
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Living Traditions
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
               Culture &amp; Living Heritage
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
               Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia.
             </p>
           </ScrollReveal>
@@ -776,10 +776,10 @@ return (
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#0552A2] font-semibold">
                       {item.subtitle}
                     </span>
-                    <h3 className="font-serif text-xl font-normal text-[#10243A]">
+                    <h3 className="font-inter text-xl font-semibold text-[#10243A]">
                       {item.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                       {item.desc}
                     </p>
                   </div>
@@ -809,17 +809,17 @@ return (
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Field Notes
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
               Stories &amp; Field Journal
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
               Curated expedition guides, destination chronicles, and cultural discoveries from across Nepal.
             </p>
           </ScrollReveal>
 
           <Link
             href="/stories"
-            className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] hover:underline shrink-0"
+            className="inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] hover:underline shrink-0"
           >
             <span>View All Journal Stories</span>
             <ArrowRight className="h-3.5 w-3.5" />
@@ -849,15 +849,15 @@ return (
                     <span>{story.readTime}</span>
                   </div>
 
-                  <h3 className="font-serif text-lg sm:text-xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                  <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
                     {story.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed flex-1">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
                     {story.excerpt}
                   </p>
 
-                  <div className="pt-2 inline-flex items-center gap-1 text-xs font-semibold text-[#0552A2] group-hover:underline">
+                  <div className="pt-2 inline-flex items-center gap-1 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
                     <span>Read story</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
@@ -881,10 +881,10 @@ return (
               <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] block">
                 Stay Connected to the High Peaks
               </span>
-              <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-white">
+              <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white">
                 Receive Himalayan Field Dispatches
               </h2>
-              <p className="text-xs sm:text-sm text-blue-100 font-light leading-relaxed max-w-md mx-auto">
+              <p className="text-xs sm:text-sm text-blue-100 font-normal font-inter leading-relaxed max-w-md mx-auto">
                 Real-time seasonal trail conditions, TIMS permit regulation updates, flight schedules into Lukla, and early expedition openings.
               </p>
 
@@ -895,11 +895,11 @@ return (
                   onChange={(e) => setNewsletterEmail(e.target.value)}
                   placeholder="Enter your email address..."
                   required
-                  className="h-12 flex-1 rounded-full bg-white/10 border border-white/25 px-5 text-xs sm:text-sm text-white placeholder:text-blue-200 focus:bg-white focus:text-slate-900 focus:outline-none transition-all"
+                  className="h-12 flex-1 rounded-full bg-white/10 border border-white/25 px-5 text-xs sm:text-sm text-white placeholder:text-blue-200 focus:bg-white focus:text-slate-900 focus:outline-none transition-all font-inter"
                 />
                 <button
                   type="submit"
-                  className="h-12 inline-flex items-center justify-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 text-xs sm:text-sm font-bold active:scale-[0.98] transition-all cursor-pointer shadow-md shrink-0"
+                  className="h-12 inline-flex items-center justify-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 text-xs sm:text-sm font-medium font-inter active:scale-[0.98] transition-all cursor-pointer shadow-md shrink-0"
                 >
                   <span>Subscribe</span>
                   <Send className="h-3.5 w-3.5" />

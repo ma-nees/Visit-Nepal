@@ -189,10 +189,10 @@ export default function StoriesPage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Field Dispatches &amp; Chronicles
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
             Stories &amp; Field Journal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-light max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             First-person chronicles, trail notes, mountain medicine advice, and cultural reflections written by certified guides and travelers.
           </p>
 
@@ -202,9 +202,9 @@ export default function StoriesPage() {
               <button
                 key={c}
                 onClick={() => setSelectedCat(c)}
-                className={`text-xs font-semibold px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
                   selectedCat === c
-                    ? 'bg-white text-[#0552A2] shadow-sm font-bold'
+                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -228,7 +228,7 @@ export default function StoriesPage() {
               placeholder="Search field stories..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-full border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0552A2]"
+              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-full border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0552A2] font-inter"
             />
           </div>
         </div>
@@ -257,11 +257,11 @@ export default function StoriesPage() {
                   <span>{filtered[0].readTime}</span>
                 </div>
 
-                <h2 className="font-serif text-2xl sm:text-3xl lg:text-4xl font-normal text-[#10243A] leading-tight">
+                <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] leading-tight">
                   {filtered[0].title}
                 </h2>
 
-                <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
+                <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                   {filtered[0].excerpt}
                 </p>
 
@@ -320,19 +320,19 @@ export default function StoriesPage() {
                       <span>{story.readTime}</span>
                     </div>
 
-                    <h3 className="font-serif text-xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                    <h3 className="font-inter text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
                       {story.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed flex-1 line-clamp-3">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
                       {story.excerpt}
                     </p>
 
                     <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                      <span className="text-slate-500 font-medium">
+                      <span className="text-slate-500 font-medium font-inter">
                         By {story.author}
                       </span>
-                      <span className="font-semibold text-[#0552A2] group-hover:underline inline-flex items-center gap-1">
+                      <span className="font-medium font-inter text-[#0552A2] group-hover:underline inline-flex items-center gap-1">
                         <span>Read</span>
                         <ArrowRight className="h-3 w-3" />
                       </span>
@@ -380,7 +380,7 @@ export default function StoriesPage() {
                 <span>{activeStory.readTime}</span>
               </div>
 
-              <h2 className="font-serif text-2xl sm:text-3xl font-normal text-[#10243A] leading-tight">
+              <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A] leading-tight">
                 {activeStory.title}
               </h2>
 
@@ -437,7 +437,7 @@ export default function StoriesPage() {
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Live Community Feed
             </span>
-            <h3 className="font-serif text-2xl sm:text-3xl font-normal text-[#10243A]">
+            <h3 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A]">
               Connect With Real Travelers &amp; Guides
             </h3>
             <p className="text-xs sm:text-sm text-slate-600 font-light max-w-xl">

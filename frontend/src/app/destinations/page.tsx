@@ -227,10 +227,10 @@ export default function DestinationsPage() {
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Geographical Catalogue
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl lg:text-7xl font-normal text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
             Destinations of Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-light max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             From glaciated 8,000-meter peaks and wind-carved desert canyons to subtropical sal jungles and medieval UNESCO valleys.
           </p>
 
@@ -240,9 +240,9 @@ export default function DestinationsPage() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`text-xs font-semibold px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-white text-[#0552A2] shadow-sm font-bold'
+                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -259,7 +259,7 @@ export default function DestinationsPage() {
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Curated Regions
           </span>
-          <span className="text-xs font-semibold text-[#0552A2]">
+          <span className="text-xs font-medium font-inter text-[#0552A2]">
             Category: {selectedCategory}
           </span>
         </div>
@@ -295,12 +295,12 @@ export default function DestinationsPage() {
                     <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
                       {dest.region}
                     </span>
-                    <h3 className="font-serif text-2xl font-normal text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                    <h3 className="font-inter text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                       {dest.name}
                     </h3>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed flex-1">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
                     {dest.description}
                   </p>
 
@@ -313,7 +313,7 @@ export default function DestinationsPage() {
                       {dest.highlights.slice(0, 3).map((h) => (
                         <span
                           key={h}
-                          className="text-[10.5px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded border border-slate-200/60"
+                          className="text-[10.5px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded border border-slate-200/60 font-inter"
                         >
                           {h}
                         </span>
@@ -337,7 +337,7 @@ export default function DestinationsPage() {
                   <div className="pt-2">
                     <Link
                       href={dest.link}
-                      className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] text-white hover:bg-[#044182] py-2.5 text-xs font-semibold transition-all active:scale-95 shadow-xs"
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] text-white hover:bg-[#044182] py-2.5 text-xs font-medium font-inter transition-all active:scale-95 shadow-xs"
                     >
                       <span>Explore Destination</span>
                       <ArrowRight className="h-3 w-3" />
@@ -364,16 +364,16 @@ export default function DestinationsPage() {
             <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] block">
               Tailor Your Expedition
             </span>
-            <h2 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal text-white leading-tight">
+            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-white leading-tight">
               Combine Multiple Regions Into One Custom Itinerary
             </h2>
-            <p className="text-xs sm:text-sm text-blue-100 font-light leading-relaxed">
+            <p className="text-xs sm:text-sm text-blue-100 font-normal font-inter leading-relaxed">
               Pair an Everest alpine trek with a peaceful retreat in Pokhara, private wildlife safaris in Chitwan, and certified Sherpa mountain guides.
             </p>
             <div className="pt-2">
               <Link
                 href="/custom-plan"
-                className="inline-flex items-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 py-3 text-xs sm:text-sm font-bold active:scale-[0.98] transition-all shadow-md"
+                className="inline-flex items-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 py-3 text-xs sm:text-sm font-medium font-inter active:scale-[0.98] transition-all shadow-md"
               >
                 <Sparkles className="h-4 w-4" />
                 <span>Launch Custom Trip Planner</span>

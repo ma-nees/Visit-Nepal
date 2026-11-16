@@ -204,10 +204,10 @@ export default function InteractiveMap() {
           <span className="text-[11px] font-bold uppercase tracking-[0.22em] text-[#92C4EA] block mb-2">
             Cartographic Discovery
           </span>
-          <h3 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-normal tracking-tight text-white">
+          <h3 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium tracking-tight text-white">
             Map of the High Himalayas
           </h3>
-          <p className="text-xs sm:text-sm text-slate-300 font-light max-w-xl mt-2 leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-300 font-normal font-inter max-w-xl mt-2 leading-relaxed">
             From the 8,000-meter glaciated crests of the Great Himalayan Trail to subtropical southern plains. Select any destination pin to explore elevation and seasonal field notes.
           </p>
         </div>
@@ -358,7 +358,7 @@ export default function InteractiveMap() {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
               <div className="absolute bottom-3 left-3 right-3 text-white">
-                <h4 className="font-serif text-xl sm:text-2xl font-normal leading-tight text-white drop-shadow-md">
+                <h4 className="font-inter text-xl sm:text-2xl font-semibold leading-tight text-white drop-shadow-md">
                   {selectedDest.name}
                 </h4>
               </div>

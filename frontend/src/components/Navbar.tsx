@@ -100,7 +100,7 @@ export default function Navbar() {
         </Link>
 
         {/* Minimal Desktop Nav: Elegant typography, whitespace-driven */}
-        <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
+        <nav className="hidden lg:flex items-center gap-6 xl:gap-8 font-inter">
           {navLinks.map((item) => {
             const active =
               pathname === item.href ||
@@ -112,19 +112,18 @@ export default function Navbar() {
                 className={`relative py-1 text-[13px] font-medium tracking-wide transition-colors duration-200 outline-none ${
                   isTransparent
                     ? active
-                      ? 'text-white font-semibold'
+                      ? 'text-white font-medium'
                       : 'text-white/80 hover:text-white'
                     : active
-                    ? 'text-[#0552A2] font-semibold'
+                    ? 'text-[#0552A2] font-medium'
                     : 'text-[#10243A]/80 hover:text-[#0552A2]'
-                }`}
+                  }`}
               >
                 <span>{item.label}</span>
                 {active && (
                   <span
-                    className={`absolute -bottom-1 left-0 right-0 h-[2px] rounded-full ${
-                      isTransparent ? 'bg-[#FDB716]' : 'bg-[#0552A2]'
-                    }`}
+                    className={`absolute -bottom-1 left-0 right-0 h-[2px] rounded-full ${isTransparent ? 'bg-[#FDB716]' : 'bg-[#0552A2]'
+                      }`}
                   />
                 )}
               </Link>
@@ -139,11 +138,10 @@ export default function Navbar() {
               {/* Messages shortcut (desktop) */}
               <Link
                 href="/chat"
-                className={`hidden md:flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${
-                  isTransparent
-                    ? 'text-white/80 hover:text-white hover:bg-white/10'
-                    : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
-                }`}
+                className={`hidden md:flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${isTransparent
+                  ? 'text-white/80 hover:text-white hover:bg-white/10'
+                  : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
+                  }`}
                 title="Concierge & Messages"
               >
                 <MessageSquare className="h-4 w-4" />
@@ -152,11 +150,10 @@ export default function Navbar() {
               {/* Role Badge Indicator */}
               <Link
                 href="/profile"
-                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${
-                  isTransparent
-                    ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
-                    : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
-                }`}
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
+                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
+                  : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
+                  }`}
                 title="Active Portal / Profile"
               >
                 <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
@@ -167,11 +164,10 @@ export default function Navbar() {
               <div className="relative hidden sm:block">
                 <button
                   onClick={() => setNotifOpen((v) => !v)}
-                  className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-                    isTransparent
-                      ? 'text-white/80 hover:text-white hover:bg-white/10'
-                      : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
-                  }`}
+                  className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
+                    ? 'text-white/80 hover:text-white hover:bg-white/10'
+                    : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
+                    }`}
                   aria-label="Notifications"
                 >
                   <Bell className="h-4 w-4" />
@@ -200,11 +196,10 @@ export default function Navbar() {
                       {notificationsList.map((n) => (
                         <div
                           key={n.id}
-                          className={`rounded-lg p-2.5 text-xs border ${
-                            n.read
-                              ? 'border-slate-100 bg-white text-slate-600'
-                              : 'border-blue-100 bg-blue-50/50 text-slate-900'
-                          }`}
+                          className={`rounded-lg p-2.5 text-xs border ${n.read
+                            ? 'border-slate-100 bg-white text-slate-600'
+                            : 'border-blue-100 bg-blue-50/50 text-slate-900'
+                            }`}
                         >
                           <div className="flex items-center justify-between gap-2">
                             <span className="font-bold">{n.title}</span>
@@ -228,11 +223,10 @@ export default function Navbar() {
                     setProfileOpen((v) => !v);
                     setNotifOpen(false);
                   }}
-                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-                    isTransparent
-                      ? 'text-white/90 hover:text-white hover:bg-white/10'
-                      : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
-                  }`}
+                  className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
+                    ? 'text-white/90 hover:text-white hover:bg-white/10'
+                    : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
+                    }`}
                   title="User Account & Logout"
                   aria-label="User Account & Logout"
                 >
@@ -260,11 +254,11 @@ export default function Navbar() {
                     </div>
 
                     {/* Navigation Options */}
-                    <div className="py-1.5 space-y-0.5">
+                    <div className="py-1.5 space-y-0.5 font-inter">
                       <Link
                         href="/profile"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
                       >
                         <User className="h-3.5 w-3.5" />
                         <span>My Profile &amp; Permits</span>
@@ -273,7 +267,7 @@ export default function Navbar() {
                       <Link
                         href="/bookings"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
                       >
                         <CalendarCheck className="h-3.5 w-3.5" />
                         <span>My Bookings</span>
@@ -282,7 +276,7 @@ export default function Navbar() {
                       <Link
                         href="/custom-plan"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
                       >
                         <Compass className="h-3.5 w-3.5" />
                         <span>Custom Itinerary</span>
@@ -291,7 +285,7 @@ export default function Navbar() {
                       <Link
                         href="/login"
                         onClick={() => setProfileOpen(false)}
-                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                        className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
                       >
                         <Shield className="h-3.5 w-3.5" />
                         <span>Switch Role / Portal</span>
@@ -318,7 +312,7 @@ export default function Navbar() {
               {/* Logged Out Visitor State: Sign In Button */}
               <Link
                 href="/login"
-                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 cursor-pointer ${
+                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium font-inter tracking-wide transition-all active:scale-95 cursor-pointer ${
                   isTransparent
                     ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
                     : 'bg-white hover:bg-blue-50 text-[#0552A2] border border-blue-200/80 shadow-2xs'
@@ -333,11 +327,10 @@ export default function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${
-              isTransparent
-                ? 'text-white hover:bg-white/10'
-                : 'text-[#10243A] hover:bg-slate-100'
-            }`}
+            className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${isTransparent
+              ? 'text-white hover:bg-white/10'
+              : 'text-[#10243A] hover:bg-slate-100'
+              }`}
             aria-label="Toggle Navigation"
           >
             {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
@@ -347,12 +340,12 @@ export default function Navbar() {
 
       {/* Mobile Minimal Drawer */}
       {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200/80 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 shadow-2xl text-[#10243A] max-h-[calc(100dvh-60px)] overflow-y-auto animate-subtle-fade-up">
+        <div className="lg:hidden border-t border-slate-200/80 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 shadow-2xl text-[#10243A] max-h-[calc(100dvh-60px)] overflow-y-auto animate-subtle-fade-up font-inter">
           <div className="space-y-1">
             <Link
               href="/"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
               <span>Home</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -362,7 +355,7 @@ export default function Navbar() {
                 key={item.href}
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+                className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
               >
                 <span>{item.label}</span>
                 <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -371,7 +364,7 @@ export default function Navbar() {
             <Link
               href="/schedule"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
               <span>Schedule (14 Days)</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -379,7 +372,7 @@ export default function Navbar() {
             <Link
               href="/chat"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
               <span>Messages &amp; Concierge</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -387,7 +380,7 @@ export default function Navbar() {
             <Link
               href="/bookings"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
               <span>My Bookings</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
@@ -395,7 +388,7 @@ export default function Navbar() {
             <Link
               href="/login"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-semibold text-[#0552A2] hover:underline border-b border-slate-100"
+              className="flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100"
             >
               <span>Partner &amp; Admin Portals</span>
               <ArrowRight className="h-3.5 w-3.5 text-[#0552A2]" />
