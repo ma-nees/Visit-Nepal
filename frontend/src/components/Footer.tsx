@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import {
   ShieldCheck,
   Mountain,
@@ -11,6 +12,11 @@ import {
 } from 'lucide-react';
 
 export default function Footer() {
+  const pathname = usePathname();
+  if (pathname === '/login' || pathname === '/signup') {
+    return null;
+  }
+
   return (
     <footer className="w-full border-t border-white/10 bg-[#031526] text-white font-inter">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-12">
