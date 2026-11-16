@@ -14,20 +14,17 @@ import {
   LogOut,
   User,
   Shield,
+  CalendarCheck,
+  Compass,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 const navLinks = [
   { href: '/destinations', label: 'Destinations' },
-  { href: '/map', label: 'Map' },
   { href: '/experiences', label: 'Experiences' },
   { href: '/culture', label: 'Culture' },
-  { href: '/stories', label: 'Stories' },
-  { href: '/explore', label: 'Explore' },
   { href: '/services', label: 'Services' },
-  { href: '/custom-plan', label: 'Custom Plan' },
-  { href: '/bookings', label: 'Bookings' },
-  { href: '/community', label: 'Community' },
+  { href: '/stories', label: 'Stories' },
   { href: '/about', label: 'About' },
 ];
 
@@ -272,6 +269,24 @@ export default function Navbar() {
                   </Link>
 
                   <Link
+                    href="/bookings"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                  >
+                    <CalendarCheck className="h-3.5 w-3.5" />
+                    <span>My Bookings</span>
+                  </Link>
+
+                  <Link
+                    href="/custom-plan"
+                    onClick={() => setProfileOpen(false)}
+                    className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
+                  >
+                    <Compass className="h-3.5 w-3.5" />
+                    <span>Custom Itinerary</span>
+                  </Link>
+
+                  <Link
                     href="/login"
                     onClick={() => setProfileOpen(false)}
                     className="flex items-center gap-2 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-[#0552A2] transition-colors"
@@ -362,6 +377,14 @@ export default function Navbar() {
               className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
               <span>Messages &amp; Concierge</span>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+            <Link
+              href="/bookings"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between py-2 text-sm font-semibold text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+            >
+              <span>My Bookings</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
             </Link>
             <Link

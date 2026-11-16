@@ -60,8 +60,8 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs sm:text-sm text-slate-300 font-light">
               <li>
-                <Link href="/destinations" className="hover:text-white transition-colors">
-                  All Regions Map
+                <Link href="/map" className="hover:text-white transition-colors">
+                  All Regions Map (Interactive)
                 </Link>
               </li>
               <li>
