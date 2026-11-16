@@ -159,47 +159,44 @@ function BarcodePattern({ value, height = 38 }: { value: string; height?: number
   );
 }
 
-/* Realistic Animated Scissors SVG */
-function AnimatedScissors({
-  cutProgress,
-  isSnapping,
-}: {
-  cutProgress: number;
-  isSnapping: boolean;
-}) {
+/* Realistic Animated Scissors with GPU Accelerated Pivot Snips */
+function UltraSmoothScissors() {
   return (
     <motion.div
-      style={{
-        position: 'absolute',
-        left: `${cutProgress * 100}%`,
-        top: '52%',
-        transform: 'translate(-50%, -50%)',
-        zIndex: 40,
-        pointerEvents: 'none',
+      initial={{ x: '-15%', opacity: 0 }}
+      animate={{
+        x: ['-15%', '0%', '105%'],
+        opacity: [0, 1, 1, 0],
       }}
-      initial={{ opacity: 0, scale: 0.7 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.6 }}
-      transition={{ duration: 0.15 }}
+      transition={{
+        duration: 1.15,
+        times: [0, 0.15, 0.9, 1],
+        ease: [0.25, 0.1, 0.25, 1],
+      }}
+      className="absolute top-[52%] pointer-events-none z-30"
+      style={{
+        transform: 'translate(-50%, -50%)',
+        willChange: 'transform, opacity',
+      }}
     >
-      <div className="relative h-16 w-16 -ml-4 -mt-8 drop-shadow-[0_10px_15px_rgba(0,0,0,0.35)]">
-        {/* Top Blade & Handle */}
+      <div className="relative h-16 w-16 -ml-4 -mt-8 drop-shadow-[0_12px_20px_rgba(0,0,0,0.35)]">
+        {/* Top Blade & Blue Handle */}
         <motion.svg
           viewBox="0 0 100 100"
           className="absolute inset-0 h-full w-full"
           animate={{
-            rotate: isSnapping ? [-20, 8, -20] : 0,
+            rotate: [-20, 8, -20],
           }}
           transition={{
-            duration: 0.18,
-            repeat: isSnapping ? Infinity : 0,
+            duration: 0.16,
+            repeat: 7,
             ease: 'easeInOut',
           }}
-          style={{ transformOrigin: '32px 48px' }}
+          style={{ transformOrigin: '32px 48px', willChange: 'transform' }}
         >
           <defs>
             <linearGradient id="bladeGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f8fafc" />
+              <stop offset="0%" stopColor="#ffffff" />
               <stop offset="50%" stopColor="#cbd5e1" />
               <stop offset="100%" stopColor="#94a3b8" />
             </linearGradient>
@@ -208,14 +205,12 @@ function AnimatedScissors({
               <stop offset="100%" stopColor="#021c38" />
             </linearGradient>
           </defs>
-          {/* Blade */}
           <path
             d="M32 48 L95 38 L92 46 L32 50 Z"
             fill="url(#bladeGradTop)"
             stroke="#64748b"
             strokeWidth="0.8"
           />
-          {/* Finger Loop Handle */}
           <ellipse
             cx="16"
             cy="36"
@@ -227,23 +222,23 @@ function AnimatedScissors({
           />
         </motion.svg>
 
-        {/* Bottom Blade & Handle */}
+        {/* Bottom Blade & Blue Handle */}
         <motion.svg
           viewBox="0 0 100 100"
           className="absolute inset-0 h-full w-full"
           animate={{
-            rotate: isSnapping ? [20, -8, 20] : 0,
+            rotate: [20, -8, 20],
           }}
           transition={{
-            duration: 0.18,
-            repeat: isSnapping ? Infinity : 0,
+            duration: 0.16,
+            repeat: 7,
             ease: 'easeInOut',
           }}
-          style={{ transformOrigin: '32px 48px' }}
+          style={{ transformOrigin: '32px 48px', willChange: 'transform' }}
         >
           <defs>
             <linearGradient id="bladeGradBottom" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f1f5f9" />
+              <stop offset="0%" stopColor="#f8fafc" />
               <stop offset="50%" stopColor="#94a3b8" />
               <stop offset="100%" stopColor="#64748b" />
             </linearGradient>
@@ -252,14 +247,12 @@ function AnimatedScissors({
               <stop offset="100%" stopColor="#021c38" />
             </linearGradient>
           </defs>
-          {/* Blade */}
           <path
             d="M32 48 L95 58 L92 50 L32 46 Z"
             fill="url(#bladeGradBottom)"
             stroke="#64748b"
             strokeWidth="0.8"
           />
-          {/* Finger Loop Handle */}
           <ellipse
             cx="16"
             cy="60"
@@ -271,7 +264,7 @@ function AnimatedScissors({
           />
         </motion.svg>
 
-        {/* Pivot Pin / Screw */}
+        {/* Solid Pivot Pin */}
         <div className="absolute left-[30px] top-[46px] h-2.5 w-2.5 rounded-full bg-amber-400 border border-amber-600 shadow-xs" />
       </div>
     </motion.div>
@@ -283,11 +276,10 @@ export default function ProfilePage() {
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
   const [switchingRole, setSwitchingRole] = useState<UserRole | null>(null);
 
-  // Animation Sequence States: 'idle' | 'scissors-entering' | 'cutting' | 'separated' | 'flying' | 'expanded'
+  // Animation Stage: 'idle' | 'cutting' | 'separated' | 'flying' | 'expanded'
   const [animStage, setAnimStage] = useState<
-    'idle' | 'scissors-entering' | 'cutting' | 'separated' | 'flying' | 'expanded'
+    'idle' | 'cutting' | 'separated' | 'flying' | 'expanded'
   >('idle');
-  const [cutProgress, setCutProgress] = useState(0);
 
   const activeRole: UserRole = currentUser?.role || role || 'traveler';
   const activeName = currentUser?.name || 'Aayush Pradhan';
@@ -298,7 +290,7 @@ export default function ProfilePage() {
 
   const bookingCount = Array.isArray(bookings) ? bookings.length : 12;
 
-  // Handle escape key to close modal
+  // Escape key closes expanded pass
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && animStage === 'expanded') {
@@ -309,58 +301,35 @@ export default function ProfilePage() {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [animStage]);
 
-  // Cinematic Scissors & Cutting Animation Trigger
+  // Smooth, continuous scissors cutting interaction
   const triggerTicketCutAnimation = () => {
     if (animStage !== 'idle') return;
 
-    // Step 1: Scissors Enter from the left
-    setAnimStage('scissors-entering');
-    setCutProgress(0);
+    // Step 1: Start smooth cutting across ticket
+    setAnimStage('cutting');
 
+    // Step 2: Exactly as scissors reach edge (1.1s), paper separates
     setTimeout(() => {
-      // Step 2: Start cutting across the ticket
-      setAnimStage('cutting');
+      setAnimStage('separated');
 
-      const startTime = performance.now();
-      const cutDuration = 900; // ms
+      // Step 3: At 1.45s, smoothly lift & rotate towards camera
+      setTimeout(() => {
+        setAnimStage('flying');
 
-      const step = (now: number) => {
-        const elapsed = now - startTime;
-        const p = Math.min(elapsed / cutDuration, 1);
-        setCutProgress(p);
-
-        if (p < 1) {
-          requestAnimationFrame(step);
-        } else {
-          // Step 3: Ticket physically separates into two pieces
-          setAnimStage('separated');
-
-          setTimeout(() => {
-            // Step 4: Flies towards camera / center in 3D
-            setAnimStage('flying');
-
-            setTimeout(() => {
-              // Step 5: Smoothly expands into full digital pass view
-              setAnimStage('expanded');
-            }, 600);
-          }, 350);
-        }
-      };
-
-      requestAnimationFrame(step);
-    }, 300);
+        // Step 4: At 1.75s, seamlessly blossom into full expanded pass
+        setTimeout(() => {
+          setAnimStage('expanded');
+        }, 320);
+      }, 350);
+    }, 1100);
   };
 
-  // Close and smoothly reverse back to initial ticket
+  // Buttery-smooth reversal back to ticket
   const closeExpandedPass = () => {
     setAnimStage('flying');
     setTimeout(() => {
-      setAnimStage('separated');
-      setTimeout(() => {
-        setAnimStage('idle');
-        setCutProgress(0);
-      }, 300);
-    }, 250);
+      setAnimStage('idle');
+    }, 350);
   };
 
   const handleLogout = () => {
@@ -386,27 +355,26 @@ export default function ProfilePage() {
   // Download QR Code utility
   const handleDownloadQr = () => {
     const canvas = document.createElement('canvas');
-    canvas.width = 300;
-    canvas.height = 300;
+    canvas.width = 320;
+    canvas.height = 320;
     const ctx = canvas.getContext('2d');
     if (ctx) {
       ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, 300, 300);
+      ctx.fillRect(0, 0, 320, 320);
       ctx.fillStyle = '#0552A2';
       ctx.font = 'bold 16px sans-serif';
       ctx.fillText('VISIT NEPAL TIMS 2026', 45, 40);
       ctx.fillStyle = '#031526';
-      // Draw grid simulation of QR
       for (let i = 0; i < 18; i++) {
         for (let j = 0; j < 18; j++) {
           if ((i + j) % 2 === 0 || (i * j) % 3 === 0) {
-            ctx.fillRect(50 + i * 11, 60 + j * 11, 10, 10);
+            ctx.fillRect(52 + i * 12, 60 + j * 12, 11, 11);
           }
         }
       }
       ctx.font = '12px monospace';
       ctx.fillStyle = '#64748b';
-      ctx.fillText(`TOKEN: VN-2026-${activeRole.toUpperCase()}`, 50, 280);
+      ctx.fillText(`TOKEN: VN-2026-${activeRole.toUpperCase()}`, 50, 300);
 
       const a = document.createElement('a');
       a.download = `TIMS-QR-${activeRole.toUpperCase()}.png`;
@@ -436,11 +404,10 @@ export default function ProfilePage() {
                     type="button"
                     disabled={isSwitching || animStage !== 'idle'}
                     onClick={() => handleSwitchUser(p.role)}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
-                      isCurrent
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${isCurrent
                         ? 'bg-[#0552A2] text-white shadow-xs'
                         : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                    } disabled:opacity-50`}
+                      } disabled:opacity-50`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{isSwitching ? '...' : p.label}</span>
@@ -522,27 +489,29 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Column: Physical Ticket with Floating & Scissors Animation */}
+          {/* Right Column: Physical Ticket with Cinematic Floating & Scissors Animation */}
           <div className="relative mx-auto w-full max-w-md">
             {/* The Floating Ticket Wrapper */}
             <motion.div
               animate={
                 animStage === 'idle'
                   ? {
-                      y: [0, -6, 0],
-                      rotate: 1.5,
-                      transition: { duration: 4.5, repeat: Infinity, ease: 'easeInOut' },
-                    }
+                    y: [0, -6, 0],
+                    rotate: 1.5,
+                    scale: 1,
+                    opacity: 1,
+                    transition: { duration: 4.2, repeat: Infinity, ease: 'easeInOut' },
+                  }
                   : animStage === 'flying'
-                  ? {
-                      scale: 1.35,
-                      y: -40,
-                      rotateX: 20,
-                      rotateY: -10,
-                      opacity: [1, 0.4, 0],
-                      transition: { duration: 0.6, ease: 'easeOut' },
+                    ? {
+                      scale: 1.25,
+                      y: -30,
+                      rotateX: 14,
+                      rotateY: -8,
+                      opacity: 0,
+                      transition: { duration: 0.45, ease: [0.32, 0.72, 0, 1] },
                     }
-                  : { y: 0, rotate: 0 }
+                    : { y: 0, rotate: 0, scale: 1, opacity: 1 }
               }
               whileHover={animStage === 'idle' ? { scale: 1.02, rotate: 0 } : undefined}
               onClick={triggerTicketCutAnimation}
@@ -550,18 +519,19 @@ export default function ProfilePage() {
               tabIndex={0}
               aria-label="Click to inspect full digital TIMS ticket details"
               className="group relative cursor-pointer select-none"
+              style={{ willChange: 'transform, opacity' }}
             >
-              {/* Interaction Hint: "Click to inspect full details" */}
+              {/* Interaction Hint Badge: "Click to inspect full details" */}
               {animStage === 'idle' && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40">
+                  {/* <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40">
                     <Maximize2 className="h-3 w-3" />
                     Click to inspect full details
-                  </span>
+                  </span> */}
                 </div>
               )}
 
-              {/* The Physical Ticket Pass Container */}
+              {/* The Physical Ticket Pass Card */}
               <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 transition-shadow duration-300 group-hover:shadow-2xl">
                 {/* Top Himalayan Tricolor Dash Strip */}
                 <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
@@ -570,14 +540,15 @@ export default function ProfilePage() {
                 <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
                 <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
 
-                {/* TOP HALF OF TICKET (Separates on cut) */}
+                {/* TOP HALF OF TICKET (Smoothly lifts & rotates on cut) */}
                 <motion.div
                   animate={
                     animStage === 'separated' || animStage === 'flying'
-                      ? { y: -8, rotate: -1.8, x: -2 }
+                      ? { y: -9, rotate: -2, x: -3 }
                       : { y: 0, rotate: 0, x: 0 }
                   }
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ willChange: 'transform' }}
                   className="p-5 sm:p-6 pb-2 space-y-4"
                 >
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
@@ -619,28 +590,35 @@ export default function ProfilePage() {
                   </div>
                 </motion.div>
 
-                {/* PERFORATED CUTTING LINE */}
+                {/* PERFORATED CUTTING SEAM */}
                 <div className="relative my-1">
                   {/* Dashed visual line */}
                   <div className="border-t border-dashed border-slate-300 mx-3" />
 
-                  {/* Animated cut progression line (red laser / paper cut slit) */}
-                  {(animStage === 'cutting' || animStage === 'separated') && (
+                  {/* Smooth GPU Animated Cut Line (Glowing Laser Cut Seam) */}
+                  {animStage === 'cutting' && (
                     <motion.div
-                      className="absolute top-0 left-0 h-[2px] bg-red-500/80 shadow-[0_0_8px_rgba(236,31,39,0.8)]"
-                      style={{ width: `${cutProgress * 100}%` }}
+                      initial={{ scaleX: 0 }}
+                      animate={{ scaleX: 1 }}
+                      transition={{
+                        duration: 1.1,
+                        ease: [0.25, 0.1, 0.25, 1],
+                      }}
+                      style={{ originX: 0, willChange: 'transform' }}
+                      className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-red-600 via-amber-400 to-red-600 shadow-[0_0_12px_rgba(236,31,39,0.9)]"
                     />
                   )}
                 </div>
 
-                {/* BOTTOM HALF OF TICKET (Separates on cut) */}
+                {/* BOTTOM HALF OF TICKET (Smoothly drops & rotates on cut) */}
                 <motion.div
                   animate={
                     animStage === 'separated' || animStage === 'flying'
-                      ? { y: 8, rotate: 1.5, x: 2 }
+                      ? { y: 9, rotate: 1.8, x: 3 }
                       : { y: 0, rotate: 0, x: 0 }
                   }
-                  transition={{ duration: 0.35, ease: 'easeOut' }}
+                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ willChange: 'transform' }}
                   className="p-5 sm:p-6 pt-2 space-y-4"
                 >
                   <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
@@ -685,13 +663,8 @@ export default function ProfilePage() {
                   </div>
                 </motion.div>
 
-                {/* REALISTIC ANIMATED SCISSORS OVERLAY */}
-                {(animStage === 'scissors-entering' || animStage === 'cutting') && (
-                  <AnimatedScissors
-                    cutProgress={cutProgress}
-                    isSnapping={animStage === 'cutting'}
-                  />
-                )}
+                {/* BUTTERY-SMOOTH ANIMATED SCISSORS */}
+                {animStage === 'cutting' && <UltraSmoothScissors />}
               </div>
             </motion.div>
           </div>
@@ -705,18 +678,19 @@ export default function ProfilePage() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.25 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-md"
             onClick={closeExpandedPass}
           >
             {/* The Expanded Digital Pass Card */}
             <motion.div
-              initial={{ scale: 0.88, y: 30, opacity: 0 }}
+              initial={{ scale: 0.9, y: 25, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.9, y: 20, opacity: 0 }}
-              transition={{ type: 'spring', damping: 25, stiffness: 280 }}
+              exit={{ scale: 0.92, y: 15, opacity: 0 }}
+              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200/90 text-slate-900 my-8"
+              style={{ willChange: 'transform, opacity' }}
             >
               {/* Top Himalayan Tricolor Dash Strip */}
               <div className="h-3 bg-[repeating-linear-gradient(90deg,#0552A2_0_30px,#FDB716_30px_60px,#EC1F27_60px_90px,#ffffff_90px_120px)]" />
@@ -866,6 +840,7 @@ export default function ProfilePage() {
                     animate={{ y: [0, 110, 0] }}
                     transition={{ duration: 2.8, repeat: Infinity, ease: 'easeInOut' }}
                     className="absolute inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-[#0552A2] to-transparent shadow-[0_0_12px_#0552A2] pointer-events-none z-10"
+                    style={{ willChange: 'transform' }}
                   />
 
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
