@@ -159,127 +159,14 @@ function BarcodePattern({ value, height = 38 }: { value: string; height?: number
   );
 }
 
-/* Realistic Animated Scissors with GPU Accelerated Pivot Snips */
-function UltraSmoothScissors() {
-  return (
-    <motion.div
-      initial={{ x: '-15%', opacity: 0 }}
-      animate={{
-        x: ['-15%', '0%', '105%'],
-        opacity: [0, 1, 1, 0],
-      }}
-      transition={{
-        duration: 1.15,
-        times: [0, 0.15, 0.9, 1],
-        ease: [0.25, 0.1, 0.25, 1],
-      }}
-      className="absolute top-[52%] pointer-events-none z-30"
-      style={{
-        transform: 'translate(-50%, -50%)',
-        willChange: 'transform, opacity',
-      }}
-    >
-      <div className="relative h-16 w-16 -ml-4 -mt-8 drop-shadow-[0_12px_20px_rgba(0,0,0,0.35)]">
-        {/* Top Blade & Blue Handle */}
-        <motion.svg
-          viewBox="0 0 100 100"
-          className="absolute inset-0 h-full w-full"
-          animate={{
-            rotate: [-20, 8, -20],
-          }}
-          transition={{
-            duration: 0.16,
-            repeat: 7,
-            ease: 'easeInOut',
-          }}
-          style={{ transformOrigin: '32px 48px', willChange: 'transform' }}
-        >
-          <defs>
-            <linearGradient id="bladeGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#ffffff" />
-              <stop offset="50%" stopColor="#cbd5e1" />
-              <stop offset="100%" stopColor="#94a3b8" />
-            </linearGradient>
-            <linearGradient id="handleGradTop" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0552A2" />
-              <stop offset="100%" stopColor="#021c38" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M32 48 L95 38 L92 46 L32 50 Z"
-            fill="url(#bladeGradTop)"
-            stroke="#64748b"
-            strokeWidth="0.8"
-          />
-          <ellipse
-            cx="16"
-            cy="36"
-            rx="14"
-            ry="11"
-            fill="none"
-            stroke="url(#handleGradTop)"
-            strokeWidth="5"
-          />
-        </motion.svg>
-
-        {/* Bottom Blade & Blue Handle */}
-        <motion.svg
-          viewBox="0 0 100 100"
-          className="absolute inset-0 h-full w-full"
-          animate={{
-            rotate: [20, -8, 20],
-          }}
-          transition={{
-            duration: 0.16,
-            repeat: 7,
-            ease: 'easeInOut',
-          }}
-          style={{ transformOrigin: '32px 48px', willChange: 'transform' }}
-        >
-          <defs>
-            <linearGradient id="bladeGradBottom" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#f8fafc" />
-              <stop offset="50%" stopColor="#94a3b8" />
-              <stop offset="100%" stopColor="#64748b" />
-            </linearGradient>
-            <linearGradient id="handleGradBottom" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="#0552A2" />
-              <stop offset="100%" stopColor="#021c38" />
-            </linearGradient>
-          </defs>
-          <path
-            d="M32 48 L95 58 L92 50 L32 46 Z"
-            fill="url(#bladeGradBottom)"
-            stroke="#64748b"
-            strokeWidth="0.8"
-          />
-          <ellipse
-            cx="16"
-            cy="60"
-            rx="14"
-            ry="11"
-            fill="none"
-            stroke="url(#handleGradBottom)"
-            strokeWidth="5"
-          />
-        </motion.svg>
-
-        {/* Solid Pivot Pin */}
-        <div className="absolute left-[30px] top-[46px] h-2.5 w-2.5 rounded-full bg-amber-400 border border-amber-600 shadow-xs" />
-      </div>
-    </motion.div>
-  );
-}
-
 export default function ProfilePage() {
   const router = useRouter();
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
   const [switchingRole, setSwitchingRole] = useState<UserRole | null>(null);
 
-  // Animation Stage: 'idle' | 'cutting' | 'separated' | 'flying' | 'expanded'
-  const [animStage, setAnimStage] = useState<
-    'idle' | 'cutting' | 'separated' | 'flying' | 'expanded'
-  >('idle');
+  // Modal expand state
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOpening, setIsOpening] = useState(false);
 
   const activeRole: UserRole = currentUser?.role || role || 'traveler';
   const activeName = currentUser?.name || 'Aayush Pradhan';
@@ -293,43 +180,27 @@ export default function ProfilePage() {
   // Escape key closes expanded pass
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && animStage === 'expanded') {
+      if (e.key === 'Escape' && isExpanded) {
         closeExpandedPass();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [animStage]);
+  }, [isExpanded]);
 
-  // Smooth, continuous scissors cutting interaction
-  const triggerTicketCutAnimation = () => {
-    if (animStage !== 'idle') return;
+  // Smooth cinematic pass opening (No scissors)
+  const openExpandedPass = () => {
+    if (isExpanded || isOpening) return;
+    setIsOpening(true);
 
-    // Step 1: Start smooth cutting across ticket
-    setAnimStage('cutting');
-
-    // Step 2: Exactly as scissors reach edge (1.1s), paper separates
     setTimeout(() => {
-      setAnimStage('separated');
-
-      // Step 3: At 1.45s, smoothly lift & rotate towards camera
-      setTimeout(() => {
-        setAnimStage('flying');
-
-        // Step 4: At 1.75s, seamlessly blossom into full expanded pass
-        setTimeout(() => {
-          setAnimStage('expanded');
-        }, 320);
-      }, 350);
-    }, 1100);
+      setIsExpanded(true);
+      setIsOpening(false);
+    }, 280);
   };
 
-  // Buttery-smooth reversal back to ticket
   const closeExpandedPass = () => {
-    setAnimStage('flying');
-    setTimeout(() => {
-      setAnimStage('idle');
-    }, 350);
+    setIsExpanded(false);
   };
 
   const handleLogout = () => {
@@ -339,7 +210,7 @@ export default function ProfilePage() {
   };
 
   const handleSwitchUser = async (targetRole: UserRole) => {
-    if (targetRole === activeRole || animStage !== 'idle') return;
+    if (targetRole === activeRole || isExpanded || isOpening) return;
     setSwitchingRole(targetRole);
     try {
       await setRole(targetRole);
@@ -402,12 +273,13 @@ export default function ProfilePage() {
                   <button
                     key={p.role}
                     type="button"
-                    disabled={isSwitching || animStage !== 'idle'}
+                    disabled={isSwitching || isExpanded || isOpening}
                     onClick={() => handleSwitchUser(p.role)}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${isCurrent
+                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${
+                      isCurrent
                         ? 'bg-[#0552A2] text-white shadow-xs'
                         : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                      } disabled:opacity-50`}
+                    } disabled:opacity-50`}
                   >
                     <Icon className="h-3.5 w-3.5" />
                     <span>{isSwitching ? '...' : p.label}</span>
@@ -489,32 +361,30 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Right Column: Physical Ticket with Cinematic Floating & Scissors Animation */}
+          {/* Right Column: Physical Ticket with Fluid Lift & Zoom Animation */}
           <div className="relative mx-auto w-full max-w-md">
             {/* The Floating Ticket Wrapper */}
             <motion.div
               animate={
-                animStage === 'idle'
+                isOpening
                   ? {
-                    y: [0, -6, 0],
-                    rotate: 1.5,
-                    scale: 1,
-                    opacity: 1,
-                    transition: { duration: 4.2, repeat: Infinity, ease: 'easeInOut' },
-                  }
-                  : animStage === 'flying'
-                    ? {
-                      scale: 1.25,
-                      y: -30,
-                      rotateX: 14,
-                      rotateY: -8,
-                      opacity: 0,
-                      transition: { duration: 0.45, ease: [0.32, 0.72, 0, 1] },
+                      scale: 1.15,
+                      y: -20,
+                      rotateX: 10,
+                      opacity: 0.6,
+                      transition: { duration: 0.28, ease: 'easeOut' },
                     }
-                    : { y: 0, rotate: 0, scale: 1, opacity: 1 }
+                  : {
+                      y: [0, -6, 0],
+                      rotate: 1.5,
+                      scale: 1,
+                      opacity: 1,
+                      transition: { duration: 4.2, repeat: Infinity, ease: 'easeInOut' },
+                    }
               }
-              whileHover={animStage === 'idle' ? { scale: 1.02, rotate: 0 } : undefined}
-              onClick={triggerTicketCutAnimation}
+              whileHover={{ scale: 1.025, rotate: 0, transition: { duration: 0.25 } }}
+              whileTap={{ scale: 0.98 }}
+              onClick={openExpandedPass}
               role="button"
               tabIndex={0}
               aria-label="Click to inspect full digital TIMS ticket details"
@@ -522,17 +392,15 @@ export default function ProfilePage() {
               style={{ willChange: 'transform, opacity' }}
             >
               {/* Interaction Hint Badge: "Click to inspect full details" */}
-              {animStage === 'idle' && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
-                  {/* <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40">
-                    <Maximize2 className="h-3 w-3" />
-                    Click to inspect full details
-                  </span> */}
-                </div>
-              )}
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 z-30 pointer-events-none">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40 group-hover:scale-105 transition-transform">
+                  <Maximize2 className="h-3 w-3" />
+                  Click to inspect full details
+                </span>
+              </div>
 
               {/* The Physical Ticket Pass Card */}
-              <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 transition-shadow duration-300 group-hover:shadow-2xl">
+              <div className="relative overflow-hidden rounded-2xl bg-white text-slate-900 shadow-xl border border-slate-200/90 transition-all duration-300 group-hover:shadow-2xl group-hover:border-[#0552A2]/40">
                 {/* Top Himalayan Tricolor Dash Strip */}
                 <div className="h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#FDB716_24px_48px,#EC1F27_48px_72px,#ffffff_72px_96px)]" />
 
@@ -540,17 +408,7 @@ export default function ProfilePage() {
                 <span className="absolute -left-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
                 <span className="absolute -right-3.5 top-[52%] h-7 w-7 rounded-full bg-slate-50 shadow-inner z-20" />
 
-                {/* TOP HALF OF TICKET (Smoothly lifts & rotates on cut) */}
-                <motion.div
-                  animate={
-                    animStage === 'separated' || animStage === 'flying'
-                      ? { y: -9, rotate: -2, x: -3 }
-                      : { y: 0, rotate: 0, x: 0 }
-                  }
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ willChange: 'transform' }}
-                  className="p-5 sm:p-6 pb-2 space-y-4"
-                >
+                <div className="p-5 sm:p-6 space-y-4">
                   {/* Header: Visit Nepal + Digital TIMS pass + Verified Badge */}
                   <div className="flex items-start justify-between gap-3">
                     <div className="flex items-center gap-2.5">
@@ -588,83 +446,51 @@ export default function ProfilePage() {
                       {activeRole}
                     </p>
                   </div>
-                </motion.div>
 
-                {/* PERFORATED CUTTING SEAM */}
-                <div className="relative my-1">
-                  {/* Dashed visual line */}
-                  <div className="border-t border-dashed border-slate-300 mx-3" />
-
-                  {/* Smooth GPU Animated Cut Line (Glowing Laser Cut Seam) */}
-                  {animStage === 'cutting' && (
-                    <motion.div
-                      initial={{ scaleX: 0 }}
-                      animate={{ scaleX: 1 }}
-                      transition={{
-                        duration: 1.1,
-                        ease: [0.25, 0.1, 0.25, 1],
-                      }}
-                      style={{ originX: 0, willChange: 'transform' }}
-                      className="absolute top-0 left-0 right-0 h-[2.5px] bg-gradient-to-r from-red-600 via-amber-400 to-red-600 shadow-[0_0_12px_rgba(236,31,39,0.9)]"
-                    />
-                  )}
-                </div>
-
-                {/* BOTTOM HALF OF TICKET (Smoothly drops & rotates on cut) */}
-                <motion.div
-                  animate={
-                    animStage === 'separated' || animStage === 'flying'
-                      ? { y: 9, rotate: 1.8, x: 3 }
-                      : { y: 0, rotate: 0, x: 0 }
-                  }
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  style={{ willChange: 'transform' }}
-                  className="p-5 sm:p-6 pt-2 space-y-4"
-                >
-                  <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
-                    <div className="flex items-start gap-2.5 sm:col-span-2">
-                      <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                      <div className="min-w-0">
-                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
-                        <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
+                  {/* Perforated Divider Line */}
+                  <div className="border-t border-dashed border-slate-300 pt-4">
+                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4 text-xs">
+                      <div className="flex items-start gap-2.5 sm:col-span-2">
+                        <Mail className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                        <div className="min-w-0">
+                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Registered email</dt>
+                          <dd className="break-all font-medium text-slate-800">{activeEmail}</dd>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-start gap-2.5">
-                      <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                      <div>
-                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
-                        <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
+                      <div className="flex items-start gap-2.5">
+                        <Phone className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                        <div>
+                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Emergency hotline</dt>
+                          <dd className="font-semibold text-red-600">+977 1 4256909 / 1144</dd>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-start gap-2.5">
-                      <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                      <div>
-                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
-                        <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
+                      <div className="flex items-start gap-2.5">
+                        <Globe className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                        <div>
+                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Jurisdiction</dt>
+                          <dd className="font-medium text-slate-800">Nepal Tourism Authority</dd>
+                        </div>
                       </div>
-                    </div>
 
-                    <div className="flex items-start gap-2.5 sm:col-span-2">
-                      <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
-                      <div>
-                        <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
-                        <dd className="font-medium text-slate-800">
-                          {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
-                        </dd>
+                      <div className="flex items-start gap-2.5 sm:col-span-2">
+                        <CalendarCheck className="mt-0.5 h-3.5 w-3.5 shrink-0 text-[#0552A2]" />
+                        <div>
+                          <dt className="text-[10px] uppercase font-semibold text-slate-400">Bookings</dt>
+                          <dd className="font-medium text-slate-800">
+                            {bookingCount} {bookingCount === 1 ? 'booking' : 'bookings'}
+                          </dd>
+                        </div>
                       </div>
-                    </div>
-                  </dl>
+                    </dl>
+                  </div>
 
                   {/* Barcode & Monospace Ledger ID */}
                   <div className="border-t border-slate-200/80 pt-3">
                     <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} />
                   </div>
-                </motion.div>
-
-                {/* BUTTERY-SMOOTH ANIMATED SCISSORS */}
-                {animStage === 'cutting' && <UltraSmoothScissors />}
+                </div>
               </div>
             </motion.div>
           </div>
@@ -673,12 +499,12 @@ export default function ProfilePage() {
 
       {/* EXPANDED FULL-SCREEN DIGITAL TIMS PASS MODAL */}
       <AnimatePresence>
-        {animStage === 'expanded' && (
+        {isExpanded && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            transition={{ duration: 0.28, ease: 'easeInOut' }}
             className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 overflow-y-auto bg-slate-950/75 backdrop-blur-md"
             onClick={closeExpandedPass}
           >
@@ -687,7 +513,7 @@ export default function ProfilePage() {
               initial={{ scale: 0.9, y: 25, opacity: 0 }}
               animate={{ scale: 1, y: 0, opacity: 1 }}
               exit={{ scale: 0.92, y: 15, opacity: 0 }}
-              transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
               onClick={(e) => e.stopPropagation()}
               className="relative w-full max-w-2xl overflow-hidden rounded-3xl bg-white shadow-2xl border border-slate-200/90 text-slate-900 my-8"
               style={{ willChange: 'transform, opacity' }}
