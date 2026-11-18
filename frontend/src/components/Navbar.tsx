@@ -412,7 +412,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={toggleMobile}
-            className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+            className={`lg:hidden relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
               isTransparent
                 ? 'text-white hover:bg-white/10'
                 : 'text-[#10243A] hover:bg-slate-100'
@@ -420,20 +420,32 @@ export default function Navbar() {
             aria-label={mobileOpen && !isClosing ? 'Close Navigation Menu' : 'Open Navigation Menu'}
             aria-expanded={mobileOpen && !isClosing}
           >
-            <div className="hamburger-box">
+            <div className="relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none">
               <span
-                className={`hamburger-line ${
-                  mobileOpen && !isClosing ? 'hamburger-line-top-open' : ''
+                className={`block h-[2px] w-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+                  isTransparent ? 'bg-white' : 'bg-slate-800'
+                } ${
+                  mobileOpen && !isClosing
+                    ? 'translate-y-[6px] rotate-45'
+                    : 'translate-y-0 rotate-0'
                 }`}
               />
               <span
-                className={`hamburger-line ${
-                  mobileOpen && !isClosing ? 'hamburger-line-mid-open' : ''
+                className={`block h-[2px] w-full rounded-full transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                  isTransparent ? 'bg-white' : 'bg-slate-800'
+                } ${
+                  mobileOpen && !isClosing
+                    ? 'opacity-0 scale-x-0'
+                    : 'opacity-100 scale-x-100'
                 }`}
               />
               <span
-                className={`hamburger-line ${
-                  mobileOpen && !isClosing ? 'hamburger-line-bot-open' : ''
+                className={`block h-[2px] w-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+                  isTransparent ? 'bg-white' : 'bg-slate-800'
+                } ${
+                  mobileOpen && !isClosing
+                    ? '-translate-y-[6px] -rotate-45'
+                    : 'translate-y-0 rotate-0'
                 }`}
               />
             </div>
