@@ -63,7 +63,6 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
   });
   const invoiceNo = data.invoiceNumber || `VN-INV-2026-${Math.floor(10000 + Math.random() * 89999)}`;
   const bookingId = data.bookingId || `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`;
-  const qrHash = data.qrCode || `VN-PASS-${bookingId}-VERIFIED-2026`;
   const paymentMethod = data.paymentMethod || 'Nepal Tourism Gateway (eSewa / Khalti / International Card)';
   const status = data.status || 'PAID IN FULL • CLEARED';
 
@@ -329,41 +328,10 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
       </table>
     </div>
 
-    <!-- Security & Boarding Pass Strip -->
-    <div style="background: #0f172a; color: #ffffff; border-radius: 6px; padding: 7px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px;">
-      <div style="display: flex; align-items: center; gap: 10px;">
-        <div style="background: #ffffff; padding: 3px; border-radius: 4px; display: inline-block;">
-          <!-- SVG QR Code Icon -->
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0552A2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="3" y="3" width="7" height="7"></rect>
-            <rect x="14" y="3" width="7" height="7"></rect>
-            <rect x="14" y="14" width="7" height="7"></rect>
-            <rect x="3" y="14" width="7" height="7"></rect>
-          </svg>
-        </div>
-        <div>
-          <div style="font-size: 8.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
-            Digital Pass Verification Hash
-          </div>
-          <div style="font-size: 10.5px; font-weight: 700; font-family: monospace; color: #38bdf8;">
-            ${qrHash}
-          </div>
-          <div style="font-size: 8.5px; color: #94a3b8; margin-top: 1px;">
-            Valid for immigration inspection, TIMS counters, and Sagarmatha / Annapurna checkpoint entries.
-          </div>
-        </div>
-      </div>
-      <div style="text-align: right;">
-        <span style="display: inline-block; background: #0552A2; color: #ffffff; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
-          NTB AUTHENTICATED
-        </span>
-      </div>
-    </div>
-
     <!-- Footer Disclaimers & Emergency -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e2e8f0; padding-top: 6px; font-size: 9px; color: #64748b;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e2e8f0; padding-top: 8px; font-size: 9px; color: #64748b;">
       <div style="max-width: 520px; line-height: 1.35;">
-        <p><strong>Official Notice:</strong> Present this receipt & boarding pass along with your original passport at Nepal Tourism Board checkpoints. High-altitude medical evacuation coverage is registered under your booking reference.</p>
+        <p><strong>Official Notice:</strong> Present this official tax receipt along with your original passport at Nepal Tourism Board checkpoints. High-altitude medical evacuation coverage is registered under your booking reference.</p>
         <p style="margin-top: 2px; color: #dc2626; font-weight: 600;">
           🚨 NTB 24/7 Satellite Search & Rescue Emergency Coordination Hotline: 1144 | +977-1-4256909
         </p>
