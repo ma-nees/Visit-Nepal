@@ -4,8 +4,6 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
 import {
-  Menu,
-  X,
   UserCircle2,
   ArrowRight,
   Bell,
@@ -410,7 +408,7 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Toggle: Ultra-smooth physical 3-line morph into X */}
           <button
             type="button"
             onClick={toggleMobile}
@@ -419,20 +417,26 @@ export default function Navbar() {
                 ? 'text-white hover:bg-white/10'
                 : 'text-[#10243A] hover:bg-slate-100'
             }`}
-            aria-label="Toggle Navigation"
-            aria-expanded={mobileOpen}
+            aria-label={mobileOpen && !isClosing ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+            aria-expanded={mobileOpen && !isClosing}
           >
-            <span
-              className={`inline-flex transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileOpen && !isClosing ? 'rotate-90 scale-95' : 'rotate-0 scale-100'
-              }`}
-            >
-              {mobileOpen && !isClosing ? (
-                <X className="h-4.5 w-4.5 text-slate-800" />
-              ) : (
-                <Menu className="h-4.5 w-4.5" />
-              )}
-            </span>
+            <div className="hamburger-box">
+              <span
+                className={`hamburger-line ${
+                  mobileOpen && !isClosing ? 'hamburger-line-top-open' : ''
+                }`}
+              />
+              <span
+                className={`hamburger-line ${
+                  mobileOpen && !isClosing ? 'hamburger-line-mid-open' : ''
+                }`}
+              />
+              <span
+                className={`hamburger-line ${
+                  mobileOpen && !isClosing ? 'hamburger-line-bot-open' : ''
+                }`}
+              />
+            </div>
           </button>
         </div>
       </div>
