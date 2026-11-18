@@ -1682,33 +1682,19 @@ export default function CustomTripPlannerPage() {
               </div>
             </div>
 
-            {/* Elegant Light Price Summary Box (Zero code look, 100% clean luxury travel vibe) */}
-            <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/80 via-white to-blue-50/30 p-4 space-y-2 shadow-2xs">
-              <div className="flex items-center justify-between">
-                <span className="text-[11px] font-medium text-slate-500">
-                  Estimated Total Price
+            {/* Pure Typography Price Summary (No card box, just clean text) */}
+            <div className="border-t border-slate-200/80 pt-3 space-y-1">
+              <div className="flex items-baseline justify-between">
+                <span className="text-xs font-semibold text-slate-600">
+                  Estimated Total
                 </span>
-                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full">
-                  <ShieldCheck className="h-3 w-3 text-emerald-600" />
-                  <span>NTB Verified Rate</span>
+                <span className="text-xl font-bold font-poppins text-slate-900">
+                  NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
                 </span>
               </div>
-
-              <div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xs font-bold text-[#0552A2]">NPR</span>
-                  <span className="text-2xl font-extrabold font-poppins text-slate-900 tracking-tight">
-                    {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
-                  </span>
-                </div>
-                <p className="text-xs text-slate-500 mt-1">
-                  <strong className="text-slate-700 font-semibold">
-                    ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD
-                  </strong>
-                  <span className="mx-1 text-slate-300">•</span>
-                  <span>Includes 13% VAT &amp; 5% SC</span>
-                </p>
-              </div>
+              <p className="text-[11px] text-slate-500 text-right">
+                ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD • Includes 13% VAT &amp; 5% SC
+              </p>
             </div>
 
             {/* Quick jump to step button if not on review */}

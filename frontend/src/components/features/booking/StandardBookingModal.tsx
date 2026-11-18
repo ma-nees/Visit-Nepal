@@ -536,16 +536,15 @@ export default function StandardBookingModal({
                 </div>
               </div>
 
-              {/* Running Price Preview Bar (Clean Luxury Concierge Aesthetic) */}
-              <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-r from-slate-50 via-white to-blue-50/40 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+              {/* Running Price Preview (Pure Text & Button, No Card Box) */}
+              <div className="border-t border-slate-150 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-inter">
                 <div>
-                  <span className="text-[11px] font-medium text-slate-500">Estimated Expedition Investment</span>
-                  <div className="flex items-baseline gap-1 mt-0.5">
-                    <span className="text-xs font-bold text-[#0552A2]">NPR</span>
-                    <span className="text-xl font-extrabold font-poppins text-slate-900">
-                      {finalTotalNpr.toLocaleString()}
+                  <span className="text-xs font-semibold text-slate-600">Estimated Total</span>
+                  <div className="flex items-baseline gap-1.5 mt-0.5">
+                    <span className="text-xl font-bold font-poppins text-slate-900">
+                      NPR {finalTotalNpr.toLocaleString()}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium ml-1">
+                    <span className="text-xs text-slate-500 font-normal">
                       (~${finalTotalUsd.toLocaleString()} USD)
                     </span>
                   </div>
