@@ -24,3 +24,6 @@ next-env.d.ts
 # OS files
 .DS_Store
 Thumbs.db
+
+# Local database store
+backend/data/

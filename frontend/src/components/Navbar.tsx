@@ -22,13 +22,12 @@ import {
 import { useApp } from '@/context/AppContext';
 
 const navLinks = [
-  { href: '/destinations', label: 'Destinations' },
+  { href: '/explore', label: 'Packages' },
   { href: '/custom-plan', label: 'Custom Trip' },
+  { href: '/destinations', label: 'Destinations' },
   { href: '/experiences', label: 'Experiences' },
   { href: '/services', label: 'Services' },
-  { href: '/dashboard', label: 'Dashboard' },
-  { href: '/culture', label: 'Culture' },
-  { href: '/stories', label: 'Stories' },
+  { href: '/bookings', label: 'My Bookings' },
 ];
 
 export default function Navbar() {
@@ -398,11 +397,19 @@ export default function Navbar() {
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
             </Link>
             <Link
-              href="/bookings"
+              href="/culture"
               onClick={() => setMobileOpen(false)}
               className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
             >
-              <span>My Bookings</span>
+              <span>Culture &amp; Heritage</span>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+            </Link>
+            <Link
+              href="/dashboard"
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+            >
+              <span>Traveler Dashboard</span>
               <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
             </Link>
             <Link
@@ -447,18 +454,18 @@ export default function Navbar() {
           <div className="pt-2">
             <div className="grid grid-cols-2 gap-2 text-center text-xs">
               <Link
-                href="/custom-plan"
+                href="/explore"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg border border-slate-200 py-2 font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs"
               >
-                Custom Plan
+                Browse Packages
               </Link>
               <Link
-                href="/services"
+                href="/custom-plan"
                 onClick={() => setMobileOpen(false)}
-                className="rounded-lg border border-slate-200 py-2 font-medium text-slate-700 hover:bg-slate-50"
+                className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
               >
-                Services
+                Custom Trip
               </Link>
             </div>
           </div>

@@ -29,6 +29,11 @@ import {
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
 import PaymentModal from '@/components/features/booking/PaymentModal';
+import {
+  printOfficialReceipt,
+  downloadOfficialReceiptHtml,
+  sanitizeName,
+} from '@/lib/receiptGenerator';
 
 type DashboardTab =
   | 'bookings'
@@ -68,6 +73,39 @@ export default function TravelerDashboardPage() {
   const activeBookings = bookings.filter(
     (b) => b.status === 'Confirmed' || b.status === 'Paid' || b.status === 'Pending' || b.status === 'Quoted'
   );
+
+  const handlePrintBookingReceipt = (b: any) => {
+    const amountNum = parseInt(String(b?.amount || '0').replace(/[^0-9]/g, ''), 10) || 120000;
+    const subtotal = Math.round(amountNum / 1.18);
+    const serviceCharge = Math.round(subtotal * 0.05);
+    const vat = Math.round(subtotal * 0.13);
+
+    printOfficialReceipt({
+      invoiceNumber: b?.invoiceNumber || `VN-INV-2026-${b?.id || Math.floor(10000 + Math.random() * 89999)}`,
+      bookingId: b?.id || `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
+      qrCode: b?.qrCode || `VN-PASS-${b?.id}-VERIFIED-2026`,
+      travelerName: sanitizeName(b?.travelerDetails?.leadTravelerName || currentUser?.name || 'Aayush Pradhan'),
+      travelerEmail: b?.travelerDetails?.leadEmail || currentUser?.email || 'aayush.traveler@visitnepal.com',
+      travelerPhone: b?.travelerDetails?.leadPhone || b?.contactPhone || '+977-9801234567',
+      packageTitle: b?.title || 'Himalayan Expedition',
+      departureDate: b?.date || '2026-05-15',
+      provider: b?.provider || 'Himalayan Sherpa Expeditions',
+      assignedGuide: b?.assignedGuide || 'Pasang Nuru Sherpa (IFMGA)',
+      meetingPoint: b?.meetingPoint || 'Kathmandu Departure Base',
+      items: [
+        {
+          description: b?.title || 'Expedition Package',
+          details: 'Official NTB Verified Expedition Itinerary & Field Services',
+          qty: '1 Reservation',
+          amountNpr: subtotal,
+        },
+      ],
+      subtotalNpr: subtotal,
+      serviceChargeNpr: serviceCharge,
+      vatNpr: vat,
+      totalNpr: amountNum,
+    });
+  };
 
   const pastBookings = bookings.filter(
     (b) => b.status === 'Completed' || b.status === 'Cancelled'
@@ -261,9 +299,9 @@ export default function TravelerDashboardPage() {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => window.print()}
+                        onClick={() => handlePrintBookingReceipt(b)}
                         className="p-1.5 rounded-lg border border-slate-300 text-slate-600 hover:bg-slate-50 cursor-pointer"
-                        title="Print Invoice"
+                        title="Print Official Receipt Only"
                       >
                         <Printer className="h-3.5 w-3.5" />
                       </button>
@@ -494,8 +532,8 @@ export default function TravelerDashboardPage() {
                     <span className="font-semibold text-slate-700">{b.amount}</span>
                     <button
                       type="button"
-                      onClick={() => window.print()}
-                      className="text-[#0552A2] hover:underline font-bold text-xs inline-flex items-center gap-1"
+                      onClick={() => handlePrintBookingReceipt(b)}
+                      className="text-[#0552A2] hover:underline font-bold text-xs inline-flex items-center gap-1 cursor-pointer"
                     >
                       <Download className="h-3.5 w-3.5" />
                       <span>Download Tax Invoice</span>
@@ -544,8 +582,16 @@ export default function TravelerDashboardPage() {
                   <td className="py-3 px-4 text-right">
                     <button
                       type="button"
-                      onClick={() => window.print()}
-                      className="text-[#0552A2] hover:underline font-bold text-xs"
+                      onClick={() =>
+                        handlePrintBookingReceipt({
+                          id: 'BKG-991204',
+                          invoiceNumber: 'VN-INV-991204',
+                          title: 'Everest Base Camp & Kala Patthar',
+                          amount: 'NPR 182,500',
+                          date: '2026-05-15',
+                        })
+                      }
+                      className="text-[#0552A2] hover:underline font-bold text-xs cursor-pointer"
                     >
                       Print Receipt
                     </button>
@@ -564,8 +610,16 @@ export default function TravelerDashboardPage() {
                   <td className="py-3 px-4 text-right">
                     <button
                       type="button"
-                      onClick={() => window.print()}
-                      className="text-[#0552A2] hover:underline font-bold text-xs"
+                      onClick={() =>
+                        handlePrintBookingReceipt({
+                          id: 'BKG-881290',
+                          invoiceNumber: 'VN-INV-881290',
+                          title: 'Gokyo Lakes High Pass Route',
+                          amount: 'NPR 312,000',
+                          date: '2026-06-01',
+                        })
+                      }
+                      className="text-[#0552A2] hover:underline font-bold text-xs cursor-pointer"
                     >
                       Print Receipt
                     </button>
@@ -805,8 +859,9 @@ export default function TravelerDashboardPage() {
             <div className="flex gap-2">
               <button
                 type="button"
-                onClick={() => window.print()}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                onClick={() => handlePrintBookingReceipt(selectedPassBooking)}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-sm cursor-pointer"
+                title="Print or save PDF of official boarding pass and receipt"
               >
                 <Printer className="h-3.5 w-3.5" />
                 <span>Print Official Pass</span>
@@ -814,7 +869,7 @@ export default function TravelerDashboardPage() {
               <button
                 type="button"
                 onClick={() => setSelectedPassBooking(null)}
-                className="flex-1 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182]"
+                className="flex-1 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 py-2.5 text-xs font-bold text-slate-700 cursor-pointer"
               >
                 Close
               </button>

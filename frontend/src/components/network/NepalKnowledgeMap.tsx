@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useId } from 'react';
 import { motion } from 'framer-motion';
 import { NEPAL_COUNTRY_PATH } from '@/data/nepal-map-data';
 import { MapPin, Wind } from 'lucide-react';
@@ -131,14 +131,26 @@ export const NEPAL_LANDMARKS: Landmark[] = [
 
 export interface NepalKnowledgeMapProps {
   embedded?: boolean;
+  showSpotlight?: boolean;
   onSelectLandmark?: (landmark: Landmark) => void;
 }
 
 export function NepalKnowledgeMap({
+  embedded = false,
+  showSpotlight = false,
   onSelectLandmark,
 }: NepalKnowledgeMapProps) {
   const [selectedLandmark, setSelectedLandmark] = useState<Landmark>(NEPAL_LANDMARKS[0]);
   const [hoveredLandmark, setHoveredLandmark] = useState<Landmark | null>(null);
+
+  const rawId = useId();
+  const uid = rawId.replace(/[^a-zA-Z0-9]/g, '');
+  const fillId = `nepalFill_${uid}`;
+  const strokeId = `nepalStroke_${uid}`;
+  const glowId = `hotspotGlow_${uid}`;
+  const maskId = `nepalMask_${uid}`;
+  const beamId = `outlineBeam_${uid}`;
+  const filterId = `outlineFilter_${uid}`;
 
   const handleLandmarkClick = (landmark: Landmark) => {
     setSelectedLandmark(landmark);
@@ -158,14 +170,14 @@ export function NepalKnowledgeMap({
         >
           <defs>
             {/* Soft Himalayan Sky Blue Gradient Fill from User Brand Palette (#92C4EA) */}
-            <linearGradient id="nepalAestheticFill" x1="0%" y1="10%" x2="100%" y2="90%">
+            <linearGradient id={fillId} x1="0%" y1="10%" x2="100%" y2="90%">
               <stop offset="0%" stopColor="#A8D4F2" stopOpacity="0.95" />
               <stop offset="50%" stopColor="#92C4EA" stopOpacity="0.92" />
               <stop offset="100%" stopColor="#7EBAE3" stopOpacity="0.9" />
             </linearGradient>
 
             {/* Earthy Warm Brown / Bronze Outline Highlight */}
-            <linearGradient id="nepalBrownRim" x1="0%" y1="0%" x2="100%" y2="100%">
+            <linearGradient id={strokeId} x1="0%" y1="0%" x2="100%" y2="100%">
               <stop offset="0%" stopColor="#A66732" />
               <stop offset="35%" stopColor="#874C1E" />
               <stop offset="70%" stopColor="#9C5C26" />
@@ -173,12 +185,12 @@ export function NepalKnowledgeMap({
             </linearGradient>
 
             {/* Pin Glow Filter */}
-            <filter id="hotspotGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <filter id={glowId} x="-50%" y="-50%" width="200%" height="200%">
               <feDropShadow dx="0" dy="2" stdDeviation="3.5" floodColor="#0552A2" floodOpacity="0.35" />
             </filter>
 
             {/* MASK THAT CONSTRAINS SHINE STRICTLY TO THE OUTLINE OF NEPAL */}
-            <mask id="nepalOutlineOnlyMask" maskUnits="userSpaceOnUse">
+            <mask id={maskId} maskUnits="userSpaceOnUse">
               <rect x="-200" y="-200" width="1600" height="1200" fill="#000000" />
               <path
                 d={NEPAL_COUNTRY_PATH}
@@ -191,7 +203,7 @@ export function NepalKnowledgeMap({
             </mask>
 
             {/* Radiant golden-diamond shine beam for the outline */}
-            <linearGradient id="outlineShineBeam" x1="0%" y1="0%" x2="0%" y2="100%">
+            <linearGradient id={beamId} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0" />
               <stop offset="25%" stopColor="#FDB716" stopOpacity="0.55" />
               <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
@@ -200,7 +212,7 @@ export function NepalKnowledgeMap({
             </linearGradient>
 
             {/* Glowing filter for the outline shine */}
-            <filter id="outlineGlowFilter" x="-30%" y="-30%" width="160%" height="160%">
+            <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%">
               <feGaussianBlur stdDeviation="3" result="blur" />
               <feMerge>
                 <feMergeNode in="blur" />
@@ -209,19 +221,29 @@ export function NepalKnowledgeMap({
             </filter>
           </defs>
 
-          {/* 2. THE SINGLE UNIFIED SILHOUETTE OF NEPAL (Solid soft sky blue + warm brown rim) */}
+          {/* 2. Guaranteed Solid Base Silhouette of Nepal (Visible under any browser condition) */}
           <path
             d={NEPAL_COUNTRY_PATH}
-            fill="url(#nepalAestheticFill)"
-            stroke="url(#nepalBrownRim)"
-            strokeWidth="2.6"
+            fill="#92C4EA"
+            stroke="#874C1E"
+            strokeWidth="2.8"
+            strokeLinejoin="round"
+            strokeLinecap="round"
+          />
+
+          {/* 2b. Luminous Gradient-Enhanced Country Silhouette */}
+          <path
+            d={NEPAL_COUNTRY_PATH}
+            fill={`url(#${fillId})`}
+            stroke={`url(#${strokeId})`}
+            strokeWidth="2.8"
             strokeLinejoin="round"
             strokeLinecap="round"
             className="transition-all duration-300"
           />
 
-          {/* 2b. SHINE STRICTLY ON THE OUTLINE OF NEPAL - SWEEPING FROM TOP TO BOTTOM */}
-          <g mask="url(#nepalOutlineOnlyMask)" filter="url(#outlineGlowFilter)" className="pointer-events-none">
+          {/* 2c. SHINE STRICTLY ON THE OUTLINE OF NEPAL - SWEEPING FROM TOP TO BOTTOM */}
+          <g mask={`url(#${maskId})`} filter={`url(#${filterId})`} className="pointer-events-none">
             <motion.g
               animate={{
                 y: [-240, 840],
@@ -244,7 +266,7 @@ export function NepalKnowledgeMap({
               {/* Luminous wavy ribbon that passes over and illuminates the border */}
               <path
                 d="M -100 0 Q 200 90, 500 20 T 900 70 T 1350 10 L 1350 160 Q 1050 220, 750 150 T 350 210 T -100 140 Z"
-                fill="url(#outlineShineBeam)"
+                fill={`url(#${beamId})`}
               />
             </motion.g>
           </g>
@@ -283,7 +305,7 @@ export function NepalKnowledgeMap({
                     fill={spot.color}
                     stroke="#FFFFFF"
                     strokeWidth="1.8"
-                    filter="url(#hotspotGlow)"
+                    filter={`url(#${glowId})`}
                     cx="0"
                     cy="0"
                     className="transition-all duration-200"
@@ -334,33 +356,35 @@ export function NepalKnowledgeMap({
       </div>
 
       {/* 4. Sleek Landmark Spotlight (Clean Light Editorial Card) */}
-      <div className="w-full pt-2.5 sm:pt-3 mt-1.5 sm:mt-2 border-t border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
-        <div className="flex items-center gap-2.5 min-w-0 w-full sm:w-auto">
-          <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0552A2] to-[#92C4EA] text-white shadow-xs">
-            <MapPin className="h-4 w-4 text-[#FDB716]" />
-          </span>
-          <div className="min-w-0 flex-1">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">
-                {active.name}
-              </h4>
-              <span className="text-[10px] font-mono text-[#0552A2] bg-[#92C4EA]/25 border border-[#92C4EA]/60 px-2 py-0.2 rounded-full shrink-0 font-semibold">
-                {active.elevation}
-              </span>
+      {!embedded && showSpotlight && (
+        <div className="w-full pt-2.5 sm:pt-3 mt-1.5 sm:mt-2 border-t border-slate-200/90 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 sm:gap-3 text-xs">
+          <div className="flex items-center gap-2.5 min-w-0 w-full sm:w-auto">
+            <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-[#0552A2] to-[#92C4EA] text-white shadow-xs">
+              <MapPin className="h-4 w-4 text-[#FDB716]" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2 flex-wrap">
+                <h4 className="font-bold text-slate-900 text-xs sm:text-sm truncate">
+                  {active.name}
+                </h4>
+                <span className="text-[10px] font-mono text-[#0552A2] bg-[#92C4EA]/25 border border-[#92C4EA]/60 px-2 py-0.2 rounded-full shrink-0 font-semibold">
+                  {active.elevation}
+                </span>
+              </div>
+              <p className="text-[10.5px] sm:text-[11px] text-slate-500 font-normal truncate mt-0.5">
+                {active.description}
+              </p>
             </div>
-            <p className="text-[10.5px] sm:text-[11px] text-slate-500 font-normal truncate mt-0.5">
-              {active.description}
-            </p>
+          </div>
+
+          <div className="shrink-0 flex items-center self-end sm:self-auto">
+            <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 sm:py-1 rounded-full shadow-2xs">
+              <Wind className="h-2.5 w-2.5 text-emerald-600" />
+              {active.temp}
+            </span>
           </div>
         </div>
-
-        <div className="shrink-0 flex items-center self-end sm:self-auto">
-          <span className="inline-flex items-center gap-1 text-[10px] font-mono font-semibold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 sm:py-1 rounded-full shadow-2xs">
-            <Wind className="h-2.5 w-2.5 text-emerald-600" />
-            {active.temp}
-          </span>
-        </div>
-      </div>
+      )}
 
     </div>
   );

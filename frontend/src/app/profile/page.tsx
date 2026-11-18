@@ -30,6 +30,11 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useApp, UserRole } from '@/context/AppContext';
+import {
+  printOfficialReceipt,
+  downloadOfficialReceiptHtml,
+  sanitizeName,
+} from '@/lib/receiptGenerator';
 
 interface PersonaProfile {
   role: UserRole;
@@ -863,8 +868,35 @@ export default function ProfilePage() {
                   <div className="flex flex-wrap items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => window.print()}
+                      onClick={() =>
+                        printOfficialReceipt({
+                          invoiceNumber: `VN-TIMS-2026-${Math.floor(10000 + Math.random() * 89999)}`,
+                          bookingId: `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
+                          qrCode: `VN-TIMS-${activeRole.toUpperCase()}-VERIFIED-2026`,
+                          travelerName: sanitizeName(currentPersona.name),
+                          travelerEmail: currentPersona.email,
+                          travelerPhone: '+977-9801234567',
+                          packageTitle: `Official TIMS Permit & Clearance (${currentPersona.label})`,
+                          departureDate: '2026-05-15',
+                          provider: 'Nepal Tourism Board Desks',
+                          assignedGuide: 'IFMGA Certified Sherpa Guide',
+                          meetingPoint: 'Kathmandu Departure Base / Lukla Hub',
+                          items: [
+                            {
+                              description: 'Government TIMS Trekking Clearance Pass',
+                              details: 'Official checkpoint entry documentation',
+                              qty: '1 Pass',
+                              amountNpr: 15000,
+                            },
+                          ],
+                          subtotalNpr: 15000,
+                          serviceChargeNpr: 750,
+                          vatNpr: 1950,
+                          totalNpr: 17700,
+                        })
+                      }
                       className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#0552A2] px-4 py-2.5 text-xs font-semibold text-white shadow-xs hover:bg-[#044182] transition-colors"
+                      title="Print official pass & receipt only"
                     >
                       <Printer className="h-4 w-4" />
                       <span>Print Pass</span>
@@ -872,11 +904,38 @@ export default function ProfilePage() {
 
                     <button
                       type="button"
-                      onClick={() => window.print()}
+                      onClick={() =>
+                        downloadOfficialReceiptHtml({
+                          invoiceNumber: `VN-TIMS-2026-${Math.floor(10000 + Math.random() * 89999)}`,
+                          bookingId: `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
+                          qrCode: `VN-TIMS-${activeRole.toUpperCase()}-VERIFIED-2026`,
+                          travelerName: sanitizeName(currentPersona.name),
+                          travelerEmail: currentPersona.email,
+                          travelerPhone: '+977-9801234567',
+                          packageTitle: `Official TIMS Permit & Clearance (${currentPersona.label})`,
+                          departureDate: '2026-05-15',
+                          provider: 'Nepal Tourism Board Desks',
+                          assignedGuide: 'IFMGA Certified Sherpa Guide',
+                          meetingPoint: 'Kathmandu Departure Base / Lukla Hub',
+                          items: [
+                            {
+                              description: 'Government TIMS Trekking Clearance Pass',
+                              details: 'Official checkpoint entry documentation',
+                              qty: '1 Pass',
+                              amountNpr: 15000,
+                            },
+                          ],
+                          subtotalNpr: 15000,
+                          serviceChargeNpr: 750,
+                          vatNpr: 1950,
+                          totalNpr: 17700,
+                        })
+                      }
                       className="inline-flex cursor-pointer items-center gap-2 rounded-xl border border-slate-300 bg-white px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-colors shadow-2xs"
+                      title="Download clean standalone receipt file"
                     >
-                      <Download className="h-4 w-4 text-slate-500" />
-                      <span>Download PDF</span>
+                      <Download className="h-4 w-4 text-[#0552A2]" />
+                      <span>Download Receipt</span>
                     </button>
 
                     <button

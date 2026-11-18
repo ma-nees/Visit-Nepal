@@ -8,7 +8,6 @@ import {
   Users,
   ShieldCheck,
   CheckCircle2,
-  Mountain,
   UserCheck,
   ConciergeBell,
   Sparkles,
@@ -19,9 +18,22 @@ import {
   FileText,
   Lock,
   QrCode as QrCodeIcon,
+  Mail,
+  Phone,
+  Globe,
+  User,
+  ChevronRight,
+  Printer,
+  Download,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import PaymentModal, { PaymentMethod } from './PaymentModal';
+import {
+  printOfficialReceipt,
+  downloadOfficialReceiptHtml,
+  sanitizeName,
+  OfficialReceiptData,
+} from '@/lib/receiptGenerator';
 
 export interface BookingPackageDetails {
   id: string;
@@ -63,7 +75,9 @@ export default function StandardBookingModal({
   const [gearKitRequested, setGearKitRequested] = useState(false);
 
   // Traveler info form
-  const [fullName, setFullName] = useState(currentUser?.name || 'Aayush Pradhan');
+  const rawInitialName = currentUser?.name || 'Aayush Pradhan';
+  const cleanInitialName = rawInitialName.replace(/\./g, ' ').replace(/\s+Explorer/i, '').trim() || 'Aayush Pradhan';
+  const [fullName, setFullName] = useState(cleanInitialName);
   const [email, setEmail] = useState(currentUser?.email || 'aayush.traveler@visitnepal.com');
   const [phone, setPhone] = useState('+977-9801234567');
   const [nationality, setNationality] = useState('Nepal / International');
@@ -154,15 +168,112 @@ export default function StandardBookingModal({
     setStep(4); // Confirmed screen
   };
 
+  const buildOfficialReceiptData = (): OfficialReceiptData => {
+    const bookingId = createdBooking?.id || `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`;
+    const invoiceNumber = createdBooking?.invoiceNumber || `VN-INV-2026-${Math.floor(10000 + Math.random() * 89999)}`;
+    const qrCode = createdBooking?.qrCode || `VN-PASS-${bookingId}-VERIFIED-2026`;
+
+    const items = [
+      {
+        description: `Expedition Base Package: ${pkg.title}`,
+        details: `${days} Days Route Schedule • Rendezvous Base: Kathmandu`,
+        qty: `${totalTravelers} Traveler(s)`,
+        amountNpr: basePackageTotal,
+      },
+    ];
+
+    if (guideRequested) {
+      items.push({
+        description: 'IFMGA Certified Lead Mountain Guide',
+        details: 'Route safety coordinator with satellite comms & high-altitude first-aid',
+        qty: `${days} Days`,
+        amountNpr: guideTotal,
+      });
+    }
+
+    if (porterRequested) {
+      items.push({
+        description: 'High-Altitude Porter Expedition Logistics',
+        details: 'Expedition heavy gear support up to 20kg per traveler',
+        qty: `${days} Days`,
+        amountNpr: porterTotal,
+      });
+    }
+
+    if (butlerRequested) {
+      items.push({
+        description: 'VIP Sherpa Butler & Concierge Service',
+        details: '24/7 tented camp dining logistics & personal assistance',
+        qty: `${days} Days`,
+        amountNpr: butlerTotal,
+      });
+    }
+
+    if (insuranceRequested) {
+      items.push({
+        description: 'Emergency Helicopter Rescue Bond & TIMS Permit',
+        details: 'Official Government TIMS clearance & guaranteed air evacuation bond',
+        qty: `${totalTravelers} Person(s)`,
+        amountNpr: insuranceTotal,
+      });
+    }
+
+    if (shuttleRequested) {
+      items.push({
+        description: 'Private Airport & Helipad Transfers',
+        details: '4WD overland vehicle transport between TIA and expedition base',
+        qty: '1 Service',
+        amountNpr: shuttleFlat,
+      });
+    }
+
+    if (gearKitRequested) {
+      items.push({
+        description: 'High-Alpine Extreme Gear Kit Rental',
+        details: '-20°C Down parka, 800-fill sleeping bag, crampons & carbon poles',
+        qty: `${totalTravelers} Person(s)`,
+        amountNpr: gearKitTotal,
+      });
+    }
+
+    return {
+      invoiceNumber,
+      bookingId,
+      qrCode,
+      travelerName: sanitizeName(fullName),
+      travelerEmail: email,
+      travelerPhone: phone,
+      travelerNationality: nationality,
+      passportNumber: passportNumber,
+      emergencyContact: emergencyContact,
+      dietaryOrMedicalNotes: dietaryNotes,
+      packageTitle: pkg.title,
+      departureDate,
+      duration: `${days} Days`,
+      groupSize: `${adultsCount} Adults${childrenCount > 0 ? `, ${childrenCount} Kids` : ''} (${totalTravelers} Total)`,
+      provider: pkg.provider || 'Himalayan Sherpa Expeditions',
+      assignedGuide: guideRequested ? 'Pasang Nuru Sherpa (IFMGA)' : 'Independent Expedition',
+      meetingPoint: 'Kathmandu Departure Base (TIA Terminal 2 / Thamel)',
+      items,
+      subtotalNpr: subtotal,
+      serviceChargeNpr: serviceCharge,
+      vatNpr: vat,
+      totalNpr: finalTotalNpr,
+      totalUsd: finalTotalUsd,
+    };
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto">
       <div className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in duration-150 my-auto">
         {/* Top Header */}
-        <div className="flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] text-white">
-          <div className="space-y-0.5">
-            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider text-[#92C4EA]">
-              <Mountain className="h-3.5 w-3.5 text-[#FDB716]" />
-              <span>Standard Expedition &amp; Service Reservation</span>
+        <div className="relative flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] text-white overflow-hidden">
+          {/* Subtle atmospheric ambient glow */}
+          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#92C4EA]/15 rounded-full blur-2xl pointer-events-none" />
+          <div className="space-y-0.5 relative z-10">
+            <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#92C4EA]">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#EC1F27]" />
+              <span>Official Expedition Reservation • NTB 2026</span>
             </div>
             <h2 className="text-base sm:text-lg font-bold font-poppins text-white line-clamp-1">
               {pkg.title}
@@ -170,41 +281,52 @@ export default function StandardBookingModal({
           </div>
           <button
             onClick={onClose}
-            className="rounded-lg p-1.5 text-slate-300 hover:bg-white/10 hover:text-white transition-colors cursor-pointer"
+            className="relative z-10 rounded-full p-2 text-slate-300 hover:bg-white/10 hover:text-white transition-all cursor-pointer active:scale-95"
+            aria-label="Close modal"
           >
-            <X className="h-5 w-5" />
+            <X className="h-4.5 w-4.5" />
           </button>
         </div>
 
         {/* Wizard Step Progress Indicator */}
-        <div className="flex border-b border-slate-200 bg-slate-50 px-6 py-2.5 text-xs font-semibold">
-          <div className={`flex items-center gap-1.5 ${step === 1 ? 'text-[#0552A2]' : 'text-slate-500'}`}>
-            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${step === 1 ? 'bg-[#0552A2] text-white' : 'bg-slate-200 text-slate-600'}`}>
-              1
-            </span>
-            <span>Dates &amp; Add-ons</span>
-          </div>
-          <span className="mx-3 text-slate-300">/</span>
-          <div className={`flex items-center gap-1.5 ${step === 2 ? 'text-[#0552A2]' : 'text-slate-500'}`}>
-            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${step === 2 ? 'bg-[#0552A2] text-white' : 'bg-slate-200 text-slate-600'}`}>
-              2
-            </span>
-            <span>Traveler Details</span>
-          </div>
-          <span className="mx-3 text-slate-300">/</span>
-          <div className={`flex items-center gap-1.5 ${step === 3 ? 'text-[#0552A2]' : 'text-slate-500'}`}>
-            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${step === 3 ? 'bg-[#0552A2] text-white' : 'bg-slate-200 text-slate-600'}`}>
-              3
-            </span>
-            <span>Breakdown &amp; Payment</span>
-          </div>
-          <span className="mx-3 text-slate-300">/</span>
-          <div className={`flex items-center gap-1.5 ${step === 4 ? 'text-emerald-700' : 'text-slate-400'}`}>
-            <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${step === 4 ? 'bg-emerald-600 text-white' : 'bg-slate-200 text-slate-500'}`}>
-              ✓
-            </span>
-            <span>Confirmed</span>
-          </div>
+        <div className="flex items-center justify-between border-b border-slate-200/80 bg-slate-50/80 px-4 sm:px-6 py-2.5 text-xs font-inter font-semibold overflow-x-auto">
+          {[
+            { num: 1, label: 'Dates & Add-ons' },
+            { num: 2, label: 'Traveler Details' },
+            { num: 3, label: 'Breakdown & Payment' },
+            { num: 4, label: 'Confirmed' },
+          ].map((s, idx) => {
+            const isCurrent = step === s.num;
+            const isCompleted = step > s.num;
+
+            return (
+              <div key={s.num} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+                <div
+                  className={`flex items-center gap-1.5 sm:gap-2 transition-all ${
+                    isCurrent
+                      ? 'text-[#0552A2] font-bold'
+                      : isCompleted
+                      ? 'text-emerald-700 font-semibold'
+                      : 'text-slate-400 font-normal'
+                  }`}
+                >
+                  <span
+                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-mono font-bold transition-all shadow-2xs ${
+                      isCurrent
+                        ? 'bg-[#0552A2] text-white ring-2 ring-[#0552A2]/20'
+                        : isCompleted
+                        ? 'bg-emerald-600 text-white'
+                        : 'bg-slate-200 text-slate-500'
+                    }`}
+                  >
+                    {isCompleted ? '✓' : s.num}
+                  </span>
+                  <span className="text-[11px] sm:text-xs">{s.label}</span>
+                </div>
+                {idx < 3 && <ChevronRight className="h-3.5 w-3.5 text-slate-300 mx-1 sm:mx-2 shrink-0" />}
+              </div>
+            );
+          })}
         </div>
 
         {/* Modal Body */}
@@ -213,60 +335,71 @@ export default function StandardBookingModal({
           {step === 1 && (
             <div className="space-y-5">
               {/* Departure & Group Size Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-inter">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Departure Date
                   </label>
-                  <input
-                    type="date"
-                    value={departureDate}
-                    onChange={(e) => setDepartureDate(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <Calendar className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="date"
+                      value={departureDate}
+                      onChange={(e) => setDepartureDate(e.target.value)}
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Adult Travelers
                   </label>
-                  <div className="flex items-center justify-between rounded-xl border border-slate-300 px-3 py-1.5">
-                    <span className="text-xs font-bold text-slate-800">{adultsCount} Adults</span>
+                  <div className="flex items-center justify-between bg-slate-50/70 border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-2xs">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                      <Users className="h-3.5 w-3.5 text-[#0552A2]" />
+                      <span>{adultsCount} Adults</span>
+                    </div>
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => setAdultsCount((v) => Math.max(1, v - 1))}
-                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
                       >
                         -
                       </button>
                       <button
                         type="button"
                         onClick={() => setAdultsCount((v) => Math.min(16, v + 1))}
-                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
                       >
                         +
                       </button>
                     </div>
                   </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Children (Under 12)
                   </label>
-                  <div className="flex items-center justify-between rounded-xl border border-slate-300 px-3 py-1.5">
-                    <span className="text-xs font-bold text-slate-800">{childrenCount} Kids</span>
+                  <div className="flex items-center justify-between bg-slate-50/70 border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-2xs">
+                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
+                      <Users className="h-3.5 w-3.5 text-slate-400" />
+                      <span>{childrenCount} Kids</span>
+                    </div>
                     <div className="flex items-center gap-1.5">
                       <button
                         type="button"
                         onClick={() => setChildrenCount((v) => Math.max(0, v - 1))}
-                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
                       >
                         -
                       </button>
                       <button
                         type="button"
                         onClick={() => setChildrenCount((v) => Math.min(8, v + 1))}
-                        className="h-6 w-6 rounded bg-slate-100 font-bold hover:bg-slate-200 text-xs"
+                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
                       >
                         +
                       </button>
@@ -417,7 +550,7 @@ export default function StandardBookingModal({
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#044182] active:scale-[0.98] transition-all cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer"
                 >
                   <span>Continue to Traveler Details</span>
                   <ArrowRight className="h-4 w-4" />
@@ -429,106 +562,166 @@ export default function StandardBookingModal({
           {/* STEP 2: Traveler Information Form */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="border-b border-slate-100 pb-2">
-                <h3 className="text-sm font-bold text-slate-900">Lead Traveler Information</h3>
-                <p className="text-xs text-slate-500">
-                  Required for official permit filings and NTB digital boarding passes.
+              <div className="border-b border-slate-150 pb-2.5">
+                <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[#0552A2] uppercase tracking-wider">
+                  <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2]" />
+                  <span>Official Permit Documentation</span>
+                </div>
+                <h3 className="text-base font-bold font-poppins text-slate-900 tracking-tight mt-0.5">
+                  Lead Traveler Information
+                </h3>
+                <p className="text-xs text-slate-500 font-inter">
+                  Required for official immigration filings, park checkpoint permits, and NTB digital boarding passes.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs">
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-inter">
+                {/* Full Legal Name */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Full Legal Name *
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={fullName}
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <User className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="e.g. Aayush Pradhan"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Email Address */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Email Address *
                   </label>
-                  <input
-                    type="email"
-                    required
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <Mail className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="e.g. aayush.traveler@visitnepal.com"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Phone / WhatsApp */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Phone / WhatsApp *
                   </label>
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <Phone className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="tel"
+                      required
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      placeholder="+977-9801234567"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Nationality */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Nationality *
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={nationality}
-                    onChange={(e) => setNationality(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <Globe className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={nationality}
+                      onChange={(e) => setNationality(e.target.value)}
+                      placeholder="e.g. Nepal / International"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Passport / National ID Number */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Passport / National ID Number *
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={passportNumber}
-                    onChange={(e) => setPassportNumber(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 font-mono uppercase focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <ShieldCheck className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={passportNumber}
+                      onChange={(e) => setPassportNumber(e.target.value)}
+                      placeholder="e.g. NP-9982341A"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-mono font-medium uppercase focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div>
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Emergency Contact */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Emergency Contact Name &amp; Phone *
                   </label>
-                  <input
-                    type="text"
-                    required
-                    value={emergencyContact}
-                    onChange={(e) => setEmergencyContact(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <HeartHandshake className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      required
+                      value={emergencyContact}
+                      onChange={(e) => setEmergencyContact(e.target.value)}
+                      placeholder="e.g. Dr. S. Pradhan (+977-9841239876)"
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
-                <div className="sm:col-span-2">
-                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+
+                {/* Dietary or High Altitude Notes */}
+                <div className="sm:col-span-2 flex flex-col gap-1">
+                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
                     Dietary, Medical, or High Altitude Notes (Optional)
                   </label>
-                  <input
-                    type="text"
-                    placeholder="Vegetarian, Gluten-Free, Previous Diamox use, etc."
-                    value={dietaryNotes}
-                    onChange={(e) => setDietaryNotes(e.target.value)}
-                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
-                  />
+                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                    <div className="pl-3 text-[#0552A2] pointer-events-none">
+                      <FileText className="h-4 w-4" />
+                    </div>
+                    <input
+                      type="text"
+                      placeholder="Vegetarian, Gluten-Free, Previous Diamox use, acute asthma, etc."
+                      value={dietaryNotes}
+                      onChange={(e) => setDietaryNotes(e.target.value)}
+                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 </div>
               </div>
 
               {/* Navigation buttons */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-150">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   <span>Back</span>
@@ -537,10 +730,10 @@ export default function StandardBookingModal({
                   type="button"
                   onClick={() => setStep(3)}
                   disabled={!fullName || !email || !phone}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-5 py-2.5 text-xs font-bold text-white hover:bg-[#044182] disabled:opacity-50 cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 disabled:opacity-50 transition-all cursor-pointer active:scale-95"
                 >
                   <span>Review &amp; Price Breakdown</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -658,11 +851,11 @@ export default function StandardBookingModal({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-150">
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95"
                 >
                   <ArrowLeft className="h-3.5 w-3.5" />
                   <span>Back</span>
@@ -670,11 +863,11 @@ export default function StandardBookingModal({
                 <button
                   type="button"
                   onClick={handleProceedToPayment}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-md cursor-pointer active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer"
                 >
                   <Lock className="h-3.5 w-3.5" />
                   <span>Confirm &amp; Proceed to Payment</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -730,7 +923,7 @@ export default function StandardBookingModal({
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] uppercase font-bold">Traveler</span>
-                    <p className="font-semibold text-slate-800">{fullName}</p>
+                    <p className="font-semibold text-slate-800">{sanitizeName(fullName)}</p>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] uppercase font-bold">Amount Paid</span>
@@ -751,23 +944,35 @@ export default function StandardBookingModal({
                 </div>
               </div>
 
-              {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-2.5 max-w-md mx-auto pt-2">
+              {/* Action Buttons: Clean Isolated Receipt Download / Print (Receipt Only) */}
+              <div className="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto pt-2">
                 <button
                   type="button"
-                  onClick={() => window.print()}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  onClick={() => printOfficialReceipt(buildOfficialReceiptData())}
+                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 py-2.5 px-4 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 cursor-pointer active:scale-95 transition-all"
+                  title="Prints or saves PDF of ONLY the official tax invoice & pass, excluding the website and background"
                 >
-                  <FileText className="h-4 w-4" />
-                  <span>Download / Print Invoice</span>
+                  <Printer className="h-4 w-4" />
+                  <span>Download / Print Receipt</span>
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => downloadOfficialReceiptHtml(buildOfficialReceiptData())}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 py-2.5 px-3.5 text-xs font-bold text-slate-700 shadow-2xs cursor-pointer active:scale-95 transition-all"
+                  title="Directly download clean standalone receipt HTML file"
+                >
+                  <Download className="h-4 w-4 text-[#0552A2]" />
+                  <span>Save File</span>
+                </button>
+
                 <Link
                   href="/dashboard"
                   onClick={onClose}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182] cursor-pointer"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 py-2.5 px-3.5 text-xs font-bold text-slate-700 cursor-pointer active:scale-95 transition-all"
                 >
-                  <span>Go to Traveler Dashboard</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <span>Dashboard</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>
             </div>

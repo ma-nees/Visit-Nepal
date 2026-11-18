@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { motion } from 'framer-motion';
+import { Sparkles } from 'lucide-react';
 import { NepalKnowledgeMap } from '@/components/network/NepalKnowledgeMap';
 
 interface AuthLeftPanelProps {
@@ -11,28 +11,23 @@ interface AuthLeftPanelProps {
 
 export default function AuthLeftPanel({ }: AuthLeftPanelProps) {
   return (
-    <div className="w-full lg:w-1/2 min-h-0 lg:h-full flex items-center justify-center p-4 sm:p-6 lg:px-8 lg:py-4 xl:p-12 relative bg-gradient-to-b from-[#FBFBFA] via-[#F4F6F9] to-[#EBF0F5] text-slate-800 overflow-hidden select-none border-b lg:border-b-0 lg:border-r border-slate-200/80 shadow-xs">
+    <div className="hidden md:flex md:w-1/2 h-full items-center justify-center p-4 sm:p-6 lg:px-8 lg:py-4 xl:p-10 relative bg-gradient-to-b from-[#F8FAFC] via-[#F1F5F9] to-[#E2E8F0] text-slate-800 overflow-hidden select-none border-b md:border-b-0 md:border-r border-slate-200/80 shadow-xs">
+      {/* Subtle architectural dot grid */}
+      <div className="absolute inset-0 bg-[radial-gradient(#0552A2_0.75px,transparent_0.75px)] [background-size:24px_24px] opacity-[0.035] pointer-events-none" />
 
-      {/* 1. Light & Clean Editorial Atmosphere */}
-      <div className="absolute -top-24 -left-24 w-[320px] sm:w-[420px] h-[320px] sm:h-[420px] rounded-full bg-[#92C4EA]/25 blur-[100px] pointer-events-none" />
-      <div className="absolute bottom-0 right-0 w-[340px] sm:w-[440px] h-[340px] sm:h-[440px] rounded-full bg-[#0552A2]/08 blur-[120px] pointer-events-none" />
-      <div className="absolute top-1/2 right-1/4 w-60 sm:w-72 h-60 sm:h-72 rounded-full bg-[#FDB716]/10 blur-[90px] pointer-events-none" />
+      {/* Subtle ambient lighting */}
+      <div className="absolute -top-24 -left-24 w-[380px] h-[380px] rounded-full bg-[#92C4EA]/20 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-0 right-0 w-[360px] h-[360px] rounded-full bg-[#0552A2]/08 blur-[120px] pointer-events-none" />
 
-      {/* Floating subtle ambient pearl orb */}
-      <motion.div
-        animate={{
-          scale: [1, 1.1, 1],
-          opacity: [0.35, 0.55, 0.35],
-        }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-16 right-16 w-80 h-80 rounded-full bg-[#92C4EA]/20 blur-3xl pointer-events-none"
-      />
-
-      {/* 2. Unified Content Stage (Header + Map + Spotlight tightly connected) */}
-      <div className="w-full max-w-xl my-auto relative z-20 flex flex-col gap-4 sm:gap-5">
+      {/* Unified Content Stage */}
+      <div className="w-full max-w-lg my-auto relative z-20 flex flex-col gap-3 sm:gap-4">
         {/* Top Header HUD */}
         <div className="space-y-1">
-          <h2 className="text-xl sm:text-2xl lg:text-3xl font-poppins font-medium text-slate-900 tracking-tight">
+          <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50/90 border border-blue-200/70 px-2.5 py-0.5 text-[9.5px] font-bold text-[#0552A2] tracking-wider uppercase shadow-2xs">
+            <Sparkles className="h-2.5 w-2.5 text-[#FDB716]" />
+            <span>Sacred Geography • Nepal Tourism Gateway</span>
+          </div>
+          <h2 className="text-xl sm:text-2xl font-poppins font-semibold text-slate-900 tracking-tight">
             Map of the High Himalayas
           </h2>
           <p className="text-[11px] sm:text-xs text-slate-500 font-normal mt-0.5 max-w-md leading-relaxed">
@@ -40,12 +35,11 @@ export default function AuthLeftPanel({ }: AuthLeftPanelProps) {
           </p>
         </div>
 
-        {/* Central Map Stage: Clean Unified Nepal Map */}
+        {/* Central Map Stage */}
         <div className="w-full flex items-center justify-center">
           <NepalKnowledgeMap embedded={true} />
         </div>
       </div>
-
     </div>
   );
 }

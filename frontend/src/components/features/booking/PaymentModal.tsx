@@ -13,8 +13,15 @@ import {
   ArrowRight,
   FileText,
   QrCode as QrCodeIcon,
+  Printer,
+  Download,
 } from 'lucide-react';
 import { api } from '@/lib/api';
+import {
+  printOfficialReceipt,
+  downloadOfficialReceiptHtml,
+  sanitizeName,
+} from '@/lib/receiptGenerator';
 
 interface PaymentModalProps {
   isOpen: boolean;
@@ -364,19 +371,81 @@ export default function PaymentModal({
 
             <div className="flex gap-2">
               <button
+                type="button"
                 onClick={() => {
-                  window.print();
+                  const receiptData = {
+                    invoiceNumber: booking.invoiceNumber || `VN-INV-2026-${booking.id}`,
+                    bookingId: booking.id,
+                    qrCode: `VN-PASS-${booking.id}-VERIFIED-2026`,
+                    travelerName: sanitizeName('Aayush Pradhan'),
+                    travelerEmail: 'aayush.traveler@visitnepal.com',
+                    travelerPhone: walletPhone || '+977-9801234567',
+                    packageTitle: booking.title,
+                    departureDate: booking.date || '2026-05-15',
+                    provider: booking.provider || 'Himalayan Sherpa Expeditions',
+                    paymentMethod: selectedMethod,
+                    items: [
+                      {
+                        description: booking.title,
+                        details: 'Expedition Package & Verified Settlement',
+                        qty: '1 Reservation',
+                        amountNpr: Math.round(booking.totalAmountNpr / 1.18),
+                      },
+                    ],
+                    subtotalNpr: Math.round(booking.totalAmountNpr / 1.18),
+                    serviceChargeNpr: Math.round((booking.totalAmountNpr / 1.18) * 0.05),
+                    vatNpr: Math.round((booking.totalAmountNpr / 1.18) * 0.13),
+                    totalNpr: booking.totalAmountNpr,
+                  };
+                  printOfficialReceipt(receiptData);
                 }}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-300 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-50"
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-sm cursor-pointer"
+                title="Print or save PDF of official receipt only"
               >
-                <FileText className="h-3.5 w-3.5" />
-                <span>Print Official Receipt</span>
+                <Printer className="h-3.5 w-3.5" />
+                <span>Print Receipt</span>
               </button>
               <button
-                onClick={onClose}
-                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] py-2.5 text-xs font-bold text-white hover:bg-[#044182]"
+                type="button"
+                onClick={() => {
+                  const receiptData = {
+                    invoiceNumber: booking.invoiceNumber || `VN-INV-2026-${booking.id}`,
+                    bookingId: booking.id,
+                    qrCode: `VN-PASS-${booking.id}-VERIFIED-2026`,
+                    travelerName: sanitizeName('Aayush Pradhan'),
+                    travelerEmail: 'aayush.traveler@visitnepal.com',
+                    travelerPhone: walletPhone || '+977-9801234567',
+                    packageTitle: booking.title,
+                    departureDate: booking.date || '2026-05-15',
+                    provider: booking.provider || 'Himalayan Sherpa Expeditions',
+                    paymentMethod: selectedMethod,
+                    items: [
+                      {
+                        description: booking.title,
+                        details: 'Expedition Package & Verified Settlement',
+                        qty: '1 Reservation',
+                        amountNpr: Math.round(booking.totalAmountNpr / 1.18),
+                      },
+                    ],
+                    subtotalNpr: Math.round(booking.totalAmountNpr / 1.18),
+                    serviceChargeNpr: Math.round((booking.totalAmountNpr / 1.18) * 0.05),
+                    vatNpr: Math.round((booking.totalAmountNpr / 1.18) * 0.13),
+                    totalNpr: booking.totalAmountNpr,
+                  };
+                  downloadOfficialReceiptHtml(receiptData);
+                }}
+                className="inline-flex items-center justify-center gap-1 rounded-xl border border-slate-300 py-2.5 px-3 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                title="Download offline receipt file"
               >
-                <span>View in Dashboard</span>
+                <Download className="h-3.5 w-3.5 text-[#0552A2]" />
+                <span>Save</span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                className="flex-1 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 py-2.5 text-xs font-bold text-slate-700 hover:bg-slate-100 cursor-pointer"
+              >
+                <span>Dashboard</span>
               </button>
             </div>
           </div>
