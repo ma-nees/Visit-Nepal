@@ -556,11 +556,11 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation button */}
-              <div className="flex justify-end pt-3 border-t border-slate-100">
+              <div className="flex justify-end pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Proceed to Travel Details</span>
                   <ArrowRight className="h-4 w-4" />
@@ -712,18 +712,18 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(1)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Build Custom Itinerary</span>
                   <ArrowRight className="h-4 w-4" />
@@ -900,18 +900,18 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(2)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(4)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Select Expedition Services</span>
                   <ArrowRight className="h-4 w-4" />
@@ -1127,18 +1127,18 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(3)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(5)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Review Required Permits</span>
                   <ArrowRight className="h-4 w-4" />
@@ -1231,18 +1231,18 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(4)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(6)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Calculate Dynamic Quotation</span>
                   <ArrowRight className="h-4 w-4" />
@@ -1362,18 +1362,18 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(5)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setCurrentStep(7)}
-                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-xs cursor-pointer"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Review &amp; Submit Request</span>
                   <ArrowRight className="h-4 w-4" />
@@ -1479,25 +1479,25 @@ export default function CustomTripPlannerPage() {
               </div>
 
               {/* Navigation & Submit Button */}
-              <div className="flex justify-between items-center pt-3 border-t border-slate-100">
+              <div className="flex justify-between items-center pt-4 border-t border-slate-100">
                 <button
                   type="button"
                   onClick={() => setCurrentStep(6)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" /> Back
+                  <ArrowLeft className="h-3.5 w-3.5" /> <span>Back</span>
                 </button>
                 <button
                   type="button"
                   disabled={submitting || !leadName || !leadEmail || !leadPhone}
                   onClick={handleSubmitCustomTrip}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#0552A2] px-6 py-2.5 text-xs font-bold text-white hover:bg-[#044182] shadow-md cursor-pointer disabled:opacity-50 active:scale-[0.98] transition-all"
+                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 cursor-pointer disabled:opacity-50 active:scale-95 transition-all whitespace-nowrap"
                 >
                   {submitting ? (
                     <span>Submitting Custom Plan...</span>
                   ) : (
                     <>
-                      <span>Submit Custom Plan (PENDING_REVIEW)</span>
+                      <span>Submit Custom Plan</span>
                       <ArrowRight className="h-4 w-4" />
                     </>
                   )}
