@@ -13,6 +13,7 @@ import {
   Users,
 } from 'lucide-react';
 import { destinations } from '@/data/mockData';
+import { getScaleDestinations } from '@/data/scaleCatalog';
 import { useApp } from '@/context/AppContext';
 import StandardBookingModal from '@/components/features/booking/StandardBookingModal';
 
@@ -28,7 +29,9 @@ function PackageDetailContent({
   const [booked, setBooked] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  const dest = destinations.find((d) => d.id === id);
+  const dest =
+    destinations.find((d) => d.id === id) ||
+    getScaleDestinations(1000).find((d) => d.id === id);
 
   if (!dest) {
     return (

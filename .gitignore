@@ -27,3 +27,6 @@ Thumbs.db
 
 # Local database store
 backend/data/
+
+# Generated PDFs and print receipts
+*.pdf
