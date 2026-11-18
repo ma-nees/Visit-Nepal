@@ -35,9 +35,38 @@ export default function Navbar() {
   const router = useRouter();
   const { role, currentUser, logout, notificationsList, markAllRead } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [isClosing, setIsClosing] = useState(false);
+  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
   const [notifOpen, setNotifOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
+
+  const openMobile = () => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
+    setIsClosing(false);
+    setMobileOpen(true);
+  };
+
+  const closeMobile = () => {
+    if (!mobileOpen || isClosing) return;
+    setIsClosing(true);
+    closeTimerRef.current = setTimeout(() => {
+      setMobileOpen(false);
+      setIsClosing(false);
+      closeTimerRef.current = null;
+    }, 280);
+  };
+
+  const toggleMobile = () => {
+    if (mobileOpen && !isClosing) {
+      closeMobile();
+    } else {
+      openMobile();
+    }
+  };
 
   // Close notifications dropdown on click outside
   useEffect(() => {
@@ -81,13 +110,18 @@ export default function Navbar() {
 
   // Close mobile drawer on route change
   useEffect(() => {
+    if (closeTimerRef.current) {
+      clearTimeout(closeTimerRef.current);
+      closeTimerRef.current = null;
+    }
     setMobileOpen(false);
+    setIsClosing(false);
     setNotifOpen(false);
   }, [pathname]);
 
   // Lock body scroll and handle Escape key when mobile menu is open
   useEffect(() => {
-    if (mobileOpen) {
+    if (mobileOpen && !isClosing) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -95,7 +129,7 @@ export default function Navbar() {
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
-        setMobileOpen(false);
+        closeMobile();
       }
     };
 
@@ -104,7 +138,16 @@ export default function Navbar() {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mobileOpen]);
+  }, [mobileOpen, isClosing]);
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (closeTimerRef.current) {
+        clearTimeout(closeTimerRef.current);
+      }
+    };
+  }, []);
 
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
@@ -369,7 +412,8 @@ export default function Navbar() {
 
           {/* Mobile Menu Toggle */}
           <button
-            onClick={() => setMobileOpen((v) => !v)}
+            type="button"
+            onClick={toggleMobile}
             className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
               isTransparent && !mobileOpen
                 ? 'text-white hover:bg-white/10'
@@ -380,140 +424,149 @@ export default function Navbar() {
           >
             <span
               className={`inline-flex transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileOpen ? 'rotate-90 scale-95' : 'rotate-0 scale-100'
+                mobileOpen && !isClosing ? 'rotate-90 scale-95' : 'rotate-0 scale-100'
               }`}
             >
-              {mobileOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+              {mobileOpen && !isClosing ? (
+                <X className="h-4.5 w-4.5 text-slate-800" />
+              ) : (
+                <Menu className="h-4.5 w-4.5" />
+              )}
             </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile Backdrop Overlay (Fades in softly behind the falling shutter) */}
-      <div
-        onClick={() => setMobileOpen(false)}
-        className={`lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/45 backdrop-blur-xs transition-opacity duration-300 z-40 ${
-          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
-        }`}
-        aria-hidden="true"
-      />
+      {/* Mobile Shutter Overlay & Dropdown Menu */}
+      {mobileOpen && (
+        <>
+          {/* Backdrop Overlay */}
+          <div
+            onClick={closeMobile}
+            className={`lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/45 backdrop-blur-xs z-40 ${
+              isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
+            }`}
+            aria-hidden="true"
+          />
 
-      {/* Mobile Shutter Dropdown Drawer (Smooth physical shutter drop & roll-up) */}
-      <div
-        className={`lg:hidden shutter-drawer ${
-          mobileOpen ? 'shutter-drawer-open' : 'shutter-drawer-closed'
-        } relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 text-[#10243A] overflow-y-auto font-inter`}
-      >
-        <div className="space-y-1">
-          <Link
-            href="/"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          {/* Shutter Drawer: drops down from top on open, rolls back up on close */}
+          <div
+            className={`lg:hidden relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-2xl ${
+              isClosing ? 'animate-shutter-up' : 'animate-shutter-down'
+            }`}
           >
-            <span>Home</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
-          {navLinks.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              onClick={() => setMobileOpen(false)}
-              className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-            >
-              <span>{item.label}</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-            </Link>
-          ))}
-          <Link
-            href="/schedule"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-          >
-            <span>Schedule (14 Days)</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
-          <Link
-            href="/chat"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-          >
-            <span>Messages &amp; Concierge</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
-          <Link
-            href="/culture"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-          >
-            <span>Culture &amp; Heritage</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
-          <Link
-            href="/dashboard"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-          >
-            <span>Traveler Dashboard</span>
-            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
-          <Link
-            href="/login"
-            onClick={() => setMobileOpen(false)}
-            className="group flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100 transition-colors"
-          >
-            <span>Partner &amp; Admin Portals</span>
-            <ArrowRight className="h-3.5 w-3.5 text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-          </Link>
+            <div className="space-y-1">
+              <Link
+                href="/"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+              >
+                <span>Home</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              {navLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMobile}
+                  className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+                >
+                  <span>{item.label}</span>
+                  <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+                </Link>
+              ))}
+              <Link
+                href="/schedule"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+              >
+                <span>Schedule (14 Days)</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                href="/chat"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+              >
+                <span>Messages &amp; Concierge</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                href="/culture"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+              >
+                <span>Culture &amp; Heritage</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                href="/dashboard"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+              >
+                <span>Traveler Dashboard</span>
+                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
+              <Link
+                href="/login"
+                onClick={closeMobile}
+                className="group flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100 transition-colors"
+              >
+                <span>Partner &amp; Admin Portals</span>
+                <ArrowRight className="h-3.5 w-3.5 text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+              </Link>
 
-          {currentUser ? (
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                handleLogout();
-              }}
-              className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
-            >
-              <span className="flex items-center gap-2">
-                <LogOut className="h-4 w-4" />
-                <span>Sign Out / Log Out</span>
-              </span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </button>
-          ) : (
-            <Link
-              href="/login"
-              onClick={() => setMobileOpen(false)}
-              className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
-            >
-              <span className="flex items-center gap-2">
-                <User className="h-4 w-4" />
-                <span>Sign In to Portal</span>
-              </span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          )}
-        </div>
+              {currentUser ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMobile();
+                    handleLogout();
+                  }}
+                  className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
+                >
+                  <span className="flex items-center gap-2">
+                    <LogOut className="h-4 w-4" />
+                    <span>Sign Out / Log Out</span>
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </button>
+              ) : (
+                <Link
+                  href="/login"
+                  onClick={closeMobile}
+                  className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
+                >
+                  <span className="flex items-center gap-2">
+                    <User className="h-4 w-4" />
+                    <span>Sign In to Portal</span>
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+              )}
+            </div>
 
-        <div className="pt-2">
-          <div className="grid grid-cols-2 gap-2 text-center text-xs">
-            <Link
-              href="/explore"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs active:scale-95"
-            >
-              Browse Packages
-            </Link>
-            <Link
-              href="/custom-plan"
-              onClick={() => setMobileOpen(false)}
-              className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors active:scale-95"
-            >
-              Custom Trip
-            </Link>
+            <div className="pt-2">
+              <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                <Link
+                  href="/explore"
+                  onClick={closeMobile}
+                  className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs active:scale-95"
+                >
+                  Browse Packages
+                </Link>
+                <Link
+                  href="/custom-plan"
+                  onClick={closeMobile}
+                  className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors active:scale-95"
+                >
+                  Custom Trip
+                </Link>
+              </div>
+            </div>
           </div>
-        </div>
-      </div>
+        </>
+      )}
     </header>
   );
 }
