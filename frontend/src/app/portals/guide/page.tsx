@@ -74,19 +74,33 @@ export default function GuidePortalPage() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* 1. Header Banner */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] p-6 sm:p-8 text-white border border-white/10">
-        <div className="relative z-10 max-w-2xl space-y-2.5">
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#92C4EA]">
-            <Compass className="h-3.5 w-3.5" />
-            <span>NMA &amp; IFMGA Certified Lead Mountaineer 2026</span>
+      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
+      <div className="relative pb-6 border-b border-slate-200/80">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+              <Compass className="h-3.5 w-3.5 text-[#0552A2]" />
+              <span>NMA &amp; IFMGA Certified</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-600 font-medium">Lead Mountaineer Desk 2026</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+              Mountain Guide <span className="text-[#0552A2]">Operations Desk</span>
+            </h1>
+
+            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+              Assigned expedition rosters, client altitude monitoring, daily rate payouts, and live dispatch.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white font-poppins">
-            Mountain Guide Operations Desk
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
-            Assigned expedition rosters, client altitude monitoring, daily rate payouts, and live dispatch.
-          </p>
+
+          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <div className="text-left">
+              <div className="text-xs font-bold text-slate-900">{guide.licenseNumber}</div>
+              <div className="text-[10px] text-emerald-600 font-semibold">IFMGA Verified Master Guide</div>
+            </div>
+          </div>
         </div>
       </div>
 

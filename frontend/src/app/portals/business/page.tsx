@@ -20,6 +20,7 @@ import {
   Send,
   Clock,
   ArrowRight,
+  ShieldCheck,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
@@ -158,19 +159,33 @@ export default function BusinessPortalPage() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
-      {/* 1. Header Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] p-6 sm:p-8 text-white border border-white/10 shadow-lg">
-        <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#92C4EA]">
-            <Building2 className="h-4 w-4" />
-            <span>Authorized Tour Operator Enterprise Suite 2026</span>
+      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
+      <div className="relative pb-6 border-b border-slate-200/80">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+              <Building2 className="h-3.5 w-3.5 text-[#0552A2]" />
+              <span>Tour Operator Enterprise Suite</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-600 font-medium">NTB Authorized 2026</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+              Tour Operator &amp; <span className="text-[#0552A2]">Agency Operations</span>
+            </h1>
+
+            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+              Review custom itinerary requests, issue binding quotations, manage standard reservations, and assign IFMGA field staff.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white font-poppins">
-            Tour Operator &amp; Agency Management Hub
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-200 leading-relaxed">
-            Review custom itinerary requests, issue binding quotations, manage standard reservations, and assign IFMGA field staff.
-          </p>
+
+          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <div className="text-left">
+              <div className="text-xs font-bold text-slate-900">{business.name}</div>
+              <div className="text-[10px] text-emerald-600 font-semibold">Official Verified License</div>
+            </div>
+          </div>
         </div>
       </div>
 

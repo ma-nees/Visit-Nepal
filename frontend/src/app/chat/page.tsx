@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Send, BadgeCheck } from 'lucide-react';
+import { Send, BadgeCheck, Radio, ShieldCheck, Sparkles, Wifi } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 export default function ChatPage() {
@@ -21,19 +21,59 @@ export default function ChatPage() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* 1. Header Banner: Compact, clean */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] p-6 sm:p-8 text-white border border-white/10">
-        <div className="relative z-10 max-w-2xl space-y-2.5">
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#92C4EA]">
-            <BadgeCheck className="h-3.5 w-3.5" />
-            <span>Encrypted Satellite &amp; Cellular Comms 2026</span>
+      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
+      <div className="relative pb-6 border-b border-slate-200/80">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+              <span className="relative flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
+              </span>
+              <span>Encrypted Satellite &amp; Field Dispatch</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-600 font-medium">Himalayan Ops 2026</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+              Messages &amp; <span className="text-[#0552A2]">Concierge Dispatch</span>
+            </h1>
+
+            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+              Real-time direct chat with assigned IFMGA mountain guides, lodge hosts, and Sherpa butlers.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white">
-            Messages &amp; Concierge Dispatch
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
-            Real-time direct chat with assigned IFMGA mountain guides, lodge hosts, and Sherpa butlers.
-          </p>
+
+          {/* Field Comms Status Strip */}
+          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
+            <div className="flex items-center gap-3 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+              <div className="flex -space-x-2">
+                {conversations.slice(0, 3).map((c, i) => (
+                  <img
+                    key={i}
+                    src={c.avatar}
+                    alt={c.name}
+                    className="h-7 w-7 rounded-full object-cover ring-2 ring-white"
+                  />
+                ))}
+              </div>
+              <div className="text-left">
+                <div className="text-xs font-bold text-slate-900">Field Staff Online</div>
+                <div className="text-[10px] text-emerald-600 font-semibold flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
+                  <span>3 Guides on Mountain</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+              <Radio className="h-4 w-4 text-[#0552A2] animate-pulse" />
+              <div className="text-left">
+                <div className="text-xs font-bold text-slate-900">Satellite Link</div>
+                <div className="text-[10px] text-slate-500 font-medium">Khumbu &amp; Annapurna Mesh</div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

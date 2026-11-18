@@ -95,19 +95,33 @@ export default function AdminPortalPage() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* 1. Header Banner */}
-      <div className="relative overflow-hidden rounded-xl bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] p-6 sm:p-8 text-white border border-white/10">
-        <div className="relative z-10 max-w-2xl space-y-2.5">
-          <div className="flex items-center gap-2 text-[11px] font-bold tracking-wider uppercase text-[#92C4EA]">
-            <ShieldCheck className="h-3.5 w-3.5" />
-            <span>Ministry of Culture, Tourism &amp; Civil Aviation 2026</span>
+      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
+      <div className="relative pb-6 border-b border-slate-200/80">
+        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+              <ShieldCheck className="h-3.5 w-3.5 text-[#0552A2]" />
+              <span>Ministry of Culture, Tourism &amp; Civil Aviation</span>
+              <span className="text-slate-300">•</span>
+              <span className="text-slate-600 font-medium">Official NTB Desk 2026</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+              Government Oversight &amp; <span className="text-[#0552A2]">Permits Authority</span>
+            </h1>
+
+            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+              Real-time traveler tracking, TIMS &amp; restricted zone permit approval queues, and tour agency compliance verifications.
+            </p>
           </div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white font-poppins">
-            Nepal Tourism Board (NTB) Government Admin Desk
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-200 max-w-xl leading-relaxed">
-            Real-time traveler tracking, TIMS &amp; restricted zone permit approval queues, and tour agency compliance verifications.
-          </p>
+
+          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
+            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+            <div className="text-left">
+              <div className="text-xs font-bold text-slate-900">National Registry</div>
+              <div className="text-[10px] text-emerald-600 font-semibold">Live Checkpoint Monitoring</div>
+            </div>
+          </div>
         </div>
       </div>
 
