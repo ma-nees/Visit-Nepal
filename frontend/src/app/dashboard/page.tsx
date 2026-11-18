@@ -25,6 +25,10 @@ import {
   ChevronRight,
   HelpCircle,
   ExternalLink,
+  Search,
+  Filter,
+  RefreshCw,
+  RotateCcw,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
@@ -65,14 +69,46 @@ export default function TravelerDashboardPage() {
   const [rejectNotes, setRejectNotes] = useState('');
   const [paymentModalBooking, setPaymentModalBooking] = useState<any | null>(null);
 
+  // Interactive controls state
+  const [bookingSearch, setBookingSearch] = useState('');
+  const [statusFilter, setStatusFilter] = useState<'ALL' | 'CONFIRMED' | 'PAID' | 'PENDING'>('ALL');
+  const [isSyncing, setIsSyncing] = useState(false);
+
   useEffect(() => {
     refreshCustomPlans();
   }, []);
+
+  const handleSyncStatus = () => {
+    setIsSyncing(true);
+    refreshCustomPlans();
+    setTimeout(() => {
+      setIsSyncing(false);
+    }, 700);
+  };
 
   // Filter bookings for active vs history
   const activeBookings = bookings.filter(
     (b) => b.status === 'Confirmed' || b.status === 'Paid' || b.status === 'Pending' || b.status === 'Quoted'
   );
+
+  const filteredActiveBookings = activeBookings.filter((b) => {
+    const q = bookingSearch.trim().toLowerCase();
+    const matchesSearch =
+      !q ||
+      b.title?.toLowerCase().includes(q) ||
+      b.id?.toLowerCase().includes(q) ||
+      b.provider?.toLowerCase().includes(q) ||
+      b.assignedGuide?.toLowerCase().includes(q) ||
+      b.category?.toLowerCase().includes(q);
+
+    const matchesStatus =
+      statusFilter === 'ALL' ||
+      (statusFilter === 'CONFIRMED' && b.status === 'Confirmed') ||
+      (statusFilter === 'PAID' && b.status === 'Paid') ||
+      (statusFilter === 'PENDING' && (b.status === 'Pending' || b.status === 'Quoted'));
+
+    return matchesSearch && matchesStatus;
+  });
 
   const handlePrintBookingReceipt = (b: any) => {
     const amountNum = parseInt(String(b?.amount || '0').replace(/[^0-9]/g, ''), 10) || 120000;
@@ -169,17 +205,89 @@ export default function TravelerDashboardPage() {
         </div>
       </div>
 
-      {/* 2. Responsive Dashboard Navigation Tabs */}
-      <div className="flex border-b border-slate-200 bg-white rounded-xl p-1.5 shadow-xs overflow-x-auto scrollbar-none gap-1">
+      {/* 2. Interactive KPI Overview Hub (Clickable Command Metrics to Switch Tabs) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {[
+          {
+            id: 'bookings',
+            title: 'Active Expeditions',
+            value: activeBookings.length,
+            subtitle: 'Confirmed & Boarding Passes',
+            icon: Calendar,
+            accentColor: 'text-[#0552A2]',
+            bgIcon: 'bg-blue-50',
+          },
+          {
+            id: 'custom-trips',
+            title: 'Custom Itineraries',
+            value: customPlans.length,
+            subtitle: 'Operator Quotes & Reviews',
+            icon: Compass,
+            accentColor: 'text-purple-600',
+            bgIcon: 'bg-purple-50',
+          },
+          {
+            id: 'history',
+            title: 'Completed Treks',
+            value: pastBookings.length,
+            subtitle: 'Tax Invoices & Records',
+            icon: Clock,
+            accentColor: 'text-emerald-600',
+            bgIcon: 'bg-emerald-50',
+          },
+          {
+            id: 'notifications',
+            title: 'Alerts & Messages',
+            value: notificationsList.filter((n) => !n.read).length + conversations.length,
+            subtitle: 'Direct Operator Updates',
+            icon: Bell,
+            accentColor: 'text-amber-600',
+            bgIcon: 'bg-amber-50',
+          },
+        ].map((kpi) => {
+          const KpiIcon = kpi.icon;
+          const isSelected = activeTab === kpi.id;
+          return (
+            <button
+              key={kpi.id}
+              type="button"
+              onClick={() => setActiveTab(kpi.id as DashboardTab)}
+              className={`text-left rounded-2xl p-4 transition-all border cursor-pointer group active:scale-[0.99] ${
+                isSelected
+                  ? 'bg-blue-50/40 border-[#0552A2] ring-2 ring-[#0552A2]/20 shadow-xs'
+                  : 'bg-white border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
+              }`}
+            >
+              <div className="flex items-center justify-between mb-2">
+                <span className={`p-2 rounded-xl ${kpi.bgIcon} ${kpi.accentColor}`}>
+                  <KpiIcon className="h-4 w-4" />
+                </span>
+                <span className="text-[11px] font-semibold text-slate-400 group-hover:text-[#0552A2] transition-colors flex items-center gap-0.5">
+                  <span>View</span>
+                  <ChevronRight className="h-3 w-3" />
+                </span>
+              </div>
+              <div className="text-2xl font-black text-slate-900 font-poppins">
+                {kpi.value}
+              </div>
+              <div className="text-xs font-bold text-slate-800 mt-0.5">{kpi.title}</div>
+              <div className="text-[11px] text-slate-500 truncate mt-0.5">{kpi.subtitle}</div>
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 3. Full-Width Non-Scrollable Navigation Tabs */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-1.5 p-1.5 bg-white border border-slate-200/90 rounded-2xl shadow-xs w-full">
         {[
           { id: 'bookings', label: 'My Bookings', icon: Calendar, badge: activeBookings.length },
           { id: 'custom-trips', label: 'Custom Trips', icon: Compass, badge: customPlans.length },
-          { id: 'history', label: 'Booking History', icon: Clock, badge: pastBookings.length },
-          { id: 'payments', label: 'Payment History', icon: CreditCard },
-          { id: 'saved', label: 'Saved Itineraries', icon: Bookmark },
+          { id: 'history', label: 'History', icon: Clock, badge: pastBookings.length },
+          { id: 'payments', label: 'Payments', icon: CreditCard },
+          { id: 'saved', label: 'Saved', icon: Bookmark },
           { id: 'messages', label: 'Messages', icon: MessageSquare, badge: conversations.length },
-          { id: 'notifications', label: 'Notifications', icon: Bell, badge: notificationsList.filter((n) => !n.read).length },
-          { id: 'profile', label: 'Profile & Documents', icon: User },
+          { id: 'notifications', label: 'Alerts', icon: Bell, badge: notificationsList.filter((n) => !n.read).length },
+          { id: 'profile', label: 'Profile', icon: User },
         ].map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -187,18 +295,20 @@ export default function TravelerDashboardPage() {
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id as DashboardTab)}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-bold whitespace-nowrap transition-all cursor-pointer ${
+              className={`flex items-center justify-center gap-1.5 px-2 py-2.5 rounded-xl text-xs font-bold transition-all cursor-pointer text-center ${
                 isActive
                   ? 'bg-[#0552A2] text-white shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
               }`}
             >
-              <Icon className="h-3.5 w-3.5" />
-              <span>{tab.label}</span>
+              <Icon className="h-3.5 w-3.5 shrink-0" />
+              <span className="truncate">{tab.label}</span>
               {typeof tab.badge === 'number' && tab.badge > 0 && (
-                <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
-                  isActive ? 'bg-white text-[#0552A2]' : 'bg-slate-200 text-slate-700'
-                }`}>
+                <span
+                  className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full shrink-0 leading-none ${
+                    isActive ? 'bg-white text-[#0552A2]' : 'bg-slate-200 text-slate-700'
+                  }`}
+                >
                   {tab.badge}
                 </span>
               )}
@@ -207,19 +317,97 @@ export default function TravelerDashboardPage() {
         })}
       </div>
 
-      {/* 3. Tab Contents */}
+      {/* 4. Tab Contents */}
 
       {/* TAB 1: MY BOOKINGS */}
       {activeTab === 'bookings' && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <h2 className="text-base font-bold font-poppins text-slate-900">
-              Active &amp; Upcoming Reservations ({activeBookings.length})
-            </h2>
-            <span className="text-xs text-slate-500">
-              Official NTB verified passes &amp; permits
-            </span>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-base font-bold font-poppins text-slate-900">
+                Active &amp; Upcoming Reservations ({activeBookings.length})
+              </h2>
+              <p className="text-xs text-slate-500">
+                Official NTB verified passes, QR permits &amp; expedition manifests
+              </p>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleSyncStatus}
+                disabled={isSyncing}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white px-3 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all cursor-pointer disabled:opacity-60"
+                title="Sync latest permit & clearance data with NTB"
+              >
+                <RefreshCw className={`h-3.5 w-3.5 text-[#0552A2] ${isSyncing ? 'animate-spin' : ''}`} />
+                <span>{isSyncing ? 'Syncing...' : 'Sync Passes'}</span>
+              </button>
+              <Link
+                href="/custom-plan"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#044182] transition-all"
+              >
+                <Mountain className="h-3.5 w-3.5" />
+                <span>New Trip</span>
+              </Link>
+            </div>
           </div>
+
+          {/* Interactive Search & Status Filter Controls */}
+          {activeBookings.length > 0 && (
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-white p-3 rounded-2xl border border-slate-200/90 shadow-2xs">
+              <div className="relative flex-1 max-w-md">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  type="text"
+                  placeholder="Search by expedition name, ID, or guide..."
+                  value={bookingSearch}
+                  onChange={(e) => setBookingSearch(e.target.value)}
+                  className="w-full pl-9 pr-8 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
+                />
+                {bookingSearch && (
+                  <button
+                    type="button"
+                    onClick={() => setBookingSearch('')}
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 cursor-pointer"
+                  >
+                    <X className="h-3.5 w-3.5" />
+                  </button>
+                )}
+              </div>
+
+              {/* Status Filter Pills */}
+              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+                <span className="text-[11px] font-semibold text-slate-400 mr-1 hidden sm:inline-flex items-center gap-1">
+                  <Filter className="h-3 w-3" /> Filter:
+                </span>
+                {[
+                  { id: 'ALL', label: 'All', count: activeBookings.length },
+                  { id: 'CONFIRMED', label: 'Confirmed', count: activeBookings.filter((b) => b.status === 'Confirmed').length },
+                  { id: 'PAID', label: 'Paid', count: activeBookings.filter((b) => b.status === 'Paid').length },
+                  { id: 'PENDING', label: 'Pending', count: activeBookings.filter((b) => b.status === 'Pending' || b.status === 'Quoted').length },
+                ].map((pill) => (
+                  <button
+                    key={pill.id}
+                    type="button"
+                    onClick={() => setStatusFilter(pill.id as any)}
+                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                      statusFilter === pill.id
+                        ? 'bg-[#0552A2] text-white shadow-2xs'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
+                    }`}
+                  >
+                    <span>{pill.label}</span>
+                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                      statusFilter === pill.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}>
+                      {pill.count}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
           {activeBookings.length === 0 ? (
             <div className="rounded-2xl border border-dashed border-slate-300 p-12 text-center bg-white space-y-3">
@@ -235,9 +423,28 @@ export default function TravelerDashboardPage() {
                 Browse Expeditions
               </Link>
             </div>
+          ) : filteredActiveBookings.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-slate-300 p-8 text-center bg-white space-y-3">
+              <Search className="mx-auto h-7 w-7 text-slate-400" />
+              <h4 className="text-sm font-bold text-slate-800">No matching reservations found</h4>
+              <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                No bookings match &quot;{bookingSearch}&quot; with selected filter.
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setBookingSearch('');
+                  setStatusFilter('ALL');
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300 bg-white px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+              >
+                <RotateCcw className="h-3.5 w-3.5 text-[#0552A2]" />
+                <span>Reset Search &amp; Filters</span>
+              </button>
+            </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {activeBookings.map((b) => (
+              {filteredActiveBookings.map((b) => (
                 <div
                   key={b.id}
                   className="rounded-2xl border border-slate-200 bg-white p-5 shadow-xs hover:border-slate-300 transition-all space-y-3"
