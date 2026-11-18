@@ -1564,31 +1564,25 @@ export default function CustomTripPlannerPage() {
         </div>
 
         {/* Live Trip Summary & Calculation Sidebar (Right Col) */}
-        <div className="space-y-4">
-          <div className="sticky top-20 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm space-y-4 font-inter">
-            {/* Header with official pulse */}
+        <div className="space-y-4 font-inter">
+          <div className="sticky top-20 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-xs space-y-4">
+            {/* Clean Header */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <div className="flex items-center gap-2">
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                </span>
-                <span className="text-xs font-bold font-poppins text-slate-900 tracking-tight">
-                  Trip Overview
-                </span>
-              </div>
-              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#0552A2] bg-blue-50/80 border border-blue-200/60 px-2 py-0.5 rounded-md">
+              <span className="text-xs font-bold font-poppins text-slate-900 tracking-tight">
+                Trip Overview
+              </span>
+              <span className="text-[10px] font-semibold text-[#0552A2] bg-blue-50/80 border border-blue-200/60 px-2.5 py-0.5 rounded-full">
                 Live Calculator
               </span>
             </div>
 
-            {/* Selected Route Badge Card */}
+            {/* Selected Route Inset Card */}
             <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200/70 space-y-1">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0552A2] flex items-center gap-1">
+                <span className="text-[10px] font-semibold uppercase tracking-wider text-[#0552A2] flex items-center gap-1">
                   <MapPin className="h-3 w-3" /> Selected Route
                 </span>
-                <span className="text-[9.5px] font-bold text-slate-500 uppercase tracking-wider bg-white border border-slate-200 px-1.5 py-0.5 rounded">
+                <span className="text-[9.5px] font-semibold text-slate-600 bg-white border border-slate-200 px-1.5 py-0.5 rounded-md">
                   {activeRegion.difficulty || 'Custom'}
                 </span>
               </div>
@@ -1598,44 +1592,44 @@ export default function CustomTripPlannerPage() {
               <p className="text-[11px] text-slate-500">{activeRegion.regionName}</p>
             </div>
 
-            {/* Key Trip Parameters: 2x2 Micro-Tiles */}
+            {/* Key Trip Parameters: 2x2 Clean Micro-Tiles */}
             <div className="grid grid-cols-2 gap-2 text-[11px]">
-              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
-                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+              <div className="bg-slate-50/60 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold uppercase tracking-wider">
                   <Calendar className="h-3 w-3 text-[#0552A2]" />
                   <span>Start Date</span>
                 </div>
-                <p className="font-bold text-slate-800 text-xs font-mono">{startDate}</p>
+                <p className="font-semibold text-slate-800 text-xs">{startDate}</p>
               </div>
 
-              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
-                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+              <div className="bg-slate-50/60 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold uppercase tracking-wider">
                   <Clock className="h-3 w-3 text-[#0552A2]" />
                   <span>Duration</span>
                 </div>
-                <p className="font-bold text-slate-800 text-xs">{totalDurationDays} Days</p>
+                <p className="font-semibold text-slate-800 text-xs">{totalDurationDays} Days</p>
               </div>
 
-              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
-                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+              <div className="bg-slate-50/60 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold uppercase tracking-wider">
                   <Users className="h-3 w-3 text-[#0552A2]" />
                   <span>Travelers</span>
                 </div>
-                <p className="font-bold text-slate-800 text-xs">{adultsCount + childrenCount} Person(s)</p>
+                <p className="font-semibold text-slate-800 text-xs">{adultsCount + childrenCount} Person(s)</p>
               </div>
 
-              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
-                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+              <div className="bg-slate-50/60 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-semibold uppercase tracking-wider">
                   <Sparkles className="h-3 w-3 text-[#0552A2]" />
                   <span>Style</span>
                 </div>
-                <p className="font-bold text-slate-800 text-xs truncate" title={travelStyle}>{travelStyle}</p>
+                <p className="font-semibold text-slate-800 text-xs truncate" title={travelStyle}>{travelStyle}</p>
               </div>
             </div>
 
             {/* Field Service Specifications */}
             <div className="space-y-2 border-t border-slate-100 pt-3 text-xs">
-              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">
+              <span className="text-[10px] font-semibold uppercase tracking-wider text-slate-400 block">
                 Field Staff &amp; Services
               </span>
 
@@ -1645,7 +1639,7 @@ export default function CustomTripPlannerPage() {
                   <span>Lead Guide</span>
                 </div>
                 {guideRequested ? (
-                  <span className="text-[10px] font-bold text-[#0552A2] bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-semibold text-[#0552A2] bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md">
                     IFMGA Certified
                   </span>
                 ) : (
@@ -1658,7 +1652,7 @@ export default function CustomTripPlannerPage() {
                   <Luggage className="h-3.5 w-3.5 text-[#0552A2]" />
                   <span>Porters</span>
                 </div>
-                <span className="text-[10px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">
+                <span className="text-[10px] font-semibold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">
                   {porterCount} Porter(s)
                 </span>
               </div>
@@ -1669,7 +1663,7 @@ export default function CustomTripPlannerPage() {
                   <span>Sherpa Butler</span>
                 </div>
                 {sherpaButlerRequested ? (
-                  <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                  <span className="text-[10px] font-semibold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
                     VIP Concierge
                   </span>
                 ) : (
@@ -1688,30 +1682,32 @@ export default function CustomTripPlannerPage() {
               </div>
             </div>
 
-            {/* Estimated Budget Box: Atmospheric Navy Gradient */}
-            <div className="relative rounded-2xl bg-gradient-to-br from-[#031526] via-[#052b52] to-[#031526] p-4 text-white shadow-md border border-white/10 overflow-hidden space-y-1.5">
-              <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#92C4EA]/15 rounded-full blur-xl pointer-events-none" />
-              
+            {/* Elegant Light Price Summary Box (Zero code look, 100% clean luxury travel vibe) */}
+            <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-b from-slate-50/80 via-white to-blue-50/30 p-4 space-y-2 shadow-2xs">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-[#92C4EA]">
-                  Estimated Total
+                <span className="text-[11px] font-medium text-slate-500">
+                  Estimated Total Price
                 </span>
-                <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">
-                  NTB 2026 STATUTORY
+                <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-200/60 px-2 py-0.5 rounded-full">
+                  <ShieldCheck className="h-3 w-3 text-emerald-600" />
+                  <span>NTB Verified Rate</span>
                 </span>
               </div>
 
-              <p className="text-2xl font-extrabold text-[#FDB716] font-poppins tracking-tight">
-                NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
-              </p>
-
-              <div className="flex items-center justify-between text-[11px] text-slate-300 pt-0.5 border-t border-white/10">
-                <span className="font-semibold">
-                  ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD
-                </span>
-                <span className="text-[10px] text-slate-400 font-light">
-                  Includes 13% VAT &amp; 5% SC
-                </span>
+              <div>
+                <div className="flex items-baseline gap-1.5">
+                  <span className="text-xs font-bold text-[#0552A2]">NPR</span>
+                  <span className="text-2xl font-extrabold font-poppins text-slate-900 tracking-tight">
+                    {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
+                  </span>
+                </div>
+                <p className="text-xs text-slate-500 mt-1">
+                  <strong className="text-slate-700 font-semibold">
+                    ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD
+                  </strong>
+                  <span className="mx-1 text-slate-300">•</span>
+                  <span>Includes 13% VAT &amp; 5% SC</span>
+                </p>
               </div>
             </div>
 

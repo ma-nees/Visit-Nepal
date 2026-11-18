@@ -536,21 +536,24 @@ export default function StandardBookingModal({
                 </div>
               </div>
 
-              {/* Running Price Preview Bar */}
-              <div className="rounded-xl bg-slate-900 p-4 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-md">
+              {/* Running Price Preview Bar (Clean Luxury Concierge Aesthetic) */}
+              <div className="rounded-2xl border border-slate-200/90 bg-gradient-to-r from-slate-50 via-white to-blue-50/40 p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
                 <div>
-                  <span className="text-[10px] uppercase font-bold text-slate-400">Estimated Total</span>
-                  <p className="text-lg font-extrabold text-[#FDB716]">
-                    NPR {finalTotalNpr.toLocaleString()}
-                    <span className="text-xs text-slate-300 font-normal ml-1.5">
+                  <span className="text-[11px] font-medium text-slate-500">Estimated Expedition Investment</span>
+                  <div className="flex items-baseline gap-1 mt-0.5">
+                    <span className="text-xs font-bold text-[#0552A2]">NPR</span>
+                    <span className="text-xl font-extrabold font-poppins text-slate-900">
+                      {finalTotalNpr.toLocaleString()}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium ml-1">
                       (~${finalTotalUsd.toLocaleString()} USD)
                     </span>
-                  </p>
+                  </div>
                 </div>
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
                   <span>Continue to Traveler Details</span>
                   <ArrowRight className="h-4 w-4" />
@@ -931,14 +934,16 @@ export default function StandardBookingModal({
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-xl bg-slate-900 p-3 text-white">
-                  <div className="flex items-center gap-2">
-                    <QrCodeIcon className="h-5 w-5 text-[#FDB716]" />
-                    <span className="text-xs font-mono font-bold">
+                <div className="flex items-center justify-between rounded-xl border border-blue-200/80 bg-blue-50/70 p-3 text-slate-900">
+                  <div className="flex items-center gap-2.5">
+                    <div className="p-1 rounded-md bg-white border border-blue-200/60 shadow-2xs">
+                      <QrCodeIcon className="h-4 w-4 text-[#0552A2]" />
+                    </div>
+                    <span className="text-xs font-semibold text-slate-800 tracking-wide">
                       {createdBooking?.qrCode || `VN-PASS-${createdBooking?.id}-VERIFIED-2026`}
                     </span>
                   </div>
-                  <span className="rounded bg-emerald-500/20 px-2 py-0.5 text-[10px] font-bold text-emerald-400 border border-emerald-500/30">
+                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
                     VERIFIED
                   </span>
                 </div>
