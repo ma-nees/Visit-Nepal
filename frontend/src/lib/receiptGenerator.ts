@@ -71,13 +71,13 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
     .map(
       (item, idx) => `
         <tr style="border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-size: 11px; color: #64748b; font-family: monospace;">0${idx + 1}</td>
-          <td style="padding: 10px 12px; font-size: 12px; font-weight: 600; color: #0f172a;">
+          <td style="padding: 5px 8px; font-size: 10px; color: #64748b; font-family: monospace;">0${idx + 1}</td>
+          <td style="padding: 5px 8px; font-size: 10.5px; font-weight: 600; color: #0f172a;">
             ${item.description}
-            ${item.details ? `<div style="font-size: 10px; font-weight: 400; color: #64748b; margin-top: 2px;">${item.details}</div>` : ''}
+            ${item.details ? `<div style="font-size: 9px; font-weight: 400; color: #64748b; margin-top: 1px;">${item.details}</div>` : ''}
           </td>
-          <td style="padding: 10px 12px; font-size: 11px; color: #475569; text-align: center;">${item.qty || '1 Unit'}</td>
-          <td style="padding: 10px 12px; font-size: 12px; font-weight: 600; color: #0f172a; text-align: right; font-family: monospace;">
+          <td style="padding: 5px 8px; font-size: 10px; color: #475569; text-align: center;">${item.qty || '1 Unit'}</td>
+          <td style="padding: 5px 8px; font-size: 10.5px; font-weight: 600; color: #0f172a; text-align: right; font-family: monospace;">
             NPR ${item.amountNpr.toLocaleString()}
           </td>
         </tr>
@@ -93,37 +93,42 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
   <style>
     @page {
       size: A4 portrait;
-      margin: 14mm 16mm;
+      margin: 8mm 10mm;
     }
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
     }
-    body {
+    html, body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
       color: #0f172a;
       background: #ffffff;
-      line-height: 1.45;
-      padding: 24px;
-      max-width: 800px;
+      line-height: 1.35;
+      padding: 0;
       margin: 0 auto;
+      max-width: 820px;
       -webkit-print-color-adjust: exact;
       print-color-adjust: exact;
     }
+    body {
+      padding: 12px;
+    }
     .receipt-container {
       border: 1px solid #cbd5e1;
-      border-radius: 12px;
-      padding: 28px;
+      border-radius: 10px;
+      padding: 16px 20px;
       background: #ffffff;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      page-break-inside: avoid !important;
+      break-inside: avoid !important;
     }
     .badge-pill {
       display: inline-block;
-      padding: 3px 8px;
-      font-size: 10px;
+      padding: 2px 7px;
+      font-size: 9px;
       font-weight: 700;
-      border-radius: 6px;
+      border-radius: 5px;
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
@@ -133,14 +138,32 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
       border: 1px solid #bbf7d0;
     }
     @media print {
-      body {
-        padding: 0;
-        background: transparent;
+      html, body {
+        height: 100% !important;
+        max-height: 100% !important;
+        overflow: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        background: transparent !important;
+        page-break-after: avoid !important;
+        page-break-before: avoid !important;
+        break-after: avoid !important;
+        break-before: avoid !important;
       }
       .receipt-container {
-        border: 1px solid #94a3b8;
-        box-shadow: none;
-        padding: 20px;
+        border: 1px solid #94a3b8 !important;
+        box-shadow: none !important;
+        padding: 12px 16px !important;
+        max-height: 275mm !important;
+        box-sizing: border-box !important;
+        page-break-inside: avoid !important;
+        page-break-after: avoid !important;
+        break-inside: avoid !important;
+        overflow: hidden !important;
+      }
+      tr {
+        page-break-inside: avoid !important;
+        break-inside: avoid !important;
       }
       .no-print {
         display: none !important;
@@ -151,80 +174,80 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
 <body>
   <div class="receipt-container">
     <!-- Header -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0552A2; padding-bottom: 18px; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; border-bottom: 2px solid #0552A2; padding-bottom: 8px; margin-bottom: 10px;">
       <div>
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <div style="width: 10px; height: 10px; border-radius: 50%; background: #EC1F27;"></div>
-          <span style="font-size: 10px; font-weight: 800; letter-spacing: 1.5px; color: #EC1F27; text-transform: uppercase;">
+        <div style="display: flex; align-items: center; gap: 6px;">
+          <div style="width: 8px; height: 8px; border-radius: 50%; background: #EC1F27;"></div>
+          <span style="font-size: 9px; font-weight: 800; letter-spacing: 1.2px; color: #EC1F27; text-transform: uppercase;">
             GOVERNMENT OF NEPAL • MINISTRY OF TOURISM
           </span>
         </div>
-        <h1 style="font-size: 20px; font-weight: 800; color: #0552A2; margin-top: 4px; letter-spacing: -0.3px;">
+        <h1 style="font-size: 18px; font-weight: 800; color: #0552A2; margin-top: 2px; letter-spacing: -0.3px; line-height: 1.2;">
           NEPAL TOURISM BOARD (NTB)
         </h1>
-        <p style="font-size: 11px; color: #64748b; margin-top: 2px;">
+        <p style="font-size: 10px; color: #64748b; margin-top: 1px;">
           Official Tax Invoice & Expedition Permit Clearance Desk • Kathmandu, Nepal
         </p>
-        <p style="font-size: 10px; color: #94a3b8; margin-top: 1px; font-family: monospace;">
+        <p style="font-size: 9.5px; color: #94a3b8; margin-top: 1px; font-family: monospace;">
           PAN: 301295847 &nbsp;|&nbsp; VAT Reg: 601928471 &nbsp;|&nbsp; NTB Clearance ID: 2026-HIM-09
         </p>
       </div>
       <div style="text-align: right;">
         <span class="badge-pill badge-success">${status}</span>
-        <div style="font-size: 16px; font-weight: 800; font-family: monospace; color: #0f172a; margin-top: 6px;">
+        <div style="font-size: 14px; font-weight: 800; font-family: monospace; color: #0f172a; margin-top: 4px;">
           ${invoiceNo}
         </div>
-        <div style="font-size: 10px; color: #64748b; font-family: monospace; margin-top: 2px;">
+        <div style="font-size: 9.5px; color: #64748b; font-family: monospace; margin-top: 1px;">
           Date: ${now}
         </div>
       </div>
     </div>
 
     <!-- Meta Summary Bar -->
-    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; margin-bottom: 20px;">
+    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 7px 10px; margin-bottom: 9px;">
       <div>
-        <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Booking Reference</span>
-        <div style="font-size: 12px; font-weight: 700; color: #0552A2; font-family: monospace; margin-top: 2px;">${bookingId}</div>
+        <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Booking Reference</span>
+        <div style="font-size: 11px; font-weight: 700; color: #0552A2; font-family: monospace; margin-top: 1px;">${bookingId}</div>
       </div>
       <div>
-        <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Departure Date</span>
-        <div style="font-size: 12px; font-weight: 700; color: #0f172a; margin-top: 2px;">${data.departureDate}</div>
+        <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Departure Date</span>
+        <div style="font-size: 11px; font-weight: 700; color: #0f172a; margin-top: 1px;">${data.departureDate}</div>
       </div>
       <div>
-        <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Payment Channel</span>
-        <div style="font-size: 11px; font-weight: 600; color: #0f172a; margin-top: 2px;">${paymentMethod.split('(')[0].trim()}</div>
+        <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Payment Channel</span>
+        <div style="font-size: 10.5px; font-weight: 600; color: #0f172a; margin-top: 1px;">${paymentMethod.split('(')[0].trim()}</div>
       </div>
       <div>
-        <span style="font-size: 9px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Total Amount Paid</span>
-        <div style="font-size: 13px; font-weight: 800; color: #15803d; font-family: monospace; margin-top: 2px;">
+        <span style="font-size: 8.5px; font-weight: 700; text-transform: uppercase; color: #64748b; letter-spacing: 0.5px;">Total Amount Paid</span>
+        <div style="font-size: 12px; font-weight: 800; color: #15803d; font-family: monospace; margin-top: 1px;">
           NPR ${data.totalNpr.toLocaleString()}
         </div>
       </div>
     </div>
 
     <!-- 2 Column Dossier: Traveler & Expedition -->
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px;">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 9px;">
       <!-- Traveler Box -->
-      <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; background: #ffffff;">
-        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #0552A2; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
+      <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 9px 11px; background: #ffffff;">
+        <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #0552A2; letter-spacing: 0.8px; margin-bottom: 5px; border-bottom: 1px solid #f1f5f9; padding-bottom: 2px;">
           Lead Traveler & Permit Holder
         </div>
-        <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${cleanName}</div>
-        <div style="font-size: 11px; color: #475569; margin-top: 3px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: #0f172a;">${cleanName}</div>
+        <div style="font-size: 10px; color: #475569; margin-top: 2px;">
           <strong>Nationality:</strong> ${data.travelerNationality || 'International'}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Passport / National ID:</strong> ${data.passportNumber || 'NP-VERIFIED-PASS'}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Phone:</strong> ${data.travelerPhone}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Email:</strong> ${data.travelerEmail}
         </div>
         ${
           data.emergencyContact
-            ? `<div style="font-size: 10px; color: #64748b; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #e2e8f0;">
+            ? `<div style="font-size: 9.5px; color: #64748b; margin-top: 3px; padding-top: 3px; border-top: 1px dashed #e2e8f0;">
                 <strong>Emergency Contact:</strong> ${data.emergencyContact}
               </div>`
             : ''
@@ -232,74 +255,74 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
       </div>
 
       <!-- Expedition Logistics Box -->
-      <div style="border: 1px solid #e2e8f0; border-radius: 8px; padding: 14px; background: #ffffff;">
-        <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #0552A2; letter-spacing: 1px; margin-bottom: 8px; border-bottom: 1px solid #f1f5f9; padding-bottom: 4px;">
+      <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 9px 11px; background: #ffffff;">
+        <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #0552A2; letter-spacing: 0.8px; margin-bottom: 5px; border-bottom: 1px solid #f1f5f9; padding-bottom: 2px;">
           Expedition & Checkpoint Clearance
         </div>
-        <div style="font-size: 13px; font-weight: 700; color: #0f172a;">${data.packageTitle}</div>
-        <div style="font-size: 11px; color: #475569; margin-top: 3px;">
+        <div style="font-size: 11.5px; font-weight: 700; color: #0f172a;">${data.packageTitle}</div>
+        <div style="font-size: 10px; color: #475569; margin-top: 2px;">
           <strong>Duration:</strong> ${data.duration || 'Scheduled Itinerary'}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Travelers:</strong> ${data.groupSize || 'Confirmed Party'}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Licensed Operator:</strong> ${data.provider || 'Himalayan Sherpa Expeditions'}
         </div>
-        <div style="font-size: 11px; color: #475569; margin-top: 2px;">
+        <div style="font-size: 10px; color: #475569; margin-top: 1px;">
           <strong>Assigned Route Leader:</strong> ${data.assignedGuide || 'IFMGA Certified Sherpa Guide'}
         </div>
-        <div style="font-size: 10px; color: #64748b; margin-top: 4px; padding-top: 4px; border-top: 1px dashed #e2e8f0;">
+        <div style="font-size: 9.5px; color: #64748b; margin-top: 3px; padding-top: 3px; border-top: 1px dashed #e2e8f0;">
           <strong>Rendezvous Base:</strong> ${data.meetingPoint || 'Kathmandu Departure Base (TIA / Thamel)'}
         </div>
       </div>
     </div>
 
     <!-- Itemized Quotation / Invoice Table -->
-    <div style="margin-bottom: 20px;">
-      <div style="font-size: 10px; font-weight: 800; text-transform: uppercase; color: #475569; letter-spacing: 0.5px; margin-bottom: 6px;">
+    <div style="margin-bottom: 9px;">
+      <div style="font-size: 9px; font-weight: 800; text-transform: uppercase; color: #475569; letter-spacing: 0.5px; margin-bottom: 4px;">
         Itemized Statement of Charges (Compliant with NTB & IRD Regulations)
       </div>
-      <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; border-radius: 8px; overflow: hidden;">
+      <table style="width: 100%; border-collapse: collapse; border: 1px solid #cbd5e1; border-radius: 6px; overflow: hidden;">
         <thead>
           <tr style="background: #f1f5f9; border-bottom: 2px solid #cbd5e1; text-align: left;">
-            <th style="padding: 10px 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #475569;">#</th>
-            <th style="padding: 10px 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #475569;">Description & Included Services</th>
-            <th style="padding: 10px 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #475569; text-align: center;">Qty / Unit</th>
-            <th style="padding: 10px 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; color: #475569; text-align: right;">Amount (NPR)</th>
+            <th style="padding: 5px 8px; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #475569;">#</th>
+            <th style="padding: 5px 8px; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #475569;">Description & Included Services</th>
+            <th style="padding: 5px 8px; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #475569; text-align: center;">Qty / Unit</th>
+            <th style="padding: 5px 8px; font-size: 9px; font-weight: 700; text-transform: uppercase; color: #475569; text-align: right;">Amount (NPR)</th>
           </tr>
         </thead>
         <tbody>
           ${rowsHtml}
           <!-- Subtotal -->
           <tr style="background: #f8fafc; font-weight: 600; border-top: 1px solid #cbd5e1;">
-            <td colspan="3" style="padding: 8px 12px; font-size: 11px; text-align: right; color: #475569;">Subtotal (Taxable Amount):</td>
-            <td style="padding: 8px 12px; font-size: 12px; text-align: right; font-family: monospace; color: #0f172a;">
+            <td colspan="3" style="padding: 4px 8px; font-size: 10px; text-align: right; color: #475569;">Subtotal (Taxable Amount):</td>
+            <td style="padding: 4px 8px; font-size: 10.5px; text-align: right; font-family: monospace; color: #0f172a;">
               NPR ${data.subtotalNpr.toLocaleString()}
             </td>
           </tr>
           <!-- Tourism Service Charge -->
           <tr style="background: #f8fafc;">
-            <td colspan="3" style="padding: 6px 12px; font-size: 11px; text-align: right; color: #64748b;">Nepal Tourism Service Charge (5%):</td>
-            <td style="padding: 6px 12px; font-size: 11px; text-align: right; font-family: monospace; color: #475569;">
+            <td colspan="3" style="padding: 3px 8px; font-size: 9.5px; text-align: right; color: #64748b;">Nepal Tourism Service Charge (5%):</td>
+            <td style="padding: 3px 8px; font-size: 9.5px; text-align: right; font-family: monospace; color: #475569;">
               NPR ${data.serviceChargeNpr.toLocaleString()}
             </td>
           </tr>
           <!-- Inland Revenue VAT -->
           <tr style="background: #f8fafc;">
-            <td colspan="3" style="padding: 6px 12px; font-size: 11px; text-align: right; color: #64748b;">Nepal Inland Revenue VAT (13%):</td>
-            <td style="padding: 6px 12px; font-size: 11px; text-align: right; font-family: monospace; color: #475569;">
+            <td colspan="3" style="padding: 3px 8px; font-size: 9.5px; text-align: right; color: #64748b;">Nepal Inland Revenue VAT (13%):</td>
+            <td style="padding: 3px 8px; font-size: 9.5px; text-align: right; font-family: monospace; color: #475569;">
               NPR ${data.vatNpr.toLocaleString()}
             </td>
           </tr>
           <!-- Grand Total -->
           <tr style="background: #eff6ff; border-top: 2px solid #0552A2;">
-            <td colspan="3" style="padding: 12px; font-size: 13px; font-weight: 800; text-align: right; color: #0552A2;">
+            <td colspan="3" style="padding: 6px 8px; font-size: 11px; font-weight: 800; text-align: right; color: #0552A2;">
               TOTAL AMOUNT PAID:
             </td>
-            <td style="padding: 12px; font-size: 15px; font-weight: 800; text-align: right; color: #0552A2; font-family: monospace;">
+            <td style="padding: 6px 8px; font-size: 12.5px; font-weight: 800; text-align: right; color: #0552A2; font-family: monospace;">
               NPR ${data.totalNpr.toLocaleString()}
-              ${data.totalUsd ? `<div style="font-size: 10px; font-weight: 400; color: #64748b;">(~${data.totalUsd.toLocaleString()} USD)</div>` : ''}
+              ${data.totalUsd ? `<span style="font-size: 9.5px; font-weight: 500; color: #64748b; margin-left: 4px;">(~${data.totalUsd.toLocaleString()} USD)</span>` : ''}
             </td>
           </tr>
         </tbody>
@@ -307,11 +330,11 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
     </div>
 
     <!-- Security & Boarding Pass Strip -->
-    <div style="background: #0f172a; color: #ffffff; border-radius: 8px; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px;">
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <div style="background: #ffffff; padding: 4px; border-radius: 4px; display: inline-block;">
+    <div style="background: #0f172a; color: #ffffff; border-radius: 6px; padding: 7px 12px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 9px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <div style="background: #ffffff; padding: 3px; border-radius: 4px; display: inline-block;">
           <!-- SVG QR Code Icon -->
-          <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#0552A2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#0552A2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="3" width="7" height="7"></rect>
             <rect x="14" y="3" width="7" height="7"></rect>
             <rect x="14" y="14" width="7" height="7"></rect>
@@ -319,34 +342,34 @@ export function generateReceiptHtml(data: OfficialReceiptData): string {
           </svg>
         </div>
         <div>
-          <div style="font-size: 10px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
+          <div style="font-size: 8.5px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px;">
             Digital Pass Verification Hash
           </div>
-          <div style="font-size: 12px; font-weight: 700; font-family: monospace; color: #38bdf8;">
+          <div style="font-size: 10.5px; font-weight: 700; font-family: monospace; color: #38bdf8;">
             ${qrHash}
           </div>
-          <div style="font-size: 9px; color: #94a3b8; margin-top: 1px;">
+          <div style="font-size: 8.5px; color: #94a3b8; margin-top: 1px;">
             Valid for immigration inspection, TIMS counters, and Sagarmatha / Annapurna checkpoint entries.
           </div>
         </div>
       </div>
       <div style="text-align: right;">
-        <span style="display: inline-block; background: #0552A2; color: #ffffff; font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 4px; text-transform: uppercase;">
+        <span style="display: inline-block; background: #0552A2; color: #ffffff; font-size: 9px; font-weight: 800; padding: 3px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
           NTB AUTHENTICATED
         </span>
       </div>
     </div>
 
     <!-- Footer Disclaimers & Emergency -->
-    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e2e8f0; padding-top: 12px; font-size: 10px; color: #64748b;">
-      <div style="max-w: 480px; line-height: 1.4;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-end; border-top: 1px solid #e2e8f0; padding-top: 6px; font-size: 9px; color: #64748b;">
+      <div style="max-width: 520px; line-height: 1.35;">
         <p><strong>Official Notice:</strong> Present this receipt & boarding pass along with your original passport at Nepal Tourism Board checkpoints. High-altitude medical evacuation coverage is registered under your booking reference.</p>
-        <p style="margin-top: 4px; color: #dc2626; font-weight: 600;">
+        <p style="margin-top: 2px; color: #dc2626; font-weight: 600;">
           🚨 NTB 24/7 Satellite Search & Rescue Emergency Coordination Hotline: 1144 | +977-1-4256909
         </p>
       </div>
       <div style="text-align: right; min-width: 140px;">
-        <div style="border-top: 1px solid #94a3b8; padding-top: 4px; margin-top: 24px; font-size: 9px; color: #475569; font-weight: 700;">
+        <div style="border-top: 1px solid #94a3b8; padding-top: 2px; margin-top: 8px; font-size: 8.5px; color: #475569; font-weight: 700; line-height: 1.2;">
           Controller of Tourism Desk<br/>
           Government of Nepal
         </div>
