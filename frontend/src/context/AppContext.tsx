@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import { CheckCircle2, X } from 'lucide-react';
 import {
   Booking,
   CommunityPost,
@@ -621,9 +622,38 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     >
       {children}
       {toast && (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-xl bg-slate-900 px-4 py-3 text-sm font-medium text-white shadow-xl border border-slate-700 animate-fade-in">
-          <span className="h-2.5 w-2.5 rounded-full bg-emerald-400" />
-          {toast}
+        <div className="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-w-md z-[100] animate-fade-in pointer-events-auto">
+          <div className="rounded-2xl bg-[#031526]/95 backdrop-blur-md text-white p-3.5 sm:p-4 shadow-2xl border border-white/15 flex items-start gap-3">
+            <div className="p-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-400 shrink-0 mt-0.5">
+              <CheckCircle2 className="h-4 w-4" />
+            </div>
+
+            <div className="flex-1 min-w-0 pr-1">
+              {toast.includes(': ') ? (
+                <>
+                  <div className="text-[11px] font-bold uppercase tracking-wider text-emerald-400 font-mono">
+                    {toast.split(': ')[0]}
+                  </div>
+                  <div className="text-xs sm:text-sm font-semibold text-slate-100 leading-snug mt-0.5 break-words">
+                    {toast.split(': ').slice(1).join(': ')}
+                  </div>
+                </>
+              ) : (
+                <p className="text-xs sm:text-sm font-medium text-slate-100 leading-snug break-words">
+                  {toast}
+                </p>
+              )}
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setToast(null)}
+              className="text-slate-400 hover:text-white p-1 rounded-lg hover:bg-white/10 transition-colors shrink-0 -mr-1 -mt-1 cursor-pointer"
+              aria-label="Dismiss notification"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
         </div>
       )}
     </AppContext.Provider>
