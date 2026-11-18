@@ -380,29 +380,34 @@ button, a {
   transform: translateY(0);
 }
 
-/* Shutter Drop-down & Roll-up Butter-Smooth Animations with Zoom-In Effect */
-@keyframes shutterDown {
+/* Butter-Smooth Zoom-In & Zoom-Out Mobile Navigation Animations */
+@keyframes menuZoomIn {
   0% {
     opacity: 0;
-    transform: scale(0.95) translateY(-14px);
+    transform: scale(0.88) translateY(-18px);
+    filter: blur(4px);
   }
   60% {
-    opacity: 0.96;
+    opacity: 0.98;
+    filter: blur(0px);
   }
   100% {
     opacity: 1;
     transform: scale(1) translateY(0);
+    filter: blur(0px);
   }
 }
 
-@keyframes shutterUp {
+@keyframes menuZoomOut {
   0% {
     opacity: 1;
     transform: scale(1) translateY(0);
+    filter: blur(0px);
   }
   100% {
     opacity: 0;
-    transform: scale(0.96) translateY(-18px);
+    transform: scale(0.88) translateY(-18px);
+    filter: blur(2px);
   }
 }
 
@@ -427,7 +432,7 @@ button, a {
 @keyframes menuItemsZoomIn {
   0% {
     opacity: 0;
-    transform: scale(0.97) translateY(-6px);
+    transform: scale(0.92) translateY(-8px);
   }
   100% {
     opacity: 1;
@@ -436,27 +441,27 @@ button, a {
 }
 
 .animate-shutter-down {
-  animation: shutterDown 0.36s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: menuZoomIn 0.40s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   transform-origin: top center;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
 .animate-shutter-up {
-  animation: shutterUp 0.28s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: menuZoomOut 0.30s cubic-bezier(0.32, 0, 0.67, 0) forwards;
   transform-origin: top center;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
 }
 
 .animate-backdrop-in {
-  animation: backdropFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: backdropFadeIn 0.38s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
 .animate-backdrop-out {
-  animation: backdropFadeOut 0.28s ease-in forwards;
+  animation: backdropFadeOut 0.30s ease-in forwards;
 }
 
 .animate-menu-zoom {
-  animation: menuItemsZoomIn 0.40s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: menuItemsZoomIn 0.44s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   will-change: transform, opacity;
 }
 

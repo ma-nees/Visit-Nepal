@@ -55,7 +55,7 @@ export default function Navbar() {
       setMobileOpen(false);
       setIsClosing(false);
       closeTimerRef.current = null;
-    }, 280);
+    }, 300);
   };
 
   const toggleMobile = () => {
@@ -422,7 +422,7 @@ export default function Navbar() {
           >
             <div
               className={`relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileOpen && !isClosing ? 'scale-110 rotate-90' : 'scale-100 rotate-0'
+                mobileOpen && !isClosing ? 'scale-115 rotate-90' : 'scale-100 rotate-0'
               }`}
             >
               <span
