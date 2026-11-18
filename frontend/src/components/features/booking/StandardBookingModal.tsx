@@ -537,7 +537,7 @@ export default function StandardBookingModal({
               </div>
 
               {/* Running Price Preview (Pure Text & Button, No Card Box) */}
-              <div className="border-t border-slate-150 pt-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-inter">
+              <div className="border-t border-slate-150 pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 font-inter">
                 <div>
                   <span className="text-xs font-semibold text-slate-600">Estimated Total</span>
                   <div className="flex items-baseline gap-1.5 mt-0.5">
@@ -552,10 +552,11 @@ export default function StandardBookingModal({
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  className="w-full sm:w-auto h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-5 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
-                  <span>Continue to Traveler Details</span>
-                  <ArrowRight className="h-4 w-4" />
+                  <span className="hidden sm:inline">Continue to Traveler Details</span>
+                  <span className="sm:hidden">Traveler Details</span>
+                  <ArrowRight className="h-4 w-4 shrink-0" />
                 </button>
               </div>
             </div>
@@ -719,23 +720,24 @@ export default function StandardBookingModal({
               </div>
 
               {/* Navigation buttons */}
-              <div className="flex justify-between items-center pt-4 border-t border-slate-150">
+              <div className="flex items-center justify-between gap-2.5 pt-4 border-t border-slate-150">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="h-10 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 sm:px-4 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" />
+                  <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
                   <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setStep(3)}
                   disabled={!fullName || !email || !phone}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 disabled:opacity-50 transition-all cursor-pointer active:scale-95"
+                  className="flex-1 sm:flex-initial h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-4 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 disabled:opacity-50 transition-all cursor-pointer active:scale-95 whitespace-nowrap"
                 >
-                  <span>Review &amp; Price Breakdown</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <span className="hidden sm:inline">Review &amp; Price Breakdown</span>
+                  <span className="sm:hidden">Price Breakdown</span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                 </button>
               </div>
             </div>
@@ -853,23 +855,24 @@ export default function StandardBookingModal({
               </div>
 
               {/* Action Buttons */}
-              <div className="flex justify-between items-center pt-4 border-t border-slate-150">
+              <div className="flex items-center justify-between gap-2.5 pt-4 border-t border-slate-150">
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-4 py-2.5 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95"
+                  className="h-10 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 sm:px-4 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 whitespace-nowrap"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5" />
+                  <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
                   <span>Back</span>
                 </button>
                 <button
                   type="button"
                   onClick={handleProceedToPayment}
-                  className="inline-flex items-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-6 py-2.5 text-xs font-semibold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer"
+                  className="flex-1 sm:flex-initial h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-4 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
                 >
-                  <Lock className="h-3.5 w-3.5" />
-                  <span>Confirm &amp; Proceed to Payment</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
+                  <Lock className="h-3.5 w-3.5 shrink-0" />
+                  <span className="hidden sm:inline">Confirm &amp; Proceed to Payment</span>
+                  <span className="sm:hidden">Confirm &amp; Pay</span>
+                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
                 </button>
               </div>
             </div>
