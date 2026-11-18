@@ -303,46 +303,55 @@ export default function ProfilePage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50/70 py-10 px-4 font-inter text-slate-900 sm:px-6 lg:px-8">
-      <div className="mx-auto max-w-6xl space-y-8">
-        {/* Top: Seamless Persona Switcher Pills */}
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200/80 pb-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
+    <div className="min-h-screen bg-slate-50/70 py-5 sm:py-8 lg:py-10 px-4 font-inter text-slate-900 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl space-y-6 sm:space-y-8">
+        {/* Top: Optimized Persona Switcher */}
+        <div className="border-b border-slate-200/80 pb-3 sm:pb-4 space-y-2.5 sm:space-y-0 sm:flex sm:items-center sm:justify-between sm:gap-4">
+          <div className="flex items-center justify-between sm:justify-start gap-2 sm:gap-3">
+            <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-slate-400 shrink-0">
               Switch Persona:
             </span>
-            <div className="flex flex-wrap items-center gap-1.5">
-              {personaProfiles.map((p) => {
-                const isCurrent = p.role === activeRole;
-                const isSwitching = switchingRole === p.role;
-                const Icon = roleIcon[p.role] || Compass;
-                return (
-                  <button
-                    key={p.role}
-                    type="button"
-                    disabled={isSwitching || isExpanded || tearState !== 'idle'}
-                    onClick={() => handleSwitchUser(p.role)}
-                    className={`inline-flex cursor-pointer items-center gap-1.5 rounded-full px-3.5 py-1.5 text-xs font-semibold transition-all ${isCurrent
-                        ? 'bg-[#0552A2] text-white shadow-xs'
-                        : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                      } disabled:opacity-50`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    <span>{isSwitching ? '...' : p.label}</span>
-                  </button>
-                );
-              })}
+            {/* Mobile-only compact active session status badge */}
+            <div className="sm:hidden inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 shrink-0">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              <span>Active · <span className="capitalize font-bold text-emerald-900">{currentPersona.role}</span></span>
             </div>
           </div>
 
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-800">
+          {/* Persona Pills: Smooth horizontal swipe on mobile, clean flex wrap on tablet/desktop */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+            {personaProfiles.map((p) => {
+              const isCurrent = p.role === activeRole;
+              const isSwitching = switchingRole === p.role;
+              const Icon = roleIcon[p.role] || Compass;
+              return (
+                <button
+                  key={p.role}
+                  type="button"
+                  disabled={isSwitching || isExpanded || tearState !== 'idle'}
+                  onClick={() => handleSwitchUser(p.role)}
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 sm:px-3.5 py-1.5 text-xs font-semibold transition-all active:scale-95 ${
+                    isCurrent
+                      ? 'bg-[#0552A2] text-white shadow-xs'
+                      : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
+                  } disabled:opacity-50`}
+                >
+                  <Icon className="h-3.5 w-3.5 shrink-0" />
+                  <span>{isSwitching ? '...' : p.label}</span>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Desktop/Tablet active session badge */}
+          <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-800 shrink-0">
             <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
           </div>
         </div>
 
         {/* Main Content: Left Identity + Right Interactive Animated Ticket Pass */}
-        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
+        <div className="grid gap-6 sm:gap-8 lg:gap-10 lg:grid-cols-[1.3fr_1fr] lg:items-center">
           {/* Left Column: User Identity Showcase */}
           <div className="space-y-6">
             <div className="flex items-center gap-5">
