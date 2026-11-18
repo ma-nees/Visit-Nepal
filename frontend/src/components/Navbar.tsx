@@ -155,7 +155,7 @@ export default function Navbar() {
   // When mobile drawer is open: solid clean white background for seamless shutter connection
   // Initial state at top of hero: completely transparent, floating, white text & white logo.
   // Scrolled state (>70px or non-home pages): solid clean white background, dark blue navigation text, subtle bottom border & shadow.
-  const isTransparent = isHome && !isScrolled;
+  const isTransparent = isHome && !isScrolled && !mobileOpen;
 
   const headerBgClass = mobileOpen
     ? 'bg-white border-b border-slate-200 shadow-sm'
@@ -173,7 +173,7 @@ export default function Navbar() {
         {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled or open) */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group py-0.5">
           <img
-            src={isTransparent && !mobileOpen ? '/logo-white.webp' : '/logo-brand.webp'}
+            src={isTransparent ? '/logo-white.webp' : '/logo-brand.webp'}
             alt="Visit Nepal"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/logo-brand.webp';
@@ -415,7 +415,7 @@ export default function Navbar() {
             type="button"
             onClick={toggleMobile}
             className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
-              isTransparent && !mobileOpen
+              isTransparent
                 ? 'text-white hover:bg-white/10'
                 : 'text-[#10243A] hover:bg-slate-100'
             }`}
