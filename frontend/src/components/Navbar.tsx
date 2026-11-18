@@ -408,7 +408,7 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Mobile Menu Toggle: Ultra-smooth physical 3-line morph into X */}
+          {/* Mobile Menu Toggle: Ultra-smooth physical 3-line morph with zoom-in physics */}
           <button
             type="button"
             onClick={toggleMobile}
@@ -420,9 +420,13 @@ export default function Navbar() {
             aria-label={mobileOpen && !isClosing ? 'Close Navigation Menu' : 'Open Navigation Menu'}
             aria-expanded={mobileOpen && !isClosing}
           >
-            <div className="relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none">
+            <div
+              className={`relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileOpen && !isClosing ? 'scale-110 rotate-90' : 'scale-100 rotate-0'
+              }`}
+            >
               <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+                className={`block h-[2px] w-full rounded-full transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
                 } ${
                   mobileOpen && !isClosing
@@ -431,7 +435,7 @@ export default function Navbar() {
                 }`}
               />
               <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-200 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                className={`block h-[2px] w-full rounded-full transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
                 } ${
                   mobileOpen && !isClosing
@@ -440,7 +444,7 @@ export default function Navbar() {
                 }`}
               />
               <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+                className={`block h-[2px] w-full rounded-full transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
                 } ${
                   mobileOpen && !isClosing
@@ -471,7 +475,7 @@ export default function Navbar() {
               isClosing ? 'animate-shutter-up' : 'animate-shutter-down'
             }`}
           >
-            <div className="space-y-1">
+            <div className="space-y-1 animate-menu-zoom">
               <Link
                 href="/"
                 onClick={closeMobile}
@@ -562,7 +566,7 @@ export default function Navbar() {
               )}
             </div>
 
-            <div className="pt-2">
+            <div className="pt-2 animate-menu-zoom">
               <div className="grid grid-cols-2 gap-2 text-center text-xs">
                 <Link
                   href="/explore"
