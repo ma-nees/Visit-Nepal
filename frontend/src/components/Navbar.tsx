@@ -85,14 +85,38 @@ export default function Navbar() {
     setNotifOpen(false);
   }, [pathname]);
 
+  // Lock body scroll and handle Escape key when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setMobileOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [mobileOpen]);
+
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
   // Header dynamic classes:
+  // When mobile drawer is open: solid clean white background for seamless shutter connection
   // Initial state at top of hero: completely transparent, floating, white text & white logo.
   // Scrolled state (>70px or non-home pages): solid clean white background, dark blue navigation text, subtle bottom border & shadow.
   const isTransparent = isHome && !isScrolled;
 
-  const headerBgClass = isTransparent
+  const headerBgClass = mobileOpen
+    ? 'bg-white border-b border-slate-200 shadow-sm'
+    : isTransparent
     ? 'bg-transparent border-transparent shadow-none'
     : 'bg-white/95 backdrop-blur-md border-b border-slate-200/80 shadow-xs shadow-slate-900/5';
 
@@ -103,10 +127,10 @@ export default function Navbar() {
       className={`${positionClass} z-50 w-full transition-all duration-300 ease-in-out ${headerBgClass} border-t-0 m-0`}
     >
       <div className="flex h-12 sm:h-13 lg:h-[52px] w-full items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
-        {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled) */}
+        {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled or open) */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group py-0.5">
           <img
-            src={isTransparent ? '/logo-white.webp' : '/logo-brand.webp'}
+            src={isTransparent && !mobileOpen ? '/logo-white.webp' : '/logo-brand.webp'}
             alt="Visit Nepal"
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/logo-brand.webp';
@@ -346,131 +370,150 @@ export default function Navbar() {
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileOpen((v) => !v)}
-            className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 ${isTransparent
-              ? 'text-white hover:bg-white/10'
-              : 'text-[#10243A] hover:bg-slate-100'
-              }`}
+            className={`lg:hidden flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+              isTransparent && !mobileOpen
+                ? 'text-white hover:bg-white/10'
+                : 'text-[#10243A] hover:bg-slate-100'
+            }`}
             aria-label="Toggle Navigation"
+            aria-expanded={mobileOpen}
           >
-            {mobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+            <span
+              className={`inline-flex transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+                mobileOpen ? 'rotate-90 scale-95' : 'rotate-0 scale-100'
+              }`}
+            >
+              {mobileOpen ? <X className="h-4.5 w-4.5" /> : <Menu className="h-4.5 w-4.5" />}
+            </span>
           </button>
         </div>
       </div>
 
-      {/* Mobile Minimal Drawer */}
-      {mobileOpen && (
-        <div className="lg:hidden border-t border-slate-200/80 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 shadow-2xl text-[#10243A] max-h-[calc(100dvh-60px)] overflow-y-auto animate-subtle-fade-up font-inter">
-          <div className="space-y-1">
+      {/* Mobile Backdrop Overlay (Fades in softly behind the falling shutter) */}
+      <div
+        onClick={() => setMobileOpen(false)}
+        className={`lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/45 backdrop-blur-xs transition-opacity duration-300 z-40 ${
+          mobileOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'
+        }`}
+        aria-hidden="true"
+      />
+
+      {/* Mobile Shutter Dropdown Drawer (Smooth physical shutter drop & roll-up) */}
+      <div
+        className={`lg:hidden shutter-drawer ${
+          mobileOpen ? 'shutter-drawer-open' : 'shutter-drawer-closed'
+        } relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 text-[#10243A] overflow-y-auto font-inter`}
+      >
+        <div className="space-y-1">
+          <Link
+            href="/"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          >
+            <span>Home</span>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          {navLinks.map((item) => (
             <Link
-              href="/"
+              key={item.href}
+              href={item.href}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+              className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
             >
-              <span>Home</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
+              <span>{item.label}</span>
+              <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
             </Link>
-            {navLinks.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setMobileOpen(false)}
-                className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
-              >
-                <span>{item.label}</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
-              </Link>
-            ))}
-            <Link
-              href="/schedule"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
+          ))}
+          <Link
+            href="/schedule"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          >
+            <span>Schedule (14 Days)</span>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          <Link
+            href="/chat"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          >
+            <span>Messages &amp; Concierge</span>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          <Link
+            href="/culture"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          >
+            <span>Culture &amp; Heritage</span>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          <Link
+            href="/dashboard"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
+          >
+            <span>Traveler Dashboard</span>
+            <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+          <Link
+            href="/login"
+            onClick={() => setMobileOpen(false)}
+            className="group flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100 transition-colors"
+          >
+            <span>Partner &amp; Admin Portals</span>
+            <ArrowRight className="h-3.5 w-3.5 text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
+          </Link>
+
+          {currentUser ? (
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false);
+                handleLogout();
+              }}
+              className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
             >
-              <span>Schedule (14 Days)</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
-            </Link>
-            <Link
-              href="/chat"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
-            >
-              <span>Messages &amp; Concierge</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
-            </Link>
-            <Link
-              href="/culture"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
-            >
-              <span>Culture &amp; Heritage</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
-            </Link>
-            <Link
-              href="/dashboard"
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100"
-            >
-              <span>Traveler Dashboard</span>
-              <ArrowRight className="h-3.5 w-3.5 text-slate-400" />
-            </Link>
+              <span className="flex items-center gap-2">
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out / Log Out</span>
+              </span>
+              <ArrowRight className="h-3.5 w-3.5" />
+            </button>
+          ) : (
             <Link
               href="/login"
               onClick={() => setMobileOpen(false)}
-              className="flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100"
+              className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
             >
-              <span>Partner &amp; Admin Portals</span>
-              <ArrowRight className="h-3.5 w-3.5 text-[#0552A2]" />
+              <span className="flex items-center gap-2">
+                <User className="h-4 w-4" />
+                <span>Sign In to Portal</span>
+              </span>
+              <ArrowRight className="h-3.5 w-3.5" />
             </Link>
+          )}
+        </div>
 
-            {currentUser ? (
-              <button
-                type="button"
-                onClick={() => {
-                  setMobileOpen(false);
-                  handleLogout();
-                }}
-                className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
-              >
-                <span className="flex items-center gap-2">
-                  <LogOut className="h-4 w-4" />
-                  <span>Sign Out / Log Out</span>
-                </span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </button>
-            ) : (
-              <Link
-                href="/login"
-                onClick={() => setMobileOpen(false)}
-                className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
-              >
-                <span className="flex items-center gap-2">
-                  <User className="h-4 w-4" />
-                  <span>Sign In to Portal</span>
-                </span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            )}
-          </div>
-
-          <div className="pt-2">
-            <div className="grid grid-cols-2 gap-2 text-center text-xs">
-              <Link
-                href="/explore"
-                onClick={() => setMobileOpen(false)}
-                className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs"
-              >
-                Browse Packages
-              </Link>
-              <Link
-                href="/custom-plan"
-                onClick={() => setMobileOpen(false)}
-                className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors"
-              >
-                Custom Trip
-              </Link>
-            </div>
+        <div className="pt-2">
+          <div className="grid grid-cols-2 gap-2 text-center text-xs">
+            <Link
+              href="/explore"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs active:scale-95"
+            >
+              Browse Packages
+            </Link>
+            <Link
+              href="/custom-plan"
+              onClick={() => setMobileOpen(false)}
+              className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors active:scale-95"
+            >
+              Custom Trip
+            </Link>
           </div>
         </div>
-      )}
+      </div>
     </header>
   );
 }

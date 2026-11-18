@@ -380,6 +380,33 @@ button, a {
   transform: translateY(0);
 }
 
+/* Shutter Drop-down & Roll-up Animations for Mobile Navigation */
+.shutter-drawer {
+  transform-origin: top center;
+  transition: transform 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.32s cubic-bezier(0.16, 1, 0.3, 1),
+              max-height 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.35s ease;
+  will-change: transform, opacity, max-height;
+}
+
+.shutter-drawer-open {
+  transform: translateY(0) scaleY(1);
+  opacity: 1;
+  max-height: 88vh;
+  pointer-events: auto;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+}
+
+.shutter-drawer-closed {
+  transform: translateY(-20px) scaleY(0.96);
+  opacity: 0;
+  max-height: 0px;
+  pointer-events: none;
+  overflow: hidden;
+  box-shadow: none;
+}
+
 /* Accessibility: Respect Reduced Motion Preference */
 @media (prefers-reduced-motion: reduce) {
   *,
