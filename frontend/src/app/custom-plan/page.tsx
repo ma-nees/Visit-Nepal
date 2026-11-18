@@ -1395,7 +1395,7 @@ export default function CustomTripPlannerPage() {
                   Review &amp; Submit Custom Expedition Request
                 </h2>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Your custom plan will be submitted to licensed operators with initial status <span className="font-mono font-bold text-[#0552A2]">PENDING_REVIEW</span>.
+                  Your custom plan will be submitted to licensed NTB operators for route verification and official quotation.
                 </p>
               </div>
 
@@ -1514,7 +1514,7 @@ export default function CustomTripPlannerPage() {
               </div>
               <div className="space-y-1">
                 <span className="rounded bg-amber-100 text-amber-800 font-bold text-[10px] px-2.5 py-0.5 uppercase tracking-wider">
-                  Status: PENDING_REVIEW
+                  Status: Under Operator Review
                 </span>
                 <h3 className="text-2xl font-bold font-poppins text-slate-900 mt-2">
                   Custom Trip Request Submitted!
