@@ -171,40 +171,38 @@ export default function TravelerDashboardPage() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
-      {/* 1. Dashboard Welcome Header (Unique & Aesthetic Editorial - No Dark Box Container) */}
-      <div className="relative pb-6 border-b border-slate-200/80">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="space-y-2.5 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+      {/* 1. Dashboard Welcome Header */}
+      <div className="relative pb-5 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
-              <span>Official Traveler Operations Portal</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-slate-600 font-medium">NTB Verified 2026</span>
+              <span>Traveler Portal • NTB 2026</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
               Welcome Back, <span className="text-[#0552A2]">{currentUser?.name || 'Aayush Pradhan'}</span>
             </h1>
 
-            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
-              Manage your verified Himalayan expedition permits, custom quotation approvals, digital QR boarding passes, and official tax invoices.
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+              Manage your verified Himalayan expedition permits, custom quotations, QR boarding passes, and invoices.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 shrink-0">
+          <div className="flex items-center gap-2 shrink-0">
             <Link
               href="/custom-plan"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] text-white px-4 py-2.5 text-xs font-bold hover:bg-[#044182] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] text-white px-3.5 py-2 text-xs font-bold hover:bg-[#044182] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
             >
               <Mountain className="h-3.5 w-3.5" />
               <span>Plan Custom Trip</span>
             </Link>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 px-4 py-2.5 text-xs font-bold hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer shadow-2xs"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 px-3.5 py-2 text-xs font-bold hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer shadow-2xs"
             >
               <span>Explore Routes</span>
             </Link>

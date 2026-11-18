@@ -48,43 +48,35 @@ function ExploreContent() {
 
   return (
     <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
-      <div className="relative pb-6 border-b border-slate-200/80">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
-              <Compass className="h-3.5 w-3.5 text-[#0552A2]" />
-              <span>Curated Himalayan Expeditions</span>
-              <span className="text-slate-300">•</span>
-              <span className="text-slate-600 font-medium">Official 2026 Registry</span>
+      {/* 1. Optimized & Clean Editorial Header */}
+      <div className="relative pb-5 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="space-y-2 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+              <Compass className="h-3.5 w-3.5 shrink-0" />
+              <span>Official 2026 Route Registry</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
               Explore Iconic <span className="text-[#0552A2]">Mountain Treks</span> &amp; Circuits
             </h1>
 
-            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
               Choose from UNESCO World Heritage valleys, high-altitude passes, and remote forbidden kingdoms with certified local IFMGA guides.
             </p>
           </div>
 
-          {/* Route & Clearance Badges */}
-          <div className="flex flex-wrap sm:flex-nowrap items-center gap-3">
-            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-              <Mountain className="h-4 w-4 text-[#0552A2]" />
-              <div className="text-left">
-                <div className="text-xs font-bold text-slate-900">{destinations.length} Official Routes</div>
-                <div className="text-[10px] text-slate-500 font-medium">Everest, Annapurna, Manaslu</div>
-              </div>
-            </div>
+          {/* Compact Inline Badges */}
+          <div className="flex items-center gap-2 shrink-0">
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
+              <Mountain className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+              <span>{destinations.length} Routes</span>
+            </span>
 
-            <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-              <ShieldCheck className="h-4 w-4 text-emerald-600" />
-              <div className="text-left">
-                <div className="text-xs font-bold text-slate-900">TIMS &amp; ACAP</div>
-                <div className="text-[10px] text-emerald-600 font-semibold">Online Permit Approvals</div>
-              </div>
-            </div>
+            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-xs font-semibold">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+              <span>TIMS &amp; ACAP Approved</span>
+            </span>
           </div>
         </div>
       </div>
