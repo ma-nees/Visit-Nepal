@@ -28,6 +28,7 @@ import {
   Luggage,
   PhoneCall,
   Search,
+  Users,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
@@ -1564,73 +1565,153 @@ export default function CustomTripPlannerPage() {
 
         {/* Live Trip Summary & Calculation Sidebar (Right Col) */}
         <div className="space-y-4">
-          <div className="sticky top-20 rounded-2xl border border-slate-200 bg-white p-5 shadow-xs space-y-4">
+          <div className="sticky top-20 rounded-2xl border border-slate-200/90 bg-white p-5 shadow-sm space-y-4 font-inter">
+            {/* Header with official pulse */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-3">
-              <span className="text-xs font-bold uppercase tracking-wider text-slate-500">
-                Custom Trip Overview
-              </span>
-              <span className="text-[10px] font-bold text-[#0552A2] bg-blue-50 px-2 py-0.5 rounded">
+              <div className="flex items-center gap-2">
+                <span className="relative flex h-2 w-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                  <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                </span>
+                <span className="text-xs font-bold font-poppins text-slate-900 tracking-tight">
+                  Trip Overview
+                </span>
+              </div>
+              <span className="inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#0552A2] bg-blue-50/80 border border-blue-200/60 px-2 py-0.5 rounded-md">
                 Live Calculator
               </span>
             </div>
 
-            <div className="space-y-2 text-xs">
-              <div>
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Selected Route</span>
-                <p className="font-bold text-slate-900 text-sm">{activeRegion.name}</p>
-                <p className="text-[11px] text-slate-500">{activeRegion.regionName}</p>
+            {/* Selected Route Badge Card */}
+            <div className="bg-slate-50/80 rounded-xl p-3 border border-slate-200/70 space-y-1">
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-[#0552A2] flex items-center gap-1">
+                  <MapPin className="h-3 w-3" /> Selected Route
+                </span>
+                <span className="text-[9.5px] font-bold text-slate-500 uppercase tracking-wider bg-white border border-slate-200 px-1.5 py-0.5 rounded">
+                  {activeRegion.difficulty || 'Custom'}
+                </span>
+              </div>
+              <p className="font-bold text-slate-900 text-sm font-poppins line-clamp-1 mt-0.5">
+                {activeRegion.name}
+              </p>
+              <p className="text-[11px] text-slate-500">{activeRegion.regionName}</p>
+            </div>
+
+            {/* Key Trip Parameters: 2x2 Micro-Tiles */}
+            <div className="grid grid-cols-2 gap-2 text-[11px]">
+              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+                  <Calendar className="h-3 w-3 text-[#0552A2]" />
+                  <span>Start Date</span>
+                </div>
+                <p className="font-bold text-slate-800 text-xs font-mono">{startDate}</p>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 border-t border-slate-100 pt-2 text-[11px]">
-                <div>
-                  <span className="text-slate-400">Start Date:</span>
-                  <p className="font-semibold text-slate-800">{startDate}</p>
+              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+                  <Clock className="h-3 w-3 text-[#0552A2]" />
+                  <span>Duration</span>
                 </div>
-                <div>
-                  <span className="text-slate-400">Duration:</span>
-                  <p className="font-semibold text-slate-800">{totalDurationDays} Days</p>
-                </div>
-                <div>
-                  <span className="text-slate-400">Travelers:</span>
-                  <p className="font-semibold text-slate-800">{adultsCount + childrenCount} Person(s)</p>
-                </div>
-                <div>
-                  <span className="text-slate-400">Style:</span>
-                  <p className="font-semibold text-slate-800">{travelStyle}</p>
-                </div>
+                <p className="font-bold text-slate-800 text-xs">{totalDurationDays} Days</p>
               </div>
 
-              {/* Service Highlights */}
-              <div className="border-t border-slate-100 pt-2 space-y-1 text-[11px] text-slate-600">
-                <div className="flex justify-between">
-                  <span>Lead Guide:</span>
-                  <span className="font-semibold text-slate-800">{guideRequested ? 'IFMGA Licensed' : 'None'}</span>
+              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+                  <Users className="h-3 w-3 text-[#0552A2]" />
+                  <span>Travelers</span>
                 </div>
-                <div className="flex justify-between">
-                  <span>Porters:</span>
-                  <span className="font-semibold text-slate-800">{porterCount} Porter(s)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Sherpa Butler:</span>
-                  <span className="font-semibold text-slate-800">{sherpaButlerRequested ? 'VIP Concierge' : 'None'}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span>Lodging:</span>
-                  <span className="font-semibold text-slate-800">{accommodationTier}</span>
-                </div>
+                <p className="font-bold text-slate-800 text-xs">{adultsCount + childrenCount} Person(s)</p>
               </div>
 
-              {/* Estimated Budget Box */}
-              <div className="rounded-xl bg-slate-900 p-4 text-white space-y-1 mt-3">
-                <span className="text-[10px] uppercase font-bold text-slate-400">
+              <div className="bg-slate-50/70 border border-slate-200/60 rounded-xl p-2.5 space-y-0.5">
+                <div className="flex items-center gap-1.5 text-slate-400 text-[10px] font-bold uppercase">
+                  <Sparkles className="h-3 w-3 text-[#0552A2]" />
+                  <span>Style</span>
+                </div>
+                <p className="font-bold text-slate-800 text-xs truncate" title={travelStyle}>{travelStyle}</p>
+              </div>
+            </div>
+
+            {/* Field Service Specifications */}
+            <div className="space-y-2 border-t border-slate-100 pt-3 text-xs">
+              <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-400 block">
+                Field Staff &amp; Services
+              </span>
+
+              <div className="flex items-center justify-between text-[11px] py-1 border-b border-slate-100/80">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <UserCheck className="h-3.5 w-3.5 text-[#0552A2]" />
+                  <span>Lead Guide</span>
+                </div>
+                {guideRequested ? (
+                  <span className="text-[10px] font-bold text-[#0552A2] bg-blue-50 border border-blue-200/70 px-2 py-0.5 rounded-md">
+                    IFMGA Certified
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-slate-400">Independent</span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] py-1 border-b border-slate-100/80">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <Luggage className="h-3.5 w-3.5 text-[#0552A2]" />
+                  <span>Porters</span>
+                </div>
+                <span className="text-[10px] font-bold text-slate-800 bg-slate-100 px-2 py-0.5 rounded-md">
+                  {porterCount} Porter(s)
+                </span>
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] py-1 border-b border-slate-100/80">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <ConciergeBell className="h-3.5 w-3.5 text-[#0552A2]" />
+                  <span>Sherpa Butler</span>
+                </div>
+                {sherpaButlerRequested ? (
+                  <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                    VIP Concierge
+                  </span>
+                ) : (
+                  <span className="text-[10px] text-slate-400">Optional</span>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between text-[11px] py-1">
+                <div className="flex items-center gap-1.5 text-slate-600">
+                  <Hotel className="h-3.5 w-3.5 text-[#0552A2]" />
+                  <span>Lodging</span>
+                </div>
+                <span className="font-semibold text-slate-800 text-[11px] truncate max-w-[140px] text-right" title={accommodationTier}>
+                  {accommodationTier}
+                </span>
+              </div>
+            </div>
+
+            {/* Estimated Budget Box: Atmospheric Navy Gradient */}
+            <div className="relative rounded-2xl bg-gradient-to-br from-[#031526] via-[#052b52] to-[#031526] p-4 text-white shadow-md border border-white/10 overflow-hidden space-y-1.5">
+              <div className="absolute -top-10 -right-10 w-28 h-28 bg-[#92C4EA]/15 rounded-full blur-xl pointer-events-none" />
+              
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] uppercase font-mono font-bold tracking-wider text-[#92C4EA]">
                   Estimated Total
                 </span>
-                <p className="text-xl font-extrabold text-[#FDB716]">
-                  NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
-                </p>
-                <p className="text-[11px] text-slate-300">
-                  ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD • Includes 13% VAT &amp; 5% SC
-                </p>
+                <span className="text-[9px] font-mono text-slate-400 uppercase tracking-wider">
+                  NTB 2026 STATUTORY
+                </span>
+              </div>
+
+              <p className="text-2xl font-extrabold text-[#FDB716] font-poppins tracking-tight">
+                NPR {(calculatedPricing?.estimatedBudgetNpr || 0).toLocaleString()}
+              </p>
+
+              <div className="flex items-center justify-between text-[11px] text-slate-300 pt-0.5 border-t border-white/10">
+                <span className="font-semibold">
+                  ~${Math.round((calculatedPricing?.estimatedBudgetNpr || 0) / 135).toLocaleString()} USD
+                </span>
+                <span className="text-[10px] text-slate-400 font-light">
+                  Includes 13% VAT &amp; 5% SC
+                </span>
               </div>
             </div>
 
@@ -1639,9 +1720,10 @@ export default function CustomTripPlannerPage() {
               <button
                 type="button"
                 onClick={() => setCurrentStep(7)}
-                className="w-full rounded-xl border border-[#0552A2] py-2 text-xs font-bold text-[#0552A2] hover:bg-blue-50 transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center gap-1.5 w-full rounded-xl border border-slate-200 bg-white hover:bg-slate-50 py-2.5 text-xs font-semibold text-slate-700 shadow-2xs hover:border-[#0552A2]/40 hover:text-[#0552A2] transition-all cursor-pointer active:scale-95"
               >
-                Skip Directly to Review &amp; Submit
+                <span>Skip Directly to Review &amp; Submit</span>
+                <ArrowRight className="h-3.5 w-3.5" />
               </button>
             )}
           </div>
