@@ -106,6 +106,17 @@ export default function HeroBackgroundSlider({
       <div className="absolute inset-0 z-20 bg-slate-950/40 sm:bg-slate-950/25 pointer-events-none" />
       <div className="absolute inset-0 z-20 bg-gradient-to-b from-slate-950/75 via-slate-950/40 to-transparent sm:bg-gradient-to-r sm:from-slate-950/85 sm:via-slate-950/45 sm:to-transparent pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-28 sm:h-36 z-20 bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent pointer-events-none" />
+
+      {/* 2. Cinematic Atmospheric Mist & Cloud Fade-Out (Seamlessly dissolves bottom of hero into white section below) */}
+      <div
+        className="absolute bottom-0 inset-x-0 h-36 sm:h-48 md:h-56 lg:h-64 z-20 pointer-events-none"
+        style={{
+          background: `
+            radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 80%),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 20%, rgba(255, 255, 255, 0.12) 40%, rgba(255, 255, 255, 0.32) 60%, rgba(255, 255, 255, 0.62) 78%, rgba(255, 255, 255, 0.88) 92%, #FFFFFF 100%)
+          `,
+        }}
+      />
     </div>
   );
 }
