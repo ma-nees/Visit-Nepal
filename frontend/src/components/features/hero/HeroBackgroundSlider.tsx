@@ -101,27 +101,20 @@ export default function HeroBackgroundSlider({
         );
       })}
 
-      {/* 1. Atmospheric Contrast Vignettes for Razor-Sharp Text Readability */}
-      <div className="absolute inset-0 z-20 bg-slate-950/25 pointer-events-none" />
-      <div className="absolute inset-0 z-20 bg-gradient-to-r from-slate-950/85 via-slate-950/45 to-transparent pointer-events-none" />
-      <div className="absolute top-0 inset-x-0 h-32 z-20 bg-gradient-to-b from-slate-950/70 via-slate-950/20 to-transparent pointer-events-none" />
+      {/* 1. Atmospheric Contrast Overlays (Deeper on mobile to ensure crisp text legibility over vivid photography) */}
+      <div className="absolute inset-0 z-20 bg-slate-950/40 sm:bg-slate-950/25 pointer-events-none" />
+      <div className="absolute inset-0 z-20 bg-gradient-to-b from-slate-950/75 via-slate-950/40 to-transparent sm:bg-gradient-to-r sm:from-slate-950/85 sm:via-slate-950/45 sm:to-transparent pointer-events-none" />
+      <div className="absolute top-0 inset-x-0 h-28 sm:h-36 z-20 bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent pointer-events-none" />
 
-      {/* 2. Atmospheric White Mist & Cloud Dissolve at Bottom (Seamless Fade into Clean White Section Below) */}
+      {/* 2. Seamless Full-Width Natural Cloud Mist (Dissolves horizontally into white section below with zero dome/hump) */}
       <div
-        className="absolute bottom-0 inset-x-0 h-44 sm:h-60 lg:h-72 z-20 pointer-events-none"
+        className="absolute bottom-0 inset-x-0 h-28 sm:h-44 lg:h-56 z-20 pointer-events-none"
         style={{
           background:
-            'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.03) 15%, rgba(255,255,255,0.12) 35%, rgba(255,255,255,0.35) 55%, rgba(255,255,255,0.7) 75%, rgba(255,255,255,0.92) 90%, #FFFFFF 100%)',
+            'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.22) 40%, rgba(255,255,255,0.55) 65%, rgba(255,255,255,0.85) 85%, #FFFFFF 100%)',
         }}
       />
-      <div
-        className="absolute bottom-0 inset-x-0 h-32 sm:h-48 lg:h-60 z-20 pointer-events-none"
-        style={{
-          background:
-            'radial-gradient(ellipse 120% 75% at 50% 100%, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 45%, rgba(255,255,255,0) 80%)',
-        }}
-      />
-      <div className="absolute bottom-0 inset-x-0 h-4 z-20 bg-[#FFFFFF] pointer-events-none" />
+      <div className="absolute bottom-0 inset-x-0 h-5 z-20 bg-[#FFFFFF] pointer-events-none" />
     </div>
   );
 }

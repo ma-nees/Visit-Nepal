@@ -17,6 +17,7 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
   const [isOverlayFadingIn, setIsOverlayFadingIn] = useState(false);
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const isTransitioningRef = useRef(false);
   const rafIdRef = useRef<number | null>(null);
@@ -27,13 +28,23 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
   const CROSSFADE_DURATION = 1.2;
 
   useEffect(() => {
-    // Respect accessibility reduced-motion preference
+    // Respect accessibility reduced-motion preference & handle responsive viewport sizing
     if (typeof window !== "undefined") {
       const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
       setIsReducedMotion(mediaQuery.matches);
       const listener = (e: MediaQueryListEvent) => setIsReducedMotion(e.matches);
       mediaQuery.addEventListener("change", listener);
-      return () => mediaQuery.removeEventListener("change", listener);
+
+      const checkMobile = () => {
+        setIsMobile(window.innerWidth < 640);
+      };
+      checkMobile();
+      window.addEventListener("resize", checkMobile);
+
+      return () => {
+        mediaQuery.removeEventListener("change", listener);
+        window.removeEventListener("resize", checkMobile);
+      };
     }
   }, []);
 
@@ -154,15 +165,42 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
       : "opacity-0 transition-none pointer-events-none"
     }`;
 
+  const viewBox = isMobile ? "0 0 540 215" : "0 0 1000 142";
+  const foreignWidth = isMobile ? 540 : 1000;
+  const foreignHeight = isMobile ? 215 : 142;
+
+  const renderGlyphs = (extraClass = "", extraProps: React.SVGProps<SVGTextElement> = {}) => {
+    if (isMobile) {
+      return (
+        <>
+          <text x="2" y="96" className={`hero-text-glyph-mobile ${extraClass}`} {...extraProps}>
+            Discover
+          </text>
+          <text x="2" y="196" className={`hero-text-glyph-mobile ${extraClass}`} {...extraProps}>
+            Nepal
+          </text>
+        </>
+      );
+    }
+    return (
+      <text x="2" y="112" className={`hero-text-glyph ${extraClass}`} {...extraProps}>
+        Discover Nepal
+      </text>
+    );
+  };
+
   return (
-    <div className={`relative w-full max-w-2xl sm:max-w-3xl lg:max-w-4xl select-none group cursor-default ${className}`}>
+    <div className={`relative w-full ${isMobile ? "max-w-xs sm:max-w-none" : "max-w-2xl sm:max-w-3xl lg:max-w-4xl"} select-none group cursor-default ${className}`}>
       {/* Semantic Accessible Heading for Screen Readers & Search Crawlers */}
       <h1 className="sr-only">Discover Nepal</h1>
 
+      {/* Ambient Dark Aura for Ultra-Sharp Contrast against bright snow, rocks & sky */}
+      <div className="absolute -inset-2 sm:-inset-6 bg-slate-950/45 blur-2xl rounded-3xl pointer-events-none -z-10" />
+
       {/* Visual Video-Masked Letterforms SVG with Proportional Cinematic Glyphs */}
       <svg
-        viewBox="0 0 1000 142"
-        className="w-full h-auto overflow-visible block drop-shadow-[0_8px_24px_rgba(0,0,0,0.75)] group-hover:drop-shadow-[0_12px_36px_rgba(146,196,234,0.35)] transition-all duration-700"
+        viewBox={viewBox}
+        className="w-full h-auto overflow-visible block drop-shadow-[0_4px_16px_rgba(0,0,0,0.95)] drop-shadow-[0_8px_32px_rgba(0,0,0,0.85)] group-hover:drop-shadow-[0_12px_40px_rgba(146,196,234,0.4)] transition-all duration-700"
         aria-hidden="true"
         preserveAspectRatio="xMinYMid meet"
       >
@@ -173,6 +211,13 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
               font-family: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
               font-weight: 900;
               font-size: 120px;
+              letter-spacing: -0.035em;
+              text-rendering: geometricPrecision;
+            }
+            .hero-text-glyph-mobile {
+              font-family: var(--font-poppins), Poppins, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+              font-weight: 900;
+              font-size: 106px;
               letter-spacing: -0.035em;
               text-rendering: geometricPrecision;
             }
@@ -193,31 +238,27 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
 
           {/* SVG ClipPath defining the letter outlines */}
           <clipPath id="discover-nepal-text-mask">
-            <text x="2" y="112" className="hero-text-glyph">
-              Discover Nepal
-            </text>
+            {renderGlyphs()}
           </clipPath>
         </defs>
 
         {/* Layer 1: Instant High-Contrast Silver-White Fallback Text */}
-        <text
-          x="2"
-          y="112"
-          className={`hero-text-glyph transition-opacity duration-1000 ease-out ${isVideoLoaded && !isReducedMotion ? "opacity-0" : "opacity-100"
+        <g
+          className={`transition-opacity duration-1000 ease-out ${isVideoLoaded && !isReducedMotion ? "opacity-0" : "opacity-100"
             }`}
           fill="url(#hero-fallback-grad)"
           filter="url(#hero-letter-glow)"
         >
-          Discover Nepal
-        </text>
+          {renderGlyphs()}
+        </g>
 
         {/* Layer 2: Live Video Playing Inside Letterforms with Dual-Player Seamless Crossfade */}
         {!isReducedMotion && (
           <foreignObject
             x="0"
             y="0"
-            width="1000"
-            height="142"
+            width={foreignWidth}
+            height={foreignHeight}
             clipPath="url(#discover-nepal-text-mask)"
             className={`transition-opacity duration-1000 ease-out ${isVideoLoaded ? "opacity-100" : "opacity-0"
               }`}
@@ -233,7 +274,7 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
                 disablePictureInPicture
                 disableRemotePlayback
                 poster="/hero-himalayas.webp"
-                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-transform duration-1000 ease-out brightness-120 contrast-125 saturate-120 ${playerAClass}`}
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-transform duration-1000 ease-out brightness-110 contrast-120 saturate-125 ${playerAClass}`}
                 src="/videos/nepal-hero.mp4"
               />
 
@@ -245,7 +286,7 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
                 preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
-                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-transform duration-1000 ease-out brightness-120 contrast-125 saturate-120 ${playerBClass}`}
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-transform duration-1000 ease-out brightness-110 contrast-120 saturate-125 ${playerBClass}`}
                 src="/videos/nepal-hero.mp4"
               />
             </div>
@@ -253,16 +294,11 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
         )}
 
         {/* Layer 3: Ultra-Crisp Crystalline Outer Rim Stroke for Razor-Sharp Legibility */}
-        <text
-          x="2"
-          y="112"
-          className="hero-text-glyph pointer-events-none transition-all duration-500"
-          fill="none"
-          stroke="rgba(255, 255, 255, 0.55)"
-          strokeWidth="1.5"
-        >
-          Discover Nepal
-        </text>
+        {renderGlyphs("pointer-events-none transition-all duration-500", {
+          fill: "none",
+          stroke: "rgba(255, 255, 255, 0.95)",
+          strokeWidth: isMobile ? 2.2 : 1.8,
+        })}
       </svg>
     </div>
   );

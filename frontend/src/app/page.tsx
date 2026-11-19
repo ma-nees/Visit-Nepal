@@ -315,10 +315,10 @@ export default function HomePage() {
         <HeroBackgroundSlider scrollY={scrollY} intervalMs={5500} />
 
         {/* Hero Narrative: Left-aligned editorial typography - Edge-to-Edge */}
-        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center pointer-events-auto">
+        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-20 sm:pt-24 pb-14 sm:pb-12 flex-1 flex flex-col justify-center pointer-events-auto">
           <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl lg:max-w-5xl space-y-4 sm:space-y-5">
             {/* Minimal Eyebrow */}
-            <div className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold tracking-[0.25em] uppercase text-[#92C4EA]">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/45 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#92C4EA] shadow-md w-fit">
               <span>Visit Nepal Official</span>
             </div>
 
@@ -326,23 +326,23 @@ export default function HomePage() {
             <HeroVideoTitle />
 
             {/* Supporting Text */}
-            <p className="text-base sm:text-xl text-slate-200/90 font-normal font-inter leading-relaxed max-w-2xl">
+            <p className="text-sm sm:text-lg lg:text-xl text-slate-100 font-medium font-inter leading-relaxed max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
               Where the Himalayas meet extraordinary experiences.
             </p>
 
             {/* Primary & Secondary Minimal CTAs */}
-            <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
+            <div className="pt-2 sm:pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-3.5">
               <Link
                 href="/explore"
                 prefetch={true}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-6 py-2.5 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-md shadow-[#0552A2]/30 min-h-[40px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-7 py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-lg shadow-[#0552A2]/40 min-h-[44px]"
               >
                 <span>Explore Nepal</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="#experiences"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 px-5 py-2.5 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white active:scale-[0.98] transition-all min-h-[40px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-slate-950/50 hover:bg-slate-900/70 backdrop-blur-md border border-white/30 px-6 py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white active:scale-[0.98] transition-all shadow-md shadow-black/20 min-h-[44px]"
               >
                 <span>Discover Experiences</span>
               </Link>
