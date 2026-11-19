@@ -82,14 +82,13 @@ export default function CulturePage() {
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=1920&q=85')",
+              "url('https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=1920&fm=webp&q=85')",
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Cultural Anthology
           </span>
           <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">

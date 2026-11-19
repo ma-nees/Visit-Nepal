@@ -7,16 +7,9 @@ import { motion, AnimatePresence } from 'framer-motion';
 import {
   UserCircle2,
   ArrowRight,
-  Bell,
   MessageSquare,
-  CheckCheck,
   LogOut,
   User,
-  Shield,
-  CalendarCheck,
-  Compass,
-  ShieldCheck,
-  CheckCircle2,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
@@ -71,12 +64,10 @@ const itemVariants = {
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { role, currentUser, logout, notificationsList, markAllRead } = useApp();
+  const { role, currentUser, logout } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMenuExiting, setIsMenuExiting] = useState(false);
-  const [notifOpen, setNotifOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const notifRef = useRef<HTMLDivElement>(null);
 
   const openMobile = () => {
     setIsMenuExiting(false);
@@ -96,21 +87,6 @@ export default function Navbar() {
       openMobile();
     }
   };
-
-  // Close notifications dropdown on click outside
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent) => {
-      if (notifRef.current && !notifRef.current.contains(e.target as Node)) {
-        setNotifOpen(false);
-      }
-    };
-    if (notifOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [notifOpen]);
 
   const handleLogout = () => {
     logout();
@@ -141,7 +117,6 @@ export default function Navbar() {
   useEffect(() => {
     setMobileOpen(false);
     setIsMenuExiting(false);
-    setNotifOpen(false);
   }, [pathname]);
 
   // Lock body scroll and handle Escape key when mobile menu is open
@@ -165,7 +140,7 @@ export default function Navbar() {
     };
   }, [mobileOpen]);
 
-  const unreadCount = notificationsList.filter((n) => !n.read).length;
+
 
   // Header dynamic classes:
   // When mobile drawer is open or smoothly exiting: solid clean white background for seamless continuity
@@ -186,7 +161,7 @@ export default function Navbar() {
     <header
       className={`${positionClass} z-50 w-full transition-all duration-300 ease-in-out ${headerBgClass} border-t-0 m-0`}
     >
-      <div className="flex h-12 sm:h-13 lg:h-[52px] w-full items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto">
+      <div className="flex h-12 sm:h-13 lg:h-[52px] w-full items-center justify-between px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
         {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled or open) */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group py-0.5">
           <img
@@ -249,154 +224,14 @@ export default function Navbar() {
               {/* Role Badge Indicator */}
               <Link
                 href="/profile"
-                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
+                className={`inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
                   ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
                   : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
                   }`}
                 title="Active Portal / Profile"
               >
-                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                 <span className="capitalize">{currentUser.role || role || 'Traveler'}</span>
               </Link>
-
-              {/* Notifications bell */}
-              <div className="relative hidden sm:block">
-                <button
-                  onClick={() => setNotifOpen((v) => !v)}
-                  className={`relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
-                    ? 'text-white/80 hover:text-white hover:bg-white/10'
-                    : 'text-slate-600 hover:text-[#0552A2] hover:bg-slate-100'
-                    }`}
-                  aria-label="Notifications"
-                >
-                  <Bell className="h-4 w-4" />
-                  {unreadCount > 0 && (
-                    <span className="absolute 1 top-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-[#EC1F27] text-[8px] font-bold text-white">
-                      {unreadCount}
-                    </span>
-                  )}
-                </button>
-
-                {notifOpen && (
-                  <div
-                    ref={notifRef}
-                    className="absolute right-0 mt-2.5 w-[calc(100vw-24px)] max-w-sm sm:w-[380px] rounded-2xl border border-slate-200/90 bg-white/98 backdrop-blur-xl shadow-[0_20px_50px_-10px_rgba(3,21,38,0.20),0_0_0_1px_rgba(3,21,38,0.04)] z-50 text-slate-900 animate-subtle-fade-up overflow-hidden font-inter"
-                  >
-                    {/* Header: Clean, balanced typography with pill count and action */}
-                    <div className="flex items-center justify-between px-4.5 py-3 border-b border-slate-100 bg-slate-50/60">
-                      <div className="flex items-center gap-2">
-                        <span className="text-xs font-bold text-slate-900 font-poppins uppercase tracking-wider">
-                          Notifications
-                        </span>
-                        {unreadCount > 0 && (
-                          <span className="bg-[#0552A2]/10 text-[#0552A2] text-[10px] font-bold px-2 py-0.5 rounded-full">
-                            {unreadCount} new
-                          </span>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={markAllRead}
-                        className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 hover:text-[#0552A2] transition-colors cursor-pointer"
-                      >
-                        <CheckCheck className="h-3.5 w-3.5 text-[#0552A2]" />
-                        <span>Mark read</span>
-                      </button>
-                    </div>
-
-                    {/* Seamless Notification List (NO separated cards) */}
-                    <div className="divide-y divide-slate-100/90 max-h-[320px] overflow-y-auto scrollbar-thin">
-                      {notificationsList.length === 0 ? (
-                        <div className="py-8 text-center text-xs text-slate-400">
-                          No notifications at this time
-                        </div>
-                      ) : (
-                        notificationsList.map((n) => {
-                          const isPermit = n.title.toLowerCase().includes('permit');
-                          const isBooking =
-                            n.title.toLowerCase().includes('booking') ||
-                            n.title.toLowerCase().includes('reservation') ||
-                            n.title.toLowerCase().includes('confirmed');
-                          const isWeather =
-                            n.title.toLowerCase().includes('weather') ||
-                            n.title.toLowerCase().includes('advisory');
-
-                          return (
-                            <div
-                              key={n.id}
-                              className={`group flex items-start gap-3 px-4.5 py-3 transition-colors duration-150 hover:bg-slate-50/80 cursor-pointer ${
-                                !n.read ? 'bg-blue-50/30' : 'bg-transparent'
-                              }`}
-                            >
-                              {/* Visual Circle Indicator */}
-                              <div
-                                className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full mt-0.5 ${
-                                  isPermit
-                                    ? 'bg-emerald-50 text-emerald-600'
-                                    : isBooking
-                                    ? 'bg-blue-50 text-[#0552A2]'
-                                    : isWeather
-                                    ? 'bg-amber-50 text-amber-600'
-                                    : 'bg-slate-100 text-slate-600'
-                                }`}
-                              >
-                                {isPermit ? (
-                                  <ShieldCheck className="h-4 w-4" />
-                                ) : isBooking ? (
-                                  <CalendarCheck className="h-4 w-4" />
-                                ) : isWeather ? (
-                                  <Compass className="h-4 w-4" />
-                                ) : (
-                                  <Bell className="h-4 w-4" />
-                                )}
-                              </div>
-
-                              {/* Notification Body Text */}
-                              <div className="flex-1 min-w-0">
-                                <div className="flex items-baseline justify-between gap-2">
-                                  <span
-                                    className={`text-xs font-semibold truncate ${
-                                      !n.read ? 'text-slate-900 font-bold' : 'text-slate-800'
-                                    }`}
-                                  >
-                                    {n.title}
-                                  </span>
-                                  <span className="text-[10px] text-slate-400 shrink-0 font-medium">
-                                    {n.time}
-                                  </span>
-                                </div>
-                                <p className="mt-0.5 text-[11px] text-slate-500 leading-relaxed font-normal">
-                                  {n.body}
-                                </p>
-                              </div>
-
-                              {/* Tiny Unread Accent Dot */}
-                              {!n.read && (
-                                <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2] ring-2 ring-blue-100 shrink-0 mt-2" />
-                              )}
-                            </div>
-                          );
-                        })
-                      )}
-                    </div>
-
-                    {/* Aesthetic Bottom Action Bar */}
-                    <div className="border-t border-slate-100 bg-slate-50/60 px-4.5 py-2.5 flex items-center justify-between">
-                      <Link
-                        href="/dashboard"
-                        onClick={() => setNotifOpen(false)}
-                        className="text-[11px] font-semibold text-slate-600 hover:text-[#0552A2] flex items-center gap-1 transition-colors"
-                      >
-                        <span>View all in Dashboard</span>
-                        <ArrowRight className="h-3 w-3" />
-                      </Link>
-                      <span className="text-[10px] text-slate-400 font-medium">
-                        Live NTB Sync
-                      </span>
-                    </div>
-                  </div>
-                )}
-              </div>
 
               {/* User Profile: Direct redirect to /profile */}
               <Link
@@ -578,9 +413,6 @@ export default function Navbar() {
                         }`}
                       >
                         <span className="flex items-center gap-2.5">
-                          {isActive && (
-                            <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2] animate-pulse" />
-                          )}
                           <span>{item.label}</span>
                         </span>
                         <ArrowRight

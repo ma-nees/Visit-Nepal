@@ -43,6 +43,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${poppins.variable} ${inter.variable} h-full antialiased bg-[#031526]`}>
+      <head>
+        <link rel="preload" as="image" href="/images/hero/hero-slide-1.webp" type="image/webp" fetchPriority="high" />
+      </head>
       <body className="min-h-full flex flex-col bg-[#031526] text-slate-900 m-0 p-0 border-none">
         <AppProvider>
           <Suspense

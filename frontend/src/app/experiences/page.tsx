@@ -241,14 +241,13 @@ export default function ExperiencesPage() {
           className="absolute inset-0 bg-cover bg-center opacity-20 scale-105"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1920&q=85')",
+              "url('https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1920&fm=webp&q=85')",
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="relative z-10 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Experiential Catalogue
           </span>
           <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
@@ -278,7 +277,7 @@ export default function ExperiencesPage() {
       </section>
 
       {/* 2. Featured Experience Visual Deep-Dive */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-14">
         <ScrollReveal direction="up" duration={650} distance={20}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
             {/* Visual Panel (Col 1-7) - Unobstructed Photography */}
@@ -381,7 +380,7 @@ export default function ExperiencesPage() {
 
       {/* 3. All 8 Visual Experiences Gallery Grid */}
       <section className="bg-[#F7F9FC] py-20 sm:py-28 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-12">
           <div className="max-w-2xl space-y-2">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Complete Directory

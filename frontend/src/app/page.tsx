@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import ScrollReveal from '@/components/ScrollReveal';
 import InteractiveMap from '@/components/InteractiveMap';
+import HeroBackgroundSlider from '@/components/features/hero/HeroBackgroundSlider';
 import HeroVideoTitle from '@/components/features/hero/HeroVideoTitle';
 
 // 8 Primary Destinations required by specification
@@ -262,7 +263,7 @@ const travelStories = [
     date: 'Cultural Dispatch',
     readTime: '8 min read',
     image:
-    'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80',
+      'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80',
     excerpt:
       'Beyond the rainshadow mountains, life in the 14th-century capital continues around Buddhist prayer wheels, earthen monasteries, and wind-blown alleys.',
   },
@@ -291,54 +292,43 @@ export default function HomePage() {
     const handleScroll = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
-        if (window.scrollY <= 800) {
-          setScrollY(window.scrollY);
-        }
-        ticking = false;
-      });
-  ticking = true;
-}
+          if (window.scrollY <= 800) {
+            setScrollY(window.scrollY);
+          }
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
 
-window.addEventListener('scroll', handleScroll, { passive: true });
-return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-return (
+  return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* =========================================================================
           1. HERO SECTION: Full-Screen Cinematic Experience (100vh)
           ========================================================================= */}
       <section className="relative overflow-hidden bg-slate-950 text-white min-h-[100dvh] flex flex-col justify-between pt-12 sm:pt-14 lg:pt-[52px]">
-        {/* Edge-to-edge High-Resolution Himalayan Landscape with subtle parallax */}
-        <div
-          className="absolute inset-0 bg-cover bg-center will-change-transform scale-105"
-          style={{
-            backgroundImage: "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&h=1080&fit=crop&auto=format')",
-            transform: `translate3d(0, ${Math.min(scrollY * 0.16, 90)}px, 0)`,
-          }}
-        />
+        {/* Dynamic Auto-Changing Hero Background Slideshow with 6 Nepal Images */}
+        <HeroBackgroundSlider scrollY={scrollY} intervalMs={5500} />
 
-        {/* Sophisticated Editorial Vignette: Soft gradient for crystal clear text readability */}
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950/85 via-slate-950/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#031526]/90 via-transparent to-slate-950/40" />
+        {/* Hero Narrative: Left-aligned editorial typography - Edge-to-Edge */}
+        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center pointer-events-auto">
+          <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl lg:max-w-5xl space-y-4 sm:space-y-5">
+            {/* Minimal Eyebrow */}
+            <div className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold tracking-[0.25em] uppercase text-[#92C4EA]">
+              <span>Visit Nepal Official</span>
+            </div>
 
-            {/* Hero Narrative: Left-aligned editorial typography */}
-            <div className="relative max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center">
-              <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl space-y-5">
-                {/* Minimal Eyebrow */}
-                <div className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold tracking-[0.25em] uppercase text-[#92C4EA]">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
-                  <span>Visit Nepal Official</span>
-                </div>
+            {/* Main Heading: Discover Nepal with dynamic cinematic video masking */}
+            <HeroVideoTitle />
 
-                {/* Main Heading: Discover Nepal with dynamic cinematic video masking */}
-                <HeroVideoTitle />
-
-                {/* Supporting Text */}
-                <p className="text-base sm:text-xl text-slate-200/90 font-normal font-inter leading-relaxed max-w-xl">
-                  Where the Himalayas meet extraordinary experiences.
-                </p>
+            {/* Supporting Text */}
+            <p className="text-base sm:text-xl text-slate-200/90 font-normal font-inter leading-relaxed max-w-2xl">
+              Where the Himalayas meet extraordinary experiences.
+            </p>
 
             {/* Primary & Secondary Minimal CTAs */}
             <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
@@ -360,25 +350,17 @@ return (
           </ScrollReveal>
         </div>
 
-            {/* Subtle Bottom Scroll Indicator & Coordinates Whisper */}
-            <div className="relative w-full px-4 sm:px-6 lg:px-8 pb-4 pt-1">
-              <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-white/70">
-                <div className="flex items-center gap-2 font-mono text-[11px] text-slate-300">
-                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>27°59′17″ N, 86°55′31″ E · Himalayan Range, Nepal</span>
-                </div>
-        </div>
-      </div>
-    </section>
+
+      </section>
 
       {/* =========================================================================
           2. CREDIBILITY STRIP: Four High-Impact Mountain Pillars
           ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 border-b border-slate-100">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-6 sm:py-8">
         <ScrollReveal direction="up" duration={600} distance={20}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 items-center text-center">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 items-center text-center">
             {/* Col 1: 8 of 14 */}
-            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
                 8 <span className="text-lg sm:text-xl font-bold text-slate-400">of</span> 14
               </span>
@@ -388,7 +370,7 @@ return (
             </div>
 
             {/* Col 2: 8,848.86m */}
-            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
                 8,848<span className="text-base sm:text-lg font-bold text-[#FDB716]">.86</span><span className="text-xs font-semibold text-slate-600 ml-0.5">m</span>
               </span>
@@ -398,7 +380,7 @@ return (
             </div>
 
             {/* Col 3: 10 UNESCO */}
-            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
                 10 <span className="text-base sm:text-lg font-bold text-slate-800">UNESCO</span>
               </span>
@@ -408,7 +390,7 @@ return (
             </div>
 
             {/* Col 4: 100% */}
-            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
                 100<span className="text-lg sm:text-xl font-bold text-emerald-600">%</span>
               </span>
@@ -423,7 +405,7 @@ return (
       {/* =========================================================================
           3. DESTINATIONS SECTION: Explore the Extraordinary (Asymmetrical Editorial)
           ========================================================================= */}
-      <section id="destinations" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18 space-y-6 sm:space-y-8">
+      <section id="destinations" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-10 sm:py-14 lg:py-18 space-y-6 sm:space-y-8">
         {/* Section Heading */}
         <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
@@ -444,30 +426,36 @@ return (
             <ScrollReveal direction="up" duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[0].link}
-                className="group relative flex flex-col justify-between h-[340px] sm:h-[390px] lg:h-[430px] w-full rounded-2xl overflow-hidden bg-slate-950 p-4 sm:p-5 transition-all duration-500 border border-slate-200/80 shadow-md"
+                className="group flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-xs hover:border-[#0552A2]/40 hover:shadow-md transition-all duration-300"
               >
-                <img
-                  src={editorialDestinations[0].image}
-                  alt={editorialDestinations[0].name}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-
-                {/* Top Corner Badge (Keeps mountain peaks 100% visible) */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[11px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
-                    {editorialDestinations[0].tag} · {editorialDestinations[0].altitude}
-                  </span>
+                {/* Clean Photo Container at Top (100% Unobstructed Landscape) */}
+                <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden bg-slate-900">
+                  <img
+                    src={editorialDestinations[0].image}
+                    alt={editorialDestinations[0].name}
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[11px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
+                      {editorialDestinations[0].tag} · {editorialDestinations[0].altitude}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Compact Docked Glass Card (Preserves unobstructed landscape photography) */}
-                <div className="relative z-10 rounded-xl bg-slate-950/75 backdrop-blur-md p-4 sm:p-5 border border-white/15 text-white space-y-1.5 shadow-lg group-hover:bg-slate-950/85 transition-colors">
-                  <h3 className="font-inter text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white group-hover:text-slate-100 transition-colors">
-                    {editorialDestinations[0].name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter max-w-lg leading-relaxed line-clamp-2">
-                    {editorialDestinations[0].description}
-                  </p>
-                  <div className="pt-1 inline-flex items-center gap-2 text-xs font-semibold font-inter text-[#92C4EA] group-hover:text-[#FDB716] transition-colors">
+                {/* Content Cleanly UNDER the Image */}
+                <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3 bg-white">
+                  <div className="space-y-1">
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">
+                      {editorialDestinations[0].region}
+                    </span>
+                    <h3 className="font-inter text-xl sm:text-2xl font-bold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                      {editorialDestinations[0].name}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed line-clamp-2">
+                      {editorialDestinations[0].description}
+                    </p>
+                  </div>
+                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] group-hover:text-[#044182]">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -481,30 +469,36 @@ return (
             <ScrollReveal direction="up" delay={120} duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[1].link}
-                className="group relative flex flex-col justify-between h-[340px] sm:h-[390px] lg:h-[430px] w-full rounded-2xl overflow-hidden bg-slate-950 p-4 sm:p-5 transition-all duration-500 border border-slate-200/80 shadow-md"
+                className="group flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-xs hover:border-[#0552A2]/40 hover:shadow-md transition-all duration-300"
               >
-                <img
-                  src={editorialDestinations[1].image}
-                  alt={editorialDestinations[1].name}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
-                />
-
-                {/* Top Corner Badge */}
-                <div className="relative z-10 flex items-center justify-between">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[10px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
-                    {editorialDestinations[1].tag} · {editorialDestinations[1].altitude}
-                  </span>
+                {/* Clean Photo Container at Top (100% Unobstructed Landscape) */}
+                <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden bg-slate-900">
+                  <img
+                    src={editorialDestinations[1].image}
+                    alt={editorialDestinations[1].name}
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                  <div className="absolute top-3 left-3 flex items-center gap-1.5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[11px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
+                      {editorialDestinations[1].tag} · {editorialDestinations[1].altitude}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Compact Docked Glass Card */}
-                <div className="relative z-10 rounded-xl bg-slate-950/75 backdrop-blur-md p-4 sm:p-5 border border-white/15 text-white space-y-1.5 shadow-lg group-hover:bg-slate-950/85 transition-colors">
-                  <h3 className="font-inter text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-slate-100 transition-colors">
-                    {editorialDestinations[1].name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter leading-relaxed line-clamp-2">
-                    {editorialDestinations[1].description}
-                  </p>
-                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#92C4EA] group-hover:text-[#FDB716] transition-colors">
+                {/* Content Cleanly UNDER the Image */}
+                <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-3 bg-white">
+                  <div className="space-y-1">
+                    <span className="text-[10px] sm:text-[11px] font-mono uppercase tracking-wider text-slate-400 block font-semibold">
+                      {editorialDestinations[1].region}
+                    </span>
+                    <h3 className="font-inter text-lg sm:text-xl font-bold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                      {editorialDestinations[1].name}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed line-clamp-2">
+                      {editorialDestinations[1].description}
+                    </p>
+                  </div>
+                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] group-hover:text-[#044182]">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -595,7 +589,7 @@ return (
           4. EXPERIENCES SECTION: Experience Nepal (8 Visual Stories)
           ========================================================================= */}
       <section id="experiences" className="bg-[#F7F9FC] py-10 sm:py-14 lg:py-18 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-6 sm:space-y-8">
           {/* Section Heading */}
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
@@ -661,7 +655,7 @@ return (
       {/* =========================================================================
           5. DISCOVER NEPAL: Immersive Storytelling Introduction
           ========================================================================= */}
-      <section id="discover" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18">
+      <section id="discover" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-10 sm:py-14 lg:py-18">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left: Editorial Narrative & Key Dimensions (Col 1-6) */}
           <div className="lg:col-span-6 space-y-4">
@@ -736,7 +730,7 @@ return (
           6. CULTURE & HERITAGE: Living Traditions & Craftsmanship
           ========================================================================= */}
       <section id="culture" className="bg-[#F7F9FC] py-10 sm:py-14 lg:py-18 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-6 sm:space-y-8">
           {/* Section Heading */}
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
@@ -783,7 +777,7 @@ return (
       {/* =========================================================================
           7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
           ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-10 sm:py-14">
         <ScrollReveal direction="up" duration={700} distance={24}>
           <InteractiveMap />
         </ScrollReveal>
@@ -792,7 +786,7 @@ return (
       {/* =========================================================================
           8. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
           ========================================================================= */}
-      <section id="stories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-6 sm:space-y-8">
+      <section id="stories" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-10 sm:py-14 space-y-6 sm:space-y-8">
         {/* Section Heading & Link */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">

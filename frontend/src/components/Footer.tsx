@@ -19,7 +19,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full border-t border-white/10 bg-[#031526] text-white font-inter">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-14 pb-8 sm:pb-12">
+      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-8 sm:pt-14 pb-8 sm:pb-12">
         {/* Main Editorial Grid */}
         <div className="grid grid-cols-2 lg:grid-cols-12 gap-y-6 gap-x-6 sm:gap-8 lg:gap-12 pb-8 sm:pb-12 border-b border-white/10">
           {/* Brand & Identity (Full width on mobile, 5 cols on lg) */}
@@ -40,20 +40,7 @@ export default function Footer() {
             </p>
 
             {/* Official Accreditations */}
-            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 text-[10.5px] sm:text-[11px] text-slate-300">
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 sm:px-3 py-0.5 sm:py-1">
-                <ShieldCheck className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#92C4EA]" />
-                <span>Nepal Tourism Board</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 sm:px-3 py-0.5 sm:py-1">
-                <Mountain className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-[#FDB716]" />
-                <span>TAAN Authorized</span>
-              </span>
-              <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 border border-white/10 px-2.5 sm:px-3 py-0.5 sm:py-1">
-                <Compass className="h-3 w-3 sm:h-3.5 sm:w-3.5 text-emerald-400" />
-                <span>IFMGA Certified</span>
-              </span>
-            </div>
+
           </div>
 
           {/* Destinations (1 col on mobile, 2 cols on lg) */}

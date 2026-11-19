@@ -312,8 +312,7 @@ export default function ProfilePage() {
               Switch Persona:
             </span>
             {/* Mobile-only compact active session status badge */}
-            <div className="sm:hidden inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-emerald-800 shrink-0">
-              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <div className="sm:hidden inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-800 shrink-0">
               <span>Active · <span className="capitalize font-bold text-emerald-900">{currentPersona.role}</span></span>
             </div>
           </div>
@@ -343,8 +342,7 @@ export default function ProfilePage() {
           </div>
 
           {/* Desktop/Tablet active session badge */}
-          <div className="hidden sm:inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-xs font-semibold text-emerald-800 shrink-0">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+          <div className="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 shrink-0">
             <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
           </div>
         </div>

@@ -186,7 +186,6 @@ export default function StoriesPage() {
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Field Dispatches &amp; Chronicles
           </span>
           <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">

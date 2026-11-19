@@ -57,7 +57,7 @@ function PackageDetailContent({
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-4 font-inter">
+    <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-3.5 sm:py-5 lg:px-8 space-y-4 font-inter">
       {/* Top Navigation Row */}
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Link
@@ -68,8 +68,7 @@ function PackageDetailContent({
           <span>Back to all expeditions</span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
-            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800">
             Official NTB Route Registry
           </span>
         </div>

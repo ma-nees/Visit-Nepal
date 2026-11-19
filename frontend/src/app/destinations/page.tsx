@@ -217,14 +217,13 @@ export default function DestinationsPage() {
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
             backgroundImage:
-              "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&h=1080&fit=crop&auto=format')",
+              "url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1920&h=1080&fit=crop&auto=format&fm=webp&q=85')",
           }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="relative z-10 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
-            <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Geographical Catalogue
           </span>
           <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
@@ -259,7 +258,7 @@ export default function DestinationsPage() {
       </section>
 
       {/* 2. Destinations Asymmetrical Editorial Showcase */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-12 space-y-6 sm:space-y-8">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Curated Regions
@@ -356,14 +355,14 @@ export default function DestinationsPage() {
       </section>
 
       {/* 3. Interactive Nepal Map Embedded */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-20">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-20">
         <ScrollReveal direction="up" duration={700} distance={24}>
           <InteractiveMap />
         </ScrollReveal>
       </section>
 
       {/* 4. Editorial Trip Builder Callout */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 sm:pb-28">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pb-20 sm:pb-28">
         <div className="rounded-3xl bg-[#0552A2] text-white p-8 sm:p-14 relative overflow-hidden shadow-xl">
           <div className="relative z-10 max-w-2xl space-y-4">
             <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] block">
