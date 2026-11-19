@@ -127,7 +127,6 @@ function ServicesContent() {
                   decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-950/10 to-transparent opacity-90" />
                 <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 rounded-full bg-slate-900/80 backdrop-blur-xs px-2 py-0.5 text-[11px] font-bold text-white shadow-xs">
                   <Star className="h-3 w-3 fill-[#FDB716] text-[#FDB716]" />
                   <span>{h.rating}</span>
@@ -135,13 +134,13 @@ function ServicesContent() {
                 <span className="absolute top-2.5 left-2.5 inline-flex items-center gap-1 rounded-full bg-[#0552A2]/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-semibold text-white shadow-xs">
                   NTB Verified
                 </span>
-                <span className="absolute bottom-2.5 left-2.5 right-2.5 inline-flex items-center gap-1 rounded-md bg-white/95 backdrop-blur-xs px-2 py-0.5 text-[10px] font-semibold text-slate-800 shadow-xs truncate">
-                  <MapPin className="h-2.5 w-2.5 text-[#EC1F27] shrink-0" />
-                  <span className="truncate">{h.location}</span>
-                </span>
               </div>
-              <div className="flex flex-1 flex-col p-3.5 space-y-2.5">
+              <div className="flex flex-1 flex-col p-3.5 space-y-2">
                 <div>
+                  <div className="flex items-center gap-1 text-[10.5px] font-semibold text-[#EC1F27] mb-1">
+                    <MapPin className="h-2.5 w-2.5 shrink-0" />
+                    <span className="truncate">{h.location}</span>
+                  </div>
                   <h2 className="text-sm font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors leading-snug line-clamp-1">
                     {h.name}
                   </h2>
@@ -509,17 +508,16 @@ function ServicesContent() {
                   decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/60 via-transparent to-transparent opacity-80" />
                 <span className="absolute top-3 right-3 inline-flex items-center gap-1 rounded-full bg-slate-900/80 backdrop-blur-xs px-2.5 py-1 text-xs font-bold text-white shadow-xs">
                   <Star className="h-3.5 w-3.5 fill-[#FDB716] text-[#FDB716]" />
                   <span>{a.rating}</span>
                 </span>
-                <span className="absolute bottom-3 left-3 inline-flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-xs px-2.5 py-0.5 text-[11px] font-semibold text-slate-800 shadow-xs">
-                  <MapPin className="h-3 w-3 text-[#EC1F27]" />
-                  <span className="truncate max-w-[200px]">{a.location}</span>
-                </span>
               </div>
-              <div className="flex flex-1 flex-col p-5 space-y-3">
+              <div className="flex flex-1 flex-col p-5 space-y-2.5">
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#EC1F27]">
+                  <MapPin className="h-3.5 w-3.5 shrink-0" />
+                  <span className="truncate">{a.location}</span>
+                </div>
                 <h2 className="text-base font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors leading-snug line-clamp-1">
                   {a.title}
                 </h2>

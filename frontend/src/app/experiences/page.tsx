@@ -281,22 +281,20 @@ export default function ExperiencesPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14">
         <ScrollReveal direction="up" duration={650} distance={20}>
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
-            {/* Visual Panel (Col 1-7) */}
+            {/* Visual Panel (Col 1-7) - Unobstructed Photography */}
             <div className="lg:col-span-7">
-              <div className="relative aspect-[16/10] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-slate-900 shadow-xl">
+              <div className="relative aspect-[16/10] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-slate-900 shadow-xl group border border-slate-200/80">
                 <img
                   src={activeExp.heroImage}
                   alt={activeExp.title}
-                  className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
+                  className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-102"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
-                    {activeExp.tag} · {activeExp.altitudeRange}
+                {/* Minimal floating corner badge (keeps photo 100% visible) */}
+                <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[11px] font-semibold text-white border border-white/15 shadow-sm">
+                    <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
+                    <span>{activeExp.tag} · {activeExp.altitudeRange}</span>
                   </span>
-                  <h3 className="font-inter text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight">
-                    {activeExp.title}
-                  </h3>
                 </div>
               </div>
             </div>
@@ -307,9 +305,12 @@ export default function ExperiencesPage() {
                 <span className="text-[10px] font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
                   Featured Experience Profile
                 </span>
-                <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A] mt-0.5">
-                  {activeExp.subtitle}
+                <h2 className="font-poppins text-2xl sm:text-3xl font-bold text-[#10243A] mt-1 leading-snug">
+                  {activeExp.title}
                 </h2>
+                <p className="text-xs sm:text-sm font-semibold text-[#0552A2] mt-0.5">
+                  {activeExp.subtitle}
+                </p>
               </div>
 
               <p className="text-sm sm:text-base text-slate-700 font-normal font-inter leading-relaxed">

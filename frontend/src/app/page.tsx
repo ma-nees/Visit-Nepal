@@ -444,27 +444,30 @@ return (
             <ScrollReveal direction="up" duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[0].link}
-                className="group relative flex flex-col justify-end h-[320px] sm:h-[380px] lg:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-950 p-5 sm:p-7 transition-all duration-500"
+                className="group relative flex flex-col justify-between h-[340px] sm:h-[390px] lg:h-[430px] w-full rounded-2xl overflow-hidden bg-slate-950 p-4 sm:p-5 transition-all duration-500 border border-slate-200/80 shadow-md"
               >
                 <img
                   src={editorialDestinations[0].image}
                   alt={editorialDestinations[0].name}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-90"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
 
-
-                <div className="relative z-10 space-y-2 text-white">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
+                {/* Top Corner Badge (Keeps mountain peaks 100% visible) */}
+                <div className="relative z-10 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[11px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
                     {editorialDestinations[0].tag} · {editorialDestinations[0].altitude}
                   </span>
-                  <h3 className="font-inter text-2xl sm:text-3xl lg:text-4xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
+                </div>
+
+                {/* Compact Docked Glass Card (Preserves unobstructed landscape photography) */}
+                <div className="relative z-10 rounded-xl bg-slate-950/75 backdrop-blur-md p-4 sm:p-5 border border-white/15 text-white space-y-1.5 shadow-lg group-hover:bg-slate-950/85 transition-colors">
+                  <h3 className="font-inter text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight text-white group-hover:text-slate-100 transition-colors">
                     {editorialDestinations[0].name}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter max-w-lg leading-relaxed line-clamp-2">
                     {editorialDestinations[0].description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-medium font-inter text-white group-hover:text-[#FDB716] transition-colors">
+                  <div className="pt-1 inline-flex items-center gap-2 text-xs font-semibold font-inter text-[#92C4EA] group-hover:text-[#FDB716] transition-colors">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -478,27 +481,30 @@ return (
             <ScrollReveal direction="up" delay={120} duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[1].link}
-                className="group relative flex flex-col justify-end h-[320px] sm:h-[380px] lg:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-950 p-5 sm:p-7 transition-all duration-500"
+                className="group relative flex flex-col justify-between h-[340px] sm:h-[390px] lg:h-[430px] w-full rounded-2xl overflow-hidden bg-slate-950 p-4 sm:p-5 transition-all duration-500 border border-slate-200/80 shadow-md"
               >
                 <img
                   src={editorialDestinations[1].image}
                   alt={editorialDestinations[1].name}
-                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105 opacity-90"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
 
-
-                <div className="relative z-10 space-y-1.5 text-white">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
+                {/* Top Corner Badge */}
+                <div className="relative z-10 flex items-center justify-between">
+                  <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-3 py-1 text-[10px] font-mono tracking-wider text-[#FDB716] border border-white/15 shadow-sm">
                     {editorialDestinations[1].tag} · {editorialDestinations[1].altitude}
                   </span>
-                  <h3 className="font-inter text-xl sm:text-2xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
+                </div>
+
+                {/* Compact Docked Glass Card */}
+                <div className="relative z-10 rounded-xl bg-slate-950/75 backdrop-blur-md p-4 sm:p-5 border border-white/15 text-white space-y-1.5 shadow-lg group-hover:bg-slate-950/85 transition-colors">
+                  <h3 className="font-inter text-lg sm:text-xl font-bold tracking-tight text-white group-hover:text-slate-100 transition-colors">
                     {editorialDestinations[1].name}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter leading-relaxed line-clamp-2">
                     {editorialDestinations[1].description}
                   </p>
-                  <div className="pt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-white group-hover:text-[#FDB716] transition-colors">
+                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#92C4EA] group-hover:text-[#FDB716] transition-colors">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -702,18 +708,21 @@ return (
           {/* Right: Layered Editorial Photography Panel (Col 7-12) */}
           <div className="lg:col-span-6">
             <ScrollReveal direction="up" delay={150} duration={750} distance={28}>
-              <div className="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] sm:aspect-[16/11] shadow-xl">
-                <img
-                  src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
-                  alt="Himalayan Monastery Dawn"
-                  className="h-full w-full object-cover"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[#031526]/80 via-transparent to-transparent" />
-                <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
-                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
-                    Sacred Monasteries of the High Valley
-                  </span>
-                  <p className="font-inter text-base font-normal text-slate-100">
+              <div className="rounded-2xl overflow-hidden bg-white border border-slate-200/80 shadow-md">
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+                    alt="Himalayan Monastery Dawn"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
+                  />
+                  <div className="absolute top-3 left-3">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/70 backdrop-blur-md px-2.5 py-1 text-[10px] font-mono tracking-wider text-[#FDB716] border border-white/10">
+                      Sacred Monasteries of the High Valley
+                    </span>
+                  </div>
+                </div>
+                <div className="p-3.5 bg-slate-50/70 border-t border-slate-100">
+                  <p className="font-inter text-xs sm:text-sm font-normal text-slate-700 italic">
                     &ldquo;In the silence of the high peaks, the soul discovers its native home.&rdquo;
                   </p>
                 </div>

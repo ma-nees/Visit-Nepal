@@ -57,44 +57,85 @@ function PackageDetailContent({
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
-      <Link
-        href="/explore"
-        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#0552A2] transition-colors"
-      >
-        <ArrowLeft className="h-3.5 w-3.5" />
-        <span>Back to all expeditions</span>
-      </Link>
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-4 font-inter">
+      {/* Top Navigation Row */}
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <Link
+          href="/explore"
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#0552A2] transition-colors"
+        >
+          <ArrowLeft className="h-3.5 w-3.5" />
+          <span>Back to all expeditions</span>
+        </Link>
+        <div className="flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-200/80 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800">
+            <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            Official NTB Route Registry
+          </span>
+        </div>
+      </div>
 
-      {/* Hero */}
-      <div className="relative h-56 sm:h-72 lg:h-84 overflow-hidden rounded-xl border border-slate-200/90 shadow-md">
+      {/* Expedition Header & Metadata (Separated from image for pure unobstructed visibility) */}
+      <div className="space-y-2 pt-1 pb-1">
+        {/* Category, Grade & Rating Badges */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="rounded-full bg-[#0552A2] px-3 py-1 text-[11px] font-bold text-white shadow-xs">
+            {dest.category}
+          </span>
+          <span className="rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-[11px] font-semibold text-slate-700">
+            {dest.difficulty} Grade
+          </span>
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/80 px-2.5 py-1 text-[11px] font-bold text-amber-900">
+            <Star className="h-3.5 w-3.5 fill-[#FDB716] text-[#FDB716]" />
+            <span>{dest.rating}</span>
+            <span className="text-slate-500 font-normal text-[10px]">({dest.reviewsCount} reviews)</span>
+          </span>
+        </div>
+
+        {/* Main Title */}
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
+          {dest.title}
+        </h1>
+
+        {/* Location & Quick Specs Strip */}
+        <div className="flex flex-wrap items-center gap-y-1.5 gap-x-3.5 text-xs text-slate-600">
+          <p className="flex items-center gap-1.5 font-semibold text-[#EC1F27]">
+            <MapPin className="h-3.5 w-3.5" />
+            <span>{dest.location}</span>
+          </p>
+          <span className="hidden sm:inline text-slate-300">•</span>
+          <p className="flex items-center gap-1 text-slate-600 font-medium">
+            <Mountain className="h-3.5 w-3.5 text-[#0552A2]" />
+            <span>Max Alt: <strong className="text-slate-900 font-bold">{dest.altitude}</strong></span>
+          </p>
+          <span className="hidden sm:inline text-slate-300">•</span>
+          <p className="flex items-center gap-1 text-slate-600 font-medium">
+            <Clock className="h-3.5 w-3.5 text-emerald-600" />
+            <span>Duration: <strong className="text-slate-900 font-bold">{dest.duration}</strong></span>
+          </p>
+        </div>
+      </div>
+
+      {/* Unobstructed Expedition Photography Showcase (100% visible, zero text covering the landscape) */}
+      <div className="relative h-64 sm:h-80 lg:h-[390px] w-full overflow-hidden rounded-2xl border border-slate-200/90 shadow-md bg-slate-950 group">
         <img
           src={dest.imageUrl}
           alt={dest.title}
-          className="h-full w-full object-cover transition-transform duration-1000 scale-105"
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/35 to-transparent" />
-        <div className="absolute bottom-6 left-5 right-5 sm:left-8 sm:right-8 text-white space-y-2">
-          <div className="flex flex-wrap items-center gap-1.5 mb-1">
-            <span className="rounded bg-[#0552A2] px-2.5 py-0.5 text-[10px] font-bold text-white shadow-xs">
-              {dest.category}
-            </span>
-            <span className="rounded bg-white/20 px-2.5 py-0.5 text-[10px] font-semibold backdrop-blur-md border border-white/20 text-white">
-              {dest.difficulty} Grade
-            </span>
-            <span className="inline-flex items-center gap-1 rounded bg-slate-900/80 px-2.5 py-0.5 text-[11px] font-bold text-white backdrop-blur-md">
-              <Star className="h-3 w-3 fill-[#FDB716] text-[#FDB716]" />
-              <span>{dest.rating}</span>
-              <span className="text-slate-300 font-normal text-[10px]">({dest.reviewsCount} reviews)</span>
-            </span>
-          </div>
-          <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight drop-shadow-md text-white">
-            {dest.title}
-          </h1>
-          <p className="flex items-center gap-1.5 text-xs sm:text-sm text-slate-200 font-medium">
-            <MapPin className="h-3.5 w-3.5 text-[#EC1F27]" />
-            <span>{dest.location}</span>
-          </p>
+
+        {/* Minimal Floating Corner Badges (Non-obtrusive) */}
+        <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/65 backdrop-blur-md px-3 py-1 text-[11px] font-semibold text-white border border-white/15 shadow-sm">
+            <Mountain className="h-3.5 w-3.5 text-[#FDB716]" />
+            <span>Himalayan Vista</span>
+          </span>
+        </div>
+
+        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/65 backdrop-blur-md px-3 py-1 text-[11px] font-medium text-white/90 border border-white/15 shadow-sm">
+            <span>Official NTB Photography</span>
+          </span>
         </div>
       </div>
 

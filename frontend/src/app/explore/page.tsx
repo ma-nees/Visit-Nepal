@@ -490,8 +490,8 @@ function ExploreContent() {
               prefetch={false}
               className="group flex flex-col overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-2xs hover:border-[#0552A2]/40 hover:shadow-xs active:scale-[0.99] transition-all duration-200"
             >
-              {/* Photo & Overlay Badges */}
-              <div className="relative h-36 sm:h-42 overflow-hidden bg-slate-900">
+              {/* Photo & Minimal Corner Badges (Completely unobstructed image) */}
+              <div className="relative h-40 sm:h-44 overflow-hidden bg-slate-900">
                 <img
                   src={dest.imageUrl}
                   alt={dest.title}
@@ -512,25 +512,28 @@ function ExploreContent() {
                   <span>{dest.rating}</span>
                   <span className="text-slate-400 font-normal">({dest.reviewsCount})</span>
                 </span>
-                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-white text-[10px] font-semibold">
-                  <span className="inline-flex items-center gap-1 rounded bg-black/55 backdrop-blur-xs px-1.5 py-0.5">
-                    <Mountain className="h-2.5 w-2.5 text-[#FDB716]" />
-                    <span>Peak: {dest.altitude}</span>
-                  </span>
-                  <span className="inline-flex items-center gap-1 rounded bg-black/55 backdrop-blur-xs px-1.5 py-0.5">
-                    <Clock className="h-2.5 w-2.5 text-[#92C4EA]" />
-                    <span>{dest.duration}</span>
-                  </span>
-                </div>
               </div>
 
-              {/* Card Body */}
+              {/* Card Body with Clean Location & Specs Strip */}
               <div className="flex flex-1 flex-col p-3 sm:p-3.5">
-                <div className="flex items-center gap-1 text-[10px] font-semibold text-[#EC1F27]">
-                  <MapPin className="h-2.5 w-2.5 shrink-0" />
-                  <span className="truncate">{dest.location}</span>
+                <div className="flex items-center justify-between gap-1 text-[10px]">
+                  <div className="flex items-center gap-1 font-semibold text-[#EC1F27] truncate">
+                    <MapPin className="h-2.5 w-2.5 shrink-0" />
+                    <span className="truncate">{dest.location}</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 text-slate-500 font-medium shrink-0 text-[9.5px]">
+                    <span className="inline-flex items-center gap-0.5">
+                      <Mountain className="h-2.5 w-2.5 text-[#0552A2]" />
+                      <span>{dest.altitude}</span>
+                    </span>
+                    <span>•</span>
+                    <span className="inline-flex items-center gap-0.5">
+                      <Clock className="h-2.5 w-2.5 text-slate-500" />
+                      <span>{dest.duration}</span>
+                    </span>
+                  </div>
                 </div>
-                <h2 className="mt-0.5 text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors line-clamp-1">
+                <h2 className="mt-1 text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors line-clamp-1">
                   {dest.title}
                 </h2>
                 <p className="mt-0.5 text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
