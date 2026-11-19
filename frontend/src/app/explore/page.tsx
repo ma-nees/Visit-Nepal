@@ -249,19 +249,19 @@ function ExploreContent() {
           })}
         </div>
 
-        {/* Compact Controls Bar: Responsive 2-Row Layout on Mobile, Single Row on Desktop */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2 bg-slate-50/80 p-2 sm:p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
-          {/* Row 1 on Mobile: Search Box + View Mode Toggle Side-by-Side */}
-          <div className="flex items-center gap-2 flex-1 min-w-0">
+        {/* Compact Controls Bar: Ultra-Space-Efficient 2-Row Mobile / Single-Row Desktop */}
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-1.5 sm:gap-2 bg-slate-50/70 p-1.5 sm:p-2 rounded-xl border border-slate-200/80 shadow-2xs">
+          {/* Row 1 on Mobile / Left Section on Desktop: Search Box + View Mode Toggle */}
+          <div className="flex items-center gap-1.5 sm:gap-2 flex-1 min-w-0">
             {/* Search Box */}
-            <div className="relative flex-1 min-w-[180px]">
+            <div className="relative flex-1 min-w-[140px]">
               <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
               <input
                 type="text"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search by trek name, region, or altitude..."
-                className="w-full rounded-lg border border-slate-200 bg-white h-8 pl-8 pr-7 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1.5 focus:ring-[#0552A2] shadow-2xs"
+                placeholder="Search treks, regions, altitude..."
+                className="w-full rounded-lg border border-slate-200 bg-white h-7.5 sm:h-8 pl-8 pr-7 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1.5 focus:ring-[#0552A2] shadow-2xs"
               />
               {query && (
                 <button
@@ -274,12 +274,12 @@ function ExploreContent() {
               )}
             </div>
 
-            {/* View Mode Toggle (Attached side-by-side with Search on mobile) */}
+            {/* View Mode Toggle (Mobile / Tablet) */}
             <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0 lg:hidden">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                className={`p-1 rounded-md transition-colors cursor-pointer ${
                   viewMode === 'grid'
                     ? 'bg-[#0552A2] text-white shadow-2xs'
                     : 'text-slate-500 hover:text-slate-900'
@@ -292,7 +292,7 @@ function ExploreContent() {
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                className={`p-1 rounded-md transition-colors cursor-pointer ${
                   viewMode === 'list'
                     ? 'bg-[#0552A2] text-white shadow-2xs'
                     : 'text-slate-500 hover:text-slate-900'
@@ -305,15 +305,15 @@ function ExploreContent() {
             </div>
           </div>
 
-          {/* Row 2 on Mobile / Inline on Desktop: Filter Dropdowns Strip */}
-          <div className="flex flex-wrap items-center gap-1.5 pb-0.5 sm:pb-0">
+          {/* Row 2 on Mobile (3 Equal Columns) / Inline on Desktop: Filter Dropdowns Strip */}
+          <div className="grid grid-cols-3 sm:flex sm:flex-wrap items-center gap-1 sm:gap-1.5">
             {/* Difficulty Grade */}
-            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
-              <SlidersHorizontal className="h-3 w-3 text-slate-400 shrink-0" />
+            <div className="h-7.5 sm:h-8 flex items-center justify-between gap-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs">
+              <SlidersHorizontal className="h-3 w-3 text-slate-400 shrink-0 hidden xs:block" />
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
+                className="w-full bg-transparent font-medium text-slate-800 focus:outline-none text-[11px] sm:text-xs cursor-pointer truncate pr-0.5"
                 aria-label="Filter by difficulty"
               >
                 <option value="All">All Grades</option>
@@ -325,12 +325,12 @@ function ExploreContent() {
             </div>
 
             {/* Duration Range */}
-            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
-              <Clock className="h-3 w-3 text-slate-400 shrink-0" />
+            <div className="h-7.5 sm:h-8 flex items-center justify-between gap-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs">
+              <Clock className="h-3 w-3 text-slate-400 shrink-0 hidden xs:block" />
               <select
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
-                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
+                className="w-full bg-transparent font-medium text-slate-800 focus:outline-none text-[11px] sm:text-xs cursor-pointer truncate pr-0.5"
                 aria-label="Filter by duration"
               >
                 <option value="All">All Durations</option>
@@ -341,7 +341,7 @@ function ExploreContent() {
             </div>
 
             {/* Sort Dropdown */}
-            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
+            <div className="h-7.5 sm:h-8 flex items-center justify-between gap-1 rounded-lg border border-slate-200 bg-white px-2 text-[11px] sm:text-xs font-semibold text-slate-700 shadow-2xs">
               <select
                 value={sortBy}
                 onChange={(e) =>
@@ -349,19 +349,19 @@ function ExploreContent() {
                     e.target.value as 'popular' | 'price-low' | 'price-high' | 'duration-asc' | 'altitude-desc'
                   )
                 }
-                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
+                className="w-full bg-transparent font-medium text-slate-800 focus:outline-none text-[11px] sm:text-xs cursor-pointer truncate pr-0.5"
                 aria-label="Sort expeditions"
               >
                 <option value="popular">Top Rated</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="duration-asc">Duration: Short to Long</option>
-                <option value="altitude-desc">Elevation: High to Low</option>
+                <option value="price-low">Price: Low</option>
+                <option value="price-high">Price: High</option>
+                <option value="duration-asc">Duration</option>
+                <option value="altitude-desc">Elevation</option>
               </select>
             </div>
 
-            {/* Items Per Page (Chunk Size) */}
-            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
+            {/* Items Per Page (Visible on tablet/desktop >= sm:) */}
+            <div className="hidden sm:flex h-7.5 sm:h-8 items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
               <span className="text-[10px] text-slate-400">Show:</span>
               <select
                 value={itemsPerPage}
