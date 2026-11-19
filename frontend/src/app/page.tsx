@@ -357,58 +357,46 @@ export default function HomePage() {
       {/* =========================================================================
           2. CREDIBILITY STRIP: Four High-Impact Mountain Pillars
           ========================================================================= */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-10 border-b border-slate-200/80 bg-white">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-10 bg-white">
         <ScrollReveal direction="up" duration={600} distance={16}>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-center text-center">
             {/* Col 1: 8 of 14 */}
-            <div className="pt-4 sm:pt-0 sm:px-4 flex flex-col items-start justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0552A2] tracking-tight leading-none">
                 8 <span className="text-sm sm:text-base font-normal text-slate-400">of 14</span>
               </span>
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-900">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
                 8,000M Summits
-              </p>
-              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Highest mountain systems on Earth
               </p>
             </div>
 
             {/* Col 2: 8,848.86m */}
-            <div className="pt-4 sm:pt-0 sm:px-4 flex flex-col items-start justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0552A2] tracking-tight leading-none">
                 8,848<span className="text-xl sm:text-2xl font-normal text-slate-400">.86m</span>
               </span>
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-900">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
                 Apex Altitude
-              </p>
-              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Sagarmatha (Mt. Everest) summit
               </p>
             </div>
 
             {/* Col 3: 10 UNESCO */}
-            <div className="pt-4 sm:pt-0 sm:px-4 flex flex-col items-start justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0552A2] tracking-tight leading-none">
                 10 <span className="text-sm sm:text-base font-normal text-slate-400">Sites</span>
               </span>
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-900">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
                 UNESCO Monuments
-              </p>
-              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Protected cultural &amp; natural heritage
               </p>
             </div>
 
             {/* Col 4: 100% */}
-            <div className="pt-4 sm:pt-0 sm:px-4 flex flex-col items-start justify-center">
+            <div className="py-2 px-3 sm:px-5 flex flex-col items-center justify-center">
               <span className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#0552A2] tracking-tight leading-none">
                 100<span className="text-xl sm:text-2xl font-normal text-slate-400">%</span>
               </span>
-              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-900">
+              <p className="mt-2 text-xs font-semibold uppercase tracking-wider text-slate-700">
                 Official Certification
-              </p>
-              <p className="text-[11px] text-slate-500 font-normal mt-0.5">
-                Government &amp; IFMGA verified operations
               </p>
             </div>
           </div>
@@ -592,6 +580,8 @@ export default function HomePage() {
             </ScrollReveal>
           ))}
         </div>
+      </section>
+
       {/* =========================================================================
           4. EXPERIENCES SECTION: Experience Nepal (8 Visual Stories)
           ========================================================================= */}
@@ -847,7 +837,6 @@ export default function HomePage() {
             </ScrollReveal>
           ))}
         </div>
-      </section>
       </section>
     </div>
   );
