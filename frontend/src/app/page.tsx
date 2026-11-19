@@ -325,7 +325,7 @@ return (
 
             {/* Hero Narrative: Left-aligned editorial typography */}
             <div className="relative max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-16 sm:pt-24 pb-12 flex-1 flex flex-col justify-center">
-              <ScrollReveal direction="up" duration={750} distance={24} className="max-w-3xl space-y-5">
+              <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl space-y-5">
                 {/* Minimal Eyebrow */}
                 <div className="inline-flex items-center gap-2 text-xs sm:text-[13px] font-semibold tracking-[0.25em] uppercase text-[#92C4EA]">
                   <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
