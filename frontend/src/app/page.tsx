@@ -7,6 +7,7 @@ import {
   Mountain,
   Compass,
   ArrowRight,
+  Sparkles,
   Calendar,
   Clock,
   BookOpen,
@@ -309,16 +310,15 @@ export default function HomePage() {
       {/* =========================================================================
           1. HERO SECTION: Full-Screen Cinematic Experience (100vh)
           ========================================================================= */}
-      <section className="relative overflow-hidden bg-slate-950 text-white min-h-[100dvh] flex flex-col justify-between pt-12 sm:pt-14 lg:pt-[52px]">
+      <section className="relative overflow-hidden bg-white text-white min-h-[100dvh] flex flex-col justify-between pt-12 sm:pt-14 lg:pt-[52px]">
         {/* Dynamic Auto-Changing Hero Background Slideshow with 6 Nepal Images */}
         <HeroBackgroundSlider scrollY={scrollY} intervalMs={5500} />
 
         {/* Hero Narrative: Left-aligned editorial typography - Edge-to-Edge */}
         <div className="relative z-30 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-16 sm:pt-24 pb-12 sm:pb-14 flex-1 flex flex-col justify-center pointer-events-auto">
           <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl lg:max-w-5xl space-y-3.5 sm:space-y-5">
-            {/* Minimal Editorial Eyebrow */}
-            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-slate-950/60 border border-white/20 text-[11px] sm:text-xs font-semibold tracking-[0.2em] uppercase text-[#92C4EA] shadow-xs w-fit">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#EC1F27]" />
+            {/* Minimal Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/45 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#92C4EA] shadow-md w-fit">
               <span>Visit Nepal Official</span>
             </div>
 
@@ -330,19 +330,19 @@ export default function HomePage() {
               Where the Himalayas meet extraordinary experiences.
             </p>
 
-            {/* Primary & Secondary Editorial CTAs */}
-            <div className="pt-2 sm:pt-3.5 flex flex-row flex-wrap items-center gap-2.5 sm:gap-3.5">
+            {/* Primary & Secondary Minimal CTAs */}
+            <div className="pt-1.5 sm:pt-3 flex flex-row flex-wrap items-center gap-2.5 sm:gap-3.5">
               <Link
                 href="/explore"
                 prefetch={true}
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-[#0552A2] hover:bg-[#044182] px-5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white shadow-sm shadow-[#0552A2]/30 active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] hover:bg-[#044182] px-5 sm:px-7 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white shadow-lg shadow-[#0552A2]/35 active:scale-95 transition-all"
               >
                 <span>Explore Nepal</span>
                 <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
               </Link>
               <Link
                 href="#experiences"
-                className="inline-flex items-center justify-center gap-2 rounded-lg bg-slate-950/60 hover:bg-slate-900/80 border border-white/25 hover:border-white/40 px-4.5 sm:px-5.5 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white shadow-xs active:scale-95 transition-all"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-slate-950/60 hover:bg-slate-900/80 backdrop-blur-md border border-white/25 hover:border-white/40 px-4.5 sm:px-6 py-2.5 sm:py-3 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white shadow-md shadow-black/25 active:scale-95 transition-all"
               >
                 <Compass className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-[#92C4EA]" />
                 <span>Discover Experiences</span>
@@ -351,13 +351,14 @@ export default function HomePage() {
           </ScrollReveal>
         </div>
 
-
+        {/* Subpixel Anti-Seam Overlap: Pure white bleed to guarantee seamless transition on high-DPI & mobile screens */}
+        <div className="absolute -bottom-1 inset-x-0 h-3 bg-white z-20 pointer-events-none" />
       </section>
 
       {/* =========================================================================
           2. CREDIBILITY STRIP: Four High-Impact Mountain Pillars
           ========================================================================= */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-10 bg-white">
+      <section className="relative z-10 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-10 bg-white -mt-[1px]">
         <ScrollReveal direction="up" duration={600} distance={16}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-center text-center">
             {/* Col 1: 8 of 14 */}
@@ -582,262 +583,262 @@ export default function HomePage() {
         </div>
       </section>
 
-        {/* =========================================================================
+      {/* =========================================================================
           4. EXPERIENCES SECTION: Experience Nepal (8 Visual Stories)
           ========================================================================= */}
-        <section id="experiences" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
-            {/* Section Heading */}
-            <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
-                Himalayan Encounters
-              </span>
-              <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
-                Experience Nepal
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
-                Eight distinct visual journeys into the high mountains, living spiritualities, and untouched wilderness.
-              </p>
-            </ScrollReveal>
-
-            {/* 8 Distinct Visual Experience Stories (4x2 Responsive Editorial Grid) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
-              {editorialExperiences.map((exp, idx) => (
-                <ScrollReveal key={exp.id} direction="up" delay={idx * 50} duration={550} distance={16}>
-                  <Link
-                    href="/experiences"
-                    className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 h-full"
-                  >
-                    <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
-                      <img
-                        src={exp.image}
-                        alt={exp.title}
-                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                      />
-                    </div>
-
-                    <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2 bg-white">
-                      <div className="space-y-1">
-                        <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                          <span className="text-[#0552A2] font-semibold">{exp.category}</span>
-                          <span>{exp.duration}</span>
-                        </div>
-                        <h3 className="font-inter text-base font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
-                          {exp.title}
-                        </h3>
-                      </div>
-
-                      <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
-                        {exp.description}
-                      </p>
-
-                      <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                        <span className="inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
-                          <span>Explore itineraries</span>
-                          <ChevronRight className="h-3 w-3" />
-                        </span>
-                      </div>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-          5. DISCOVER NEPAL: Immersive Storytelling Introduction
-          ========================================================================= */}
-        <section id="discover" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
-            {/* Left: Editorial Narrative & Key Dimensions (Col 1-6) */}
-            <div className="lg:col-span-6 space-y-5">
-              <ScrollReveal direction="up" duration={650} distance={20} className="space-y-2">
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
-                  About Nepal
-                </span>
-                <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight leading-tight">
-                  A Land of Extreme Geography &amp; Timeless Spirit
-                </h2>
-              </ScrollReveal>
-
-              <ScrollReveal direction="up" delay={80} duration={650} distance={20} className="space-y-3.5 text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
-                <p>
-                  Nowhere else on Earth does the landscape rise with such breathtaking verticality. Within less than 150 kilometers, Nepal transitions from warm subtropical river basins (60 meters above sea level) into the highest summits on the planet, culminating at the 8,848.86m apex of Sagarmatha.
-                </p>
-                <p>
-                  Across this dramatic terrain thrive twelve bioclimatic zones, more than 850 species of birds, and over 125 distinct ethnic communities—each safeguarding their ancestral languages, mountain rituals, and living architectural heritage.
-                </p>
-                <p>
-                  From the sacred birthplace of Lord Buddha in Lumbini to the monastic highlands of the Khumbu, Nepal is not merely a destination—it is a transformative encounter with nature and human spirit.
-                </p>
-              </ScrollReveal>
-
-              {/* Numeric Accents */}
-              <ScrollReveal direction="up" delay={140} duration={650} distance={20}>
-                <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200/80">
-                  <div>
-                    <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">60m – 8,848m</span>
-                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Elevation Rise</span>
-                  </div>
-                  <div>
-                    <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">12 Zones</span>
-                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Bioclimates</span>
-                  </div>
-                  <div>
-                    <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">125+</span>
-                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Ethnic Cultures</span>
-                  </div>
-                </div>
-              </ScrollReveal>
-            </div>
-
-            {/* Right: Layered Editorial Photography Panel (Col 7-12) */}
-            <div className="lg:col-span-6">
-              <ScrollReveal direction="up" delay={150} duration={750} distance={24}>
-                <div className="rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
-                  <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
-                    <img
-                      src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
-                      alt="Himalayan Monastery Dawn"
-                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
-                    />
-                  </div>
-                  <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3 text-xs text-slate-600">
-                    <p className="font-inter italic">
-                      &ldquo;In the silence of the high peaks, the soul discovers its native home.&rdquo;
-                    </p>
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 shrink-0">
-                      Tengboche Gompa
-                    </span>
-                  </div>
-                </div>
-              </ScrollReveal>
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-          6. CULTURE & HERITAGE: Living Traditions & Craftsmanship
-          ========================================================================= */}
-        <section id="culture" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
-          <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
-            {/* Section Heading */}
-            <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
-                Living Traditions
-              </span>
-              <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
-                Culture &amp; Living Heritage
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
-                Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia.
-              </p>
-            </ScrollReveal>
-
-            {/* 4 Museum-Grade Cultural Editorial Panels */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
-              {cultureFeatures.map((item, idx) => (
-                <ScrollReveal key={item.title} direction="up" delay={idx * 70} duration={600} distance={20}>
-                  <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start bg-white rounded-xl p-5 border border-slate-200 shadow-xs h-full">
-                    <div className="relative h-40 sm:h-32 w-full sm:w-36 shrink-0 rounded-lg overflow-hidden bg-slate-900 border border-slate-100">
-                      <img
-                        src={item.image}
-                        alt={item.title}
-                        className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
-                      />
-                    </div>
-                    <div className="space-y-1.5 flex-1">
-                      <span className="text-[10.5px] font-mono uppercase tracking-wider text-[#0552A2] font-semibold">
-                        {item.subtitle}
-                      </span>
-                      <h3 className="font-inter text-base sm:text-lg font-semibold text-[#10243A]">
-                        {item.title}
-                      </h3>
-                      <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed line-clamp-3">
-                        {item.desc}
-                      </p>
-                    </div>
-                  </div>
-                </ScrollReveal>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* =========================================================================
-          7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
-          ========================================================================= */}
-        <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
-          <ScrollReveal direction="up" duration={700} distance={20}>
-            <InteractiveMap />
+      <section id="experiences" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
+          {/* Section Heading */}
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
+              Himalayan Encounters
+            </span>
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
+              Experience Nepal
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
+              Eight distinct visual journeys into the high mountains, living spiritualities, and untouched wilderness.
+            </p>
           </ScrollReveal>
-        </section>
 
-        {/* =========================================================================
-          8. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
-          ========================================================================= */}
-        <section id="stories" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20 space-y-8 sm:space-y-10 border-t border-slate-100">
-          {/* Section Heading & Link */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
-            <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
-              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
-                Field Notes
-              </span>
-              <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
-                Stories &amp; Field Journal
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
-                Curated expedition guides, destination chronicles, and cultural discoveries from across Nepal.
-              </p>
-            </ScrollReveal>
-
-            <Link
-              href="/stories"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] hover:underline shrink-0"
-            >
-              <span>View All Journal Stories</span>
-              <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
-          </div>
-
-          {/* 3 Large Editorial Story Articles */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
-            {travelStories.map((story, idx) => (
-              <ScrollReveal key={story.id} direction="up" delay={idx * 80} duration={600} distance={20}>
-                <Link href="/stories" className="group flex flex-col space-y-3 cursor-pointer">
-                  <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
+          {/* 8 Distinct Visual Experience Stories (4x2 Responsive Editorial Grid) */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 lg:gap-6">
+            {editorialExperiences.map((exp, idx) => (
+              <ScrollReveal key={exp.id} direction="up" delay={idx * 50} duration={550} distance={16}>
+                <Link
+                  href="/experiences"
+                  className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 h-full"
+                >
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
                     <img
-                      src={story.image}
-                      alt={story.title}
+                      src={exp.image}
+                      alt={exp.title}
                       className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                     />
                   </div>
 
-                  <div className="space-y-1.5 flex flex-col flex-1">
-                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                      <span className="text-[#0552A2] font-semibold">{story.category}</span>
-                      <span>{story.readTime}</span>
+                  <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2 bg-white">
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                        <span className="text-[#0552A2] font-semibold">{exp.category}</span>
+                        <span>{exp.duration}</span>
+                      </div>
+                      <h3 className="font-inter text-base font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                        {exp.title}
+                      </h3>
                     </div>
 
-                    <h3 className="font-inter text-base font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
-                      {story.title}
-                    </h3>
-
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-2">
-                      {story.excerpt}
+                    <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
+                      {exp.description}
                     </p>
 
-                    <div className="pt-1.5 inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
-                      <span>Read story</span>
-                      <ArrowRight className="h-3 w-3" />
+                    <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
+                        <span>Explore itineraries</span>
+                        <ChevronRight className="h-3 w-3" />
+                      </span>
                     </div>
                   </div>
                 </Link>
               </ScrollReveal>
             ))}
           </div>
-        </section>
-      </div>
-    );
-  }
+        </div>
+      </section>
+
+      {/* =========================================================================
+          5. DISCOVER NEPAL: Immersive Storytelling Introduction
+          ========================================================================= */}
+      <section id="discover" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
+          {/* Left: Editorial Narrative & Key Dimensions (Col 1-6) */}
+          <div className="lg:col-span-6 space-y-5">
+            <ScrollReveal direction="up" duration={650} distance={20} className="space-y-2">
+              <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
+                About Nepal
+              </span>
+              <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight leading-tight">
+                A Land of Extreme Geography &amp; Timeless Spirit
+              </h2>
+            </ScrollReveal>
+
+            <ScrollReveal direction="up" delay={80} duration={650} distance={20} className="space-y-3.5 text-xs sm:text-sm text-slate-600 font-normal leading-relaxed">
+              <p>
+                Nowhere else on Earth does the landscape rise with such breathtaking verticality. Within less than 150 kilometers, Nepal transitions from warm subtropical river basins (60 meters above sea level) into the highest summits on the planet, culminating at the 8,848.86m apex of Sagarmatha.
+              </p>
+              <p>
+                Across this dramatic terrain thrive twelve bioclimatic zones, more than 850 species of birds, and over 125 distinct ethnic communities—each safeguarding their ancestral languages, mountain rituals, and living architectural heritage.
+              </p>
+              <p>
+                From the sacred birthplace of Lord Buddha in Lumbini to the monastic highlands of the Khumbu, Nepal is not merely a destination—it is a transformative encounter with nature and human spirit.
+              </p>
+            </ScrollReveal>
+
+            {/* Numeric Accents */}
+            <ScrollReveal direction="up" delay={140} duration={650} distance={20}>
+              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-200/80">
+                <div>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">60m – 8,848m</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Elevation Rise</span>
+                </div>
+                <div>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">12 Zones</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Bioclimates</span>
+                </div>
+                <div>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">125+</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Ethnic Cultures</span>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+
+          {/* Right: Layered Editorial Photography Panel (Col 7-12) */}
+          <div className="lg:col-span-6">
+            <ScrollReveal direction="up" delay={150} duration={750} distance={24}>
+              <div className="rounded-xl overflow-hidden bg-white border border-slate-200 shadow-sm">
+                <div className="relative aspect-[16/10] overflow-hidden bg-slate-900">
+                  <img
+                    src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
+                    alt="Himalayan Monastery Dawn"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
+                  />
+                </div>
+                <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-3 text-xs text-slate-600">
+                  <p className="font-inter italic">
+                    &ldquo;In the silence of the high peaks, the soul discovers its native home.&rdquo;
+                  </p>
+                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 shrink-0">
+                    Tengboche Gompa
+                  </span>
+                </div>
+              </div>
+            </ScrollReveal>
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          6. CULTURE & HERITAGE: Living Traditions & Craftsmanship
+          ========================================================================= */}
+      <section id="culture" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
+        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
+          {/* Section Heading */}
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
+              Living Traditions
+            </span>
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
+              Culture &amp; Living Heritage
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
+              Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia.
+            </p>
+          </ScrollReveal>
+
+          {/* 4 Museum-Grade Cultural Editorial Panels */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5 sm:gap-6">
+            {cultureFeatures.map((item, idx) => (
+              <ScrollReveal key={item.title} direction="up" delay={idx * 70} duration={600} distance={20}>
+                <div className="flex flex-col sm:flex-row gap-4 sm:gap-5 items-start bg-white rounded-xl p-5 border border-slate-200 shadow-xs h-full">
+                  <div className="relative h-40 sm:h-32 w-full sm:w-36 shrink-0 rounded-lg overflow-hidden bg-slate-900 border border-slate-100">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
+                    />
+                  </div>
+                  <div className="space-y-1.5 flex-1">
+                    <span className="text-[10.5px] font-mono uppercase tracking-wider text-[#0552A2] font-semibold">
+                      {item.subtitle}
+                    </span>
+                    <h3 className="font-inter text-base sm:text-lg font-semibold text-[#10243A]">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed line-clamp-3">
+                      {item.desc}
+                    </p>
+                  </div>
+                </div>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* =========================================================================
+          7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
+          ========================================================================= */}
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
+        <ScrollReveal direction="up" duration={700} distance={20}>
+          <InteractiveMap />
+        </ScrollReveal>
+      </section>
+
+      {/* =========================================================================
+          8. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
+          ========================================================================= */}
+      <section id="stories" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20 space-y-8 sm:space-y-10 border-t border-slate-100">
+        {/* Section Heading & Link */}
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
+              Field Notes
+            </span>
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
+              Stories &amp; Field Journal
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
+              Curated expedition guides, destination chronicles, and cultural discoveries from across Nepal.
+            </p>
+          </ScrollReveal>
+
+          <Link
+            href="/stories"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] hover:underline shrink-0"
+          >
+            <span>View All Journal Stories</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </Link>
+        </div>
+
+        {/* 3 Large Editorial Story Articles */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 sm:gap-8">
+          {travelStories.map((story, idx) => (
+            <ScrollReveal key={story.id} direction="up" delay={idx * 80} duration={600} distance={20}>
+              <Link href="/stories" className="group flex flex-col space-y-3 cursor-pointer">
+                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
+                  <img
+                    src={story.image}
+                    alt={story.title}
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                  />
+                </div>
+
+                <div className="space-y-1.5 flex flex-col flex-1">
+                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                    <span className="text-[#0552A2] font-semibold">{story.category}</span>
+                    <span>{story.readTime}</span>
+                  </div>
+
+                  <h3 className="font-inter text-base font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                    {story.title}
+                  </h3>
+
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-2">
+                    {story.excerpt}
+                  </p>
+
+                  <div className="pt-1.5 inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
+                    <span>Read story</span>
+                    <ArrowRight className="h-3 w-3" />
+                  </div>
+                </div>
+              </Link>
+            </ScrollReveal>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}

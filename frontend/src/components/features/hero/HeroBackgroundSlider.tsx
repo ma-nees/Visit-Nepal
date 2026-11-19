@@ -76,7 +76,7 @@ export default function HeroBackgroundSlider({
 
   return (
     <div
-      className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0"
+      className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 bg-slate-950"
       aria-hidden="true"
     >
       {/* Layered Crossfading Image Slides with Subtle Cinematic Ken Burns & Scroll Parallax */}
@@ -109,14 +109,16 @@ export default function HeroBackgroundSlider({
 
       {/* 2. Cinematic Atmospheric Mist & Cloud Fade-Out (Seamlessly dissolves bottom of hero into white section below) */}
       <div
-        className="absolute bottom-0 inset-x-0 h-36 sm:h-48 md:h-56 lg:h-64 z-20 pointer-events-none"
+        className="absolute -bottom-1 inset-x-0 h-40 sm:h-52 md:h-60 lg:h-72 z-20 pointer-events-none"
         style={{
           background: `
-            radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 80%),
-            linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.03) 20%, rgba(255, 255, 255, 0.12) 40%, rgba(255, 255, 255, 0.32) 60%, rgba(255, 255, 255, 0.62) 78%, rgba(255, 255, 255, 0.88) 92%, #FFFFFF 100%)
+            radial-gradient(ellipse 90% 70% at 50% 100%, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 255, 255, 0) 80%),
+            linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.04) 20%, rgba(255, 255, 255, 0.16) 40%, rgba(255, 255, 255, 0.42) 60%, rgba(255, 255, 255, 0.76) 78%, rgba(255, 255, 255, 0.94) 86%, #FFFFFF 93%, #FFFFFF 100%)
           `,
         }}
       />
+      {/* 3. Subpixel Anti-Seam Cap: Guarantees zero dark hairline leaks on mobile fractional pixel scaling */}
+      <div className="absolute -bottom-1 inset-x-0 h-3 bg-white z-20 pointer-events-none" />
     </div>
   );
 }
