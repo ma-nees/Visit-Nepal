@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import ScrollReveal from '@/components/ScrollReveal';
 import InteractiveMap from '@/components/InteractiveMap';
+import HeroVideoTitle from '@/components/features/hero/HeroVideoTitle';
 
 // 8 Primary Destinations required by specification
 const editorialDestinations = [
@@ -331,10 +332,8 @@ return (
                   <span>Visit Nepal Official</span>
                 </div>
 
-                {/* Main Heading: Discover Nepal */}
-                <h1 className="font-poppins text-5xl sm:text-7xl lg:text-8xl font-semibold tracking-tight text-white leading-[1.04]">
-                  Discover Nepal
-                </h1>
+                {/* Main Heading: Discover Nepal with dynamic cinematic video masking */}
+                <HeroVideoTitle />
 
                 {/* Supporting Text */}
                 <p className="text-base sm:text-xl text-slate-200/90 font-normal font-inter leading-relaxed max-w-xl">
