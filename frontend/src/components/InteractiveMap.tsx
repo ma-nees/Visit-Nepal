@@ -351,7 +351,7 @@ export default function InteractiveMap() {
         </div>
 
         {/* 5 Distinct Interactive Category Filter Pills */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pt-1 pb-1">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 pt-1 pb-1">
           {categoryFilters.map((filter) => {
             const Icon = filter.icon;
             const isActive = activeFilter === filter.key;

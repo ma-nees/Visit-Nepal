@@ -439,7 +439,7 @@ export default function CustomTripPlannerPage() {
 
       {/* 2. Wizard Stepper Bar */}
       <div className="rounded-xl border border-slate-200 bg-white p-1.5 sm:p-2 shadow-2xs">
-        <div className="flex items-center justify-between overflow-x-auto text-xs font-semibold gap-1.5 py-0.5 no-scrollbar">
+        <div className="flex flex-wrap items-center justify-start sm:justify-between text-xs font-semibold gap-1.5 py-0.5">
           {[
             { num: 1, label: 'Destination' },
             { num: 2, label: 'Travel Details' },

@@ -196,8 +196,8 @@ export default function StoriesPage() {
             First-person chronicles, trail notes, mountain medicine advice, and cultural reflections written by certified guides and travelers.
           </p>
 
-          {/* Filter Pills (Single-Row Swipe Strip on mobile) */}
-          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          {/* Filter Pills: Non-scrollable wrapping layout */}
+          <div className="pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
             {categories.map((c) => (
               <button
                 key={c}

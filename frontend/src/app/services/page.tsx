@@ -89,8 +89,8 @@ function ServicesContent() {
         </div>
       </div>
 
-      {/* Tab Strip: Fast, single-row swipeable on mobile, compact pills */}
-      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0 sm:flex-wrap rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
+      {/* Tab Strip: Non-scrollable wrapping layout */}
+      <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;

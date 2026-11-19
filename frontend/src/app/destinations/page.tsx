@@ -234,8 +234,8 @@ export default function DestinationsPage() {
             From glaciated 8,000-meter peaks and wind-carved desert canyons to subtropical sal jungles and medieval UNESCO valleys.
           </p>
 
-          {/* Category Filter Pills (Single-Row Swipe Strip on mobile) */}
-          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          {/* Category Filter Pills: Non-scrollable wrapping layout */}
+          <div className="pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
             {categories.map((cat) => (
               <button
                 key={cat}

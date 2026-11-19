@@ -382,7 +382,7 @@ export default function TravelerDashboardPage() {
               </div>
 
               {/* Status Filter Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 md:pb-0 scrollbar-none">
+              <div className="flex flex-wrap items-center gap-1.5 pb-1 md:pb-0">
                 <span className="text-[11px] font-semibold text-slate-400 mr-1 hidden sm:inline-flex items-center gap-1">
                   <Filter className="h-3 w-3" /> Filter:
                 </span>

@@ -318,8 +318,8 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Persona Pills: Smooth horizontal swipe on mobile, clean flex wrap on tablet/desktop */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-0.5 -mx-4 px-4 sm:mx-0 sm:px-0 sm:flex-wrap">
+          {/* Persona Pills: Non-scrollable wrapping layout */}
+          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 py-0.5">
             {personaProfiles.map((p) => {
               const isCurrent = p.role === activeRole;
               const isSwitching = switchingRole === p.role;

@@ -110,7 +110,7 @@ export default function BookingsPage() {
           <p className="text-[11px] text-slate-400">Showing {filtered.length} reservations</p>
         </div>
 
-        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5 sm:pb-0">
+        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pb-0.5 sm:pb-0">
           {(['All', 'Confirmed', 'Completed', 'Cancelled'] as const).map(
             (status) => (
               <button

@@ -52,9 +52,9 @@ function ExploreContent() {
 
   // Dynamic Category Route Counts
   const categoryCounts = useMemo(() => {
-    const map: Record<string, number> = { All: allDestinations.length };
+    const map: Record<string, number> = {};
     categories.forEach((cat) => {
-      map[cat] = allDestinations.filter((d) => d.category === cat).length;
+      map[cat] = cat === 'All' ? allDestinations.length : allDestinations.filter((d) => d.category === cat).length;
     });
     return map;
   }, [allDestinations]);
@@ -186,8 +186,8 @@ function ExploreContent() {
             </p>
           </div>
 
-          {/* Operational Metrics & 1,000 Records Benchmark Toggle (Single-row scrollable on mobile) */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 pt-0.5 sm:pt-0">
+          {/* Operational Metrics & 1,000 Records Benchmark Toggle */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5 sm:pt-0">
             {/* 1,000+ Record Benchmark Simulator Button */}
             <button
               type="button"
@@ -218,8 +218,8 @@ function ExploreContent() {
 
       {/* 2. Interactive Search & Multi-Filters Bar (Smart Space Efficiency) */}
       <div className="space-y-2.5">
-        {/* Category Filter Chips: Single-row Horizontal Swipe Strip on Mobile */}
-        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0 sm:flex-wrap pb-0.5">
+        {/* Category Filter Chips: Non-scrollable wrapping layout */}
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
           {categories.map((cat) => {
             const isSelected = category === cat;
             const count = categoryCounts[cat] || 0;
@@ -303,7 +303,7 @@ function ExploreContent() {
           </div>
 
           {/* Row 2 on Mobile / Inline on Desktop: Filter Dropdowns Strip */}
-          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5 sm:pb-0">
+          <div className="flex flex-wrap items-center gap-1.5 pb-0.5 sm:pb-0">
             {/* Difficulty Grade */}
             <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
               <SlidersHorizontal className="h-3 w-3 text-slate-400 shrink-0" />

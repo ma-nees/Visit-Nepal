@@ -258,8 +258,8 @@ export default function ExperiencesPage() {
             Eight iconic ways to encounter the heart of the Himalayas. From glaciated alpine passes to sacred living traditions and subtropical jungles.
           </p>
 
-          {/* Quick Experience Selector Strip (Single-Row Swipe Strip on mobile) */}
-          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
+          {/* Quick Experience Selector Strip: Non-scrollable wrapping layout */}
+          <div className="pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
             {experiencesData.map((exp) => (
               <button
                 key={exp.id}
