@@ -1,17 +1,17 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   X,
   Calendar,
   Users,
   ShieldCheck,
   CheckCircle2,
-  UserCheck,
+  Compass,
   ConciergeBell,
   Sparkles,
-  Plane,
+  Car,
   HeartHandshake,
   ArrowRight,
   ArrowLeft,
@@ -22,9 +22,14 @@ import {
   Phone,
   Globe,
   User,
-  ChevronRight,
+  Check,
   Printer,
   Download,
+  Shield,
+  Mountain,
+  Backpack,
+  Activity,
+  Layers,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import PaymentModal, { PaymentMethod } from './PaymentModal';
@@ -61,7 +66,7 @@ export default function StandardBookingModal({
 }: StandardBookingModalProps) {
   const { addBooking, currentUser } = useApp();
 
-  const [step, setStep] = useState<1 | 2 | 3 | 4>(1); // 1: Dates & Addons, 2: Traveler Info, 3: Review & Payment, 4: Confirmed
+  const [step, setStep] = useState<1 | 2 | 3 | 4>(1); // 1: Dates & Add-ons, 2: Traveler Info, 3: Review & Payment, 4: Confirmed
   const [departureDate, setDepartureDate] = useState('2026-05-15');
   const [adultsCount, setAdultsCount] = useState(2);
   const [childrenCount, setChildrenCount] = useState(0);
@@ -163,9 +168,9 @@ export default function StandardBookingModal({
     setIsPaymentOpen(true);
   };
 
-  const handlePaymentSuccess = (result: any) => {
+  const handlePaymentSuccess = () => {
     setIsPaymentOpen(false);
-    setStep(4); // Confirmed screen
+    setStep(4);
   };
 
   const buildOfficialReceiptData = (): OfficialReceiptData => {
@@ -263,285 +268,474 @@ export default function StandardBookingModal({
     };
   };
 
+  // Steps definition for header navigation
+  const stepsList = [
+    { num: 1, title: 'Dates & Services', short: 'Dates' },
+    { num: 2, title: 'Traveler Details', short: 'Travelers' },
+    { num: 3, title: 'Review & Breakdown', short: 'Review' },
+    { num: 4, title: 'Confirmed Pass', short: 'Pass' },
+  ];
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-3 sm:p-5 overflow-y-auto">
-      <div className="relative w-full max-w-3xl rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden animate-in fade-in zoom-in duration-150 my-auto">
-        {/* Top Header */}
-        <div className="relative flex items-center justify-between px-6 py-4 bg-gradient-to-r from-[#031526] via-[#053568] to-[#031526] text-white overflow-hidden">
-          {/* Subtle atmospheric ambient glow */}
-          <div className="absolute -top-12 -right-12 w-48 h-48 bg-[#92C4EA]/15 rounded-full blur-2xl pointer-events-none" />
-          <div className="space-y-0.5 relative z-10">
-            <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-[#92C4EA]">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#EC1F27]" />
-              <span>Official Expedition Reservation • NTB 2026</span>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/60 backdrop-blur-md p-3 sm:p-5 overflow-y-auto">
+      <motion.div
+        initial={{ opacity: 0, scale: 0.96, y: 12 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        exit={{ opacity: 0, scale: 0.96, y: 12 }}
+        transition={{ type: 'spring', damping: 25, stiffness: 300, mass: 0.8 }}
+        className="relative w-full max-w-2xl rounded-2xl bg-white shadow-[0_25px_60px_-15px_rgba(2,12,27,0.35)] border border-slate-200/80 overflow-hidden my-auto"
+      >
+        {/* 1. Refined Luxury Header */}
+        <div className="relative px-5 sm:px-6 py-4 bg-gradient-to-b from-[#031526] via-[#05264b] to-[#041d39] text-white">
+          <div className="flex items-center justify-between gap-4">
+            <div className="space-y-1 min-w-0">
+              <div className="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-white/10 border border-white/10 text-[10px] font-medium tracking-wide text-slate-200 backdrop-blur-xs">
+                <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Visit Nepal 2026 · Official Reservation</span>
+              </div>
+              <h2 className="text-base sm:text-lg font-bold font-poppins text-white truncate tracking-tight">
+                {pkg.title}
+              </h2>
+              <div className="flex items-center gap-2 text-xs text-slate-300 font-inter">
+                <span>{days} Days</span>
+                <span className="text-slate-500">•</span>
+                <span className="truncate">{pkg.provider || 'Himalayan Sherpa Expeditions'}</span>
+              </div>
             </div>
-            <h2 className="text-base sm:text-lg font-bold font-poppins text-white line-clamp-1">
-              {pkg.title}
-            </h2>
+
+            <button
+              type="button"
+              onClick={onClose}
+              className="h-8 w-8 rounded-full bg-white/10 hover:bg-white/20 active:scale-95 text-slate-300 hover:text-white transition-all flex items-center justify-center shrink-0 cursor-pointer"
+              aria-label="Close modal"
+            >
+              <X className="h-4 w-4" />
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            className="relative z-10 rounded-full p-2 text-slate-300 hover:bg-white/10 hover:text-white transition-all cursor-pointer active:scale-95"
-            aria-label="Close modal"
-          >
-            <X className="h-4.5 w-4.5" />
-          </button>
         </div>
 
-        {/* Wizard Step Progress Indicator */}
-        <div className="flex items-center justify-between border-b border-slate-200/80 bg-slate-50/80 px-4 sm:px-6 py-2.5 text-xs font-inter font-semibold overflow-x-auto">
-          {[
-            { num: 1, label: 'Dates & Add-ons' },
-            { num: 2, label: 'Traveler Details' },
-            { num: 3, label: 'Breakdown & Payment' },
-            { num: 4, label: 'Confirmed' },
-          ].map((s, idx) => {
-            const isCurrent = step === s.num;
-            const isCompleted = step > s.num;
-
-            return (
-              <div key={s.num} className="flex items-center gap-1.5 sm:gap-2 shrink-0">
+        {/* 2. Sleek Segmented Progress Bar (Zero Cutoffs on Any Screen) */}
+        <div className="border-b border-slate-200/80 bg-slate-50/70 px-5 sm:px-6 py-3">
+          {/* Mobile view: concise step label + 4 smooth progress bars */}
+          <div className="sm:hidden space-y-1.5">
+            <div className="flex items-center justify-between text-xs">
+              <span className="font-semibold text-slate-900">
+                Step {step} of 4: <span className="text-[#0552A2] font-bold">{stepsList[step - 1].title}</span>
+              </span>
+              <span className="text-[11px] font-mono font-medium text-slate-400">
+                {step * 25}%
+              </span>
+            </div>
+            <div className="grid grid-cols-4 gap-1.5 h-1.5">
+              {[1, 2, 3, 4].map((s) => (
                 <div
-                  className={`flex items-center gap-1.5 sm:gap-2 transition-all ${
+                  key={s}
+                  className={`h-full rounded-full transition-all duration-300 ${
+                    s < step
+                      ? 'bg-emerald-600'
+                      : s === step
+                      ? 'bg-[#0552A2]'
+                      : 'bg-slate-200'
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* Desktop & Tablet view: elegant connected step indicators */}
+          <div className="hidden sm:grid grid-cols-4 gap-2">
+            {stepsList.map((s) => {
+              const isCurrent = step === s.num;
+              const isCompleted = step > s.num;
+              return (
+                <div
+                  key={s.num}
+                  className={`flex items-center gap-2 py-1 px-2 rounded-lg transition-all ${
                     isCurrent
-                      ? 'text-[#0552A2] font-bold'
+                      ? 'bg-white shadow-xs border border-slate-200/80 text-[#0552A2]'
                       : isCompleted
-                      ? 'text-emerald-700 font-semibold'
-                      : 'text-slate-400 font-normal'
+                      ? 'text-emerald-700'
+                      : 'text-slate-400'
                   }`}
                 >
                   <span
-                    className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-mono font-bold transition-all shadow-2xs ${
+                    className={`flex h-5 w-5 shrink-0 items-center justify-center rounded-full text-[10px] font-bold font-mono transition-all ${
                       isCurrent
-                        ? 'bg-[#0552A2] text-white ring-2 ring-[#0552A2]/20'
+                        ? 'bg-[#0552A2] text-white'
                         : isCompleted
                         ? 'bg-emerald-600 text-white'
                         : 'bg-slate-200 text-slate-500'
                     }`}
                   >
-                    {isCompleted ? '✓' : s.num}
+                    {isCompleted ? <Check className="h-3 w-3 stroke-[3]" /> : s.num}
                   </span>
-                  <span className="text-[11px] sm:text-xs">{s.label}</span>
+                  <span className="text-xs font-semibold truncate font-inter">
+                    {s.title}
+                  </span>
                 </div>
-                {idx < 3 && <ChevronRight className="h-3.5 w-3.5 text-slate-300 mx-1 sm:mx-2 shrink-0" />}
-              </div>
-            );
-          })}
+              );
+            })}
+          </div>
         </div>
 
-        {/* Modal Body */}
-        <div className="p-6 max-h-[75vh] overflow-y-auto space-y-6">
-          {/* STEP 1: Dates, Travelers, Add-ons */}
+        {/* 3. Modal Content Body */}
+        <div className="p-5 sm:p-6 max-h-[72vh] overflow-y-auto space-y-5 font-inter text-slate-800">
+          {/* STEP 1: Dates, Group Size, and Bespoke Add-ons */}
           {step === 1 && (
             <div className="space-y-5">
-              {/* Departure & Group Size Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 text-xs font-inter">
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Departure Date
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <Calendar className="h-4 w-4" />
-                    </div>
-                    <input
-                      type="date"
-                      value={departureDate}
-                      onChange={(e) => setDepartureDate(e.target.value)}
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2 text-xs font-semibold text-slate-800 focus:outline-none"
-                    />
-                  </div>
+              {/* Trip Configuration Card */}
+              <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-4 space-y-3.5 shadow-2xs">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-slate-900 tracking-tight flex items-center gap-1.5">
+                    <Calendar className="h-3.5 w-3.5 text-[#0552A2]" />
+                    Expedition Schedule &amp; Party Size
+                  </span>
+                  <span className="text-[11px] text-slate-500">
+                    Official NTB Permit Registry
+                  </span>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Adult Travelers
-                  </label>
-                  <div className="flex items-center justify-between bg-slate-50/70 border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-2xs">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
-                      <Users className="h-3.5 w-3.5 text-[#0552A2]" />
-                      <span>{adultsCount} Adults</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setAdultsCount((v) => Math.max(1, v - 1))}
-                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAdultsCount((v) => Math.min(16, v + 1))}
-                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-                      >
-                        +
-                      </button>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  {/* Departure Date */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-600">
+                      Departure Date
+                    </label>
+                    <div className="relative flex items-center bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 focus-within:ring-2 focus-within:ring-[#0552A2]/20 focus-within:border-[#0552A2] transition-all shadow-2xs">
+                      <Calendar className="h-3.5 w-3.5 text-[#0552A2] shrink-0 mr-2" />
+                      <input
+                        type="date"
+                        value={departureDate}
+                        onChange={(e) => setDepartureDate(e.target.value)}
+                        className="w-full bg-transparent text-xs font-semibold text-slate-900 focus:outline-none cursor-pointer"
+                      />
                     </div>
                   </div>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Children (Under 12)
-                  </label>
-                  <div className="flex items-center justify-between bg-slate-50/70 border border-slate-200/90 rounded-xl px-3 py-1.5 shadow-2xs">
-                    <div className="flex items-center gap-1.5 text-xs font-bold text-slate-800">
-                      <Users className="h-3.5 w-3.5 text-slate-400" />
-                      <span>{childrenCount} Kids</span>
+
+                  {/* Adults Counter */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-600">
+                      Adults <span className="text-[10px] text-slate-400 font-normal">(Age 13+)</span>
+                    </label>
+                    <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                        <Users className="h-3.5 w-3.5 text-[#0552A2]" />
+                        <span>{adultsCount}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setAdultsCount((v) => Math.max(1, v - 1))}
+                          className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Decrease adults"
+                        >
+                          −
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setAdultsCount((v) => Math.min(16, v + 1))}
+                          className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Increase adults"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={() => setChildrenCount((v) => Math.max(0, v - 1))}
-                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-                      >
-                        -
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setChildrenCount((v) => Math.min(8, v + 1))}
-                        className="h-6 w-6 rounded-lg bg-white border border-slate-200 text-slate-700 font-bold hover:bg-slate-100 active:scale-95 text-xs flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-                      >
-                        +
-                      </button>
+                  </div>
+
+                  {/* Children Counter */}
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-semibold text-slate-600">
+                      Children <span className="text-[10px] text-emerald-600 font-medium">(25% off)</span>
+                    </label>
+                    <div className="flex items-center justify-between bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 shadow-2xs">
+                      <div className="flex items-center gap-1.5 text-xs font-bold text-slate-900">
+                        <Users className="h-3.5 w-3.5 text-slate-400" />
+                        <span>{childrenCount}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => setChildrenCount((v) => Math.max(0, v - 1))}
+                          className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Decrease children"
+                        >
+                          −
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setChildrenCount((v) => Math.min(8, v + 1))}
+                          className="h-6 w-6 rounded-md bg-slate-100 hover:bg-slate-200 active:scale-95 text-slate-700 text-xs font-bold flex items-center justify-center transition-all cursor-pointer"
+                          aria-label="Increase children"
+                        >
+                          +
+                        </button>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
 
-              {/* Add-ons Section */}
+              {/* Bespoke Add-ons & Field Staff */}
               <div className="space-y-2.5">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-slate-700">
-                    Recommended Add-ons &amp; Field Staff
+                  <h3 className="text-xs font-bold text-slate-900 tracking-tight">
+                    Expedition Staff &amp; Recommended Services
                   </h3>
                   <span className="text-[11px] text-[#0552A2] font-semibold">
                     Customize your experience
                   </span>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {/* Lead Guide */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${guideRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={guideRequested}
-                      onChange={(e) => setGuideRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">IFMGA Certified Mountain Guide</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 6,500/day</span>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                  {/* 1. Mountain Guide */}
+                  <div
+                    onClick={() => setGuideRequested(!guideRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      guideRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        guideRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {guideRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          IFMGA Mountain Guide
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            guideRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 6,500/d
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Licensed route leader with satellite comms and first-aid gear.
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        Certified lead guide with satellite comms &amp; wilderness first-aid.
                       </p>
                     </div>
-                  </label>
+                  </div>
 
-                  {/* Porter */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${porterRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={porterRequested}
-                      onChange={(e) => setPorterRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">High Altitude Porter</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 3,500/day</span>
+                  {/* 2. High Altitude Porter */}
+                  <div
+                    onClick={() => setPorterRequested(!porterRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      porterRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        porterRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {porterRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          High Altitude Porter
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            porterRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 3,500/d
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                         Carries up to 25kg duffle with official equipment insurance.
                       </p>
                     </div>
-                  </label>
+                  </div>
 
-                  {/* Sherpa Butler */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${butlerRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={butlerRequested}
-                      onChange={(e) => setButlerRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">Sherpa Butler VIP Service</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 8,500/day</span>
+                  {/* 3. Sherpa Butler */}
+                  <div
+                    onClick={() => setButlerRequested(!butlerRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      butlerRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        butlerRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {butlerRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          Sherpa Butler VIP Service
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            butlerRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 8,500/d
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Private tea ritual, heated bedding, luggage valet &amp; concierge.
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        Private tea ceremony, heated bedding, valet &amp; concierge.
                       </p>
                     </div>
-                  </label>
+                  </div>
 
-                  {/* Medevac Insurance */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${insuranceRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={insuranceRequested}
-                      onChange={(e) => setInsuranceRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">Emergency Heli-Rescue Cover</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 4,500/pp</span>
+                  {/* 4. Heli-Rescue Insurance */}
+                  <div
+                    onClick={() => setInsuranceRequested(!insuranceRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      insuranceRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        insuranceRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {insuranceRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          Emergency Heli-Rescue
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            insuranceRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 4,500/pp
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
                         24/7 mountain dispatch authorization up to 6,500m.
                       </p>
                     </div>
-                  </label>
+                  </div>
 
-                  {/* Private Shuttle */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${shuttleRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={shuttleRequested}
-                      onChange={(e) => setShuttleRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">Private Airport 4WD Shuttle</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 6,000 flat</span>
+                  {/* 5. 4WD Shuttle */}
+                  <div
+                    onClick={() => setShuttleRequested(!shuttleRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      shuttleRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        shuttleRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {shuttleRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          Private 4WD Airport Shuttle
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            shuttleRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 6,000 flat
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        Door-to-door VIP transfer between airport &amp; hotel base.
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        Door-to-door VIP transfer between airport &amp; trailhead base.
                       </p>
                     </div>
-                  </label>
+                  </div>
 
-                  {/* Expedition Gear Kit */}
-                  <label className={`flex items-start gap-3 p-3 rounded-xl border cursor-pointer transition-all ${gearKitRequested ? 'border-[#0552A2] bg-blue-50/50' : 'border-slate-200 hover:bg-slate-50'}`}>
-                    <input
-                      type="checkbox"
-                      checked={gearKitRequested}
-                      onChange={(e) => setGearKitRequested(e.target.checked)}
-                      className="mt-1 h-4 w-4 rounded text-[#0552A2] focus:ring-[#0552A2]"
-                    />
-                    <div className="text-xs">
-                      <div className="flex items-center justify-between gap-1">
-                        <span className="font-bold text-slate-900">High-Alpine Gear Kit</span>
-                        <span className="text-[10px] font-bold text-[#0552A2]">+NPR 5,000/pp</span>
+                  {/* 6. Gear Kit */}
+                  <div
+                    onClick={() => setGearKitRequested(!gearKitRequested)}
+                    className={`group relative flex items-start gap-3 p-3 rounded-xl border transition-all cursor-pointer select-none ${
+                      gearKitRequested
+                        ? 'border-[#0552A2]/40 bg-gradient-to-r from-blue-50/50 to-white ring-1 ring-[#0552A2]/20 shadow-2xs'
+                        : 'border-slate-200/90 bg-white hover:border-slate-300 hover:bg-slate-50/40'
+                    }`}
+                  >
+                    <div
+                      className={`h-5 w-5 rounded-md flex items-center justify-center shrink-0 mt-0.5 transition-all ${
+                        gearKitRequested
+                          ? 'bg-[#0552A2] text-white shadow-2xs'
+                          : 'border border-slate-300 bg-white group-hover:border-slate-400'
+                      }`}
+                    >
+                      {gearKitRequested && <Check className="h-3.5 w-3.5 stroke-[3]" />}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-baseline justify-between gap-1">
+                        <span className="text-xs font-bold text-slate-900">
+                          High-Alpine Gear Kit
+                        </span>
+                        <span
+                          className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md shrink-0 ${
+                            gearKitRequested
+                              ? 'bg-blue-100/70 text-[#0552A2]'
+                              : 'bg-slate-100 text-slate-600'
+                          }`}
+                        >
+                          +NPR 5,000/pp
+                        </span>
                       </div>
-                      <p className="text-[11px] text-slate-500 mt-0.5">
-                        -20°C Down jacket, sleeping bag, crampons &amp; carbon poles.
+                      <p className="text-[11px] text-slate-500 mt-0.5 leading-snug">
+                        -20°C Down parka, 800-fill sleeping bag, crampons &amp; poles.
                       </p>
                     </div>
-                  </label>
+                  </div>
                 </div>
               </div>
 
-              {/* Running Price Preview (Pure Text & Button, No Card Box) */}
-              <div className="border-t border-slate-150 pt-4 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 font-inter">
+              {/* Bottom Sticky Action Bar */}
+              <div className="pt-4 border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
                 <div>
-                  <span className="text-xs font-semibold text-slate-600">Estimated Total</span>
-                  <div className="flex items-baseline gap-1.5 mt-0.5">
-                    <span className="text-xl font-bold font-poppins text-slate-900">
+                  <span className="text-[11px] font-medium text-slate-500">Estimated Total</span>
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-lg sm:text-xl font-bold font-poppins text-slate-900">
                       NPR {finalTotalNpr.toLocaleString()}
                     </span>
                     <span className="text-xs text-slate-500 font-normal">
@@ -549,14 +743,14 @@ export default function StandardBookingModal({
                     </span>
                   </div>
                 </div>
+
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="w-full sm:w-auto h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-5 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  className="h-10 px-5 rounded-xl bg-gradient-to-r from-[#0552A2] to-[#044182] hover:from-[#065eb8] hover:to-[#054b94] active:scale-[0.98] text-white text-xs font-bold shadow-md shadow-[#0552A2]/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
                 >
-                  <span className="hidden sm:inline">Continue to Traveler Details</span>
-                  <span className="sm:hidden">Traveler Details</span>
-                  <ArrowRight className="h-4 w-4 shrink-0" />
+                  <span>Continue to Traveler Details</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -565,179 +759,139 @@ export default function StandardBookingModal({
           {/* STEP 2: Traveler Information Form */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="border-b border-slate-150 pb-2.5">
-                <div className="flex items-center gap-1.5 text-[10px] font-mono font-bold text-[#0552A2] uppercase tracking-wider">
-                  <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2]" />
-                  <span>Official Permit Documentation</span>
-                </div>
-                <h3 className="text-base font-bold font-poppins text-slate-900 tracking-tight mt-0.5">
-                  Lead Traveler Information
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Lead Traveler &amp; Checkpoint Information
                 </h3>
-                <p className="text-xs text-slate-500 font-inter">
-                  Required for official immigration filings, park checkpoint permits, and NTB digital boarding passes.
+                <p className="text-xs text-slate-500">
+                  Required by Nepal Tourism Board (NTB) for TIMS checkpoint permits &amp; high-altitude rescue clearance.
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 text-xs font-inter">
-                {/* Full Legal Name */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Full Legal Name *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <User className="h-4 w-4" />
-                    </div>
+              {/* Group 1: Contact Details */}
+              <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3.5 space-y-3">
+                <span className="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                  <User className="h-3.5 w-3.5 text-[#0552A2]" />
+                  Primary Contact
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Full Legal Name *</label>
                     <input
                       type="text"
                       required
                       value={fullName}
                       onChange={(e) => setFullName(e.target.value)}
                       placeholder="e.g. Aayush Pradhan"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
                     />
                   </div>
-                </div>
 
-                {/* Email Address */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Email Address *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <Mail className="h-4 w-4" />
-                    </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Email Address *</label>
                     <input
                       type="email"
                       required
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      placeholder="e.g. aayush.traveler@visitnepal.com"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      placeholder="e.g. traveler@visitnepal.com"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
                     />
                   </div>
-                </div>
 
-                {/* Phone / WhatsApp */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Phone / WhatsApp *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <Phone className="h-4 w-4" />
-                    </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Phone / WhatsApp *</label>
                     <input
                       type="tel"
                       required
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+977-9801234567"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
                     />
                   </div>
                 </div>
+              </div>
 
-                {/* Nationality */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Nationality *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <Globe className="h-4 w-4" />
-                    </div>
+              {/* Group 2: Permits & Emergency Details */}
+              <div className="rounded-xl border border-slate-200/90 bg-slate-50/50 p-3.5 space-y-3">
+                <span className="text-[11px] font-bold text-slate-800 flex items-center gap-1.5">
+                  <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                  Official Permit &amp; Safety Filing
+                </span>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Nationality *</label>
                     <input
                       type="text"
                       required
                       value={nationality}
                       onChange={(e) => setNationality(e.target.value)}
-                      placeholder="e.g. Nepal / International"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      placeholder="Nepal / International"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
                     />
                   </div>
-                </div>
 
-                {/* Passport / National ID Number */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Passport / National ID Number *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <ShieldCheck className="h-4 w-4" />
-                    </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Passport / National ID *</label>
                     <input
                       type="text"
                       required
                       value={passportNumber}
                       onChange={(e) => setPassportNumber(e.target.value)}
                       placeholder="e.g. NP-9982341A"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-mono font-medium uppercase focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-mono font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all uppercase"
                     />
                   </div>
-                </div>
 
-                {/* Emergency Contact */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Emergency Contact Name &amp; Phone *
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <HeartHandshake className="h-4 w-4" />
-                    </div>
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-medium text-slate-600">Emergency Contact &amp; Phone *</label>
                     <input
                       type="text"
                       required
                       value={emergencyContact}
                       onChange={(e) => setEmergencyContact(e.target.value)}
-                      placeholder="e.g. Dr. S. Pradhan (+977-9841239876)"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                      placeholder="Dr. S. Pradhan (+977-9841239876)"
+                      className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
                     />
                   </div>
                 </div>
 
-                {/* Dietary or High Altitude Notes */}
-                <div className="sm:col-span-2 flex flex-col gap-1">
-                  <label className="text-[10px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Dietary, Medical, or High Altitude Notes (Optional)
+                <div className="space-y-1 pt-1">
+                  <label className="text-[11px] font-medium text-slate-600">
+                    Medical, Dietary, or High Altitude Notes <span className="text-slate-400 font-normal">(Optional)</span>
                   </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <FileText className="h-4 w-4" />
-                    </div>
-                    <input
-                      type="text"
-                      placeholder="Vegetarian, Gluten-Free, Previous Diamox use, acute asthma, etc."
-                      value={dietaryNotes}
-                      onChange={(e) => setDietaryNotes(e.target.value)}
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2.5 text-xs text-slate-900 font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    value={dietaryNotes}
+                    onChange={(e) => setDietaryNotes(e.target.value)}
+                    placeholder="e.g. Vegetarian, Diamox use, mild asthma, gluten allergy..."
+                    className="w-full bg-white border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs text-slate-900 font-medium focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20 focus:border-[#0552A2] transition-all"
+                  />
                 </div>
               </div>
 
               {/* Navigation buttons */}
-              <div className="flex items-center justify-between gap-2.5 pt-4 border-t border-slate-150">
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setStep(1)}
-                  className="h-10 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 sm:px-4 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 whitespace-nowrap"
+                  className="h-10 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-xs font-semibold text-slate-700 transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+                  <ArrowLeft className="h-3.5 w-3.5" />
                   <span>Back</span>
                 </button>
+
                 <button
                   type="button"
                   onClick={() => setStep(3)}
                   disabled={!fullName || !email || !phone}
-                  className="flex-1 sm:flex-initial h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-4 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 disabled:opacity-50 transition-all cursor-pointer active:scale-95 whitespace-nowrap"
+                  className="h-10 px-5 rounded-xl bg-gradient-to-r from-[#0552A2] to-[#044182] hover:from-[#065eb8] hover:to-[#054b94] active:scale-[0.98] text-white text-xs font-bold shadow-md shadow-[#0552A2]/20 disabled:opacity-50 transition-all flex items-center gap-2 cursor-pointer"
                 >
-                  <span className="hidden sm:inline">Review &amp; Price Breakdown</span>
-                  <span className="sm:hidden">Price Breakdown</span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+                  <span>Review &amp; Itemized Breakdown</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
@@ -746,26 +900,28 @@ export default function StandardBookingModal({
           {/* STEP 3: Complete Itemized Price Breakdown & Payment Trigger */}
           {step === 3 && (
             <div className="space-y-4">
-              <div className="border-b border-slate-100 pb-2">
-                <h3 className="text-sm font-bold text-slate-900">Review Booking &amp; Itemized Quotation</h3>
+              <div className="space-y-1">
+                <h3 className="text-sm font-bold text-slate-900">
+                  Itemized Expedition Quotation
+                </h3>
                 <p className="text-xs text-slate-500">
-                  Compliant with Nepal Tourism Board statutory pricing and taxes.
+                  Compliant with statutory Nepal Tourism Board (NTB) fee schedules and Inland Revenue Department VAT.
                 </p>
               </div>
 
-              {/* Itemized Table */}
-              <div className="rounded-xl border border-slate-200 overflow-hidden text-xs">
+              {/* Clean Itemized Table */}
+              <div className="rounded-xl border border-slate-200/90 overflow-hidden text-xs bg-white shadow-2xs">
                 <table className="w-full text-left">
-                  <thead className="bg-slate-100/80 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
+                  <thead className="bg-slate-50 text-[10px] uppercase font-bold text-slate-500 border-b border-slate-200">
                     <tr>
-                      <th className="py-2.5 px-4">Line Item</th>
-                      <th className="py-2.5 px-3">Units</th>
-                      <th className="py-2.5 px-4 text-right">Amount (NPR)</th>
+                      <th className="py-2.5 px-4 font-semibold">Service Description</th>
+                      <th className="py-2.5 px-3 font-semibold">Units</th>
+                      <th className="py-2.5 px-4 text-right font-semibold">Amount (NPR)</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 text-slate-700">
                     <tr>
-                      <td className="py-2 px-4 font-semibold">{pkg.title} (Base)</td>
+                      <td className="py-2 px-4 font-semibold text-slate-900">{pkg.title}</td>
                       <td className="py-2 px-3 text-slate-500">{totalTravelers} Traveler(s)</td>
                       <td className="py-2 px-4 text-right font-medium">NPR {basePackageTotal.toLocaleString()}</td>
                     </tr>
@@ -773,42 +929,42 @@ export default function StandardBookingModal({
                       <tr>
                         <td className="py-2 px-4">IFMGA Mountain Guide</td>
                         <td className="py-2 px-3 text-slate-500">{days} Days</td>
-                        <td className="py-2 px-4 text-right">NPR {guideTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {guideTotal.toLocaleString()}</td>
                       </tr>
                     )}
                     {porterRequested && (
                       <tr>
                         <td className="py-2 px-4">High Altitude Porter</td>
                         <td className="py-2 px-3 text-slate-500">{days} Days</td>
-                        <td className="py-2 px-4 text-right">NPR {porterTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {porterTotal.toLocaleString()}</td>
                       </tr>
                     )}
                     {butlerRequested && (
                       <tr>
                         <td className="py-2 px-4">Sherpa Butler VIP Concierge</td>
                         <td className="py-2 px-3 text-slate-500">{days} Days</td>
-                        <td className="py-2 px-4 text-right">NPR {butlerTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {butlerTotal.toLocaleString()}</td>
                       </tr>
                     )}
                     {insuranceRequested && (
                       <tr>
-                        <td className="py-2 px-4">Mountain Medevac Rescue Coverage</td>
+                        <td className="py-2 px-4">Emergency Heli-Rescue Cover</td>
                         <td className="py-2 px-3 text-slate-500">{totalTravelers} Person(s)</td>
-                        <td className="py-2 px-4 text-right">NPR {insuranceTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {insuranceTotal.toLocaleString()}</td>
                       </tr>
                     )}
                     {shuttleRequested && (
                       <tr>
-                        <td className="py-2 px-4">Private Airport Transfer</td>
+                        <td className="py-2 px-4">Private 4WD Airport Transfer</td>
                         <td className="py-2 px-3 text-slate-500">1 Vehicle</td>
-                        <td className="py-2 px-4 text-right">NPR {shuttleTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {shuttleTotal.toLocaleString()}</td>
                       </tr>
                     )}
                     {gearKitRequested && (
                       <tr>
                         <td className="py-2 px-4">Expedition Cold Weather Gear Kit</td>
                         <td className="py-2 px-3 text-slate-500">{totalTravelers} Person(s)</td>
-                        <td className="py-2 px-4 text-right">NPR {gearKitTotal.toLocaleString()}</td>
+                        <td className="py-2 px-4 text-right font-medium">NPR {gearKitTotal.toLocaleString()}</td>
                       </tr>
                     )}
 
@@ -828,7 +984,7 @@ export default function StandardBookingModal({
                       </td>
                       <td className="py-1.5 px-4 text-right text-slate-600">NPR {vat.toLocaleString()}</td>
                     </tr>
-                    <tr className="bg-blue-50/80 font-extrabold text-sm text-[#0552A2] border-t-2 border-[#0552A2]/30">
+                    <tr className="bg-blue-50/70 font-extrabold text-sm text-[#0552A2] border-t border-blue-200">
                       <td colSpan={2} className="py-3 px-4">Total Amount Payable</td>
                       <td className="py-3 px-4 text-right text-base">
                         NPR {finalTotalNpr.toLocaleString()}
@@ -842,66 +998,73 @@ export default function StandardBookingModal({
               </div>
 
               {/* Lead Traveler Card Preview */}
-              <div className="rounded-xl bg-slate-50 p-3.5 border border-slate-200 text-xs space-y-1">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                  Lead Traveler &amp; Rendezvous
-                </span>
-                <p className="font-bold text-slate-800">
-                  {fullName} ({nationality}) • {phone} • {email}
-                </p>
-                <p className="text-slate-600 text-[11px]">
-                  Departure: <span className="font-semibold text-slate-800">{departureDate}</span> • Rendezvous: Kathmandu Departure Base
-                </p>
+              <div className="rounded-xl bg-slate-50/80 p-3.5 border border-slate-200 text-xs flex items-center justify-between gap-3">
+                <div className="space-y-0.5">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
+                    Lead Traveler &amp; Rendezvous
+                  </span>
+                  <p className="font-bold text-slate-800">
+                    {fullName} ({nationality}) • {phone}
+                  </p>
+                  <p className="text-slate-500 text-[11px]">
+                    Departure: <span className="font-semibold text-slate-700">{departureDate}</span> • Rendezvous: Kathmandu Departure Base
+                  </p>
+                </div>
+                <div className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-full border border-emerald-200">
+                  <ShieldCheck className="h-3.5 w-3.5" />
+                  <span>NTB Verified</span>
+                </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-between gap-2.5 pt-4 border-t border-slate-150">
+              <div className="pt-4 border-t border-slate-200 flex items-center justify-between gap-3">
                 <button
                   type="button"
                   onClick={() => setStep(2)}
-                  className="h-10 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 px-3.5 sm:px-4 text-xs font-semibold text-slate-700 transition-all cursor-pointer shadow-2xs active:scale-95 shrink-0 whitespace-nowrap"
+                  className="h-10 px-4 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:scale-95 text-xs font-semibold text-slate-700 transition-all flex items-center gap-1.5 cursor-pointer"
                 >
-                  <ArrowLeft className="h-3.5 w-3.5 shrink-0" />
+                  <ArrowLeft className="h-3.5 w-3.5" />
                   <span>Back</span>
                 </button>
+
                 <button
                   type="button"
                   onClick={handleProceedToPayment}
-                  className="flex-1 sm:flex-initial h-10 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 px-4 sm:px-6 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 active:scale-95 transition-all cursor-pointer whitespace-nowrap"
+                  className="h-10 px-6 rounded-xl bg-gradient-to-r from-[#0552A2] to-[#044182] hover:from-[#065eb8] hover:to-[#054b94] active:scale-[0.98] text-white text-xs font-bold shadow-md shadow-[#0552A2]/20 transition-all flex items-center gap-2 cursor-pointer"
                 >
-                  <Lock className="h-3.5 w-3.5 shrink-0" />
-                  <span className="hidden sm:inline">Confirm &amp; Proceed to Payment</span>
-                  <span className="sm:hidden">Confirm &amp; Pay</span>
-                  <ArrowRight className="h-3.5 w-3.5 shrink-0" />
+                  <Lock className="h-3.5 w-3.5" />
+                  <span>Authorize &amp; Pay NPR {finalTotalNpr.toLocaleString()}</span>
+                  <ArrowRight className="h-3.5 w-3.5" />
                 </button>
               </div>
             </div>
           )}
 
-          {/* STEP 4: Success & Confirmation */}
+          {/* STEP 4: Success & Confirmation Digital Boarding Pass */}
           {step === 4 && (
-            <div className="py-4 space-y-5 text-center">
-              <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-emerald-100 text-emerald-600">
-                <CheckCircle2 className="h-8 w-8" />
+            <div className="py-2 space-y-5 text-center">
+              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 shadow-xs">
+                <CheckCircle2 className="h-6 w-6 stroke-[2.5]" />
               </div>
+
               <div className="space-y-1">
-                <span className="rounded bg-emerald-100 text-emerald-800 font-bold text-[10px] px-2.5 py-0.5 uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold text-[10px] px-2.5 py-0.5 tracking-wide uppercase">
                   Official Reservation Confirmed
                 </span>
-                <h3 className="text-xl font-bold font-poppins text-slate-900">
-                  Expedition Booked Successfully!
+                <h3 className="text-lg sm:text-xl font-bold font-poppins text-slate-900">
+                  Expedition Booked Successfully
                 </h3>
-                <p className="text-xs text-slate-600 max-w-md mx-auto">
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
                   Your reservation is saved and confirmed. An official receipt and digital boarding pass have been issued.
                 </p>
               </div>
 
-              {/* Pass Card Preview */}
-              <div className="rounded-2xl border border-slate-200 bg-gradient-to-br from-slate-50 to-white p-5 text-left max-w-lg mx-auto shadow-sm space-y-3">
-                <div className="flex justify-between items-start border-b border-slate-200 pb-3">
+              {/* Digital Boarding Pass Card */}
+              <div className="rounded-2xl border border-slate-200 bg-gradient-to-b from-white to-slate-50/70 p-4 sm:p-5 text-left max-w-md mx-auto shadow-sm space-y-3 font-inter">
+                <div className="flex justify-between items-start border-b border-slate-200/80 pb-3">
                   <div>
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Unique Booking ID
+                      Booking Reference
                     </span>
                     <p className="font-mono text-sm font-extrabold text-[#0552A2]">
                       {createdBooking?.id || `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`}
@@ -909,86 +1072,84 @@ export default function StandardBookingModal({
                   </div>
                   <div className="text-right">
                     <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      Invoice No.
+                      Invoice
                     </span>
-                    <p className="font-mono text-sm font-extrabold text-slate-800">
+                    <p className="font-mono text-xs font-semibold text-slate-700">
                       {createdBooking?.invoiceNumber || `VN-INV-2026-${Math.floor(10000 + Math.random() * 89999)}`}
                     </p>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2 text-xs">
+                <div className="grid grid-cols-2 gap-2.5 text-xs">
                   <div>
                     <span className="text-slate-400 text-[10px] uppercase font-bold">Package</span>
-                    <p className="font-semibold text-slate-800 line-clamp-1">{pkg.title}</p>
+                    <p className="font-semibold text-slate-900 truncate">{pkg.title}</p>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] uppercase font-bold">Departure Date</span>
-                    <p className="font-semibold text-slate-800">{departureDate}</p>
+                    <p className="font-semibold text-slate-900">{departureDate}</p>
                   </div>
                   <div>
                     <span className="text-slate-400 text-[10px] uppercase font-bold">Traveler</span>
-                    <p className="font-semibold text-slate-800">{sanitizeName(fullName)}</p>
+                    <p className="font-semibold text-slate-900">{sanitizeName(fullName)}</p>
                   </div>
                   <div>
-                    <span className="text-slate-400 text-[10px] uppercase font-bold">Amount Paid</span>
+                    <span className="text-slate-400 text-[10px] uppercase font-bold">Total Paid</span>
                     <p className="font-bold text-emerald-700">NPR {finalTotalNpr.toLocaleString()}</p>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between rounded-xl border border-blue-200/80 bg-blue-50/70 p-3 text-slate-900">
-                  <div className="flex items-center gap-2.5">
+                {/* QR Code Barcode Row */}
+                <div className="flex items-center justify-between rounded-xl border border-blue-200/70 bg-blue-50/50 p-2.5 text-slate-900">
+                  <div className="flex items-center gap-2">
                     <div className="p-1 rounded-md bg-white border border-blue-200/60 shadow-2xs">
                       <QrCodeIcon className="h-4 w-4 text-[#0552A2]" />
                     </div>
-                    <span className="text-xs font-semibold text-slate-800 tracking-wide">
+                    <span className="font-mono text-[11px] font-semibold text-slate-700 tracking-wide truncate max-w-[200px]">
                       {createdBooking?.qrCode || `VN-PASS-${createdBooking?.id}-VERIFIED-2026`}
                     </span>
                   </div>
-                  <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-700 border border-emerald-200">
+                  <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] font-bold text-emerald-700 border border-emerald-200">
                     VERIFIED
                   </span>
                 </div>
               </div>
 
-              {/* Action Buttons: Clean Isolated Receipt Download / Print (Receipt Only) */}
-              <div className="flex flex-col sm:flex-row gap-2 max-w-lg mx-auto pt-2">
+              {/* Action Buttons */}
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 max-w-md mx-auto pt-1">
                 <button
                   type="button"
                   onClick={() => printOfficialReceipt(buildOfficialReceiptData())}
-                  className="flex-1 inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 py-2.5 px-4 text-xs font-bold text-white shadow-md shadow-[#0552A2]/20 cursor-pointer active:scale-95 transition-all"
-                  title="Prints or saves PDF of ONLY the official tax invoice & pass, excluding the website and background"
+                  className="w-full sm:flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-xs font-bold text-white shadow-2xs active:scale-95 transition-all cursor-pointer"
                 >
-                  <Printer className="h-4 w-4" />
-                  <span>Download / Print Receipt</span>
+                  <Printer className="h-3.5 w-3.5" />
+                  <span>Print Receipt</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => downloadOfficialReceiptHtml(buildOfficialReceiptData())}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 py-2.5 px-3.5 text-xs font-bold text-slate-700 shadow-2xs cursor-pointer active:scale-95 transition-all"
-                  title="Directly download clean standalone receipt HTML file"
+                  className="w-full sm:flex-1 h-9 inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-xs font-semibold text-slate-700 active:scale-95 transition-all cursor-pointer shadow-2xs"
                 >
-                  <Download className="h-4 w-4 text-[#0552A2]" />
-                  <span>Save File</span>
+                  <Download className="h-3.5 w-3.5 text-[#0552A2]" />
+                  <span>Save Offline Pass</span>
                 </button>
 
-                <Link
-                  href="/dashboard"
+                <button
+                  type="button"
                   onClick={onClose}
-                  className="inline-flex items-center justify-center gap-1.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 py-2.5 px-3.5 text-xs font-bold text-slate-700 cursor-pointer active:scale-95 transition-all"
+                  className="w-full sm:w-auto h-9 px-4 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 text-xs font-semibold text-slate-700 active:scale-95 transition-all cursor-pointer"
                 >
-                  <span>Dashboard</span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
+                  <span>Done</span>
+                </button>
               </div>
             </div>
           )}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Embedded Reusable Payment Gateway Modal */}
-      {createdBooking && (
+      {/* Embedded Secure Payment Gateway Modal */}
+      {isPaymentOpen && createdBooking && (
         <PaymentModal
           isOpen={isPaymentOpen}
           onClose={() => setIsPaymentOpen(false)}
