@@ -106,16 +106,6 @@ export default function HeroBackgroundSlider({
       <div className="absolute inset-0 z-20 bg-slate-950/40 sm:bg-slate-950/25 pointer-events-none" />
       <div className="absolute inset-0 z-20 bg-gradient-to-b from-slate-950/75 via-slate-950/40 to-transparent sm:bg-gradient-to-r sm:from-slate-950/85 sm:via-slate-950/45 sm:to-transparent pointer-events-none" />
       <div className="absolute top-0 inset-x-0 h-28 sm:h-36 z-20 bg-gradient-to-b from-slate-950/80 via-slate-950/30 to-transparent pointer-events-none" />
-
-      {/* 2. Seamless Full-Width Natural Cloud Mist (Dissolves horizontally into white section below with zero dome/hump) */}
-      <div
-        className="absolute bottom-0 inset-x-0 h-28 sm:h-44 lg:h-56 z-20 pointer-events-none"
-        style={{
-          background:
-            'linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.06) 20%, rgba(255,255,255,0.22) 40%, rgba(255,255,255,0.55) 65%, rgba(255,255,255,0.85) 85%, #FFFFFF 100%)',
-        }}
-      />
-      <div className="absolute bottom-0 inset-x-0 h-5 z-20 bg-[#FFFFFF] pointer-events-none" />
     </div>
   );
 }
