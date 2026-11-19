@@ -10,8 +10,24 @@ import {
   MessageSquare,
   LogOut,
   User,
+  LayoutDashboard,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
+
+export const getRolePortalPath = (r?: string) => {
+  switch (r?.toLowerCase()) {
+    case 'guide':
+      return '/portals/guide';
+    case 'butler':
+      return '/portals/butler';
+    case 'business':
+      return '/portals/business';
+    case 'admin':
+      return '/portals/admin';
+    default:
+      return '/dashboard';
+  }
+};
 
 const navLinks = [
   { href: '/explore', label: 'Packages' },
@@ -221,15 +237,16 @@ export default function Navbar() {
                 <MessageSquare className="h-4 w-4" />
               </Link>
 
-              {/* Role Badge Indicator */}
+              {/* Role Badge Indicator: Direct shortcut to user's dashboard */}
               <Link
-                href="/profile"
-                className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium tracking-wide transition-colors ${isTransparent
-                  ? 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
-                  : 'bg-slate-100 hover:bg-slate-200/80 text-slate-800 border border-slate-200'
+                href={getRolePortalPath(currentUser.role || role)}
+                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
+                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
+                  : 'bg-blue-50 hover:bg-blue-100/80 text-[#0552A2] border border-blue-200/80'
                   }`}
-                title="Active Portal / Profile"
+                title={`Open ${currentUser.role || role || 'Traveler'} Dashboard`}
               >
+                <LayoutDashboard className="h-3 w-3" />
                 <span className="capitalize">{currentUser.role || role || 'Traveler'}</span>
               </Link>
 
@@ -328,6 +345,29 @@ export default function Navbar() {
               className="lg:hidden relative z-50 border-t border-slate-200 bg-white px-5 pt-3.5 pb-6 space-y-3 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-xl rounded-b-2xl border-b border-slate-200/90"
             >
               <div className="space-y-0.5">
+                {/* Direct Dashboard Shortcut for Signed-in User on Mobile */}
+                {currentUser && (
+                  <motion.div
+                    custom={0}
+                    initial="hidden"
+                    animate="visible"
+                    exit="exit"
+                    variants={itemVariants}
+                  >
+                    <Link
+                      href={getRolePortalPath(currentUser.role || role)}
+                      onClick={closeMobile}
+                      className="group flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-semibold bg-[#0552A2] text-white shadow-xs hover:bg-[#044182] transition-all mb-2"
+                    >
+                      <span className="flex items-center gap-2">
+                        <LayoutDashboard className="h-4 w-4" />
+                        <span className="capitalize">{currentUser.role || role || 'Traveler'} Dashboard</span>
+                      </span>
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </motion.div>
+                )}
+
                 {mobileMenuItems.map((item, index) => {
                   const isActive =
                     pathname === item.href ||
