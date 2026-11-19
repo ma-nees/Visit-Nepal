@@ -196,21 +196,26 @@ export default function StoriesPage() {
             First-person chronicles, trail notes, mountain medicine advice, and cultural reflections written by certified guides and travelers.
           </p>
 
-          {/* Filter Pills: Non-scrollable wrapping layout */}
-          <div className="pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
-            {categories.map((c) => (
-              <button
-                key={c}
-                onClick={() => setSelectedCat(c)}
-                className={`h-8 inline-flex items-center text-xs font-semibold font-inter px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
-                  selectedCat === c
-                    ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
-                    : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
-                }`}
-              >
-                {c}
-              </button>
-            ))}
+          {/* Filter Pills: Smart 2-Row Balanced Grid on Mobile, Single Row on Desktop */}
+          <div className="pt-2.5 grid grid-cols-4 sm:flex sm:flex-wrap items-center gap-1 sm:gap-1.5 pb-0.5">
+            {categories.map((c) => {
+              const isLong = c === 'Lakes & Valleys';
+              return (
+                <button
+                  key={c}
+                  onClick={() => setSelectedCat(c)}
+                  className={`h-7 sm:h-7.5 inline-flex items-center justify-center text-[11px] sm:text-xs font-semibold font-inter px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
+                    isLong ? 'col-span-2 sm:col-auto' : 'col-span-1 sm:col-auto'
+                  } ${
+                    selectedCat === c
+                      ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
+                      : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
+                  }`}
+                >
+                  <span className="truncate">{c}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>

@@ -381,8 +381,8 @@ export default function TravelerDashboardPage() {
                 )}
               </div>
 
-              {/* Status Filter Pills */}
-              <div className="flex flex-wrap items-center gap-1.5 pb-1 md:pb-0">
+              {/* Status Filter Pills: Compact grid on mobile, flex on desktop */}
+              <div className="grid grid-cols-4 sm:flex items-center gap-1 sm:gap-1.5 pb-1 md:pb-0">
                 <span className="text-[11px] font-semibold text-slate-400 mr-1 hidden sm:inline-flex items-center gap-1">
                   <Filter className="h-3 w-3" /> Filter:
                 </span>
@@ -396,16 +396,18 @@ export default function TravelerDashboardPage() {
                     key={pill.id}
                     type="button"
                     onClick={() => setStatusFilter(pill.id as any)}
-                    className={`inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                    className={`inline-flex items-center justify-center gap-1 px-1.5 sm:px-2.5 py-1 rounded-lg text-[11px] sm:text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                       statusFilter === pill.id
-                        ? 'bg-[#0552A2] text-white shadow-2xs'
+                        ? 'bg-[#0552A2] text-white shadow-2xs font-bold'
                         : 'bg-slate-100 text-slate-600 hover:bg-slate-200/80 hover:text-slate-900'
                     }`}
                   >
-                    <span>{pill.label}</span>
-                    <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${
-                      statusFilter === pill.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
-                    }`}>
+                    <span className="truncate">{pill.label}</span>
+                    <span
+                      className={`text-[9px] sm:text-[10px] px-1 py-0 rounded-full font-medium ${
+                        statusFilter === pill.id ? 'bg-white/20 text-white' : 'bg-slate-200/80 text-slate-600'
+                      }`}
+                    >
                       {pill.count}
                     </span>
                   </button>

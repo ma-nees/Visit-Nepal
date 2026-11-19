@@ -234,21 +234,26 @@ export default function DestinationsPage() {
             From glaciated 8,000-meter peaks and wind-carved desert canyons to subtropical sal jungles and medieval UNESCO valleys.
           </p>
 
-          {/* Category Filter Pills: Non-scrollable wrapping layout */}
-          <div className="pt-3 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-0.5">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setSelectedCategory(cat)}
-                className={`h-8 inline-flex items-center text-xs font-semibold font-inter px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
-                  selectedCategory === cat
-                    ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
-                    : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
+          {/* Category Filter Pills: Smart 2-Row Balanced Grid on Mobile, Single Row on Desktop */}
+          <div className="pt-2.5 grid grid-cols-4 sm:flex sm:flex-wrap items-center gap-1 sm:gap-1.5 pb-0.5">
+            {categories.map((cat) => {
+              const isLong = cat === 'Lakes & Valleys';
+              return (
+                <button
+                  key={cat}
+                  onClick={() => setSelectedCategory(cat)}
+                  className={`h-7 sm:h-7.5 inline-flex items-center justify-center text-[11px] sm:text-xs font-semibold font-inter px-1.5 sm:px-3 py-0.5 sm:py-1 rounded-full transition-all cursor-pointer ${
+                    isLong ? 'col-span-2 sm:col-auto' : 'col-span-1 sm:col-auto'
+                  } ${
+                    selectedCategory === cat
+                      ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
+                      : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
+                  }`}
+                >
+                  <span className="truncate">{cat}</span>
+                </button>
+              );
+            })}
           </div>
         </div>
       </section>

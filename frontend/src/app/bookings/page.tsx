@@ -110,19 +110,19 @@ export default function BookingsPage() {
           <p className="text-[11px] text-slate-400">Showing {filtered.length} reservations</p>
         </div>
 
-        <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pb-0.5 sm:pb-0">
+        <div className="grid grid-cols-4 sm:flex items-center gap-1 sm:gap-1.5 pb-0.5 sm:pb-0">
           {(['All', 'Confirmed', 'Completed', 'Cancelled'] as const).map(
             (status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`h-7 sm:h-8 inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                className={`h-7 sm:h-7.5 inline-flex items-center justify-center rounded-lg px-1.5 sm:px-2.5 py-1 text-xs font-semibold transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                   filter === status
                     ? 'bg-[#0552A2] text-white shadow-xs'
                     : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
-                {status}
+                <span className="truncate">{status}</span>
               </button>
             )
           )}

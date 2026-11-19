@@ -187,12 +187,12 @@ function ExploreContent() {
           </div>
 
           {/* Operational Metrics & 1,000 Records Benchmark Toggle */}
-          <div className="flex flex-wrap items-center gap-1.5 pt-0.5 sm:pt-0">
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pt-0.5 sm:pt-0">
             {/* 1,000+ Record Benchmark Simulator Button */}
             <button
               type="button"
               onClick={() => setIs1000Mode(!is1000Mode)}
-              className={`h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all cursor-pointer shadow-2xs active:scale-95 ${
+              className={`h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-bold shrink-0 transition-all cursor-pointer shadow-2xs active:scale-95 ${
                 is1000Mode
                   ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white ring-1 ring-amber-400/40'
                   : 'bg-white border border-slate-200 text-slate-700 hover:border-[#0552A2]/40 hover:text-[#0552A2]'
@@ -203,12 +203,12 @@ function ExploreContent() {
               <span>{is1000Mode ? '1,000 Records' : 'Test 1,000+'}</span>
             </button>
 
-            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold shrink-0">
+            <span className="h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-slate-100/90 text-slate-800 text-[10px] sm:text-[11px] font-semibold shrink-0">
               <Mountain className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>{allDestinations.length} Routes</span>
             </span>
 
-            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold shrink-0">
+            <span className="h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[10px] sm:text-[11px] font-semibold shrink-0">
               <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
               <span>TIMS &amp; ACAP</span>
             </span>
@@ -217,26 +217,29 @@ function ExploreContent() {
       </div>
 
       {/* 2. Interactive Search & Multi-Filters Bar (Smart Space Efficiency) */}
-      <div className="space-y-2.5">
-        {/* Category Filter Chips: Non-scrollable wrapping layout */}
-        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+      <div className="space-y-2">
+        {/* Category Filter Chips: Smart 2-Row Balanced Grid on Mobile, Single Row on Desktop */}
+        <div className="grid grid-cols-4 sm:flex sm:flex-wrap items-center gap-1 sm:gap-1.5">
           {categories.map((cat) => {
             const isSelected = category === cat;
             const count = categoryCounts[cat] || 0;
+            const isLong = cat === 'Lakes & Valleys';
             return (
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`h-7 sm:h-8 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                className={`h-7 sm:h-7.5 inline-flex items-center justify-center gap-1 sm:gap-1.5 rounded-lg px-1.5 sm:px-2.5 py-0.5 text-[11px] sm:text-xs font-semibold transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                  isLong ? 'col-span-2 sm:col-auto' : 'col-span-1 sm:col-auto'
+                } ${
                   isSelected
-                    ? 'bg-[#0552A2] text-white shadow-xs'
+                    ? 'bg-[#0552A2] text-white shadow-xs font-bold'
                     : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
                 }`}
               >
-                <span>{cat}</span>
+                <span className="truncate">{cat}</span>
                 <span
-                  className={`text-[10px] px-1.5 py-0.2 rounded-full font-medium ${
-                    isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-500'
+                  className={`text-[9px] sm:text-[10px] px-1.5 py-0.2 rounded-full font-medium shrink-0 ${
+                    isSelected ? 'bg-white/25 text-white' : 'bg-slate-100 text-slate-500'
                   }`}
                 >
                   {count}

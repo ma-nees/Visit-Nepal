@@ -89,8 +89,8 @@ function ServicesContent() {
         </div>
       </div>
 
-      {/* Tab Strip: Non-scrollable wrapping layout */}
-      <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
+      {/* Tab Strip: Smart 2x2 Grid on Mobile, Single Row on Desktop */}
+      <div className="grid grid-cols-2 sm:flex sm:flex-wrap items-center gap-1 sm:gap-1.5 rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;
@@ -98,7 +98,7 @@ function ServicesContent() {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`h-8 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+              className={`h-7.5 sm:h-8 inline-flex items-center justify-center gap-1.5 rounded-lg px-2 sm:px-2.5 py-1 text-xs font-semibold transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                 active
                   ? 'bg-[#0552A2] text-white shadow-xs'
                   : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'

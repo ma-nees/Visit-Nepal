@@ -318,8 +318,8 @@ export default function ProfilePage() {
             </div>
           </div>
 
-          {/* Persona Pills: Non-scrollable wrapping layout */}
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 py-0.5">
+          {/* Persona Pills: Compact non-scrollable wrapping layout */}
+          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 py-0.5">
             {personaProfiles.map((p) => {
               const isCurrent = p.role === activeRole;
               const isSwitching = switchingRole === p.role;
@@ -330,7 +330,7 @@ export default function ProfilePage() {
                   type="button"
                   disabled={isSwitching || isExpanded || tearState !== 'idle'}
                   onClick={() => handleSwitchUser(p.role)}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-3 sm:px-3.5 py-1.5 text-xs font-semibold transition-all active:scale-95 ${
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${
                     isCurrent
                       ? 'bg-[#0552A2] text-white shadow-xs'
                       : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
