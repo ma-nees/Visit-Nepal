@@ -37,11 +37,6 @@ const mobileMenuItems = [
   { href: '/experiences', label: 'Experiences' },
   { href: '/services', label: 'Services' },
   { href: '/bookings', label: 'My Bookings' },
-  { href: '/schedule', label: 'Schedule (14 Days)' },
-  { href: '/chat', label: 'Messages & Concierge' },
-  { href: '/culture', label: 'Culture & Heritage' },
-  { href: '/dashboard', label: 'Traveler Dashboard' },
-  { href: '/login', label: 'Partner & Admin Portals', isHighlight: true },
 ];
 
 const itemVariants = {
@@ -579,8 +574,6 @@ export default function Navbar() {
                         className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 border-b border-slate-100/70 ${
                           isActive
                             ? 'bg-blue-50/80 text-[#0552A2] font-semibold pl-3.5'
-                            : item.isHighlight
-                            ? 'text-[#0552A2] font-semibold hover:bg-blue-50/50 hover:pl-3.5'
                             : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-50/80 hover:pl-3.5'
                         }`}
                       >
