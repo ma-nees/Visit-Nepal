@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import {
   UserCircle2,
   ArrowRight,
@@ -28,38 +29,73 @@ const navLinks = [
   { href: '/bookings', label: 'My Bookings' },
 ];
 
+const mobileMenuItems = [
+  { href: '/', label: 'Home' },
+  { href: '/explore', label: 'Packages' },
+  { href: '/custom-plan', label: 'Custom Trip' },
+  { href: '/destinations', label: 'Destinations' },
+  { href: '/experiences', label: 'Experiences' },
+  { href: '/services', label: 'Services' },
+  { href: '/bookings', label: 'My Bookings' },
+  { href: '/schedule', label: 'Schedule (14 Days)' },
+  { href: '/chat', label: 'Messages & Concierge' },
+  { href: '/culture', label: 'Culture & Heritage' },
+  { href: '/dashboard', label: 'Traveler Dashboard' },
+  { href: '/login', label: 'Partner & Admin Portals', isHighlight: true },
+];
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: -10,
+    scale: 0.96,
+  },
+  visible: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      delay: 0.04 + index * 0.024,
+      type: 'spring' as const,
+      damping: 22,
+      stiffness: 300,
+    },
+  }),
+  exit: (index: number) => ({
+    opacity: 0,
+    y: -6,
+    scale: 0.97,
+    transition: {
+      delay: (12 - index) * 0.008,
+      duration: 0.18,
+      ease: 'easeInOut' as const,
+    },
+  }),
+};
+
 export default function Navbar() {
   const pathname = usePathname();
   const router = useRouter();
   const { role, currentUser, logout, notificationsList, markAllRead } = useApp();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [isClosing, setIsClosing] = useState(false);
-  const closeTimerRef = useRef<NodeJS.Timeout | null>(null);
+  const [isMenuExiting, setIsMenuExiting] = useState(false);
   const [notifOpen, setNotifOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const notifRef = useRef<HTMLDivElement>(null);
 
   const openMobile = () => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
-    setIsClosing(false);
+    setIsMenuExiting(false);
     setMobileOpen(true);
   };
 
   const closeMobile = () => {
-    if (!mobileOpen || isClosing) return;
-    setIsClosing(true);
-    closeTimerRef.current = setTimeout(() => {
-      setMobileOpen(false);
-      setIsClosing(false);
-      closeTimerRef.current = null;
-    }, 300);
+    if (!mobileOpen) return;
+    setIsMenuExiting(true);
+    setMobileOpen(false);
   };
 
   const toggleMobile = () => {
-    if (mobileOpen && !isClosing) {
+    if (mobileOpen) {
       closeMobile();
     } else {
       openMobile();
@@ -108,18 +144,14 @@ export default function Navbar() {
 
   // Close mobile drawer on route change
   useEffect(() => {
-    if (closeTimerRef.current) {
-      clearTimeout(closeTimerRef.current);
-      closeTimerRef.current = null;
-    }
     setMobileOpen(false);
-    setIsClosing(false);
+    setIsMenuExiting(false);
     setNotifOpen(false);
   }, [pathname]);
 
   // Lock body scroll and handle Escape key when mobile menu is open
   useEffect(() => {
-    if (mobileOpen && !isClosing) {
+    if (mobileOpen) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -136,26 +168,18 @@ export default function Navbar() {
       document.body.style.overflow = '';
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [mobileOpen, isClosing]);
-
-  // Cleanup timer on unmount
-  useEffect(() => {
-    return () => {
-      if (closeTimerRef.current) {
-        clearTimeout(closeTimerRef.current);
-      }
-    };
-  }, []);
+  }, [mobileOpen]);
 
   const unreadCount = notificationsList.filter((n) => !n.read).length;
 
   // Header dynamic classes:
-  // When mobile drawer is open: solid clean white background for seamless shutter connection
+  // When mobile drawer is open or smoothly exiting: solid clean white background for seamless continuity
   // Initial state at top of hero: completely transparent, floating, white text & white logo.
   // Scrolled state (>70px or non-home pages): solid clean white background, dark blue navigation text, subtle bottom border & shadow.
-  const isTransparent = isHome && !isScrolled && !mobileOpen;
+  const isMenuVisible = mobileOpen || isMenuExiting;
+  const isTransparent = isHome && !isScrolled && !isMenuVisible;
 
-  const headerBgClass = mobileOpen
+  const headerBgClass = isMenuVisible
     ? 'bg-white border-b border-slate-200 shadow-sm'
     : isTransparent
     ? 'bg-transparent border-transparent shadow-none'
@@ -408,185 +432,245 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Mobile Menu Toggle: Ultra-smooth physical 3-line morph with zoom-in physics */}
-          <button
+          {/* Mobile Menu Toggle: Apple-grade tactile morphing spring */}
+          <motion.button
             type="button"
             onClick={toggleMobile}
-            className={`lg:hidden relative flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${
+            whileHover={{ scale: 1.08 }}
+            whileTap={{ scale: 0.90 }}
+            className={`lg:hidden relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 cursor-pointer select-none ${
               isTransparent
-                ? 'text-white hover:bg-white/10'
-                : 'text-[#10243A] hover:bg-slate-100'
+                ? 'text-white hover:bg-white/15'
+                : 'text-[#10243A] hover:bg-slate-100/90'
             }`}
-            aria-label={mobileOpen && !isClosing ? 'Close Navigation Menu' : 'Open Navigation Menu'}
-            aria-expanded={mobileOpen && !isClosing}
+            aria-label={mobileOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
+            aria-expanded={mobileOpen}
           >
-            <div
-              className={`relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none transition-transform duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] ${
-                mobileOpen && !isClosing ? 'scale-115 rotate-90' : 'scale-100 rotate-0'
-              }`}
+            <motion.div
+              animate={mobileOpen ? { rotate: 90 } : { rotate: 0 }}
+              transition={{
+                type: 'spring',
+                stiffness: 280,
+                damping: 18,
+                mass: 0.8,
+              }}
+              className="relative w-5 h-4 flex flex-col justify-between items-center pointer-events-none"
             >
-              <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+              {/* Top Bar: slides down 7px, rotates 45 degrees with fluid spring */}
+              <motion.span
+                animate={
+                  mobileOpen
+                    ? { y: 7, rotate: 45, width: 20 }
+                    : { y: 0, rotate: 0, width: 20 }
+                }
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 20,
+                  mass: 0.8,
+                }}
+                className={`block h-[2px] rounded-full origin-center ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
-                } ${
-                  mobileOpen && !isClosing
-                    ? 'translate-y-[6px] rotate-45'
-                    : 'translate-y-0 rotate-0'
                 }`}
               />
-              <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-250 ease-[cubic-bezier(0.16,1,0.3,1)] ${
+
+              {/* Middle Bar: smoothly compresses and dissolves */}
+              <motion.span
+                animate={
+                  mobileOpen
+                    ? { opacity: 0, scaleX: 0, x: -6 }
+                    : { opacity: 1, scaleX: 1, x: 0 }
+                }
+                transition={{
+                  duration: 0.22,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+                className={`block h-[2px] w-5 rounded-full ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
-                } ${
-                  mobileOpen && !isClosing
-                    ? 'opacity-0 scale-x-0'
-                    : 'opacity-100 scale-x-100'
                 }`}
               />
-              <span
-                className={`block h-[2px] w-full rounded-full transition-all duration-350 ease-[cubic-bezier(0.16,1,0.3,1)] origin-center ${
+
+              {/* Bottom Bar: slides up 7px, rotates -45 degrees with fluid spring */}
+              <motion.span
+                animate={
+                  mobileOpen
+                    ? { y: -7, rotate: -45, width: 20 }
+                    : { y: 0, rotate: 0, width: 20 }
+                }
+                transition={{
+                  type: 'spring',
+                  stiffness: 300,
+                  damping: 20,
+                  mass: 0.8,
+                }}
+                className={`block h-[2px] rounded-full origin-center ${
                   isTransparent ? 'bg-white' : 'bg-slate-800'
-                } ${
-                  mobileOpen && !isClosing
-                    ? '-translate-y-[6px] -rotate-45'
-                    : 'translate-y-0 rotate-0'
                 }`}
               />
-            </div>
-          </button>
+            </motion.div>
+          </motion.button>
         </div>
       </div>
 
-      {/* Mobile Shutter Overlay & Dropdown Menu */}
-      {mobileOpen && (
-        <>
-          {/* Backdrop Overlay */}
-          <div
-            onClick={closeMobile}
-            className={`lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/45 backdrop-blur-xs z-40 ${
-              isClosing ? 'animate-backdrop-out' : 'animate-backdrop-in'
-            }`}
-            aria-hidden="true"
-          />
+      {/* Mobile Shutter Overlay & Dropdown Menu with Cinematic Zoom-In & Staggered Reveal */}
+      <AnimatePresence onExitComplete={() => setIsMenuExiting(false)}>
+        {mobileOpen && (
+          <>
+            {/* Backdrop Overlay with Soft Frosted Blur */}
+            <motion.div
+              key="mobile-backdrop"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              onClick={closeMobile}
+              className="lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/50 backdrop-blur-sm z-40"
+              aria-hidden="true"
+            />
 
-          {/* Shutter Drawer: drops down from top on open, rolls back up on close */}
-          <div
-            className={`lg:hidden relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-md px-5 py-5 space-y-2 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-2xl ${
-              isClosing ? 'animate-shutter-up' : 'animate-shutter-down'
-            }`}
-          >
-            <div className="space-y-1 animate-menu-zoom">
-              <Link
-                href="/"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-              >
-                <span>Home</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
-              {navLinks.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  onClick={closeMobile}
-                  className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-                >
-                  <span>{item.label}</span>
-                  <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-                </Link>
-              ))}
-              <Link
-                href="/schedule"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-              >
-                <span>Schedule (14 Days)</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
-              <Link
-                href="/chat"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-              >
-                <span>Messages &amp; Concierge</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
-              <Link
-                href="/culture"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-              >
-                <span>Culture &amp; Heritage</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
-              <Link
-                href="/dashboard"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-slate-800 hover:text-[#0552A2] border-b border-slate-100 transition-colors"
-              >
-                <span>Traveler Dashboard</span>
-                <ArrowRight className="h-3.5 w-3.5 text-slate-400 group-hover:text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
-              <Link
-                href="/login"
-                onClick={closeMobile}
-                className="group flex items-center justify-between py-2 text-sm font-medium text-[#0552A2] hover:underline border-b border-slate-100 transition-colors"
-              >
-                <span>Partner &amp; Admin Portals</span>
-                <ArrowRight className="h-3.5 w-3.5 text-[#0552A2] group-hover:translate-x-0.5 transition-all" />
-              </Link>
+            {/* Shutter Drawer with Spring Zoom-In & Zoom-Out */}
+            <motion.div
+              key="mobile-drawer"
+              initial={{
+                opacity: 0,
+                y: -18,
+                scale: 0.90,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                transition: {
+                  type: 'spring',
+                  damping: 24,
+                  stiffness: 260,
+                  mass: 0.85,
+                },
+              }}
+              exit={{
+                opacity: 0,
+                y: -16,
+                scale: 0.90,
+                transition: {
+                  duration: 0.28,
+                  ease: [0.32, 0, 0.67, 0],
+                },
+              }}
+              style={{ transformOrigin: 'top center' }}
+              className="lg:hidden relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-2xl px-5 pt-3.5 pb-6 space-y-3 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-[0_30px_90px_-20px_rgba(5,82,162,0.22)] rounded-b-3xl"
+            >
+              <div className="space-y-0.5">
+                {mobileMenuItems.map((item, index) => {
+                  const isActive =
+                    pathname === item.href ||
+                    (item.href !== '/' && pathname.startsWith(item.href));
+                  return (
+                    <motion.div
+                      key={item.href}
+                      custom={index}
+                      initial="hidden"
+                      animate="visible"
+                      exit="exit"
+                      variants={itemVariants}
+                    >
+                      <Link
+                        href={item.href}
+                        onClick={closeMobile}
+                        className={`group flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 border-b border-slate-100/70 ${
+                          isActive
+                            ? 'bg-blue-50/80 text-[#0552A2] font-semibold pl-3.5'
+                            : item.isHighlight
+                            ? 'text-[#0552A2] font-semibold hover:bg-blue-50/50 hover:pl-3.5'
+                            : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-50/80 hover:pl-3.5'
+                        }`}
+                      >
+                        <span className="flex items-center gap-2.5">
+                          {isActive && (
+                            <span className="h-1.5 w-1.5 rounded-full bg-[#0552A2] animate-pulse" />
+                          )}
+                          <span>{item.label}</span>
+                        </span>
+                        <ArrowRight
+                          className={`h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-1 ${
+                            isActive
+                              ? 'text-[#0552A2]'
+                              : 'text-slate-400 group-hover:text-[#0552A2]'
+                          }`}
+                        />
+                      </Link>
+                    </motion.div>
+                  );
+                })}
 
-              {currentUser ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMobile();
-                    handleLogout();
-                  }}
-                  className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-rose-600 hover:text-rose-700 cursor-pointer"
+                {/* Sign In / Sign Out Tile */}
+                <motion.div
+                  custom={mobileMenuItems.length}
+                  initial="hidden"
+                  animate="visible"
+                  exit="exit"
+                  variants={itemVariants}
                 >
-                  <span className="flex items-center gap-2">
-                    <LogOut className="h-4 w-4" />
-                    <span>Sign Out / Log Out</span>
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </button>
-              ) : (
-                <Link
-                  href="/login"
-                  onClick={closeMobile}
-                  className="w-full flex items-center justify-between py-2.5 text-sm font-bold text-[#0552A2] hover:underline"
-                >
-                  <span className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
-                    <span>Sign In to Portal</span>
-                  </span>
-                  <ArrowRight className="h-3.5 w-3.5" />
-                </Link>
-              )}
-            </div>
-
-            <div className="pt-2 animate-menu-zoom">
-              <div className="grid grid-cols-2 gap-2 text-center text-xs">
-                <Link
-                  href="/explore"
-                  onClick={closeMobile}
-                  className="rounded-xl bg-[#0552A2] text-white py-2.5 font-semibold hover:bg-[#044182] transition-colors shadow-2xs active:scale-95"
-                >
-                  Browse Packages
-                </Link>
-                <Link
-                  href="/custom-plan"
-                  onClick={closeMobile}
-                  className="rounded-xl border border-slate-200 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-colors active:scale-95"
-                >
-                  Custom Trip
-                </Link>
+                  {currentUser ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        closeMobile();
+                        handleLogout();
+                      }}
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50/60 transition-all duration-200 cursor-pointer mt-1"
+                    >
+                      <span className="flex items-center gap-2">
+                        <LogOut className="h-4 w-4" />
+                        <span>Sign Out / Log Out</span>
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </button>
+                  ) : (
+                    <Link
+                      href="/login"
+                      onClick={closeMobile}
+                      className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-bold text-[#0552A2] hover:bg-blue-50/60 transition-all duration-200 mt-1"
+                    >
+                      <span className="flex items-center gap-2">
+                        <User className="h-4 w-4" />
+                        <span>Sign In to Portal</span>
+                      </span>
+                      <ArrowRight className="h-3.5 w-3.5" />
+                    </Link>
+                  )}
+                </motion.div>
               </div>
-            </div>
-          </div>
-        </>
-      )}
+
+              {/* Bottom Quick Action CTAs */}
+              <motion.div
+                custom={mobileMenuItems.length + 1}
+                initial="hidden"
+                animate="visible"
+                exit="exit"
+                variants={itemVariants}
+                className="pt-2"
+              >
+                <div className="grid grid-cols-2 gap-2 text-center text-xs">
+                  <Link
+                    href="/explore"
+                    onClick={closeMobile}
+                    className="rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white py-2.5 font-semibold transition-all shadow-sm hover:shadow active:scale-95 flex items-center justify-center"
+                  >
+                    Browse Packages
+                  </Link>
+                  <Link
+                    href="/custom-plan"
+                    onClick={closeMobile}
+                    className="rounded-xl border border-slate-200 hover:border-slate-300 py-2.5 font-semibold text-slate-700 hover:bg-slate-50 transition-all active:scale-95 flex items-center justify-center bg-white"
+                  >
+                    Custom Trip
+                  </Link>
+                </div>
+              </motion.div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 }
