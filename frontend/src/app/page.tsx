@@ -17,6 +17,7 @@ import {
 import ScrollReveal from '@/components/ScrollReveal';
 import InteractiveMap from '@/components/InteractiveMap';
 import HeroBackgroundSlider from '@/components/features/hero/HeroBackgroundSlider';
+import HeroVideoTitle from '@/components/features/hero/HeroVideoTitle';
 
 // 8 Primary Destinations required by specification
 const editorialDestinations = [
@@ -321,10 +322,8 @@ export default function HomePage() {
               <span>Visit Nepal Official</span>
             </div>
 
-            {/* Main Heading: Discover Nepal - Permanent High-Contrast Headline */}
-            <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-[1.08] drop-shadow-[0_4px_24px_rgba(0,0,0,0.85)] select-none">
-              Discover Nepal
-            </h1>
+            {/* Main Heading: Discover Nepal - Permanent High-Contrast Cinematic Video Headline */}
+            <HeroVideoTitle />
 
             {/* Supporting Text */}
             <p className="text-sm sm:text-lg lg:text-xl text-slate-100 font-medium font-inter leading-relaxed max-w-2xl drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)]">
