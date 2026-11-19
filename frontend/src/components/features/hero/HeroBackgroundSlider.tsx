@@ -19,6 +19,7 @@ export const HERO_SLIDES: HeroSlide[] = [
 interface HeroBackgroundSliderProps {
   scrollY?: number;
   intervalMs?: number;
+  showControls?: boolean;
 }
 
 /**
