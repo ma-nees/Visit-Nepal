@@ -404,33 +404,33 @@ export default function CustomTripPlannerPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Optimized & Clean Expedition Studio Header */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <Sparkles className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
               <span>Custom Expedition Studio 2026</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Build Your Own <span className="text-[#0552A2]">Himalayan Journey</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               Design a custom itinerary across Everest, Annapurna, Manaslu, or Mustang with certified IFMGA guides.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
-              <Mountain className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold">
+              <Mountain className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>Dynamic Calculator</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-xs font-semibold">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold">
+              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
               <span>Verified Operators</span>
             </span>
           </div>
@@ -438,8 +438,8 @@ export default function CustomTripPlannerPage() {
       </div>
 
       {/* 2. Wizard Stepper Bar */}
-      <div className="rounded-xl border border-slate-200 bg-white p-2 sm:p-3 shadow-xs">
-        <div className="flex items-center justify-between overflow-x-auto text-xs font-semibold gap-2 py-1 scrollbar-none">
+      <div className="rounded-xl border border-slate-200 bg-white p-1.5 sm:p-2 shadow-2xs">
+        <div className="flex items-center justify-between overflow-x-auto text-xs font-semibold gap-1.5 py-0.5 no-scrollbar">
           {[
             { num: 1, label: 'Destination' },
             { num: 2, label: 'Travel Details' },
@@ -456,7 +456,7 @@ export default function CustomTripPlannerPage() {
                 key={s.num}
                 type="button"
                 onClick={() => setCurrentStep(s.num)}
-                className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
+                className={`h-7 sm:h-8 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg whitespace-nowrap transition-all cursor-pointer ${
                   isActive
                     ? 'bg-[#0552A2] text-white shadow-xs font-bold'
                     : isCompleted
@@ -464,7 +464,7 @@ export default function CustomTripPlannerPage() {
                     : 'text-slate-500 hover:bg-slate-100'
                 }`}
               >
-                <span className={`flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold ${
+                <span className={`flex h-4.5 w-4.5 items-center justify-center rounded-full text-[10px] font-bold ${
                   isActive
                     ? 'bg-white text-[#0552A2]'
                     : isCompleted
@@ -481,7 +481,7 @@ export default function CustomTripPlannerPage() {
       </div>
 
       {/* 3. Wizard Content Area */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-5">
         {/* Main Step Form (Left 2 cols) */}
         <div className="lg:col-span-2 space-y-6">
           {/* ================================================================= */}

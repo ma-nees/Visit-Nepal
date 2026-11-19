@@ -34,32 +34,32 @@ export default function CommunityPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
-      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
-      <div className="relative pb-6 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-3 max-w-xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
+    <div className="max-w-4xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
+      {/* 1. Unique & Aesthetic Editorial Header */}
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-xl">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[10px] font-bold tracking-wider uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
               </span>
               <span>Live Himalayan Community</span>
               <span className="text-slate-300">•</span>
-              <span className="text-slate-600 font-medium">Field Dispatches 2026</span>
+              <span className="text-slate-600 font-medium">Dispatches 2026</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Live From the <span className="text-[#0552A2]">Himalayan Trails</span>
             </h1>
 
-            <p className="text-sm text-slate-600 leading-relaxed">
+            <p className="text-xs text-slate-500 leading-relaxed">
               Unfiltered trail updates, weather observations, pass clearance reports, and authentic photo stories straight from high camps and tea houses.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs shrink-0">
-            <MessageCircle className="h-4 w-4 text-[#0552A2]" />
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs shrink-0">
+            <MessageCircle className="h-3.5 w-3.5 text-[#0552A2]" />
             <div className="text-left">
               <div className="text-xs font-bold text-slate-900">{posts.length} Trail Posts</div>
               <div className="text-[10px] text-emerald-600 font-semibold">Active Dispatch Stream</div>

@@ -53,12 +53,12 @@ function ServicesContent() {
   }, []);
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Optimized & Clean Services Header */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -66,31 +66,31 @@ function ServicesContent() {
               <span>Government Verified Services • NTB 2026</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Official Travel Services &amp; <span className="text-[#0552A2]">Digital Permits</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               Book certified IFMGA Sherpa guides, historic boutique tea houses, dedicated Sherpa butlers, mountain flights, and instant permits.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-xs font-semibold">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold">
+              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
               <span>NTB Certified</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
-              <Sparkles className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold">
+              <Sparkles className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>Direct Booking</span>
             </span>
           </div>
         </div>
       </div>
 
-      {/* Tab Strip: Fast, responsive client-side switching */}
-      <div className="flex flex-wrap gap-1.5 rounded-xl border border-slate-200 bg-white p-1.5 shadow-xs">
+      {/* Tab Strip: Fast, single-row swipeable on mobile, compact pills */}
+      <div className="flex items-center gap-1 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0 sm:flex-wrap rounded-xl border border-slate-200 bg-white p-1 shadow-2xs">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const active = activeTab === tab.id;
@@ -98,10 +98,11 @@ function ServicesContent() {
             <button
               key={tab.id}
               onClick={() => handleTabChange(tab.id)}
-              className={`flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-150 active:scale-[0.98] ${active
-                ? 'bg-[#0552A2] text-white shadow-xs'
-                : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
-                }`}
+              className={`h-8 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                active
+                  ? 'bg-[#0552A2] text-white shadow-xs'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+              }`}
             >
               <Icon className="h-3.5 w-3.5" />
               <span>{tab.label}</span>

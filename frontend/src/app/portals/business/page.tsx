@@ -158,29 +158,29 @@ export default function BusinessPortalPage() {
   });
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
-      {/* 1. Unique & Aesthetic Editorial Header (No dark container card) */}
-      <div className="relative pb-6 border-b border-slate-200/80">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
-          <div className="space-y-3 max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[11px] font-bold tracking-wider uppercase">
-              <Building2 className="h-3.5 w-3.5 text-[#0552A2]" />
-              <span>Tour Operator Enterprise Suite</span>
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
+      {/* 1. Unique & Aesthetic Editorial Header */}
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-blue-50 border border-blue-200/60 text-[#0552A2] text-[10px] font-bold tracking-wider uppercase">
+              <Building2 className="h-3 w-3 text-[#0552A2]" />
+              <span>Tour Operator Enterprise</span>
               <span className="text-slate-300">•</span>
-              <span className="text-slate-600 font-medium">NTB Authorized 2026</span>
+              <span className="text-slate-600 font-medium">NTB 2026</span>
             </div>
 
-            <h1 className="text-3xl sm:text-4xl font-black tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Tour Operator &amp; <span className="text-[#0552A2]">Agency Operations</span>
             </h1>
 
-            <p className="text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               Review custom itinerary requests, issue binding quotations, manage standard reservations, and assign IFMGA field staff.
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/80 shadow-2xs">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-xl bg-white border border-slate-200/80 shadow-2xs shrink-0">
+            <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
             <div className="text-left">
               <div className="text-xs font-bold text-slate-900">{business.name}</div>
               <div className="text-[10px] text-emerald-600 font-semibold">Official Verified License</div>

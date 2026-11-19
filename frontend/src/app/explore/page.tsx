@@ -163,63 +163,63 @@ function ExploreContent() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
-      {/* 1. Optimized & Clean Editorial Header with Scale Benchmark Switcher */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-2 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
+      {/* 1. Optimized & Modern Compact Header with Scale Benchmark Switcher */}
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <Compass className="h-3.5 w-3.5 shrink-0" />
               <span>Official 2026 Route Registry</span>
               <span className="text-slate-300">•</span>
-              <span className="text-emerald-700 font-mono text-[11px] font-bold">
-                Virtual Chunking Engine
+              <span className="text-emerald-700 font-mono text-[10px] font-bold">
+                Virtual Engine
               </span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Explore Iconic <span className="text-[#0552A2]">Mountain Treks</span> &amp; Circuits
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl line-clamp-2 sm:line-clamp-none">
               Choose from UNESCO World Heritage valleys, high-altitude passes, and remote forbidden kingdoms with certified local IFMGA guides.
             </p>
           </div>
 
-          {/* Operational Metrics & 1,000 Records Benchmark Toggle */}
-          <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {/* Operational Metrics & 1,000 Records Benchmark Toggle (Single-row scrollable on mobile) */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar shrink-0 pt-0.5 sm:pt-0">
             {/* 1,000+ Record Benchmark Simulator Button */}
             <button
               type="button"
               onClick={() => setIs1000Mode(!is1000Mode)}
-              className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs active:scale-95 ${
+              className={`h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg text-[11px] font-bold shrink-0 transition-all cursor-pointer shadow-2xs active:scale-95 ${
                 is1000Mode
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white ring-2 ring-amber-400/30'
+                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white ring-1 ring-amber-400/40'
                   : 'bg-white border border-slate-200 text-slate-700 hover:border-[#0552A2]/40 hover:text-[#0552A2]'
               }`}
               title="Toggle between standard 29 routes and 1,000+ stress-tested catalog records"
             >
-              <Zap className={`h-3.5 w-3.5 ${is1000Mode ? 'fill-white text-white' : 'text-amber-500'}`} />
-              <span>{is1000Mode ? '1,000 Records Active' : 'Test 1,000+ Records'}</span>
+              <Zap className={`h-3 w-3 ${is1000Mode ? 'fill-white text-white' : 'text-amber-500'}`} />
+              <span>{is1000Mode ? '1,000 Records' : 'Test 1,000+'}</span>
             </button>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
-              <Mountain className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold shrink-0">
+              <Mountain className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>{allDestinations.length} Routes</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-xs font-semibold">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
-              <span>TIMS &amp; ACAP Approved</span>
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold shrink-0">
+              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
+              <span>TIMS &amp; ACAP</span>
             </span>
           </div>
         </div>
       </div>
 
-      {/* 2. Interactive Search & Multi-Filters Bar */}
-      <div className="space-y-3.5">
-        {/* Category Filter Chips with Dynamic Record Counts */}
-        <div className="flex flex-wrap items-center gap-1.5">
+      {/* 2. Interactive Search & Multi-Filters Bar (Smart Space Efficiency) */}
+      <div className="space-y-2.5">
+        {/* Category Filter Chips: Single-row Horizontal Swipe Strip on Mobile */}
+        <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar -mx-3.5 px-3.5 sm:mx-0 sm:px-0 sm:flex-wrap pb-0.5">
           {categories.map((cat) => {
             const isSelected = category === cat;
             const count = categoryCounts[cat] || 0;
@@ -227,7 +227,7 @@ function ExploreContent() {
               <button
                 key={cat}
                 onClick={() => setCategory(cat)}
-                className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-150 active:scale-[0.98] cursor-pointer ${
+                className={`h-7 sm:h-8 inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                   isSelected
                     ? 'bg-[#0552A2] text-white shadow-xs'
                     : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50'
@@ -246,38 +246,71 @@ function ExploreContent() {
           })}
         </div>
 
-        {/* Controls Bar: Search, Difficulty, Duration, Sort & View Mode Toggle */}
-        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2.5 bg-slate-50/70 p-2.5 rounded-2xl border border-slate-200/80">
-          {/* Search Box */}
-          <div className="relative flex-1 min-w-[220px]">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
-            <input
-              type="text"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder="Search by trek name, region, valley, or altitude..."
-              className="w-full rounded-xl border border-slate-200 bg-white py-2 pl-9 pr-8 text-xs font-semibold text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1.5 focus:ring-[#0552A2] shadow-2xs"
-            />
-            {query && (
+        {/* Compact Controls Bar: Responsive 2-Row Layout on Mobile, Single Row on Desktop */}
+        <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-2 bg-slate-50/80 p-2 sm:p-2.5 rounded-xl border border-slate-200/80 shadow-2xs">
+          {/* Row 1 on Mobile: Search Box + View Mode Toggle Side-by-Side */}
+          <div className="flex items-center gap-2 flex-1 min-w-0">
+            {/* Search Box */}
+            <div className="relative flex-1 min-w-[180px]">
+              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-slate-400" />
+              <input
+                type="text"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search by trek name, region, or altitude..."
+                className="w-full rounded-lg border border-slate-200 bg-white h-8 pl-8 pr-7 text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-1.5 focus:ring-[#0552A2] shadow-2xs"
+              />
+              {query && (
+                <button
+                  type="button"
+                  onClick={() => setQuery('')}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              )}
+            </div>
+
+            {/* View Mode Toggle (Attached side-by-side with Search on mobile) */}
+            <div className="inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0 lg:hidden">
               <button
                 type="button"
-                onClick={() => setQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5 rounded cursor-pointer"
+                onClick={() => setViewMode('grid')}
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                  viewMode === 'grid'
+                    ? 'bg-[#0552A2] text-white shadow-2xs'
+                    : 'text-slate-500 hover:text-slate-900'
+                }`}
+                title="Grid Cards View"
+                aria-label="Grid Cards View"
               >
-                <X className="h-3.5 w-3.5" />
+                <LayoutGrid className="h-3.5 w-3.5" />
               </button>
-            )}
+              <button
+                type="button"
+                onClick={() => setViewMode('list')}
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
+                  viewMode === 'list'
+                    ? 'bg-[#0552A2] text-white shadow-2xs'
+                    : 'text-slate-500 hover:text-slate-900'
+                }`}
+                title="Compact List View"
+                aria-label="Compact List View"
+              >
+                <List className="h-3.5 w-3.5" />
+              </button>
+            </div>
           </div>
 
-          {/* Filter Dropdowns */}
-          <div className="flex flex-wrap items-center gap-2">
+          {/* Row 2 on Mobile / Inline on Desktop: Filter Dropdowns Strip */}
+          <div className="flex items-center gap-1.5 overflow-x-auto no-scrollbar sm:flex-wrap pb-0.5 sm:pb-0">
             {/* Difficulty Grade */}
-            <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs">
-              <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
+              <SlidersHorizontal className="h-3 w-3 text-slate-400 shrink-0" />
               <select
                 value={difficulty}
                 onChange={(e) => setDifficulty(e.target.value)}
-                className="bg-transparent font-bold text-slate-800 focus:outline-none text-xs cursor-pointer"
+                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
                 aria-label="Filter by difficulty"
               >
                 <option value="All">All Grades</option>
@@ -289,23 +322,23 @@ function ExploreContent() {
             </div>
 
             {/* Duration Range */}
-            <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs">
-              <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
+              <Clock className="h-3 w-3 text-slate-400 shrink-0" />
               <select
                 value={duration}
                 onChange={(e) => setDuration(e.target.value)}
-                className="bg-transparent font-bold text-slate-800 focus:outline-none text-xs cursor-pointer"
+                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
                 aria-label="Filter by duration"
               >
                 <option value="All">All Durations</option>
-                <option value="short">Short (&lt; 7 Days)</option>
-                <option value="medium">Medium (7 - 14 Days)</option>
-                <option value="long">Long (15+ Days)</option>
+                <option value="short">&lt; 7 Days</option>
+                <option value="medium">7 - 14 Days</option>
+                <option value="long">15+ Days</option>
               </select>
             </div>
 
             {/* Sort Dropdown */}
-            <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs">
+            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
               <select
                 value={sortBy}
                 onChange={(e) =>
@@ -313,7 +346,7 @@ function ExploreContent() {
                     e.target.value as 'popular' | 'price-low' | 'price-high' | 'duration-asc' | 'altitude-desc'
                   )
                 }
-                className="bg-transparent font-bold text-slate-800 focus:outline-none text-xs cursor-pointer"
+                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
                 aria-label="Sort expeditions"
               >
                 <option value="popular">Top Rated</option>
@@ -325,12 +358,12 @@ function ExploreContent() {
             </div>
 
             {/* Items Per Page (Chunk Size) */}
-            <div className="flex items-center gap-1 rounded-xl border border-slate-200 bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 shadow-2xs">
-              <span className="text-[11px] text-slate-400">Show:</span>
+            <div className="h-8 flex items-center gap-1 rounded-lg border border-slate-200 bg-white px-2 text-xs font-semibold text-slate-700 shadow-2xs shrink-0">
+              <span className="text-[10px] text-slate-400">Show:</span>
               <select
                 value={itemsPerPage}
                 onChange={(e) => setItemsPerPage(Number(e.target.value))}
-                className="bg-transparent font-bold text-slate-800 focus:outline-none text-xs cursor-pointer"
+                className="bg-transparent font-medium text-slate-800 focus:outline-none text-xs cursor-pointer pr-1"
                 aria-label="Items per page"
               >
                 <option value={12}>12 / page</option>
@@ -340,12 +373,12 @@ function ExploreContent() {
               </select>
             </div>
 
-            {/* View Mode Toggle: Grid Cards vs Compact List View */}
-            <div className="inline-flex rounded-xl border border-slate-200 bg-white p-0.5 shadow-2xs">
+            {/* View Mode Toggle (Desktop only) */}
+            <div className="hidden lg:inline-flex rounded-lg border border-slate-200 bg-white p-0.5 shadow-2xs shrink-0">
               <button
                 type="button"
                 onClick={() => setViewMode('grid')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                   viewMode === 'grid'
                     ? 'bg-[#0552A2] text-white shadow-2xs'
                     : 'text-slate-500 hover:text-slate-900'
@@ -353,31 +386,31 @@ function ExploreContent() {
                 title="Grid Cards View"
                 aria-label="Grid Cards View"
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-3.5 w-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => setViewMode('list')}
-                className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                className={`p-1.5 rounded-md transition-colors cursor-pointer ${
                   viewMode === 'list'
                     ? 'bg-[#0552A2] text-white shadow-2xs'
                     : 'text-slate-500 hover:text-slate-900'
                 }`}
-                title="Compact List View (Fast for 100+ records)"
+                title="Compact List View"
                 aria-label="Compact List View"
               >
-                <List className="h-4 w-4" />
+                <List className="h-3.5 w-3.5" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* 3. Live Results Metric & Active Filter Chips */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 text-xs">
+      {/* 3. Live Results Metric & Active Filter Chips (Clean & Compact) */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1.5 text-xs">
         <div className="flex items-center gap-2">
-          <span className="font-semibold text-slate-700">
-            Showing <strong className="text-slate-900">{startRecord}–{endRecord}</strong> of{' '}
+          <span className="font-medium text-slate-600">
+            Showing <strong className="text-slate-900 font-semibold">{startRecord}–{endRecord}</strong> of{' '}
             <strong className="text-[#0552A2]">{totalItems.toLocaleString()}</strong> expeditions
           </span>
           {is1000Mode && (
@@ -445,17 +478,17 @@ function ExploreContent() {
           </button>
         </div>
       ) : viewMode === 'grid' ? (
-        /* MODE A: Visual Grid Cards (Chunked, Smooth 60 FPS) */
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        /* MODE A: Visual Grid Cards (Chunked, Smooth 60 FPS, Space-Efficient) */
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 sm:gap-4">
           {paginatedItems.map((dest) => (
             <Link
               key={dest.id}
               href={`/explore/${dest.id}`}
               prefetch={false}
-              className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/90 bg-white shadow-xs hover:border-[#0552A2]/40 hover:shadow-md active:scale-[0.99] transition-all duration-200"
+              className="group flex flex-col overflow-hidden rounded-xl border border-slate-200/90 bg-white shadow-2xs hover:border-[#0552A2]/40 hover:shadow-xs active:scale-[0.99] transition-all duration-200"
             >
               {/* Photo & Overlay Badges */}
-              <div className="relative h-44 sm:h-48 overflow-hidden bg-slate-900">
+              <div className="relative h-36 sm:h-42 overflow-hidden bg-slate-900">
                 <img
                   src={dest.imageUrl}
                   alt={dest.title}
@@ -463,68 +496,68 @@ function ExploreContent() {
                   decoding="async"
                   className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
-                <div className="absolute top-2.5 left-2.5 flex flex-wrap gap-1">
-                  <span className="rounded-md bg-slate-950/80 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white uppercase tracking-wider">
+                <div className="absolute top-2 left-2 flex flex-wrap gap-1">
+                  <span className="rounded-md bg-slate-950/80 backdrop-blur-xs px-1.5 py-0.5 text-[9px] font-bold text-white uppercase tracking-wider">
                     {dest.category}
                   </span>
-                  <span className="rounded-md bg-emerald-600/90 backdrop-blur-xs px-2 py-0.5 text-[10px] font-bold text-white">
+                  <span className="rounded-md bg-emerald-600/90 backdrop-blur-xs px-1.5 py-0.5 text-[9px] font-bold text-white">
                     {dest.difficulty}
                   </span>
                 </div>
-                <span className="absolute top-2.5 right-2.5 inline-flex items-center gap-1 rounded-md bg-white/95 backdrop-blur-xs px-2 py-0.5 text-[11px] font-bold text-slate-900 shadow-xs">
+                <span className="absolute top-2 right-2 inline-flex items-center gap-1 rounded-md bg-white/95 backdrop-blur-xs px-1.5 py-0.5 text-[10px] font-bold text-slate-900 shadow-2xs">
                   <Star className="h-3 w-3 fill-[#FDB716] text-[#FDB716]" />
                   <span>{dest.rating}</span>
                   <span className="text-slate-400 font-normal">({dest.reviewsCount})</span>
                 </span>
-                <div className="absolute bottom-2.5 left-2.5 right-2.5 flex items-center justify-between text-white text-[11px] font-semibold">
-                  <span className="inline-flex items-center gap-1 rounded-md bg-black/55 backdrop-blur-xs px-2 py-0.5">
-                    <Mountain className="h-3 w-3 text-[#FDB716]" />
+                <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between text-white text-[10px] font-semibold">
+                  <span className="inline-flex items-center gap-1 rounded bg-black/55 backdrop-blur-xs px-1.5 py-0.5">
+                    <Mountain className="h-2.5 w-2.5 text-[#FDB716]" />
                     <span>Peak: {dest.altitude}</span>
                   </span>
-                  <span className="inline-flex items-center gap-1 rounded-md bg-black/55 backdrop-blur-xs px-2 py-0.5">
-                    <Clock className="h-3 w-3 text-[#92C4EA]" />
+                  <span className="inline-flex items-center gap-1 rounded bg-black/55 backdrop-blur-xs px-1.5 py-0.5">
+                    <Clock className="h-2.5 w-2.5 text-[#92C4EA]" />
                     <span>{dest.duration}</span>
                   </span>
                 </div>
               </div>
 
               {/* Card Body */}
-              <div className="flex flex-1 flex-col p-4">
-                <div className="flex items-center gap-1 text-[11px] font-semibold text-[#EC1F27]">
-                  <MapPin className="h-3 w-3 shrink-0" />
+              <div className="flex flex-1 flex-col p-3 sm:p-3.5">
+                <div className="flex items-center gap-1 text-[10px] font-semibold text-[#EC1F27]">
+                  <MapPin className="h-2.5 w-2.5 shrink-0" />
                   <span className="truncate">{dest.location}</span>
                 </div>
-                <h2 className="mt-1 text-sm font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors line-clamp-1">
+                <h2 className="mt-0.5 text-xs sm:text-sm font-bold text-slate-900 group-hover:text-[#0552A2] transition-colors line-clamp-1">
                   {dest.title}
                 </h2>
-                <p className="mt-1 text-xs text-slate-600 line-clamp-2 leading-relaxed">
+                <p className="mt-0.5 text-[11px] text-slate-500 line-clamp-2 leading-relaxed">
                   {dest.description}
                 </p>
 
                 {/* Highlights */}
-                <div className="mt-3 pt-2.5 border-t border-slate-100 space-y-1">
+                <div className="mt-2 pt-2 border-t border-slate-100 space-y-0.5">
                   {dest.highlights.slice(0, 2).map((hl, i) => (
-                    <div key={i} className="flex items-center gap-1.5 text-[11px] text-slate-500">
-                      <CheckCircle2 className="h-3 w-3 text-emerald-500 shrink-0" />
+                    <div key={i} className="flex items-center gap-1.5 text-[10px] text-slate-500">
+                      <CheckCircle2 className="h-2.5 w-2.5 text-emerald-500 shrink-0" />
                       <span className="truncate">{hl}</span>
                     </div>
                   ))}
                 </div>
 
                 {/* Price & CTA */}
-                <div className="mt-auto pt-3 flex items-center justify-between border-t border-slate-100">
+                <div className="mt-auto pt-2.5 flex items-center justify-between border-t border-slate-100">
                   <div>
-                    <span className="text-[10px] uppercase tracking-wider text-slate-400 block font-semibold">
+                    <span className="text-[9px] uppercase tracking-wider text-slate-400 block font-semibold leading-none">
                       All-inclusive
                     </span>
-                    <span className="text-base font-extrabold text-[#0552A2]">
+                    <span className="text-sm sm:text-base font-extrabold text-[#0552A2]">
                       ${dest.price.toLocaleString()}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium"> / person</span>
+                    <span className="text-[10px] text-slate-400 font-medium"> / person</span>
                   </div>
                   <span className="inline-flex items-center gap-1 text-xs font-bold text-[#0552A2] group-hover:translate-x-0.5 transition-transform">
                     <span>View Route</span>
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    <ChevronRight className="h-3 w-3" />
                   </span>
                 </div>
               </div>

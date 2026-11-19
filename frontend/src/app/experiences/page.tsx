@@ -236,7 +236,7 @@ export default function ExperiencesPage() {
   return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* 1. Header Banner */}
-      <section className="relative overflow-hidden bg-[#031526] text-white pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-white/10">
+      <section className="relative overflow-hidden bg-[#031526] text-white pt-16 sm:pt-20 pb-8 sm:pb-12 border-b border-white/10">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-20 scale-105"
           style={{
@@ -246,27 +246,27 @@ export default function ExperiencesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Experiential Catalogue
           </span>
-          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
             Experience Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Eight iconic ways to encounter the heart of the Himalayas. From glaciated alpine passes to sacred living traditions and subtropical jungles.
           </p>
 
-          {/* Quick Experience Selector Strip */}
-          <div className="pt-6 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {/* Quick Experience Selector Strip (Single-Row Swipe Strip on mobile) */}
+          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             {experiencesData.map((exp) => (
               <button
                 key={exp.id}
                 onClick={() => setActiveTab(exp.id)}
-                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`h-8 inline-flex items-center text-xs font-semibold font-inter px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
                   activeTab === exp.id
-                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
+                    ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -278,23 +278,23 @@ export default function ExperiencesPage() {
       </section>
 
       {/* 2. Featured Experience Visual Deep-Dive */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14">
         <ScrollReveal direction="up" duration={650} distance={20}>
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
             {/* Visual Panel (Col 1-7) */}
             <div className="lg:col-span-7">
-              <div className="relative aspect-[16/10] sm:aspect-[16/11] rounded-3xl overflow-hidden bg-slate-900 shadow-2xl">
+              <div className="relative aspect-[16/10] sm:aspect-[16/11] rounded-2xl overflow-hidden bg-slate-900 shadow-xl">
                 <img
                   src={activeExp.heroImage}
                   alt={activeExp.title}
                   className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
+                <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
                     {activeExp.tag} · {activeExp.altitudeRange}
                   </span>
-                  <h3 className="font-inter text-2xl sm:text-3xl lg:text-4xl font-semibold leading-tight">
+                  <h3 className="font-inter text-xl sm:text-2xl lg:text-3xl font-semibold leading-tight">
                     {activeExp.title}
                   </h3>
                 </div>
@@ -302,12 +302,12 @@ export default function ExperiencesPage() {
             </div>
 
             {/* Narrative Details (Col 8-12) */}
-            <div className="lg:col-span-5 space-y-5">
+            <div className="lg:col-span-5 space-y-3.5">
               <div>
-                <span className="text-[11px] font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
+                <span className="text-[10px] font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
                   Featured Experience Profile
                 </span>
-                <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] mt-1">
+                <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A] mt-0.5">
                   {activeExp.subtitle}
                 </h2>
               </div>

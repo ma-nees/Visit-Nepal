@@ -72,7 +72,7 @@ export default function AboutPage() {
   return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* 1. Hero Header Banner */}
-      <section className="relative overflow-hidden bg-[#031526] text-white pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-white/10">
+      <section className="relative overflow-hidden bg-[#031526] text-white pt-16 sm:pt-20 pb-8 sm:pb-12 border-b border-white/10">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
@@ -82,33 +82,33 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Official Country Overview
           </span>
-          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
             About Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Where Earth’s highest glaciated pinnacles rise above sacred ancient kingdoms and subtropical wilderness. Discover our geography, people, and environmental stewardship.
           </p>
         </div>
       </section>
 
       {/* 2. Numeric Dimension Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-20 border-b border-slate-100">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 border-b border-slate-100">
         <ScrollReveal direction="up" duration={650} distance={20}>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {geographicalFacts.map((fact) => (
-              <div key={fact.title} className="space-y-1.5">
-                <span className="text-3xl sm:text-4xl font-inter font-semibold text-[#0552A2] block">
+              <div key={fact.title} className="space-y-1">
+                <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">
                   {fact.metric}
                 </span>
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-[#10243A] font-inter">
                   {fact.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-500 font-normal font-inter leading-relaxed">
+                <p className="text-xs text-slate-500 font-normal font-inter leading-relaxed">
                   {fact.desc}
                 </p>
               </div>
@@ -118,7 +118,7 @@ export default function AboutPage() {
       </section>
 
       {/* 3. Four Core Dimensions of Nepal */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 space-y-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10 sm:space-y-14">
         {pillarsOfIdentity.map((pillar, idx) => {
           const isEven = idx % 2 === 1;
           return (
@@ -161,19 +161,19 @@ export default function AboutPage() {
       </section>
 
       {/* 4. Practical Travel Essentials */}
-      <section className="bg-[#F7F9FC] py-16 sm:py-24 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="max-w-2xl space-y-2">
+      <section className="bg-[#F7F9FC] py-10 sm:py-14 border-t border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Planning Essentials
             </span>
-            <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A]">
+            <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A]">
               Practical Information for Travelers
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-1.5">
               <span className="text-xs font-mono uppercase tracking-wider text-[#0552A2] font-bold">Entry &amp; Visas</span>
               <h3 className="font-inter text-lg font-semibold text-[#10243A]">On-Arrival Tourist Visas</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">

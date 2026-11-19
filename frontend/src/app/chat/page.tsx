@@ -20,12 +20,12 @@ export default function ChatPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Optimized & Clean Editorial Header */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -33,22 +33,22 @@ export default function ChatPage() {
               <span>Encrypted Field Dispatch 2026</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Messages &amp; <span className="text-[#0552A2]">Concierge Dispatch</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               Real-time direct chat with assigned IFMGA mountain guides, lodge hosts, and Sherpa butlers.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <div className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
               <span>3 Guides Online</span>
             </div>
-            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-50 text-[#0552A2] border border-blue-200/60 text-xs font-semibold">
-              <Radio className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+            <div className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 text-[#0552A2] border border-blue-200/60 text-[11px] font-semibold">
+              <Radio className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>Satellite Link</span>
             </div>
           </div>

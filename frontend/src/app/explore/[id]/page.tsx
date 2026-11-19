@@ -57,17 +57,17 @@ function PackageDetailContent({
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       <Link
         href="/explore"
-        className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#0552A2] transition-colors"
+        className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-[#0552A2] transition-colors"
       >
         <ArrowLeft className="h-3.5 w-3.5" />
         <span>Back to all expeditions</span>
       </Link>
 
       {/* Hero */}
-      <div className="relative h-64 sm:h-80 lg:h-96 overflow-hidden rounded-xl border border-slate-200/90 shadow-md">
+      <div className="relative h-56 sm:h-72 lg:h-84 overflow-hidden rounded-xl border border-slate-200/90 shadow-md">
         <img
           src={dest.imageUrl}
           alt={dest.title}

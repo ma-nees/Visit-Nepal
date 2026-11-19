@@ -342,18 +342,18 @@ return (
                 </p>
 
             {/* Primary & Secondary Minimal CTAs */}
-            <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4">
+            <div className="pt-3 flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3">
               <Link
                 href="/explore"
                 prefetch={true}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-7 py-3.5 text-xs sm:text-sm font-medium font-inter tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-md shadow-[#0552A2]/30 min-h-[46px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-[#0552A2] px-6 py-2.5 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-md shadow-[#0552A2]/30 min-h-[40px]"
               >
                 <span>Explore Nepal</span>
                 <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="#experiences"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 px-6 py-3.5 text-xs sm:text-sm font-medium font-inter tracking-wide text-white active:scale-[0.98] transition-all min-h-[46px]"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/25 px-5 py-2.5 text-xs sm:text-sm font-semibold font-inter tracking-wide text-white active:scale-[0.98] transition-all min-h-[40px]"
               >
                 <span>Discover Experiences</span>
               </Link>
@@ -362,17 +362,12 @@ return (
         </div>
 
             {/* Subtle Bottom Scroll Indicator & Coordinates Whisper */}
-            <div className="relative w-full px-4 sm:px-6 lg:px-8 pb-6 pt-2">
+            <div className="relative w-full px-4 sm:px-6 lg:px-8 pb-4 pt-1">
               <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-white/70">
                 <div className="flex items-center gap-2 font-mono text-[11px] text-slate-300">
                   <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
                   <span>27°59′17″ N, 86°55′31″ E · Himalayan Range, Nepal</span>
                 </div>
-
-            {/* <div className="flex items-center gap-1.5 text-slate-300 text-xs font-light">
-              <span>Scroll to explore</span>
-              <span className="text-[#FDB716]">↓</span>
-            </div> */}
         </div>
       </div>
     </section>
@@ -380,45 +375,45 @@ return (
       {/* =========================================================================
           2. CREDIBILITY STRIP: Four High-Impact Mountain Pillars
           ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 border-b border-slate-100">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 border-b border-slate-100">
         <ScrollReveal direction="up" duration={600} distance={20}>
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-slate-200/80 items-center text-center">
             {/* Col 1: 8 of 14 */}
-            <div className="py-4 sm:py-2 px-3 sm:px-6 flex flex-col items-center justify-center">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#0552A2] leading-none">
-                8 <span className="text-xl sm:text-2xl font-bold text-slate-400">of</span> 14
+            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
+                8 <span className="text-lg sm:text-xl font-bold text-slate-400">of</span> 14
               </span>
-              <p className="mt-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
                 8,000M Summits
               </p>
             </div>
 
             {/* Col 2: 8,848.86m */}
-            <div className="py-4 sm:py-2 px-3 sm:px-6 flex flex-col items-center justify-center">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#0552A2] leading-none">
-                8,848<span className="text-lg sm:text-xl font-bold text-[#FDB716]">.86</span><span className="text-sm font-semibold text-slate-600 ml-0.5">m</span>
+            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
+                8,848<span className="text-base sm:text-lg font-bold text-[#FDB716]">.86</span><span className="text-xs font-semibold text-slate-600 ml-0.5">m</span>
               </span>
-              <p className="mt-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Highest Altitude
               </p>
             </div>
 
             {/* Col 3: 10 UNESCO */}
-            <div className="py-4 sm:py-2 px-3 sm:px-6 flex flex-col items-center justify-center">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#0552A2] leading-none">
-                10 <span className="text-lg sm:text-xl font-bold text-slate-800">UNESCO</span>
+            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
+                10 <span className="text-base sm:text-lg font-bold text-slate-800">UNESCO</span>
               </span>
-              <p className="mt-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Heritage Sites
               </p>
             </div>
 
             {/* Col 4: 100% */}
-            <div className="py-4 sm:py-2 px-3 sm:px-6 flex flex-col items-center justify-center">
-              <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-[#0552A2] leading-none">
-                100<span className="text-xl sm:text-2xl font-bold text-emerald-600">%</span>
+            <div className="py-3 sm:py-1 px-3 sm:px-5 flex flex-col items-center justify-center">
+              <span className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-[#0552A2] leading-none">
+                100<span className="text-lg sm:text-xl font-bold text-emerald-600">%</span>
               </span>
-              <p className="mt-2.5 text-[11px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
+              <p className="mt-2 text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-slate-500">
                 Certified &amp; Protected
               </p>
             </div>
@@ -429,28 +424,28 @@ return (
       {/* =========================================================================
           3. DESTINATIONS SECTION: Explore the Extraordinary (Asymmetrical Editorial)
           ========================================================================= */}
-      <section id="destinations" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32 space-y-12">
+      <section id="destinations" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18 space-y-6 sm:space-y-8">
         {/* Section Heading */}
-        <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+        <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
           <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
             Iconic Destinations
           </span>
-          <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
+          <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] tracking-tight">
             Explore the Extraordinary
           </h2>
-          <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+          <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
             From the world&apos;s highest mountains to ancient cities and peaceful landscapes.
           </p>
         </ScrollReveal>
 
         {/* Asymmetrical Editorial Composition 1: Panoramic Feature (Everest + Mustang) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 items-stretch">
           {/* Everest Region — 7 Columns Panoramic Panel */}
           <div className="lg:col-span-7">
             <ScrollReveal direction="up" duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[0].link}
-                className="group relative flex flex-col justify-end h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-2xl overflow-hidden bg-slate-950 p-6 sm:p-10 transition-all duration-500"
+                className="group relative flex flex-col justify-end h-[320px] sm:h-[380px] lg:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-950 p-5 sm:p-7 transition-all duration-500"
               >
                 <img
                   src={editorialDestinations[0].image}
@@ -484,7 +479,7 @@ return (
             <ScrollReveal direction="up" delay={120} duration={650} distance={24} className="h-full">
               <Link
                 href={editorialDestinations[1].link}
-                className="group relative flex flex-col justify-end h-[420px] sm:h-[480px] lg:h-[520px] w-full rounded-2xl overflow-hidden bg-slate-950 p-6 sm:p-8 transition-all duration-500"
+                className="group relative flex flex-col justify-end h-[320px] sm:h-[380px] lg:h-[420px] w-full rounded-2xl overflow-hidden bg-slate-950 p-5 sm:p-7 transition-all duration-500"
               >
                 <img
                   src={editorialDestinations[1].image}
@@ -494,17 +489,17 @@ return (
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-950/30 to-transparent" />
 
 
-                <div className="relative z-10 space-y-2 text-white">
-                  <span className="text-[11px] font-mono uppercase tracking-widest text-[#FDB716]">
+                <div className="relative z-10 space-y-1.5 text-white">
+                  <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
                     {editorialDestinations[1].tag} · {editorialDestinations[1].altitude}
                   </span>
-                  <h3 className="font-inter text-2xl sm:text-3xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
+                  <h3 className="font-inter text-xl sm:text-2xl font-semibold tracking-tight text-white group-hover:text-slate-100 transition-colors">
                     {editorialDestinations[1].name}
                   </h3>
                   <p className="text-xs sm:text-sm text-slate-200/90 font-normal font-inter leading-relaxed line-clamp-2">
                     {editorialDestinations[1].description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-2 text-xs font-medium font-inter text-white group-hover:text-[#FDB716] transition-colors">
+                  <div className="pt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-white group-hover:text-[#FDB716] transition-colors">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -515,34 +510,34 @@ return (
         </div>
 
         {/* Asymmetrical Editorial Composition 2: Triplet Panel (Annapurna, Kathmandu, Pokhara) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6">
           {[editorialDestinations[2], editorialDestinations[3], editorialDestinations[4]].map((dest, i) => (
             <ScrollReveal key={dest.id} direction="up" delay={i * 90} duration={600} distance={20}>
               <Link
                 href={dest.link}
-                className="group block space-y-3 cursor-pointer"
+                className="group block space-y-2 cursor-pointer"
               >
-                <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-900">
+                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900">
                   <img
                     src={dest.image}
                     alt={dest.name}
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-mono text-white">
+                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-[10px] font-mono text-white">
                     {dest.altitude}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
                     {dest.region}
                   </span>
-                  <h3 className="font-inter text-xl sm:text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                  <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                     {dest.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mt-1 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-600 font-light leading-relaxed mt-0.5 line-clamp-2">
                     {dest.description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
+                  <div className="pt-1.5 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
@@ -553,34 +548,34 @@ return (
         </div>
 
         {/* Asymmetrical Editorial Composition 3: The Southern Terai & Sacred Lakes (Chitwan, Lumbini, Rara Lake) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 pt-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 lg:gap-6 pt-2">
           {[editorialDestinations[5], editorialDestinations[6], editorialDestinations[7]].map((dest, i) => (
             <ScrollReveal key={dest.id} direction="up" delay={i * 90} duration={600} distance={20}>
               <Link
                 href={dest.link}
-                className="group block space-y-3 cursor-pointer"
+                className="group block space-y-2 cursor-pointer"
               >
-                <div className="relative aspect-[4/3] w-full rounded-2xl overflow-hidden bg-slate-900">
+                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900">
                   <img
                     src={dest.image}
                     alt={dest.name}
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-mono text-white">
+                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm px-2 py-0.5 rounded-full text-[10px] font-mono text-white">
                     {dest.altitude}
                   </div>
                 </div>
                 <div>
-                  <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
+                  <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 block">
                     {dest.region}
                   </span>
-                  <h3 className="font-inter text-xl sm:text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                  <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                     {dest.name}
                   </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed mt-1 line-clamp-2">
+                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed mt-0.5 line-clamp-2">
                     {dest.description}
                   </p>
-                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
+                  <div className="pt-1.5 inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>
@@ -594,58 +589,58 @@ return (
       {/* =========================================================================
           4. EXPERIENCES SECTION: Experience Nepal (8 Visual Stories)
           ========================================================================= */}
-      <section id="experiences" className="bg-[#F7F9FC] py-20 sm:py-28 lg:py-32 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="experiences" className="bg-[#F7F9FC] py-10 sm:py-14 lg:py-18 border-y border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
           {/* Section Heading */}
-          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Himalayan Encounters
             </span>
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] tracking-tight">
               Experience Nepal
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
               Eight distinct visual journeys into the high mountains, living spiritualities, and untouched wilderness.
             </p>
           </ScrollReveal>
 
           {/* 8 Distinct Visual Experience Stories (4x2 Responsive Editorial Grid) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
             {editorialExperiences.map((exp, idx) => (
               <ScrollReveal key={exp.id} direction="up" delay={idx * 60} duration={550} distance={20}>
                 <Link
                   href="/experiences"
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200/70 shadow-xs hover:border-[#0552A2]/30 transition-all duration-300 h-full"
+                  className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200/70 shadow-2xs hover:border-[#0552A2]/30 hover:shadow-xs transition-all duration-300 h-full"
                 >
-                  <div className="relative aspect-[4/3] w-full overflow-hidden bg-slate-900">
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
                     <img
                       src={exp.image}
                       alt={exp.title}
                       className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
-                    <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2.5 py-0.5 rounded-full text-[10px] font-semibold text-[#0552A2]">
+                    <div className="absolute top-2.5 left-2.5 bg-white/90 backdrop-blur-sm px-2 py-0.5 rounded-full text-[10px] font-semibold text-[#0552A2]">
                       {exp.category}
                     </div>
                   </div>
 
-                  <div className="p-6 flex flex-col flex-1 space-y-3">
+                  <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2">
                     <div>
-                      <h3 className="font-inter text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                      <h3 className="font-inter text-base sm:text-lg font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
                         {exp.title}
                       </h3>
-                      <div className="flex items-center gap-3 text-[11px] text-slate-400 font-mono mt-1">
+                      <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono mt-0.5">
                         <span>{exp.duration}</span>
                         <span>•</span>
                         <span>{exp.season}</span>
                       </div>
                     </div>
 
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
+                    <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
                       {exp.description}
                     </p>
 
                     <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
-                      <span className="inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
+                      <span className="inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
                         <span>Explore itineraries</span>
                         <ChevronRight className="h-3 w-3" />
                       </span>
@@ -661,20 +656,20 @@ return (
       {/* =========================================================================
           5. DISCOVER NEPAL: Immersive Storytelling Introduction
           ========================================================================= */}
-      <section id="discover" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 lg:py-32">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
+      <section id="discover" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-18">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           {/* Left: Editorial Narrative & Key Dimensions (Col 1-6) */}
-          <div className="lg:col-span-6 space-y-6">
-            <ScrollReveal direction="up" duration={650} distance={20} className="space-y-3">
+          <div className="lg:col-span-6 space-y-4">
+            <ScrollReveal direction="up" duration={650} distance={20} className="space-y-2">
               <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
                 About Nepal
               </span>
-              <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight leading-tight">
+              <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] tracking-tight leading-tight">
                 A Land of Extreme Geography &amp; Timeless Spirit
               </h2>
             </ScrollReveal>
 
-            <ScrollReveal direction="up" delay={80} duration={650} distance={20} className="space-y-4 text-sm sm:text-base text-slate-600 font-light leading-relaxed">
+            <ScrollReveal direction="up" delay={80} duration={650} distance={20} className="space-y-3 text-xs sm:text-sm text-slate-600 font-light leading-relaxed">
               <p>
                 Nowhere else on Earth does the landscape rise with such breathtaking verticality. Within less than 150 kilometers, Nepal transitions from warm subtropical river basins (60 meters above sea level) into the highest summits on the planet, culminating at the 8,848.86m apex of Sagarmatha.
               </p>
@@ -688,18 +683,18 @@ return (
 
             {/* Numeric Accents */}
             <ScrollReveal direction="up" delay={140} duration={650} distance={20}>
-              <div className="grid grid-cols-3 gap-4 pt-4 border-t border-slate-100">
+              <div className="grid grid-cols-3 gap-3 pt-3 border-t border-slate-100">
                 <div>
-                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">60m to 8,848m</span>
-                  <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Elevation Rise</span>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">60m to 8,848m</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Elevation Rise</span>
                 </div>
                 <div>
-                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">12 Zones</span>
-                  <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Bioclimates</span>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">12 Zones</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Bioclimates</span>
                 </div>
                 <div>
-                  <span className="text-2xl sm:text-3xl font-inter font-semibold text-[#0552A2] block">125+</span>
-                  <span className="text-[11px] uppercase tracking-wider text-slate-500 font-medium">Ethnic Cultures</span>
+                  <span className="text-xl sm:text-2xl font-inter font-semibold text-[#0552A2] block">125+</span>
+                  <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">Ethnic Cultures</span>
                 </div>
               </div>
             </ScrollReveal>
@@ -708,18 +703,18 @@ return (
           {/* Right: Layered Editorial Photography Panel (Col 7-12) */}
           <div className="lg:col-span-6">
             <ScrollReveal direction="up" delay={150} duration={750} distance={28}>
-              <div className="relative rounded-3xl overflow-hidden bg-slate-950 aspect-[4/5] shadow-2xl">
+              <div className="relative rounded-2xl overflow-hidden bg-slate-950 aspect-[4/3] sm:aspect-[16/11] shadow-xl">
                 <img
                   src="https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=85"
                   alt="Himalayan Monastery Dawn"
                   className="h-full w-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#031526]/80 via-transparent to-transparent" />
-                <div className="absolute bottom-6 left-6 right-6 text-white space-y-1">
+                <div className="absolute bottom-5 left-5 right-5 text-white space-y-1">
                   <span className="text-[10px] font-mono uppercase tracking-widest text-[#FDB716]">
                     Sacred Monasteries of the High Valley
                   </span>
-                  <p className="font-inter text-lg font-normal text-slate-100">
+                  <p className="font-inter text-base font-normal text-slate-100">
                     &ldquo;In the silence of the high peaks, the soul discovers its native home.&rdquo;
                   </p>
                 </div>
@@ -732,41 +727,41 @@ return (
       {/* =========================================================================
           6. CULTURE & HERITAGE: Living Traditions & Craftsmanship
           ========================================================================= */}
-      <section id="culture" className="bg-[#F7F9FC] py-20 sm:py-28 lg:py-32 border-y border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+      <section id="culture" className="bg-[#F7F9FC] py-10 sm:py-14 lg:py-18 border-y border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
           {/* Section Heading */}
-          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Living Traditions
             </span>
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] tracking-tight">
               Culture &amp; Living Heritage
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
               Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia.
             </p>
           </ScrollReveal>
 
           {/* 4 Museum-Grade Cultural Editorial Panels */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-10">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
             {cultureFeatures.map((item, idx) => (
               <ScrollReveal key={item.title} direction="up" delay={idx * 80} duration={600} distance={20}>
-                <div className="flex flex-col sm:flex-row gap-6 items-start bg-white rounded-2xl p-6 border border-slate-200/70 shadow-xs h-full">
-                  <div className="relative h-44 sm:h-36 w-full sm:w-44 shrink-0 rounded-xl overflow-hidden bg-slate-900">
+                <div className="flex flex-col sm:flex-row gap-4 items-start bg-white rounded-xl p-4 sm:p-5 border border-slate-200/70 shadow-2xs h-full">
+                  <div className="relative h-36 sm:h-32 w-full sm:w-36 shrink-0 rounded-lg overflow-hidden bg-slate-900">
                     <img
                       src={item.image}
                       alt={item.title}
                       className="h-full w-full object-cover transition-transform duration-700 hover:scale-105"
                     />
                   </div>
-                  <div className="space-y-1.5 flex-1">
+                  <div className="space-y-1 flex-1">
                     <span className="text-[10px] font-mono uppercase tracking-wider text-[#0552A2] font-semibold">
                       {item.subtitle}
                     </span>
-                    <h3 className="font-inter text-xl font-semibold text-[#10243A]">
+                    <h3 className="font-inter text-base sm:text-lg font-semibold text-[#10243A]">
                       {item.title}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
+                    <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed line-clamp-3">
                       {item.desc}
                     </p>
                   </div>
@@ -780,7 +775,7 @@ return (
       {/* =========================================================================
           7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
           ========================================================================= */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
         <ScrollReveal direction="up" duration={700} distance={24}>
           <InteractiveMap />
         </ScrollReveal>
@@ -789,24 +784,24 @@ return (
       {/* =========================================================================
           8. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
           ========================================================================= */}
-      <section id="stories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-12">
+      <section id="stories" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 space-y-6 sm:space-y-8">
         {/* Section Heading & Link */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Field Notes
             </span>
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-[#10243A] tracking-tight">
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] tracking-tight">
               Stories &amp; Field Journal
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
               Curated expedition guides, destination chronicles, and cultural discoveries from across Nepal.
             </p>
           </ScrollReveal>
 
           <Link
             href="/stories"
-            className="inline-flex items-center gap-1.5 text-xs font-medium font-inter text-[#0552A2] hover:underline shrink-0"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] hover:underline shrink-0"
           >
             <span>View All Journal Stories</span>
             <ArrowRight className="h-3.5 w-3.5" />
@@ -814,37 +809,37 @@ return (
         </div>
 
         {/* 3 Large Editorial Story Articles */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
           {travelStories.map((story, idx) => (
             <ScrollReveal key={story.id} direction="up" delay={idx * 90} duration={600} distance={20}>
-              <Link href="/stories" className="group flex flex-col space-y-3 cursor-pointer">
-                <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-900">
+              <Link href="/stories" className="group flex flex-col space-y-2 cursor-pointer">
+                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900">
                   <img
                     src={story.image}
                     alt={story.title}
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+                  <span className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-mono">
                     {story.category}
                   </span>
                 </div>
 
-                <div className="space-y-1.5 flex flex-col flex-1">
-                  <div className="flex items-center gap-2 text-[11px] text-slate-400 font-mono">
+                <div className="space-y-1 flex flex-col flex-1">
+                  <div className="flex items-center gap-2 text-[10px] text-slate-400 font-mono">
                     <span>{story.date}</span>
                     <span>•</span>
                     <span>{story.readTime}</span>
                   </div>
 
-                  <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                  <h3 className="font-inter text-base font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
                     {story.title}
                   </h3>
 
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
+                  <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-2">
                     {story.excerpt}
                   </p>
 
-                  <div className="pt-2 inline-flex items-center gap-1 text-xs font-medium font-inter text-[#0552A2] group-hover:underline">
+                  <div className="pt-1.5 inline-flex items-center gap-1 text-xs font-semibold font-inter text-[#0552A2] group-hover:underline">
                     <span>Read story</span>
                     <ArrowRight className="h-3 w-3" />
                   </div>

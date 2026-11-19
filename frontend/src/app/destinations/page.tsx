@@ -212,7 +212,7 @@ export default function DestinationsPage() {
   return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* 1. Header Banner */}
-      <section className="relative overflow-hidden bg-[#031526] text-white pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-white/10">
+      <section className="relative overflow-hidden bg-[#031526] text-white pt-16 sm:pt-20 pb-8 sm:pb-12 border-b border-white/10">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
@@ -222,27 +222,27 @@ export default function DestinationsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Geographical Catalogue
           </span>
-          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
             Destinations of Nepal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             From glaciated 8,000-meter peaks and wind-carved desert canyons to subtropical sal jungles and medieval UNESCO valleys.
           </p>
 
-          {/* Category Filter Pills */}
-          <div className="pt-6 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {/* Category Filter Pills (Single-Row Swipe Strip on mobile) */}
+          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`h-8 inline-flex items-center text-xs font-semibold font-inter px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
+                    ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -254,17 +254,17 @@ export default function DestinationsPage() {
       </section>
 
       {/* 2. Destinations Asymmetrical Editorial Showcase */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-12">
-        <div className="flex items-center justify-between border-b border-slate-100 pb-4">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-6 sm:space-y-8">
+        <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Curated Regions
           </span>
-          <span className="text-xs font-medium font-inter text-[#0552A2]">
+          <span className="text-xs font-semibold font-inter text-[#0552A2]">
             Category: {selectedCategory}
           </span>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 sm:gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {filtered.map((dest, idx) => (
             <ScrollReveal
               key={dest.id}
@@ -273,7 +273,7 @@ export default function DestinationsPage() {
               duration={550}
               distance={20}
             >
-              <div className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs hover:border-[#0552A2]/40 transition-all duration-300 h-full">
+              <div className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200/80 shadow-2xs hover:border-[#0552A2]/40 hover:shadow-xs transition-all duration-300 h-full">
                 {/* Visual Image Panel */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
                   <img
@@ -281,26 +281,26 @@ export default function DestinationsPage() {
                     alt={dest.name}
                     className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                   />
-                  <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[10px] font-mono">
+                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-mono">
                     {dest.altitude}
                   </div>
-                  <div className="absolute top-3 right-3 bg-white/90 backdrop-blur-sm text-[#0552A2] px-2.5 py-0.5 rounded-full text-[10px] font-semibold">
+                  <div className="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-sm text-[#0552A2] px-2 py-0.5 rounded-full text-[10px] font-semibold">
                     {dest.category}
                   </div>
                 </div>
 
                 {/* Content Details */}
-                <div className="p-6 flex flex-col flex-1 space-y-3">
+                <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
                       {dest.region}
                     </span>
-                    <h3 className="font-inter text-2xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
+                    <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
                       {dest.name}
                     </h3>
                   </div>
 
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1">
+                  <p className="text-xs text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-2">
                     {dest.description}
                   </p>
 

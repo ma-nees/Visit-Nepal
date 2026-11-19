@@ -174,7 +174,7 @@ export default function StoriesPage() {
   return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* 1. Header Banner */}
-      <section className="relative overflow-hidden bg-[#031526] text-white pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-white/10">
+      <section className="relative overflow-hidden bg-[#031526] text-white pt-16 sm:pt-20 pb-8 sm:pb-12 border-b border-white/10">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
@@ -184,27 +184,27 @@ export default function StoriesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Field Dispatches &amp; Chronicles
           </span>
-          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
             Stories &amp; Field Journal
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             First-person chronicles, trail notes, mountain medicine advice, and cultural reflections written by certified guides and travelers.
           </p>
 
-          {/* Filter Pills */}
-          <div className="pt-6 flex items-center gap-2 overflow-x-auto no-scrollbar pb-1">
+          {/* Filter Pills (Single-Row Swipe Strip on mobile) */}
+          <div className="pt-3 flex items-center gap-1.5 overflow-x-auto no-scrollbar pb-0.5">
             {categories.map((c) => (
               <button
                 key={c}
                 onClick={() => setSelectedCat(c)}
-                className={`text-xs font-medium font-inter px-4 py-2 rounded-full transition-all shrink-0 cursor-pointer ${
+                className={`h-8 inline-flex items-center text-xs font-semibold font-inter px-3 py-1 rounded-full transition-all shrink-0 cursor-pointer ${
                   selectedCat === c
-                    ? 'bg-white text-[#0552A2] shadow-sm font-medium'
+                    ? 'bg-white text-[#0552A2] shadow-xs font-semibold'
                     : 'bg-white/10 text-white/80 hover:bg-white/15 hover:text-white border border-white/10'
                 }`}
               >
@@ -216,19 +216,19 @@ export default function StoriesPage() {
       </section>
 
       {/* 2. Main Story Catalogue */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 space-y-12">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-100 pb-4">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-6 sm:space-y-8">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Editorial Articles
           </span>
-          <div className="relative w-full sm:w-72">
+          <div className="relative w-full sm:w-64">
             <Search className="h-3.5 w-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <input
               type="text"
               placeholder="Search field stories..."
               value={searchFilter}
               onChange={(e) => setSearchFilter(e.target.value)}
-              className="w-full pl-9 pr-3 py-1.5 text-xs rounded-full border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0552A2] font-inter"
+              className="w-full pl-8 pr-3 py-1.5 text-xs rounded-lg border border-slate-200 bg-slate-50 focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#0552A2] font-inter"
             />
           </div>
         </div>
@@ -236,7 +236,7 @@ export default function StoriesPage() {
         {/* Featured First Story — Panoramic Hero Card */}
         {filtered.length > 0 && selectedCat === 'All' && !searchFilter && (
           <ScrollReveal direction="up" duration={700} distance={24}>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center bg-[#F7F9FC] rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-xs">
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-[#F7F9FC] rounded-2xl p-4 sm:p-7 border border-slate-200/80 shadow-2xs">
               <div className="lg:col-span-7">
                 <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 shadow-md group">
                   <img

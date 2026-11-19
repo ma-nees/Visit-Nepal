@@ -396,21 +396,21 @@ export default function ProfilePage() {
               ))}
             </div>
 
-            <div className="flex flex-wrap items-center gap-3 pt-2">
+            <div className="flex flex-wrap items-center gap-2 pt-1.5">
               <Link
                 href={currentPersona.portalLink}
-                className="inline-flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] px-6 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#044182] active:scale-[0.98]"
+                className="h-9 inline-flex items-center justify-center gap-2 rounded-lg bg-[#0552A2] px-4 py-2 text-xs sm:text-sm font-semibold text-white shadow-2xs transition hover:bg-[#044182] active:scale-[0.98]"
               >
                 <span>Open {currentPersona.portalLabel}</span>
-                <ArrowRight className="h-4 w-4" />
+                <ArrowRight className="h-3.5 w-3.5" />
               </Link>
 
               <button
                 type="button"
                 onClick={handleLogout}
-                className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition hover:bg-slate-100 active:scale-[0.98]"
+                className="h-9 inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-slate-300 bg-white px-3.5 py-2 text-xs sm:text-sm font-medium text-slate-700 transition hover:bg-slate-50 active:scale-[0.98]"
               >
-                <LogOut className="h-4 w-4 text-slate-500" />
+                <LogOut className="h-3.5 w-3.5 text-slate-500" />
                 <span>Sign out</span>
               </button>
             </div>

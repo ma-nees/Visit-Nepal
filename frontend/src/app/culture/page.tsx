@@ -77,7 +77,7 @@ export default function CulturePage() {
   return (
     <div className="bg-[#FFFFFF] text-[#10243A] selection:bg-[#0552A2] selection:text-white">
       {/* 1. Header Hero Banner */}
-      <section className="relative overflow-hidden bg-[#031526] text-white pt-24 sm:pt-32 pb-16 sm:pb-24 border-b border-white/10">
+      <section className="relative overflow-hidden bg-[#031526] text-white pt-16 sm:pt-20 pb-8 sm:pb-12 border-b border-white/10">
         <div
           className="absolute inset-0 bg-cover bg-center opacity-25 scale-105"
           style={{
@@ -87,22 +87,22 @@ export default function CulturePage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
-          <span className="text-xs font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+          <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             <span className="h-1.5 w-1.5 rounded-full bg-[#FDB716]" />
             Cultural Anthology
           </span>
-          <h1 className="font-poppins text-4xl sm:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.08]">
+          <h1 className="font-poppins text-3xl sm:text-5xl lg:text-6xl font-semibold text-white tracking-tight leading-tight">
             Culture &amp; Living Heritage
           </h1>
-          <p className="text-sm sm:text-lg text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
+          <p className="text-xs sm:text-base text-slate-300 font-normal font-inter max-w-2xl leading-relaxed">
             Where sacred rituals, master craftsmanship, and architectural wonders endure across millennia. Explore the spiritual and artistic soul of Nepal.
           </p>
         </div>
       </section>
 
       {/* 2. Four Deep Heritage Pillars */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 sm:py-28 space-y-20">
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10 sm:space-y-14">
         {heritagePillars.map((pillar, idx) => {
           const isEven = idx % 2 === 1;
           return (
@@ -172,19 +172,19 @@ export default function CulturePage() {
       </section>
 
       {/* 3. Cultural Etiquette & Responsible Tourism Strip */}
-      <section className="bg-[#F7F9FC] py-16 sm:py-20 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
-          <div className="max-w-2xl space-y-2">
+      <section className="bg-[#F7F9FC] py-10 sm:py-14 border-t border-slate-200/60">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+          <div className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Responsible Travel
             </span>
-            <h2 className="font-poppins text-2xl sm:text-3xl font-medium text-[#10243A]">
+            <h2 className="font-poppins text-xl sm:text-2xl font-medium text-[#10243A]">
               Respecting Sacred Traditions &amp; Shrines
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-1.5">
               <h3 className="font-inter text-lg font-semibold text-[#10243A]">Clockwise Circumambulation</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Always walk clockwise around Buddhist stupas, chortens, and mani prayer walls to honor centuries of sacred custom.

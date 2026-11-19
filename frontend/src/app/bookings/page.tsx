@@ -71,55 +71,55 @@ export default function BookingsPage() {
   );
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Optimized & Clean Editorial Header */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <QrCode className="h-3.5 w-3.5 shrink-0" />
               <span>Digital Passes &amp; Trail Check-In 2026</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               My Expeditions &amp; <span className="text-[#0552A2]">Digital Passes</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl font-normal font-inter">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl font-normal font-inter">
               Instant offline QR access for checkpoint authorities, hotel check-ins, licensed guide assignments, and helicopter rescue registration.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100/90 text-slate-800 text-xs font-semibold">
-              <Calendar className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+          <div className="flex items-center gap-1.5 shrink-0">
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold">
+              <Calendar className="h-3 w-3 text-[#0552A2] shrink-0" />
               <span>{bookings.length} Passes</span>
             </span>
 
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-xs font-semibold">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold">
+              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
               <span>TIMS Validated</span>
             </span>
           </div>
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
         <div>
-          <h2 className="text-lg font-medium text-slate-900 font-poppins">Active Itinerary Passes</h2>
-          <p className="text-xs text-slate-500">Showing {filtered.length} reservations</p>
+          <h2 className="text-base font-semibold text-slate-900 font-poppins">Active Itinerary Passes</h2>
+          <p className="text-[11px] text-slate-400">Showing {filtered.length} reservations</p>
         </div>
 
-        <div className="flex flex-wrap gap-1.5">
+        <div className="flex items-center gap-1 overflow-x-auto no-scrollbar pb-0.5 sm:pb-0">
           {(['All', 'Confirmed', 'Completed', 'Cancelled'] as const).map(
             (status) => (
               <button
                 key={status}
                 onClick={() => setFilter(status)}
-                className={`rounded-lg px-3 py-1.5 text-xs font-bold transition-all duration-150 active:scale-[0.98] ${
+                className={`h-7 sm:h-8 inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-semibold shrink-0 transition-all duration-150 active:scale-[0.98] cursor-pointer ${
                   filter === status
                     ? 'bg-[#0552A2] text-white shadow-xs'
-                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-100'
+                    : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
                 }`}
               >
                 {status}
@@ -129,7 +129,7 @@ export default function BookingsPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 sm:gap-4">
         {filtered.map((b) => {
           const badgeStyle =
             b.status === 'Confirmed'

@@ -170,12 +170,12 @@ export default function TravelerDashboardPage() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto w-full px-4 py-8 sm:px-6 lg:px-8 space-y-6 font-inter">
+    <div className="max-w-7xl mx-auto w-full px-3.5 py-3.5 sm:px-6 sm:py-5 lg:px-8 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Dashboard Welcome Header */}
-      <div className="relative pb-5 border-b border-slate-200/80">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="space-y-2 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-xs font-bold text-[#0552A2] tracking-wider uppercase">
+      <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
+          <div className="space-y-1 max-w-2xl">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
               <span className="relative flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500" />
@@ -183,26 +183,26 @@ export default function TravelerDashboardPage() {
               <span>Traveler Portal • NTB 2026</span>
             </div>
 
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-slate-900 font-poppins">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
               Welcome Back, <span className="text-[#0552A2]">{currentUser?.name || 'Aayush Pradhan'}</span>
             </h1>
 
-            <p className="text-xs sm:text-sm text-slate-600 leading-relaxed max-w-xl">
+            <p className="text-xs text-slate-500 leading-relaxed max-w-xl">
               Manage your verified Himalayan expedition permits, custom quotations, QR boarding passes, and invoices.
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex items-center gap-1.5 shrink-0">
             <Link
               href="/custom-plan"
-              className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] text-white px-3.5 py-2 text-xs font-bold hover:bg-[#044182] shadow-xs active:scale-[0.98] transition-all cursor-pointer"
+              className="h-8 inline-flex items-center gap-1.5 rounded-lg bg-[#0552A2] text-white px-3 py-1.5 text-xs font-semibold hover:bg-[#044182] shadow-2xs active:scale-[0.98] transition-all cursor-pointer"
             >
-              <Mountain className="h-3.5 w-3.5" />
+              <Mountain className="h-3 w-3" />
               <span>Plan Custom Trip</span>
             </Link>
             <Link
               href="/explore"
-              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white text-slate-700 px-3.5 py-2 text-xs font-bold hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer shadow-2xs"
+              className="h-8 inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white text-slate-700 px-3 py-1.5 text-xs font-semibold hover:bg-slate-50 active:scale-[0.98] transition-all cursor-pointer shadow-2xs"
             >
               <span>Explore Routes</span>
             </Link>
@@ -211,7 +211,7 @@ export default function TravelerDashboardPage() {
       </div>
 
       {/* 2. Interactive KPI Overview Hub (Clickable Command Metrics to Switch Tabs) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-3">
         {[
           {
             id: 'bookings',
@@ -257,7 +257,7 @@ export default function TravelerDashboardPage() {
               key={kpi.id}
               type="button"
               onClick={() => setActiveTab(kpi.id as DashboardTab)}
-              className={`text-left rounded-2xl p-4 transition-all border cursor-pointer group active:scale-[0.99] ${
+              className={`text-left rounded-xl p-3 sm:p-3.5 transition-all border cursor-pointer group active:scale-[0.99] ${
                 isSelected
                   ? 'bg-blue-50/40 border-[#0552A2] ring-2 ring-[#0552A2]/20 shadow-xs'
                   : 'bg-white border-slate-200/90 hover:border-slate-300 hover:shadow-xs'
