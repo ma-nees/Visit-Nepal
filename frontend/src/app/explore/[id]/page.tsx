@@ -68,7 +68,7 @@ function PackageDetailContent({
           <span>Back to all expeditions</span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[10px] font-bold text-emerald-800">
+          <span className="inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200/80 text-[10px] font-semibold text-emerald-800">
             Official NTB Route Registry
           </span>
         </div>
@@ -78,13 +78,13 @@ function PackageDetailContent({
       <div className="space-y-2 pt-1 pb-1">
         {/* Category, Grade & Rating Badges */}
         <div className="flex flex-wrap items-center gap-2">
-          <span className="rounded-full bg-[#0552A2] px-3 py-1 text-[11px] font-bold text-white shadow-xs">
+          <span className="rounded-md bg-[#0552A2] px-2.5 py-0.5 text-[11px] font-semibold text-white shadow-xs">
             {dest.category}
           </span>
-          <span className="rounded-full bg-slate-100 border border-slate-200 px-3 py-1 text-[11px] font-semibold text-slate-700">
+          <span className="rounded-md bg-slate-100 border border-slate-200 px-2.5 py-0.5 text-[11px] font-medium text-slate-700">
             {dest.difficulty} Grade
           </span>
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-amber-50 border border-amber-200/80 px-2.5 py-1 text-[11px] font-bold text-amber-900">
+          <span className="inline-flex items-center gap-1.5 rounded-md bg-amber-50 border border-amber-200/80 px-2.5 py-0.5 text-[11px] font-semibold text-amber-900">
             <Star className="h-3.5 w-3.5 fill-[#FDB716] text-[#FDB716]" />
             <span>{dest.rating}</span>
             <span className="text-slate-500 font-normal text-[10px]">({dest.reviewsCount} reviews)</span>
@@ -116,26 +116,12 @@ function PackageDetailContent({
       </div>
 
       {/* Unobstructed Expedition Photography Showcase (100% visible, zero text covering the landscape) */}
-      <div className="relative h-64 sm:h-80 lg:h-[390px] w-full overflow-hidden rounded-2xl border border-slate-200/90 shadow-md bg-slate-950 group">
+      <div className="relative h-64 sm:h-80 lg:h-[390px] w-full overflow-hidden rounded-xl border border-slate-200/90 shadow-xs bg-slate-950 group">
         <img
           src={dest.imageUrl}
           alt={dest.title}
           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
         />
-
-        {/* Minimal Floating Corner Badges (Non-obtrusive) */}
-        <div className="absolute top-3.5 left-3.5 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/65 backdrop-blur-md px-3 py-1 text-[11px] font-semibold text-white border border-white/15 shadow-sm">
-            <Mountain className="h-3.5 w-3.5 text-[#FDB716]" />
-            <span>Himalayan Vista</span>
-          </span>
-        </div>
-
-        <div className="absolute bottom-3.5 right-3.5 flex items-center gap-2">
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-slate-950/65 backdrop-blur-md px-3 py-1 text-[11px] font-medium text-white/90 border border-white/15 shadow-sm">
-            <span>Official NTB Photography</span>
-          </span>
-        </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">

@@ -312,7 +312,7 @@ export default function ProfilePage() {
               Switch Persona:
             </span>
             {/* Mobile-only compact active session status badge */}
-            <div className="sm:hidden inline-flex items-center px-2.5 py-0.5 rounded-full bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-800 shrink-0">
+            <div className="sm:hidden inline-flex items-center px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200/80 text-[11px] font-semibold text-emerald-800 shrink-0">
               <span>Active · <span className="capitalize font-bold text-emerald-900">{currentPersona.role}</span></span>
             </div>
           </div>
@@ -329,7 +329,7 @@ export default function ProfilePage() {
                   type="button"
                   disabled={isSwitching || isExpanded || tearState !== 'idle'}
                   onClick={() => handleSwitchUser(p.role)}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${isCurrent
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-md px-2.5 sm:px-3 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${isCurrent
                     ? 'bg-[#0552A2] text-white shadow-xs'
                     : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
                     } disabled:opacity-50`}
@@ -342,8 +342,8 @@ export default function ProfilePage() {
           </div>
 
           {/* Desktop/Tablet active session badge */}
-          <div className="hidden sm:inline-flex items-center px-3 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 shrink-0">
-            <span>Active session · <span className="capitalize">{currentPersona.role}</span></span>
+          <div className="hidden sm:inline-flex items-center px-2.5 py-1 rounded-md bg-emerald-50 border border-emerald-200 text-xs font-semibold text-emerald-800 shrink-0">
+            <span>Active session · <span className="capitalize font-bold">{currentPersona.role}</span></span>
           </div>
         </div>
 

@@ -239,29 +239,25 @@ export default function StoriesPage() {
 
         {/* Featured First Story — Panoramic Hero Card */}
         {filtered.length > 0 && selectedCat === 'All' && !searchFilter && (
-          <ScrollReveal direction="up" duration={700} distance={24}>
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-[#F7F9FC] rounded-2xl p-4 sm:p-7 border border-slate-200/80 shadow-2xs">
+          <ScrollReveal direction="up" duration={700} distance={20}>
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-center bg-slate-50/80 rounded-xl p-5 sm:p-8 border border-slate-200 shadow-xs">
               <div className="lg:col-span-7">
-                <div className="relative aspect-[16/10] rounded-2xl overflow-hidden bg-slate-900 shadow-md group">
+                <div className="relative aspect-[16/10] rounded-lg overflow-hidden bg-slate-900 border border-slate-200">
                   <img
                     src={filtered[0].image}
                     alt={filtered[0].title}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 hover:scale-102"
                   />
-                  <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-[#0552A2] px-3 py-0.5 rounded-full text-[10px] font-semibold">
-                    Featured Dispatch
-                  </div>
                 </div>
               </div>
 
-              <div className="lg:col-span-5 space-y-4">
-                <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-                  <span>{filtered[0].date}</span>
-                  <span>•</span>
+              <div className="lg:col-span-5 space-y-3.5">
+                <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                  <span className="text-[#0552A2] font-semibold uppercase tracking-wider">{filtered[0].category}</span>
                   <span>{filtered[0].readTime}</span>
                 </div>
 
-                <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-medium text-[#10243A] leading-tight">
+                <h2 className="font-poppins text-2xl sm:text-3xl font-semibold text-[#10243A] leading-tight">
                   {filtered[0].title}
                 </h2>
 
@@ -269,21 +265,21 @@ export default function StoriesPage() {
                   {filtered[0].excerpt}
                 </p>
 
-                <div className="pt-2 flex items-center justify-between border-t border-slate-200/60">
+                <div className="pt-3 flex items-center justify-between border-t border-slate-200">
                   <div>
                     <span className="text-xs font-semibold text-slate-800 block">
                       {filtered[0].author}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-mono">
+                    <span className="text-[10px] text-slate-500 font-mono">
                       {filtered[0].authorRole}
                     </span>
                   </div>
                   <button
                     onClick={() => setActiveStory(filtered[0])}
-                    className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] text-white px-4 py-2 text-xs font-semibold hover:bg-[#044182] transition-all shadow-xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 rounded-lg bg-[#0552A2] text-white px-4 py-2 text-xs font-semibold hover:bg-[#044182] transition-colors shadow-xs cursor-pointer"
                   >
                     <span>Read Story</span>
-                    <ArrowRight className="h-3 w-3" />
+                    <ArrowRight className="h-3.5 w-3.5" />
                   </button>
                 </div>
               </div>
@@ -292,43 +288,39 @@ export default function StoriesPage() {
         )}
 
         {/* 3-Column Articles Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
           {(selectedCat === 'All' && !searchFilter ? filtered.slice(1) : filtered).map(
             (story, idx) => (
               <ScrollReveal
                 key={story.id}
                 direction="up"
-                delay={idx * 60}
+                delay={idx * 50}
                 duration={550}
-                distance={20}
+                distance={16}
               >
                 <article
                   onClick={() => setActiveStory(story)}
-                  className="group flex flex-col bg-white rounded-2xl overflow-hidden border border-slate-200/80 shadow-xs hover:border-[#0552A2]/30 transition-all duration-300 h-full cursor-pointer"
+                  className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 h-full cursor-pointer"
                 >
                   <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
                     <img
                       src={story.image}
                       alt={story.title}
-                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                     />
-                    <span className="absolute top-3 left-3 bg-black/60 backdrop-blur-sm text-white px-2.5 py-0.5 rounded-full text-[10px] font-mono">
-                      {story.category}
-                    </span>
                   </div>
 
-                  <div className="p-6 flex flex-col flex-1 space-y-3">
-                    <div className="flex items-center gap-2 text-[11px] font-mono text-slate-400">
-                      <span>{story.date}</span>
-                      <span>•</span>
+                  <div className="p-5 flex flex-col flex-1 space-y-2.5 bg-white">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                      <span className="text-[#0552A2] font-semibold uppercase tracking-wider">{story.category}</span>
                       <span>{story.readTime}</span>
                     </div>
 
-                    <h3 className="font-inter text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
+                    <h3 className="font-inter text-lg font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors leading-snug">
                       {story.title}
                     </h3>
 
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-3">
+                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed flex-1 line-clamp-2">
                       {story.excerpt}
                     </p>
 
@@ -336,7 +328,7 @@ export default function StoriesPage() {
                       <span className="text-slate-500 font-medium font-inter">
                         By {story.author}
                       </span>
-                      <span className="font-medium font-inter text-[#0552A2] group-hover:underline inline-flex items-center gap-1">
+                      <span className="font-semibold font-inter text-[#0552A2] group-hover:underline inline-flex items-center gap-1">
                         <span>Read</span>
                         <ArrowRight className="h-3 w-3" />
                       </span>

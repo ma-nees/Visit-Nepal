@@ -409,12 +409,12 @@ export default function CustomTripPlannerPage() {
       <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">
           <div className="space-y-1 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
-              <Sparkles className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
-              <span>Custom Expedition Studio 2026</span>
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#0552A2] tracking-wider uppercase">
+              <Compass className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+              <span>Custom Expedition Studio</span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-slate-900 font-poppins leading-tight">
               Build Your Own <span className="text-[#0552A2]">Himalayan Journey</span>
             </h1>
 
@@ -424,13 +424,13 @@ export default function CustomTripPlannerPage() {
           </div>
 
           <div className="flex items-center gap-1.5 shrink-0">
-            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100/90 text-slate-800 text-[11px] font-semibold">
-              <Mountain className="h-3 w-3 text-[#0552A2] shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-slate-800 text-xs font-medium">
+              <Mountain className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
               <span>Dynamic Calculator</span>
             </span>
 
-            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[11px] font-semibold">
-              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-xs font-medium">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
               <span>Verified Operators</span>
             </span>
           </div>

@@ -224,9 +224,9 @@ export default function Navbar() {
               {/* Role Badge Indicator */}
               <Link
                 href="/profile"
-                className={`inline-flex items-center px-2.5 sm:px-3 py-1 rounded-full text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
-                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
-                  : 'bg-blue-50/90 hover:bg-blue-100 text-[#0552A2] border border-blue-200/70'
+                className={`inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium tracking-wide transition-colors ${isTransparent
+                  ? 'bg-white/10 hover:bg-white/20 text-white border border-white/20'
+                  : 'bg-slate-100 hover:bg-slate-200/80 text-slate-800 border border-slate-200'
                   }`}
                 title="Active Portal / Profile"
               >
@@ -236,7 +236,7 @@ export default function Navbar() {
               {/* User Profile: Direct redirect to /profile */}
               <Link
                 href="/profile"
-                className={`flex h-8 w-8 items-center justify-center rounded-full transition-all active:scale-95 cursor-pointer ${isTransparent
+                className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors cursor-pointer ${isTransparent
                   ? 'text-white/90 hover:text-white hover:bg-white/10'
                   : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
                   }`}
@@ -251,9 +251,9 @@ export default function Navbar() {
               {/* Logged Out Visitor State: Sign In Button */}
               <Link
                 href="/login"
-                className={`inline-flex items-center gap-1.5 px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-medium font-inter tracking-wide transition-all active:scale-95 cursor-pointer ${isTransparent
-                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25 backdrop-blur-xs'
-                  : 'bg-white hover:bg-blue-50 text-[#0552A2] border border-blue-200/80 shadow-2xs'
+                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium font-inter tracking-wide transition-colors cursor-pointer ${isTransparent
+                  ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
+                  : 'bg-white hover:bg-slate-50 text-[#0552A2] border border-slate-200 shadow-xs'
                   }`}
               >
                 <User className="h-3.5 w-3.5" />
@@ -262,83 +262,36 @@ export default function Navbar() {
             </>
           )}
 
-          {/* Mobile Menu Toggle: Apple-grade tactile morphing spring */}
-          <motion.button
+          {/* Mobile Menu Toggle */}
+          <button
             type="button"
             onClick={toggleMobile}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.90 }}
-            className={`lg:hidden relative flex h-9 w-9 items-center justify-center rounded-full transition-colors duration-200 cursor-pointer select-none ${
+            className={`lg:hidden relative flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer select-none ${
               isTransparent
-                ? 'text-white hover:bg-white/15'
-                : 'text-[#10243A] hover:bg-slate-100/90'
+                ? 'text-white hover:bg-white/10'
+                : 'text-[#10243A] hover:bg-slate-100'
             }`}
             aria-label={mobileOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
             aria-expanded={mobileOpen}
           >
-            <motion.div
-              animate={mobileOpen ? { rotate: 90 } : { rotate: 0 }}
-              transition={{
-                type: 'spring',
-                stiffness: 280,
-                damping: 18,
-                mass: 0.8,
-              }}
-              className="relative w-5 h-4 flex flex-col justify-between items-center pointer-events-none"
-            >
-              {/* Top Bar: slides down 7px, rotates 45 degrees with fluid spring */}
-              <motion.span
-                animate={
-                  mobileOpen
-                    ? { y: 7, rotate: 45, width: 20 }
-                    : { y: 0, rotate: 0, width: 20 }
-                }
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 20,
-                  mass: 0.8,
-                }}
-                className={`block h-[2px] rounded-full origin-center ${
-                  isTransparent ? 'bg-white' : 'bg-slate-800'
-                }`}
+            <div className="relative w-5 h-4 flex flex-col justify-between items-center pointer-events-none">
+              <span
+                className={`block h-[2px] w-5 rounded-full transition-all duration-200 origin-center ${
+                  mobileOpen ? 'translate-y-[7px] rotate-45' : ''
+                } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
-
-              {/* Middle Bar: smoothly compresses and dissolves */}
-              <motion.span
-                animate={
-                  mobileOpen
-                    ? { opacity: 0, scaleX: 0, x: -6 }
-                    : { opacity: 1, scaleX: 1, x: 0 }
-                }
-                transition={{
-                  duration: 0.22,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className={`block h-[2px] w-5 rounded-full ${
-                  isTransparent ? 'bg-white' : 'bg-slate-800'
-                }`}
+              <span
+                className={`block h-[2px] w-5 rounded-full transition-all duration-150 ${
+                  mobileOpen ? 'opacity-0 -translate-x-2' : 'opacity-100'
+                } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
-
-              {/* Bottom Bar: slides up 7px, rotates -45 degrees with fluid spring */}
-              <motion.span
-                animate={
-                  mobileOpen
-                    ? { y: -7, rotate: -45, width: 20 }
-                    : { y: 0, rotate: 0, width: 20 }
-                }
-                transition={{
-                  type: 'spring',
-                  stiffness: 300,
-                  damping: 20,
-                  mass: 0.8,
-                }}
-                className={`block h-[2px] rounded-full origin-center ${
-                  isTransparent ? 'bg-white' : 'bg-slate-800'
-                }`}
+              <span
+                className={`block h-[2px] w-5 rounded-full transition-all duration-200 origin-center ${
+                  mobileOpen ? '-translate-y-[7px] -rotate-45' : ''
+                } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
-            </motion.div>
-          </motion.button>
+            </div>
+          </button>
         </div>
       </div>
 
@@ -358,36 +311,21 @@ export default function Navbar() {
               aria-hidden="true"
             />
 
-            {/* Shutter Drawer with Spring Zoom-In & Zoom-Out */}
+            {/* Clean Editorial Drawer */}
             <motion.div
               key="mobile-drawer"
-              initial={{
-                opacity: 0,
-                y: -18,
-                scale: 0.90,
-              }}
+              initial={{ opacity: 0, y: -8 }}
               animate={{
                 opacity: 1,
                 y: 0,
-                scale: 1,
-                transition: {
-                  type: 'spring',
-                  damping: 24,
-                  stiffness: 260,
-                  mass: 0.85,
-                },
+                transition: { duration: 0.2, ease: [0.16, 1, 0.3, 1] },
               }}
               exit={{
                 opacity: 0,
-                y: -16,
-                scale: 0.90,
-                transition: {
-                  duration: 0.28,
-                  ease: [0.32, 0, 0.67, 0],
-                },
+                y: -6,
+                transition: { duration: 0.15, ease: 'easeIn' },
               }}
-              style={{ transformOrigin: 'top center' }}
-              className="lg:hidden relative z-50 border-t border-slate-200/90 bg-white/98 backdrop-blur-2xl px-5 pt-3.5 pb-6 space-y-3 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-[0_30px_90px_-20px_rgba(5,82,162,0.22)] rounded-b-3xl"
+              className="lg:hidden relative z-50 border-t border-slate-200 bg-white px-5 pt-3.5 pb-6 space-y-3 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-xl rounded-b-2xl border-b border-slate-200/90"
             >
               <div className="space-y-0.5">
                 {mobileMenuItems.map((item, index) => {

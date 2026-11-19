@@ -277,26 +277,24 @@ export default function DestinationsPage() {
               duration={550}
               distance={20}
             >
-              <div className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200/80 shadow-2xs hover:border-[#0552A2]/40 hover:shadow-xs transition-all duration-300 h-full">
+              <div className="group flex flex-col bg-white rounded-xl overflow-hidden border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200 h-full">
                 {/* Visual Image Panel */}
                 <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
                   <img
                     src={dest.image}
                     alt={dest.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
                   />
-                  <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-sm text-white px-2 py-0.5 rounded-full text-[10px] font-mono">
-                    {dest.altitude}
-                  </div>
-                  <div className="absolute top-2.5 right-2.5 bg-white/90 backdrop-blur-sm text-[#0552A2] px-2 py-0.5 rounded-full text-[10px] font-semibold">
-                    {dest.category}
-                  </div>
                 </div>
 
                 {/* Content Details */}
-                <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2">
+                <div className="p-4 sm:p-5 flex flex-col flex-1 space-y-2 bg-white">
                   <div>
-                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                      <span className="text-[#0552A2] font-semibold">{dest.category}</span>
+                      <span>{dest.altitude}</span>
+                    </div>
+                    <span className="text-[10px] font-mono uppercase tracking-widest text-slate-400 block mt-1">
                       {dest.region}
                     </span>
                     <h3 className="font-inter text-lg sm:text-xl font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors mt-0.5">
@@ -317,7 +315,7 @@ export default function DestinationsPage() {
                       {dest.highlights.slice(0, 3).map((h) => (
                         <span
                           key={h}
-                          className="text-[10.5px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded border border-slate-200/60 font-inter"
+                          className="text-[10.5px] bg-slate-50 text-slate-700 px-2 py-0.5 rounded border border-slate-200/80 font-inter"
                         >
                           {h}
                         </span>
@@ -328,11 +326,11 @@ export default function DestinationsPage() {
                   {/* Specs Strip */}
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500 font-mono">
                     <span className="flex items-center gap-1">
-                      <Calendar className="h-3 w-3 text-[#92C4EA]" />
+                      <Calendar className="h-3 w-3 text-[#0552A2]" />
                       {dest.bestSeason.split(',')[0]}
                     </span>
                     <span className="flex items-center gap-1">
-                      <Clock className="h-3 w-3 text-[#FDB716]" />
+                      <Clock className="h-3 w-3 text-slate-500" />
                       {dest.duration}
                     </span>
                   </div>
@@ -341,10 +339,10 @@ export default function DestinationsPage() {
                   <div className="pt-2">
                     <Link
                       href={dest.link}
-                      className="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-[#0552A2] text-white hover:bg-[#044182] py-2.5 text-xs font-medium font-inter transition-all active:scale-95 shadow-xs"
+                      className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-[#0552A2] text-white hover:bg-[#044182] py-2.5 text-xs font-semibold font-inter transition-colors"
                     >
                       <span>Explore Destination</span>
-                      <ArrowRight className="h-3 w-3" />
+                      <ArrowRight className="h-3.5 w-3.5" />
                     </Link>
                   </div>
                 </div>
@@ -355,20 +353,20 @@ export default function DestinationsPage() {
       </section>
 
       {/* 3. Interactive Nepal Map Embedded */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-20">
-        <ScrollReveal direction="up" duration={700} distance={24}>
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-16">
+        <ScrollReveal direction="up" duration={700} distance={20}>
           <InteractiveMap />
         </ScrollReveal>
       </section>
 
       {/* 4. Editorial Trip Builder Callout */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pb-20 sm:pb-28">
-        <div className="rounded-3xl bg-[#0552A2] text-white p-8 sm:p-14 relative overflow-hidden shadow-xl">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pb-16 sm:pb-24">
+        <div className="rounded-xl bg-[#0552A2] text-white p-8 sm:p-12 relative overflow-hidden border border-blue-900 shadow-md">
           <div className="relative z-10 max-w-2xl space-y-4">
-            <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] block">
+            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#92C4EA] block">
               Tailor Your Expedition
             </span>
-            <h2 className="font-poppins text-3xl sm:text-4xl lg:text-5xl font-medium text-white leading-tight">
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-white leading-tight">
               Combine Multiple Regions Into One Custom Itinerary
             </h2>
             <p className="text-xs sm:text-sm text-blue-100 font-normal font-inter leading-relaxed">
@@ -377,9 +375,9 @@ export default function DestinationsPage() {
             <div className="pt-2">
               <Link
                 href="/custom-plan"
-                className="inline-flex items-center gap-2 rounded-full bg-white text-[#0552A2] hover:bg-slate-100 px-6 py-3 text-xs sm:text-sm font-medium font-inter active:scale-[0.98] transition-all shadow-md"
+                className="inline-flex items-center gap-2 rounded-lg bg-white text-[#0552A2] hover:bg-slate-100 px-5 py-2.5 text-xs sm:text-sm font-semibold font-inter transition-colors shadow-xs"
               >
-                <Sparkles className="h-4 w-4" />
+                <Compass className="h-4 w-4" />
                 <span>Launch Custom Trip Planner</span>
                 <ArrowRight className="h-3.5 w-3.5" />
               </Link>

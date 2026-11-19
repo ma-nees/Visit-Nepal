@@ -129,27 +129,25 @@ export default function AboutPage() {
               >
                 {/* Visual Image */}
                 <div className={`lg:col-span-6 ${isEven ? 'lg:order-2' : ''}`}>
-                  <div className="relative aspect-[16/11] rounded-3xl overflow-hidden bg-slate-900 shadow-xl group">
+                  <div className="relative aspect-[16/11] rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shadow-xs group">
                     <img
                       src={pillar.image}
                       alt={pillar.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-102"
                     />
-                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-mono">
-                      {pillar.tag}
-                    </div>
                   </div>
                 </div>
 
                 {/* Narrative */}
-                <div className={`lg:col-span-6 space-y-4 ${isEven ? 'lg:order-1' : ''}`}>
-                  <span className="text-xs font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
-                    Dimension {String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] tracking-tight">
+                <div className={`lg:col-span-6 space-y-3.5 ${isEven ? 'lg:order-1' : ''}`}>
+                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                    <span className="text-[#0552A2] font-semibold uppercase tracking-wider">{pillar.tag}</span>
+                    <span>Dimension {String(idx + 1).padStart(2, '0')}</span>
+                  </div>
+                  <h2 className="font-poppins text-2xl sm:text-3xl font-semibold text-[#10243A] tracking-tight">
                     {pillar.title}
                   </h2>
-                  <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+                  <p className="text-sm text-slate-600 font-normal font-inter leading-relaxed">
                     {pillar.text}
                   </p>
                 </div>
@@ -180,7 +178,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
+            <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-1.5">
               <span className="text-xs font-mono uppercase tracking-wider text-[#0552A2] font-bold">Currency &amp; Payments</span>
               <h3 className="font-inter text-lg font-semibold text-[#10243A]">Nepali Rupee (NPR)</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
@@ -188,7 +186,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
+            <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-1.5">
               <span className="text-xs font-mono uppercase tracking-wider text-[#EC1F27] font-bold">Safety &amp; Emergency</span>
               <h3 className="font-inter text-lg font-semibold text-[#10243A]">24/7 Tourist Police: 1144</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">

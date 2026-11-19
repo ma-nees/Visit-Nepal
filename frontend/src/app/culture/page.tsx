@@ -113,41 +113,39 @@ export default function CulturePage() {
               >
                 {/* Visual Image Panel */}
                 <div className={`lg:col-span-6 ${isEven ? 'lg:order-2' : ''}`}>
-                  <div className="relative aspect-[16/11] rounded-3xl overflow-hidden bg-slate-900 shadow-xl group">
+                  <div className="relative aspect-[16/11] rounded-xl overflow-hidden bg-slate-900 border border-slate-200 shadow-xs group">
                     <img
                       src={pillar.image}
                       alt={pillar.title}
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-102"
                     />
-                    <div className="absolute top-4 left-4 bg-black/60 backdrop-blur-sm text-white px-3 py-1 rounded-full text-xs font-mono">
-                      {pillar.tag}
-                    </div>
                   </div>
                 </div>
 
                 {/* Text Narrative */}
-                <div className={`lg:col-span-6 space-y-5 ${isEven ? 'lg:order-1' : ''}`}>
+                <div className={`lg:col-span-6 space-y-4 ${isEven ? 'lg:order-1' : ''}`}>
                   <div>
-                    <span className="text-xs font-mono uppercase tracking-widest text-[#0552A2] font-semibold">
-                      Heritage Dimension {String(idx + 1).padStart(2, '0')}
-                    </span>
-                    <h2 className="font-poppins text-3xl sm:text-4xl font-medium text-[#10243A] tracking-tight mt-1">
+                    <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
+                      <span className="text-[#0552A2] font-semibold uppercase tracking-wider">{pillar.tag}</span>
+                      <span>Dimension {String(idx + 1).padStart(2, '0')}</span>
+                    </div>
+                    <h2 className="font-poppins text-2xl sm:text-3xl font-semibold text-[#10243A] tracking-tight mt-1">
                       {pillar.title}
                     </h2>
                   </div>
 
-                  <p className="text-sm sm:text-base text-slate-600 font-normal font-inter leading-relaxed">
+                  <p className="text-sm text-slate-600 font-normal font-inter leading-relaxed">
                     {pillar.description}
                   </p>
 
-                  <div className="space-y-2 pt-2 border-t border-slate-100">
-                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 block">
+                  <div className="space-y-2 pt-2 border-t border-slate-200">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 block">
                       Notable Sites &amp; Expressions
                     </span>
-                    <ul className="space-y-2">
+                    <ul className="space-y-1.5">
                       {pillar.sites.map((site) => (
                         <li key={site} className="flex items-start gap-2 text-xs sm:text-sm text-slate-700 font-normal font-inter">
-                          <span className="text-[#FDB716] text-base leading-none mt-0.5">•</span>
+                          <span className="text-[#0552A2] text-sm leading-none mt-0.5">•</span>
                           <span>{site}</span>
                         </li>
                       ))}
@@ -157,7 +155,7 @@ export default function CulturePage() {
                   <div className="pt-2">
                     <Link
                       href="/explore?cat=Cultural"
-                      className="inline-flex items-center gap-2 text-xs font-medium font-inter text-[#0552A2] hover:underline"
+                      className="inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] hover:underline"
                     >
                       <span>Explore cultural routes &amp; temple tours</span>
                       <ArrowRight className="h-3.5 w-3.5" />
@@ -182,21 +180,21 @@ export default function CulturePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="rounded-xl bg-white p-4 sm:p-5 border border-slate-200/80 shadow-2xs space-y-1.5">
-              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Clockwise Circumambulation</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs space-y-2">
+              <h3 className="font-inter text-base font-semibold text-[#10243A]">Clockwise Circumambulation</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Always walk clockwise around Buddhist stupas, chortens, and mani prayer walls to honor centuries of sacred custom.
               </p>
             </div>
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
-              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Temple Attire &amp; Footwear</h3>
+            <div className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs space-y-2">
+              <h3 className="font-inter text-base font-semibold text-[#10243A]">Temple Attire &amp; Footwear</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Remove footwear and leather items before entering sacred shrines. Dress modestly with shoulders and knees respectfully covered.
               </p>
             </div>
-            <div className="rounded-2xl bg-white p-6 border border-slate-200/80 shadow-xs space-y-2">
-              <h3 className="font-inter text-lg font-semibold text-[#10243A]">Fair Artisan Trade</h3>
+            <div className="rounded-xl bg-white p-5 border border-slate-200 shadow-xs space-y-2">
+              <h3 className="font-inter text-base font-semibold text-[#10243A]">Fair Artisan Trade</h3>
               <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
                 Support traditional craft communities by purchasing certified hand-painted Thangkas and singing bowls directly from master workshops.
               </p>

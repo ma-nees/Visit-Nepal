@@ -168,16 +168,16 @@ function ExploreContent() {
       <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-2.5 sm:gap-4">
           <div className="space-y-1 max-w-2xl">
-            <div className="inline-flex items-center gap-1.5 text-[11px] font-bold text-[#0552A2] tracking-wider uppercase">
+            <div className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-[#0552A2] tracking-wider uppercase">
               <Compass className="h-3.5 w-3.5 shrink-0" />
-              <span>Official 2026 Route Registry</span>
+              <span>Official Route Registry</span>
               <span className="text-slate-300">•</span>
-              <span className="text-emerald-700 font-mono text-[10px] font-bold">
-                Virtual Engine
+              <span className="text-slate-500 font-mono text-[10px]">
+                Nepal Tourism Board
               </span>
             </div>
 
-            <h1 className="text-xl sm:text-2xl lg:text-3xl font-extrabold tracking-tight text-slate-900 font-poppins leading-tight">
+            <h1 className="text-xl sm:text-2xl lg:text-3xl font-semibold tracking-tight text-slate-900 font-poppins leading-tight">
               Explore Iconic <span className="text-[#0552A2]">Mountain Treks</span> &amp; Circuits
             </h1>
 
@@ -186,31 +186,16 @@ function ExploreContent() {
             </p>
           </div>
 
-          {/* Operational Metrics & 1,000 Records Benchmark Toggle */}
-          <div className="flex flex-wrap items-center gap-1 sm:gap-1.5 pt-0.5 sm:pt-0">
-            {/* 1,000+ Record Benchmark Simulator Button */}
-            <button
-              type="button"
-              onClick={() => setIs1000Mode(!is1000Mode)}
-              className={`h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg text-[10px] sm:text-[11px] font-bold shrink-0 transition-all cursor-pointer shadow-2xs active:scale-95 ${
-                is1000Mode
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white ring-1 ring-amber-400/40'
-                  : 'bg-white border border-slate-200 text-slate-700 hover:border-[#0552A2]/40 hover:text-[#0552A2]'
-              }`}
-              title="Toggle between standard 29 routes and 1,000+ stress-tested catalog records"
-            >
-              <Zap className={`h-3 w-3 ${is1000Mode ? 'fill-white text-white' : 'text-amber-500'}`} />
-              <span>{is1000Mode ? '1,000 Records' : 'Test 1,000+'}</span>
-            </button>
-
-            <span className="h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-slate-100/90 text-slate-800 text-[10px] sm:text-[11px] font-semibold shrink-0">
-              <Mountain className="h-3 w-3 text-[#0552A2] shrink-0" />
-              <span>{allDestinations.length} Routes</span>
+          {/* Operational Metrics */}
+          <div className="flex flex-wrap items-center gap-1.5 pt-0.5 sm:pt-0">
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-800 text-xs font-medium shrink-0">
+              <Mountain className="h-3.5 w-3.5 text-[#0552A2] shrink-0" />
+              <span>{allDestinations.length} Curated Expeditions</span>
             </span>
 
-            <span className="h-6.5 sm:h-7 inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-2.5 py-0.5 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-200/70 text-[10px] sm:text-[11px] font-semibold shrink-0">
-              <ShieldCheck className="h-3 w-3 text-emerald-600 shrink-0" />
-              <span>TIMS &amp; ACAP</span>
+            <span className="h-7 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-emerald-50 text-emerald-800 border border-emerald-200/80 text-xs font-medium shrink-0">
+              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600 shrink-0" />
+              <span>TIMS &amp; ACAP Verified</span>
             </span>
           </div>
         </div>
@@ -416,11 +401,6 @@ function ExploreContent() {
             Showing <strong className="text-slate-900 font-semibold">{startRecord}–{endRecord}</strong> of{' '}
             <strong className="text-[#0552A2]">{totalItems.toLocaleString()}</strong> expeditions
           </span>
-          {is1000Mode && (
-            <span className="rounded-full bg-amber-100 text-amber-800 font-bold text-[10px] px-2 py-0.5">
-              1,000 Scale Active
-            </span>
-          )}
         </div>
 
         {hasActiveFilters && (
