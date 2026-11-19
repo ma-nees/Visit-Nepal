@@ -245,11 +245,10 @@ export default function LoginPage() {
                 setAuthMode('signin');
                 setErrorMsg('');
               }}
-              className={`py-1.5 rounded-lg text-center transition-all cursor-pointer ${
-                authMode === 'signin'
+              className={`py-1.5 rounded-lg text-center transition-all cursor-pointer ${authMode === 'signin'
                   ? 'bg-white text-[#0552A2] shadow-xs font-bold'
                   : 'text-slate-500 hover:text-slate-800'
-              }`}
+                }`}
             >
               Sign In
             </button>
@@ -259,11 +258,10 @@ export default function LoginPage() {
                 setAuthMode('register');
                 setErrorMsg('');
               }}
-              className={`py-1.5 rounded-lg text-center transition-all cursor-pointer ${
-                authMode === 'register'
+              className={`py-1.5 rounded-lg text-center transition-all cursor-pointer ${authMode === 'register'
                   ? 'bg-white text-[#0552A2] shadow-xs font-bold'
                   : 'text-slate-500 hover:text-slate-800'
-              }`}
+                }`}
             >
               Create Account
             </button>
@@ -296,284 +294,283 @@ export default function LoginPage() {
             </p>
           </motion.div>
 
-            {/* Fast Role Demo Switcher (Segmented Track) */}
-            <motion.div variants={itemVariants} className="space-y-1">
-              <div className="flex items-center justify-between">
-                <label className="text-[9.5px] uppercase font-mono text-slate-500 tracking-wider font-bold">
-                  Credential Profile
-                </label>
-                <span className="text-[9.5px] text-[#0552A2] font-semibold">
-                  Demo Autofill
-                </span>
-              </div>
-              <div className="p-1 bg-slate-100/90 rounded-xl grid grid-cols-5 gap-0.5 sm:gap-1 border border-slate-200/60">
-                {QUICK_ROLES.map((roleItem) => {
-                  const Icon = roleItem.icon;
-                  const isSelected = selectedRole === roleItem.id;
+          {/* Fast Role Demo Switcher (Segmented Track) */}
+          <motion.div variants={itemVariants} className="space-y-1">
+            <div className="flex items-center justify-between">
+              <label className="text-[9.5px] uppercase font-mono text-slate-500 tracking-wider font-bold">
+                Credential Profile
+              </label>
+              <span className="text-[9.5px] text-[#0552A2] font-semibold">
+                Demo Autofill
+              </span>
+            </div>
+            <div className="p-1 bg-slate-100/90 rounded-xl grid grid-cols-5 gap-0.5 sm:gap-1 border border-slate-200/60">
+              {QUICK_ROLES.map((roleItem) => {
+                const Icon = roleItem.icon;
+                const isSelected = selectedRole === roleItem.id;
 
-                  return (
-                    <button
-                      key={roleItem.id}
-                      type="button"
-                      onClick={() => handleSelectRole(roleItem)}
-                      className={`flex flex-col items-center justify-center py-2 sm:py-1.5 px-0.5 sm:px-1 rounded-lg text-center transition-all cursor-pointer ${
-                        isSelected
-                          ? 'bg-white text-[#0552A2] shadow-xs font-semibold ring-1 ring-slate-900/5'
-                          : 'text-slate-500 hover:text-slate-800 hover:bg-white/50 active:bg-white/60'
+                return (
+                  <button
+                    key={roleItem.id}
+                    type="button"
+                    onClick={() => handleSelectRole(roleItem)}
+                    className={`flex flex-col items-center justify-center py-2 sm:py-1.5 px-0.5 sm:px-1 rounded-lg text-center transition-all cursor-pointer ${isSelected
+                        ? 'bg-white text-[#0552A2] shadow-xs font-semibold ring-1 ring-slate-900/5'
+                        : 'text-slate-500 hover:text-slate-800 hover:bg-white/50 active:bg-white/60'
                       }`}
-                    >
-                      <Icon className="h-3.5 w-3.5 mb-0.5" />
-                      <span className="text-[7.5px] sm:text-[8.5px] font-inter truncate max-w-full leading-tight font-medium">
-                        {roleItem.label}
-                      </span>
-                    </button>
-                  );
-                })}
+                  >
+                    <Icon className="h-3.5 w-3.5 mb-0.5" />
+                    <span className="text-[7.5px] sm:text-[8.5px] font-inter truncate max-w-full leading-tight font-medium">
+                      {roleItem.label}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+            {/* Dynamic Role Capability Badge */}
+            <div className="flex items-center justify-between text-[10px] text-slate-600 bg-blue-50/70 border border-blue-150/70 rounded-xl px-2.5 py-1.5">
+              <div className="flex items-center gap-1.5 min-w-0 mr-2">
+                <Sparkles className="h-3 w-3 text-[#FDB716] shrink-0" />
+                <span className="truncate font-medium">{activeRole.description}</span>
               </div>
-              {/* Dynamic Role Capability Badge */}
-              <div className="flex items-center justify-between text-[10px] text-slate-600 bg-blue-50/70 border border-blue-150/70 rounded-xl px-2.5 py-1.5">
-                <div className="flex items-center gap-1.5 min-w-0 mr-2">
-                  <Sparkles className="h-3 w-3 text-[#FDB716] shrink-0" />
-                  <span className="truncate font-medium">{activeRole.description}</span>
-                </div>
-                <span className="font-mono text-[9px] text-[#0552A2] font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200 shrink-0 shadow-2xs">
-                  {activeRole.badge}
-                </span>
-              </div>
-            </motion.div>
+              <span className="font-mono text-[9px] text-[#0552A2] font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200 shrink-0 shadow-2xs">
+                {activeRole.badge}
+              </span>
+            </div>
+          </motion.div>
 
-            {/* Error Message */}
-            {errorMsg && (
-              <motion.p
-                variants={itemVariants}
-                className="text-[10px] font-mono text-rose-600 font-bold border border-rose-500/10 bg-rose-500/5 px-3 py-1.5 rounded-xl text-left"
-              >
-                ⚠️ {errorMsg}
-              </motion.p>
-            )}
-
-            {/* Form */}
-            <form
-              onSubmit={handleLoginSubmit}
-              className="space-y-2 sm:space-y-2.5 text-xs font-inter text-left"
+          {/* Error Message */}
+          {errorMsg && (
+            <motion.p
+              variants={itemVariants}
+              className="text-[10px] font-mono text-rose-600 font-bold border border-rose-500/10 bg-rose-500/5 px-3 py-1.5 rounded-xl text-left"
             >
-              {/* Full Name Input (Register mode) */}
-              {authMode === 'register' && (
-                <motion.div variants={itemVariants} className="flex flex-col gap-1">
-                  <label className="text-[9.5px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Full Legal Name
-                  </label>
-                  <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                    <div className="pl-3 text-[#0552A2] pointer-events-none">
-                      <User className="h-3.5 w-3.5" />
-                    </div>
-                    <input
-                      type="text"
-                      value={regName}
-                      onChange={(e) => setRegName(e.target.value)}
-                      placeholder="Enter your full name"
-                      className="w-full bg-transparent pl-2.5 pr-3 py-2 sm:py-2 text-[13px] sm:text-xs text-slate-900 font-inter font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
-                      required
-                    />
-                  </div>
-                </motion.div>
-              )}
+              ⚠️ {errorMsg}
+            </motion.p>
+          )}
 
-              {/* Email Input */}
+          {/* Form */}
+          <form
+            onSubmit={handleLoginSubmit}
+            className="space-y-2 sm:space-y-2.5 text-xs font-inter text-left"
+          >
+            {/* Full Name Input (Register mode) */}
+            {authMode === 'register' && (
               <motion.div variants={itemVariants} className="flex flex-col gap-1">
                 <label className="text-[9.5px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                  Email Address
+                  Full Legal Name
                 </label>
                 <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
                   <div className="pl-3 text-[#0552A2] pointer-events-none">
-                    <Mail className="h-3.5 w-3.5" />
+                    <User className="h-3.5 w-3.5" />
                   </div>
                   <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="explorer@visitnepal.com"
+                    type="text"
+                    value={regName}
+                    onChange={(e) => setRegName(e.target.value)}
+                    placeholder="Enter your full name"
                     className="w-full bg-transparent pl-2.5 pr-3 py-2 sm:py-2 text-[13px] sm:text-xs text-slate-900 font-inter font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
                     required
                   />
                 </div>
               </motion.div>
+            )}
 
-              {/* Password Input */}
-              <motion.div
-                variants={itemVariants}
-                className="flex flex-col gap-1 relative"
-              >
-                <div className="flex justify-between items-center">
-                  <label className="text-[9.5px] uppercase font-mono text-slate-600 tracking-wider font-bold">
-                    Password
-                  </label>
-                  {authMode === 'signin' && (
-                    <button
-                      type="button"
-                      onClick={() => setForgotModalOpen(true)}
-                      className="text-[9.5px] text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer py-0.5"
-                    >
-                      Forgot?
-                    </button>
-                  )}
+            {/* Email Input */}
+            <motion.div variants={itemVariants} className="flex flex-col gap-1">
+              <label className="text-[9.5px] uppercase font-mono text-slate-600 tracking-wider font-bold">
+                Email Address
+              </label>
+              <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                <div className="pl-3 text-[#0552A2] pointer-events-none">
+                  <Mail className="h-3.5 w-3.5" />
                 </div>
-                <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
-                  <div className="pl-3 text-[#0552A2] pointer-events-none">
-                    <Lock className="h-3.5 w-3.5" />
-                  </div>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    placeholder="••••••••"
-                    className="w-full bg-transparent pl-2.5 pr-9 py-2 sm:py-2 text-[13px] sm:text-xs text-slate-900 font-inter font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
-                    required
-                  />
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="explorer@visitnepal.com"
+                  className="w-full bg-transparent pl-2.5 pr-3 py-2 sm:py-2 text-[13px] sm:text-xs text-slate-900 font-inter font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                  required
+                />
+              </div>
+            </motion.div>
+
+            {/* Password Input */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col gap-1 relative"
+            >
+              <div className="flex justify-between items-center">
+                <label className="text-[9.5px] uppercase font-mono text-slate-600 tracking-wider font-bold">
+                  Password
+                </label>
+                {authMode === 'signin' && (
                   <button
                     type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer p-1"
+                    onClick={() => setForgotModalOpen(true)}
+                    className="text-[9.5px] text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer py-0.5"
                   >
-                    {showPassword ? (
-                      <EyeOff className="h-3.5 w-3.5" />
-                    ) : (
-                      <Eye className="h-3.5 w-3.5" />
-                    )}
+                    Forgot?
                   </button>
+                )}
+              </div>
+              <div className="relative flex items-center bg-slate-50/70 hover:bg-slate-50 focus-within:bg-white border border-slate-200/90 focus-within:border-[#0552A2] focus-within:ring-2 focus-within:ring-[#0552A2]/10 rounded-xl transition-all shadow-2xs">
+                <div className="pl-3 text-[#0552A2] pointer-events-none">
+                  <Lock className="h-3.5 w-3.5" />
                 </div>
-              </motion.div>
+                <input
+                  type={showPassword ? 'text' : 'password'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  className="w-full bg-transparent pl-2.5 pr-9 py-2 sm:py-2 text-[13px] sm:text-xs text-slate-900 font-inter font-medium focus:outline-none placeholder:text-slate-400 placeholder:font-normal"
+                  required
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 cursor-pointer p-1"
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-3.5 w-3.5" />
+                  ) : (
+                    <Eye className="h-3.5 w-3.5" />
+                  )}
+                </button>
+              </div>
+            </motion.div>
 
-              {/* Submit Button */}
-              <motion.button
-                variants={itemVariants}
-                type="submit"
-                disabled={isSubmitting}
-                className="w-full py-2.5 rounded-xl text-xs font-inter font-semibold tracking-wide text-white bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 transition-all shadow-[0_4px_14px_rgba(5,82,162,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-0.5 border-t border-white/20 active:opacity-90"
-              >
-                {isSubmitting ? (
-                  <>
-                    <Compass className="h-3.5 w-3.5 animate-spin text-white" />
-                    <span>
-                      {authMode === 'signin' ? 'Signing In...' : 'Registering...'}
-                    </span>
-                  </>
-                ) : (
+            {/* Submit Button */}
+            <motion.button
+              variants={itemVariants}
+              type="submit"
+              disabled={isSubmitting}
+              className="w-full py-2.5 rounded-xl text-xs font-inter font-semibold tracking-wide text-white bg-gradient-to-r from-[#0552A2] via-[#084C93] to-[#0552A2] hover:opacity-95 transition-all shadow-[0_4px_14px_rgba(5,82,162,0.25)] flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50 mt-0.5 border-t border-white/20 active:opacity-90"
+            >
+              {isSubmitting ? (
+                <>
+                  <Compass className="h-3.5 w-3.5 animate-spin text-white" />
                   <span>
-                    {authMode === 'signin'
-                      ? `Sign In as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`
-                      : `Register as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`}
+                    {authMode === 'signin' ? 'Signing In...' : 'Registering...'}
                   </span>
-                )}
-              </motion.button>
-
-              {/* Social Divider */}
-              <motion.div variants={itemVariants} className="flex items-center pt-0.5">
-                <div className="flex-1 border-t border-slate-200" />
-                <span className="px-2.5 text-[9px] uppercase font-mono text-slate-400 font-bold">
-                  Or continue with
+                </>
+              ) : (
+                <span>
+                  {authMode === 'signin'
+                    ? `Sign In as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`
+                    : `Register as ${selectedRole.charAt(0).toUpperCase() + selectedRole.slice(1)}`}
                 </span>
-                <div className="flex-1 border-t border-slate-200" />
-              </motion.div>
+              )}
+            </motion.button>
 
-              {/* Google & Apple Buttons */}
-              <motion.div variants={itemVariants} className="grid grid-cols-2 gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('aayush.traveler@visitnepal.com');
-                    setPassword('NepalTourism2026!');
-                    showToast('Google authentication mock linked');
-                  }}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 py-1.5 sm:py-1.5 text-xs font-inter font-medium text-slate-700 transition-all cursor-pointer shadow-2xs"
-                >
-                  <svg className="h-3.5 w-3.5" viewBox="0 0 24 24">
-                    <path
-                      fill="#EA4335"
-                      d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.53 14.99 1 12 1 7.35 1 3.39 3.67 1.39 7.56l3.85 2.99c.96-2.88 3.66-4.51 6.76-4.51z"
-                    />
-                    <path
-                      fill="#4285F4"
-                      d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.73-4.94 3.73-8.55z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M5.24 14.79a7.12 7.12 0 0 1 0-4.32L1.39 7.56C.5 9.35 0 11.45 0 13.5c0 2.05.5 4.15 1.39 5.94l3.85-2.99c-.45-.69-.73-1.48-.73-2.15z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.12.75-2.55 1.2-4.26 1.2-3.1 0-5.8-1.63-6.76-4.51L1.39 16.9C3.39 20.79 7.35 23 12 23z"
-                    />
-                  </svg>
-                  <span>Google</span>
-                </button>
+            {/* Social Divider */}
+            <motion.div variants={itemVariants} className="flex items-center pt-0.5">
+              <div className="flex-1 border-t border-slate-200" />
+              <span className="px-2.5 text-[9px] uppercase font-mono text-slate-400 font-bold">
+                Or continue with
+              </span>
+              <div className="flex-1 border-t border-slate-200" />
+            </motion.div>
 
-                <button
-                  type="button"
-                  onClick={() => {
-                    setEmail('pasang.sherpa@visitnepal.com');
-                    setPassword('NepalTourism2026!');
-                    showToast('Apple ID authentication mock linked');
-                  }}
-                  className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 py-1.5 sm:py-1.5 text-xs font-inter font-medium text-slate-700 transition-all cursor-pointer shadow-2xs"
-                >
-                  <svg className="h-3.5 w-3.5 fill-current text-slate-900" viewBox="0 0 24 24">
-                    <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.62.72-1.16 1.86-1.02 2.98 1.09.08 2.2-.57 2.95-1.41z" />
-                  </svg>
-                  <span>Apple</span>
-                </button>
-              </motion.div>
-
-              {/* Back to Login page or switch mode */}
-              <motion.div
-                variants={itemVariants}
-                className="text-center border-t border-slate-100 pt-2 text-[11px] text-slate-500 font-inter font-normal"
+            {/* Google & Apple Buttons */}
+            <motion.div variants={itemVariants} className="grid grid-cols-2 gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('aayush.traveler@visitnepal.com');
+                  setPassword('NepalTourism2026!');
+                  showToast('Google authentication mock linked');
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 py-1.5 sm:py-1.5 text-xs font-inter font-medium text-slate-700 transition-all cursor-pointer shadow-2xs"
               >
-                {authMode === 'signin' ? (
-                  <>
-                    Don't have a travel profile?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAuthMode('register');
-                        setErrorMsg('');
-                      }}
-                      className="text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer"
-                    >
-                      Sign Up
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    Already registered?{' '}
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setAuthMode('signin');
-                        setErrorMsg('');
-                      }}
-                      className="text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer"
-                    >
-                      Sign In
-                    </button>
-                  </>
-                )}
-              </motion.div>
+                <svg className="h-3.5 w-3.5" viewBox="0 0 24 24">
+                  <path
+                    fill="#EA4335"
+                    d="M12 5.04c1.66 0 3.2.57 4.38 1.69l3.27-3.27C17.67 1.53 14.99 1 12 1 7.35 1 3.39 3.67 1.39 7.56l3.85 2.99c.96-2.88 3.66-4.51 6.76-4.51z"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M23.49 12.27c0-.81-.07-1.59-.2-2.34H12v4.44h6.44c-.28 1.48-1.12 2.73-2.38 3.58l3.7 2.87c2.16-2 3.73-4.94 3.73-8.55z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M5.24 14.79a7.12 7.12 0 0 1 0-4.32L1.39 7.56C.5 9.35 0 11.45 0 13.5c0 2.05.5 4.15 1.39 5.94l3.85-2.99c-.45-.69-.73-1.48-.73-2.15z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M12 23c3.24 0 5.97-1.07 7.96-2.91l-3.7-2.87c-1.12.75-2.55 1.2-4.26 1.2-3.1 0-5.8-1.63-6.76-4.51L1.39 16.9C3.39 20.79 7.35 23 12 23z"
+                  />
+                </svg>
+                <span>Google</span>
+              </button>
 
-              {/* Security & Official Trust Badge */}
-              <motion.div
-                variants={itemVariants}
-                className="pt-1.5 flex items-center justify-center gap-2.5 text-[9.5px] text-slate-400 font-inter"
+              <button
+                type="button"
+                onClick={() => {
+                  setEmail('pasang.sherpa@visitnepal.com');
+                  setPassword('NepalTourism2026!');
+                  showToast('Apple ID authentication mock linked');
+                }}
+                className="flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 active:bg-slate-100 py-1.5 sm:py-1.5 text-xs font-inter font-medium text-slate-700 transition-all cursor-pointer shadow-2xs"
               >
-                <span className="flex items-center gap-1 font-medium text-slate-500">
-                  <ShieldCheck className="h-3 w-3 text-[#0552A2]" />
-                  <span>256-bit SSL Protected</span>
-                </span>
-                <span className="text-slate-300">•</span>
-                <span className="font-medium text-slate-500">Official NTB Gateway</span>
-              </motion.div>
-            </form>
-          </motion.div>
+                <svg className="h-3.5 w-3.5 fill-current text-slate-900" viewBox="0 0 24 24">
+                  <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 4.17c.66-.81 1.11-1.93.99-3.06-1 .04-2.2.67-2.92 1.49-.62.72-1.16 1.86-1.02 2.98 1.09.08 2.2-.57 2.95-1.41z" />
+                </svg>
+                <span>Apple</span>
+              </button>
+            </motion.div>
+
+            {/* Back to Login page or switch mode */}
+            <motion.div
+              variants={itemVariants}
+              className="text-center border-t border-slate-100 pt-2 text-[11px] text-slate-500 font-inter font-normal"
+            >
+              {authMode === 'signin' ? (
+                <>
+                  Don't have a travel profile?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('register');
+                      setErrorMsg('');
+                    }}
+                    className="text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer"
+                  >
+                    Sign Up
+                  </button>
+                </>
+              ) : (
+                <>
+                  Already registered?{' '}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setAuthMode('signin');
+                      setErrorMsg('');
+                    }}
+                    className="text-[#0552A2] hover:text-[#EC1F27] font-inter font-semibold hover:underline cursor-pointer"
+                  >
+                    Sign In
+                  </button>
+                </>
+              )}
+            </motion.div>
+
+            {/* Security & Official Trust Badge */}
+            <motion.div
+              variants={itemVariants}
+              className="pt-1.5 flex items-center justify-center gap-2.5 text-[9.5px] text-slate-400 font-inter"
+            >
+              <span className="flex items-center gap-1 font-medium text-slate-500">
+                <ShieldCheck className="h-3 w-3 text-[#0552A2]" />
+                <span>256-bit SSL Protected</span>
+              </span>
+              <span className="text-slate-300">•</span>
+              <span className="font-medium text-slate-500">Official NTB Gateway</span>
+            </motion.div>
+          </form>
+        </motion.div>
       </AuthRightLayout>
 
       {/* Forgot Password Modal */}

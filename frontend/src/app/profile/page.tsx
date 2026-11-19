@@ -330,11 +330,10 @@ export default function ProfilePage() {
                   type="button"
                   disabled={isSwitching || isExpanded || tearState !== 'idle'}
                   onClick={() => handleSwitchUser(p.role)}
-                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${
-                    isCurrent
-                      ? 'bg-[#0552A2] text-white shadow-xs'
-                      : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
-                  } disabled:opacity-50`}
+                  className={`inline-flex shrink-0 cursor-pointer items-center gap-1.5 rounded-full px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-semibold transition-all active:scale-95 ${isCurrent
+                    ? 'bg-[#0552A2] text-white shadow-xs'
+                    : 'bg-white text-slate-700 border border-slate-200 hover:border-slate-300 hover:bg-slate-100 shadow-2xs'
+                    } disabled:opacity-50`}
                 >
                   <Icon className="h-3.5 w-3.5 shrink-0" />
                   <span>{isSwitching ? '...' : p.label}</span>
@@ -423,22 +422,22 @@ export default function ProfilePage() {
               animate={
                 tearState === 'idle'
                   ? {
-                      scaleX: [0.92, 1.04],
-                      opacity: [0.22, 0.35],
-                    }
+                    scaleX: [0.92, 1.04],
+                    opacity: [0.22, 0.35],
+                  }
                   : {
-                      scaleX: 1,
-                      opacity: 0.25,
-                    }
+                    scaleX: 1,
+                    opacity: 0.25,
+                  }
               }
               transition={
                 tearState === 'idle'
                   ? {
-                      duration: 4,
-                      repeat: Infinity,
-                      repeatType: 'reverse',
-                      ease: 'easeInOut',
-                    }
+                    duration: 4,
+                    repeat: Infinity,
+                    repeatType: 'reverse',
+                    ease: 'easeInOut',
+                  }
                   : { duration: 0.25 }
               }
               className="absolute -bottom-6 left-[8%] right-[8%] h-7 rounded-full bg-slate-900/40 blur-xl pointer-events-none -z-10"
@@ -449,24 +448,24 @@ export default function ProfilePage() {
               animate={
                 tearState === 'idle'
                   ? {
-                      y: [-4, 4],
-                      rotate: 1.2,
-                    }
+                    y: [-4, 4],
+                    rotate: 1.2,
+                  }
                   : {
-                      y: 0,
-                      rotate: 0,
-                    }
+                    y: 0,
+                    rotate: 0,
+                  }
               }
               transition={
                 tearState === 'idle'
                   ? {
-                      y: {
-                        duration: 4,
-                        repeat: Infinity,
-                        repeatType: 'reverse',
-                        ease: 'easeInOut',
-                      },
-                    }
+                    y: {
+                      duration: 4,
+                      repeat: Infinity,
+                      repeatType: 'reverse',
+                      ease: 'easeInOut',
+                    },
+                  }
                   : { duration: 0.25, ease: 'easeOut' }
               }
               whileHover={tearState === 'idle' ? { scale: 1.02, transition: { duration: 0.2 } } : {}}
@@ -484,14 +483,10 @@ export default function ProfilePage() {
             >
               {/* Interaction Hint Badge: "Click to inspect full details" */}
               <div
-                className={`absolute -top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-300 ${
-                  tearState !== 'idle' ? 'opacity-0 -translate-y-2' : 'opacity-100'
-                }`}
+                className={`absolute -top-3 left-1/2 -translate-x-1/2 z-40 pointer-events-none transition-all duration-300 ${tearState !== 'idle' ? 'opacity-0 -translate-y-2' : 'opacity-100'
+                  }`}
               >
-                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#0552A2] px-3.5 py-1 text-[11px] font-semibold text-white shadow-lg shadow-[#0552A2]/30 ring-1 ring-white/40 group-hover:scale-105 transition-transform">
-                  <Maximize2 className="h-3 w-3" />
-                  Click to inspect full details
-                </span>
+
               </div>
 
               {/* TICKET UPPER SECTION */}
@@ -500,19 +495,19 @@ export default function ProfilePage() {
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: -16, rotate: -2.5, scale: 1, opacity: 1 }
-                    : tearState === 'torn'
-                    ? { y: -26, x: -7, rotate: -3.8, scale: 1, opacity: 1 }
-                    : { y: -38, scale: 1.1, opacity: 0 }
+                      ? { y: -16, rotate: -2.5, scale: 1, opacity: 1 }
+                      : tearState === 'torn'
+                        ? { y: -26, x: -7, rotate: -3.8, scale: 1, opacity: 1 }
+                        : { y: -38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
                     ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
                     : tearState === 'torn'
-                    ? { duration: 0.28, ease: 'easeOut' }
-                    : tearState === 'elevating'
-                    ? { duration: 0.32, ease: 'easeIn' }
-                    : { duration: 0.35, ease: 'easeOut' }
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : tearState === 'elevating'
+                        ? { duration: 0.32, ease: 'easeIn' }
+                        : { duration: 0.35, ease: 'easeOut' }
                 }
                 className="relative z-20 overflow-hidden rounded-t-2xl bg-white text-slate-900 border-t border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
               >
@@ -589,19 +584,19 @@ export default function ProfilePage() {
                   tearState === 'idle'
                     ? { y: 0, x: 0, rotate: 0, scale: 1, opacity: 1 }
                     : tearState === 'tearing'
-                    ? { y: 16, rotate: 2, scale: 1, opacity: 1 }
-                    : tearState === 'torn'
-                    ? { y: 26, x: 7, rotate: 2.8, scale: 1, opacity: 1 }
-                    : { y: 38, scale: 1.1, opacity: 0 }
+                      ? { y: 16, rotate: 2, scale: 1, opacity: 1 }
+                      : tearState === 'torn'
+                        ? { y: 26, x: 7, rotate: 2.8, scale: 1, opacity: 1 }
+                        : { y: 38, scale: 1.1, opacity: 0 }
                 }
                 transition={
                   tearState === 'tearing'
                     ? { duration: 0.72, ease: [0.25, 0.1, 0.25, 1] }
                     : tearState === 'torn'
-                    ? { duration: 0.28, ease: 'easeOut' }
-                    : tearState === 'elevating'
-                    ? { duration: 0.32, ease: 'easeIn' }
-                    : { duration: 0.35, ease: 'easeOut' }
+                      ? { duration: 0.28, ease: 'easeOut' }
+                      : tearState === 'elevating'
+                        ? { duration: 0.32, ease: 'easeIn' }
+                        : { duration: 0.35, ease: 'easeOut' }
                 }
                 className="relative z-10 overflow-hidden rounded-b-2xl bg-white text-slate-900 border-b border-x border-slate-200/90 shadow-xl transition-shadow group-hover:shadow-2xl"
               >

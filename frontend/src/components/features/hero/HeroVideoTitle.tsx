@@ -7,9 +7,12 @@ interface HeroVideoTitleProps {
 }
 
 export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) {
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const videoRefA = useRef<HTMLVideoElement>(null);
+  const videoRefB = useRef<HTMLVideoElement>(null);
+  const [activePlayer, setActivePlayer] = useState<"A" | "B">("A");
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const isTransitioningRef = useRef(false);
 
   useEffect(() => {
     // Respect accessibility reduced-motion preference
@@ -25,28 +28,75 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
   useEffect(() => {
     if (isReducedMotion) return;
 
-    const video = videoRef.current;
-    if (!video) return;
+    const vA = videoRefA.current;
+    const vB = videoRefB.current;
+    if (!vA || !vB) return;
 
     const handleReady = () => setIsVideoLoaded(true);
 
-    if (video.readyState >= 3) {
-      setIsVideoLoaded(true);
-    } else {
-      video.addEventListener("canplay", handleReady);
-      video.addEventListener("playing", handleReady);
-      video.addEventListener("loadeddata", handleReady);
-    }
+    vA.addEventListener("canplay", handleReady);
+    vA.addEventListener("playing", handleReady);
+    vA.addEventListener("loadeddata", handleReady);
 
-    // Safely attempt autoplay
-    video.play().catch(() => {
+    // Initial playback on Player A
+    vA.play().catch(() => {
       // Graceful fallback for mobile low-power mode
     });
 
+    // Crossfade threshold (1.2s before clip ends)
+    const CROSSFADE_TIME = 1.2;
+
+    const checkTimeA = () => {
+      if (!vA.duration) return;
+      if (vA.currentTime >= vA.duration - CROSSFADE_TIME && !isTransitioningRef.current) {
+        isTransitioningRef.current = true;
+        vB.currentTime = 0;
+        vB.play()
+          .then(() => {
+            setActivePlayer("B");
+          })
+          .catch(() => {});
+      }
+    };
+
+    const handleEndedA = () => {
+      isTransitioningRef.current = false;
+      vA.pause();
+      vA.currentTime = 0;
+    };
+
+    const checkTimeB = () => {
+      if (!vB.duration) return;
+      if (vB.currentTime >= vB.duration - CROSSFADE_TIME && !isTransitioningRef.current) {
+        isTransitioningRef.current = true;
+        vA.currentTime = 0;
+        vA.play()
+          .then(() => {
+            setActivePlayer("A");
+          })
+          .catch(() => {});
+      }
+    };
+
+    const handleEndedB = () => {
+      isTransitioningRef.current = false;
+      vB.pause();
+      vB.currentTime = 0;
+    };
+
+    vA.addEventListener("timeupdate", checkTimeA);
+    vA.addEventListener("ended", handleEndedA);
+    vB.addEventListener("timeupdate", checkTimeB);
+    vB.addEventListener("ended", handleEndedB);
+
     return () => {
-      video.removeEventListener("canplay", handleReady);
-      video.removeEventListener("playing", handleReady);
-      video.removeEventListener("loadeddata", handleReady);
+      vA.removeEventListener("canplay", handleReady);
+      vA.removeEventListener("playing", handleReady);
+      vA.removeEventListener("loadeddata", handleReady);
+      vA.removeEventListener("timeupdate", checkTimeA);
+      vA.removeEventListener("ended", handleEndedA);
+      vB.removeEventListener("timeupdate", checkTimeB);
+      vB.removeEventListener("ended", handleEndedB);
     };
   }, [isReducedMotion]);
 
@@ -122,7 +172,7 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
           Nepal
         </text>
 
-        {/* Layer 2: Live Video Playing Inside Letterforms with Enhanced Vividness */}
+        {/* Layer 2: Live Video Playing Inside Letterforms with Dual-Player Seamless Crossfade */}
         {!isReducedMotion && (
           <foreignObject
             x="0"
@@ -135,17 +185,32 @@ export default function HeroVideoTitle({ className = "" }: HeroVideoTitleProps) 
             }`}
           >
             <div className="w-full h-full relative overflow-hidden bg-slate-950">
+              {/* Primary Video Player A */}
               <video
-                ref={videoRef}
-                autoPlay
-                loop
+                ref={videoRefA}
                 muted
                 playsInline
                 preload="auto"
                 disablePictureInPicture
                 disableRemotePlayback
                 poster="/hero-himalayas.webp"
-                className="w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-transform duration-1000 ease-out brightness-120 contrast-125 saturate-120"
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-all duration-1000 ease-in-out brightness-120 contrast-125 saturate-120 ${
+                  activePlayer === "A" ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
+                src="/videos/nepal-hero.mp4"
+              />
+
+              {/* Seamless Loop Video Player B */}
+              <video
+                ref={videoRefB}
+                muted
+                playsInline
+                preload="auto"
+                disablePictureInPicture
+                disableRemotePlayback
+                className={`absolute inset-0 w-full h-full object-cover object-center scale-105 group-hover:scale-115 transition-all duration-1000 ease-in-out brightness-120 contrast-125 saturate-120 ${
+                  activePlayer === "B" ? "opacity-100" : "opacity-0 pointer-events-none"
+                }`}
                 src="/videos/nepal-hero.mp4"
               />
             </div>
