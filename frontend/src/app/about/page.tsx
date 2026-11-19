@@ -123,9 +123,8 @@ export default function AboutPage() {
           return (
             <ScrollReveal key={pillar.title} direction="up" duration={700} distance={24}>
               <div
-                className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center ${
-                  isEven ? 'lg:flex-row-reverse' : ''
-                }`}
+                className={`grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-14 items-center ${isEven ? 'lg:flex-row-reverse' : ''
+                  }`}
               >
                 {/* Visual Image */}
                 <div className={`lg:col-span-6 ${isEven ? 'lg:order-2' : ''}`}>
