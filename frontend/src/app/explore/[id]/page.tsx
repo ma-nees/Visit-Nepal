@@ -255,11 +255,11 @@ function PackageDetailContent({
               </div>
 
               {/* Connected Timeline: Perfectly aligned node badges on the vertical border */}
-              <div className="relative ml-2 sm:ml-4 pl-4 sm:pl-6 border-l-2 border-blue-200/80 space-y-3 sm:space-y-4">
+              <div className="relative ml-3 sm:ml-4 border-l-2 border-blue-200/80 space-y-3 sm:space-y-4">
                 {dest.itinerary.map((item) => (
-                  <div key={item.day} className="relative group">
+                  <div key={item.day} className="relative pl-5 sm:pl-7 group">
                     {/* Timeline Node Badge: Centered directly over the 2px border */}
-                    <div className="absolute -left-[11px] sm:-left-[15px] top-0 flex h-5.5 w-5.5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#0552A2] text-white text-[9.5px] sm:text-[11px] font-bold font-mono shadow-xs border-2 border-white shrink-0">
+                    <div className="absolute -left-[12px] sm:-left-[15px] top-0 flex h-5.5 w-5.5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#0552A2] text-white text-[9.5px] sm:text-[11px] font-bold font-mono shadow-xs border-2 border-white shrink-0">
                       D{item.day}
                     </div>
 
