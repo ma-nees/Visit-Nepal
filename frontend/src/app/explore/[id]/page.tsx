@@ -70,10 +70,10 @@ function PackageDetailContent({
     dest.id.includes('ebc') || dest.id.includes('everest')
       ? 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=600&q=80'
       : dest.id.includes('annapurna')
-      ? 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80'
-      : dest.id.includes('langtang')
-      ? 'https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=600&q=80'
-      : 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=600&q=80';
+        ? 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=600&q=80'
+        : dest.id.includes('langtang')
+          ? 'https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=600&q=80'
+          : 'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=600&q=80';
 
   return (
     <div className="min-h-screen bg-slate-50/50 pb-20 font-inter text-slate-900 antialiased">
@@ -311,8 +311,8 @@ function PackageDetailContent({
           </div>
 
           {/* Right Column: Sticky Booking Sidebar (4 Columns) */}
-          <div className="lg:col-span-4">
-            <div className="sticky top-20 rounded-2xl border border-slate-200/90 bg-white p-6 shadow-xs space-y-5">
+          <div className="lg:col-span-4 lg:sticky lg:top-[90px] lg:self-start h-fit">
+            <div className="rounded-2xl border border-slate-200/90 bg-white p-6 shadow-xs space-y-5">
               {/* Price Header */}
               <div className="flex items-baseline justify-between border-b border-slate-100 pb-4">
                 <div>
@@ -327,9 +327,7 @@ function PackageDetailContent({
                   </div>
                 </div>
 
-                <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-[10px] font-semibold text-emerald-800">
-                  Guaranteed Departure
-                </span>
+
               </div>
 
               {/* Booking Controls */}
