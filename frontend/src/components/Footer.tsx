@@ -46,6 +46,7 @@ export default function Footer() {
             <div className="text-[10.5px] font-bold uppercase tracking-[0.18em] text-[#92C4EA]">
               Official Tourism Desk
             </div>
+
             <div className="flex flex-col sm:flex-row lg:flex-col gap-2 pt-1">
               <div className="flex items-center gap-2">
                 <MapPin className="h-3.5 w-3.5 text-slate-400 shrink-0" />
@@ -62,7 +63,7 @@ export default function Footer() {
         </div>
 
         {/* 2. Structured Multi-Column Directory Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-y-8 gap-x-6 sm:gap-8 pb-8 border-b border-white/10">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-y-8 gap-x-6 sm:gap-8 lg:gap-12 pb-8 border-b border-white/10">
           {/* Column 1: DESTINATIONS */}
           <div className="space-y-2.5 sm:space-y-3">
             <h4 className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-[#92C4EA]">
@@ -193,51 +194,8 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Column 4: PORTALS & SERVICES */}
-          <div className="space-y-2.5 sm:space-y-3">
-            <h4 className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-[#92C4EA]">
-              Portals &amp; Services
-            </h4>
-            <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-slate-300 font-light">
-              <li>
-                <Link href="/dashboard" className="hover:text-white transition-colors">
-                  Traveler Dashboard
-                </Link>
-              </li>
-              <li>
-                <Link href="/services?tab=guide" className="hover:text-white transition-colors">
-                  Mountain Guides
-                </Link>
-              </li>
-              <li>
-                <Link href="/services?tab=butler" className="hover:text-white transition-colors">
-                  Sherpa Butler Service
-                </Link>
-              </li>
-              <li>
-                <Link href="/portals/guide" className="hover:text-white transition-colors">
-                  Guide Portal
-                </Link>
-              </li>
-              <li>
-                <Link href="/portals/butler" className="hover:text-white transition-colors">
-                  Butler Portal
-                </Link>
-              </li>
-              <li>
-                <Link href="/portals/business" className="hover:text-white transition-colors">
-                  Merchant Portal
-                </Link>
-              </li>
-              <li>
-                <Link href="/portals/admin" className="hover:text-white transition-colors">
-                  Official Admin Portal
-                </Link>
-              </li>
-            </ul>
-          </div>
 
-          {/* Column 5: COMPANY & INFORMATION */}
+          {/* Column 4: COMPANY & INFORMATION */}
           <div className="space-y-2.5 sm:space-y-3">
             <h4 className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-[0.18em] text-[#92C4EA]">
               Company &amp; Info
