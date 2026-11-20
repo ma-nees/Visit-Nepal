@@ -52,8 +52,8 @@ export const mapDestinations: MapDestination[] = [
     bestSeason: 'Mar – May, Oct – Dec',
     temp: '-6°C',
     weather: 'Alpine Clear',
-    svgX: 960,
-    svgY: 480,
+    svgX: 969,
+    svgY: 500,
     imageUrl:
       'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=800&q=80',
     description:
@@ -82,8 +82,68 @@ export const mapDestinations: MapDestination[] = [
     link: '/explore/dest_annapurna',
   },
   {
+    id: 'manaslu',
+    name: 'Manaslu (Spirit Mountain)',
+    shortName: 'Manaslu',
+    region: 'Central High Himalaya',
+    type: 'Summit & Trek',
+    altitude: '1,410m – 8,163m',
+    elevationMeters: 8163,
+    bestSeason: 'Sep – Nov, Mar – May',
+    temp: '-2°C',
+    weather: 'Crisp Alpine',
+    svgX: 685,
+    svgY: 385,
+    imageUrl:
+      'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
+    description:
+      'The eighth highest peak on Earth. An authentic, remote circuit traversing the high Larkya La Pass along ancient Tibetan salt-trading routes.',
+    highlights: ['Larkya La Pass (5,106m)', 'Pungyen Gompa', 'Birendra Tal Lake', 'Untouched Villages'],
+    link: '/explore?q=Manaslu',
+  },
+  {
+    id: 'kanchenjunga',
+    name: 'Kanchenjunga Base Camp',
+    shortName: 'Kanchenjunga',
+    region: 'Eastern Frontier',
+    type: 'Summit & Trek',
+    altitude: '1,800m – 8,586m',
+    elevationMeters: 8586,
+    bestSeason: 'Mar – May, Oct – Nov',
+    temp: '-4°C',
+    weather: 'Glacial Winds',
+    svgX: 1125,
+    svgY: 515,
+    imageUrl:
+      'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=800&q=80',
+    description:
+      'The Five Treasures of the Snows. Nepal’s easternmost high alpine sanctuary, famous for remote rhododendron valleys and views of the world’s 3rd highest peak.',
+    highlights: ['Pangpema North Base Camp', 'Oktang South Viewpoint', 'Sele La Pass (4,290m)', 'Red Panda Habitat'],
+    link: '/explore?q=Kanchenjunga',
+  },
+  {
+    id: 'dhaulagiri',
+    name: 'Dhaulagiri Massif (White Mountain)',
+    shortName: 'Dhaulagiri',
+    region: 'Western High Himalaya',
+    type: 'Summit & Trek',
+    altitude: '1,100m – 8,167m',
+    elevationMeters: 8167,
+    bestSeason: 'Apr – May, Sep – Oct',
+    temp: '0°C',
+    weather: 'High Pass Breeze',
+    svgX: 515,
+    svgY: 375,
+    imageUrl:
+      'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+    description:
+      'The awe-inspiring Seventh Highest Peak. Towering abruptly over the Kali Gandaki Gorge, the deepest river valley in the world, in rugged glaciated grandeur.',
+    highlights: ['French Col (5,360m)', 'Dhampus Pass (5,244m)', 'Hidden Valley', 'Kali Gandaki Gorge'],
+    link: '/explore?q=Dhaulagiri',
+  },
+  {
     id: 'langtang',
-    name: 'Langtang Valley',
+    name: 'Langtang Valley & Kyanjin Ri',
     shortName: 'Langtang',
     region: 'Central High Himalaya',
     type: 'Summit & Trek',
@@ -92,34 +152,14 @@ export const mapDestinations: MapDestination[] = [
     bestSeason: 'Mar – May, Sep – Nov',
     temp: '4°C',
     weather: 'Crisp Valley',
-    svgX: 770,
-    svgY: 460,
+    svgX: 785,
+    svgY: 450,
     imageUrl:
       'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=800&q=80',
     description:
       'The valley of alpine glaciers nearest to Kathmandu. Renowned for its Tamang mountain heritage, cheese dairies of Kyanjin Gompa, and views of Langtang Lirung.',
     highlights: ['Kyanjin Gompa', 'Kyanjin Ri (4,773m)', 'Tamang Heritage Trail', 'Yak Pastures'],
     link: '/explore/dest_langtang',
-  },
-  {
-    id: 'kathmandu',
-    name: 'Kathmandu Valley',
-    shortName: 'Kathmandu',
-    region: 'Central Basin',
-    type: 'Culture & City',
-    altitude: '1,400m',
-    elevationMeters: 1400,
-    bestSeason: 'Year-Round',
-    temp: '20°C',
-    weather: 'Mild & Pleasant',
-    svgX: 780,
-    svgY: 520,
-    imageUrl:
-      'https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=800&q=80',
-    description:
-      'Nepal’s cultural soul. A living open-air museum of seven UNESCO World Heritage monuments, medieval tiered Newar pagodas, and sacred spiritual sanctuaries.',
-    highlights: ['Boudhanath Stupa', 'Pashupatinath Temple', 'Bhaktapur Durbar Square', 'Patan Art'],
-    link: '/explore?q=Kathmandu',
   },
   {
     id: 'mustang',
@@ -132,14 +172,34 @@ export const mapDestinations: MapDestination[] = [
     bestSeason: 'May – Oct (Rainshadow)',
     temp: '5°C',
     weather: 'High Desert Breeze',
-    svgX: 570,
-    svgY: 280,
+    svgX: 575,
+    svgY: 310,
     imageUrl:
       'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80',
     description:
       'The ancient Kingdom of Lo. A forbidden rainshadow desert of red ochre cliffs, wind-carved sky caves, and remarkably preserved 14th-century Tibetan Buddhist art.',
     highlights: ['Walled City of Lo Manthang', 'Centuries-old Sky Caves', 'Muktinath Temple', 'Red Cliffs'],
     link: '/explore?q=Mustang',
+  },
+  {
+    id: 'kathmandu',
+    name: 'Kathmandu Valley UNESCO',
+    shortName: 'Kathmandu',
+    region: 'Central Basin',
+    type: 'Culture & City',
+    altitude: '1,400m',
+    elevationMeters: 1400,
+    bestSeason: 'Year-Round',
+    temp: '20°C',
+    weather: 'Mild & Pleasant',
+    svgX: 795,
+    svgY: 520,
+    imageUrl:
+      'https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=800&q=80',
+    description:
+      'Nepal’s cultural soul. A living open-air museum of seven UNESCO World Heritage monuments, medieval tiered Newar pagodas, and sacred spiritual sanctuaries.',
+    highlights: ['Boudhanath Stupa', 'Pashupatinath Temple', 'Bhaktapur Durbar Square', 'Patan Art'],
+    link: '/explore?q=Kathmandu',
   },
   {
     id: 'lumbini',
@@ -153,13 +213,33 @@ export const mapDestinations: MapDestination[] = [
     temp: '28°C',
     weather: 'Warm & Sunny',
     svgX: 510,
-    svgY: 525,
+    svgY: 535,
     imageUrl:
       'https://images.unsplash.com/photo-1605649487212-47bdab064df8?auto=format&fit=crop&w=800&q=80',
     description:
       'The sacred birthplace of Lord Buddha (Siddhartha Gautama). An international spiritual oasis featuring the Maya Devi Temple, ancient Ashoka Pillar, and world monasteries.',
     highlights: ['Maya Devi Temple', 'Ashoka Pillar (249 BCE)', 'Peace Eternal Flame', 'World Monastic Zone'],
     link: '/explore?q=Lumbini',
+  },
+  {
+    id: 'janakpur',
+    name: 'Janakpurdham (Mithila Art)',
+    shortName: 'Janakpur',
+    region: 'Eastern Terai',
+    type: 'Culture & City',
+    altitude: '70m',
+    elevationMeters: 70,
+    bestSeason: 'Oct – Mar',
+    temp: '26°C',
+    weather: 'Sunny & Cultured',
+    svgX: 880,
+    svgY: 660,
+    imageUrl:
+      'https://images.unsplash.com/photo-1582650625119-3a31f84183fe?auto=format&fit=crop&w=800&q=80',
+    description:
+      'The historic capital of ancient Mithila and birthplace of Goddess Sita. Famous for the ornate white marble Janaki Mandir and vibrant folk Mithila wall art.',
+    highlights: ['Janaki Mandir Pagoda', 'Mithila Folk Painting Centers', 'Sacred Ponds & Ghats', 'Vivaha Mandap'],
+    link: '/explore?q=Janakpur',
   },
   {
     id: 'pokhara',
@@ -172,8 +252,8 @@ export const mapDestinations: MapDestination[] = [
     bestSeason: 'Oct – Apr',
     temp: '22°C',
     weather: 'Serene & Warm',
-    svgX: 590,
-    svgY: 430,
+    svgX: 592,
+    svgY: 420,
     imageUrl:
       'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
     description:
@@ -192,14 +272,54 @@ export const mapDestinations: MapDestination[] = [
     bestSeason: 'Apr – Jun, Sep – Nov',
     temp: '8°C',
     weather: 'Crisp Mountain',
-    svgX: 290,
-    svgY: 310,
+    svgX: 375,
+    svgY: 220,
     imageUrl:
       'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80',
     description:
       'Nepal’s largest and deepest high-altitude alpine lake, encircled by coniferous pine forests and snowy summits in the remote, untouched Karnali wilderness.',
     highlights: ['Deep Azure Mirror Waters', 'Coniferous Pine Trails', 'Murma Top Viewpoint', 'Pristine Isolation'],
     link: '/explore?q=Rara',
+  },
+  {
+    id: 'phoksundo',
+    name: 'Shey Phoksundo Lake (Dolpo)',
+    shortName: 'Phoksundo',
+    region: 'Trans-Himalayan Dolpo',
+    type: 'Lakes & Wilderness',
+    altitude: '3,611m',
+    elevationMeters: 3611,
+    bestSeason: 'May – Oct',
+    temp: '6°C',
+    weather: 'Azure Solitude',
+    svgX: 460,
+    svgY: 280,
+    imageUrl:
+      'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=800&q=80',
+    description:
+      'The deepest blue jewel of the trans-Himalaya. An alpine lake of spellbinding turquoise clarity bordered by ancient Tibetan Bon monasteries and snow leopard habitats.',
+    highlights: ['Ringmo Bon Monastery', 'Suligad Waterfall (167m)', 'Snow Leopard Territory', 'Yartung Festival'],
+    link: '/explore?q=Phoksundo',
+  },
+  {
+    id: 'gosaikunda',
+    name: 'Gosaikunda Sacred Lakes',
+    shortName: 'Gosaikunda',
+    region: 'Central Langtang Range',
+    type: 'Lakes & Wilderness',
+    altitude: '4,380m',
+    elevationMeters: 4380,
+    bestSeason: 'Apr – Jun, Sep – Nov',
+    temp: '1°C',
+    weather: 'Glacial Mist',
+    svgX: 810,
+    svgY: 470,
+    imageUrl:
+      'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=800&q=80',
+    description:
+      'Holy glacial lakes created, according to legend, by Lord Shiva’s trident. High alpine amphitheater surrounded by rugged mountain peaks and mist-veiled passes.',
+    highlights: ['Lauribina Pass (4,610m)', 'Saraswati & Bhairav Kund', 'Shiva Lingam in Water', 'Janai Purnima Pilgrimage'],
+    link: '/explore?q=Gosaikunda',
   },
   {
     id: 'chitwan',
@@ -213,13 +333,33 @@ export const mapDestinations: MapDestination[] = [
     temp: '27°C',
     weather: 'Subtropical Warm',
     svgX: 640,
-    svgY: 530,
+    svgY: 540,
     imageUrl:
       'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=800&q=80',
     description:
       'Dense subtropical sal forests and riverine grasslands sheltering endangered greater one-horned rhinoceros, Royal Bengal tigers, and gharial crocodiles.',
     highlights: ['Jeep Jungle Safari', 'Greater One-Horned Rhinos', 'Canoeing Rapti River', 'Tharu Cultural Village'],
     link: '/explore?q=Chitwan',
+  },
+  {
+    id: 'bardia',
+    name: 'Bardia National Park',
+    shortName: 'Bardia',
+    region: 'Far-Western Terai',
+    type: 'Wildlife Safari',
+    altitude: '152m',
+    elevationMeters: 152,
+    bestSeason: 'Oct – Apr',
+    temp: '29°C',
+    weather: 'Wild Riverbanks',
+    svgX: 230,
+    svgY: 410,
+    imageUrl:
+      'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=800&q=80',
+    description:
+      'Nepal’s largest untouched wilderness of the lowlands. The ultimate frontier for tracking wild Royal Bengal tigers, wild Asian elephants, and freshwater Gangetic dolphins.',
+    highlights: ['Karnali River Rafting', 'Wild Bengal Tiger Tracking', 'Elephant Breeding Center', 'Gangetic River Dolphins'],
+    link: '/explore?q=Bardia',
   },
 ];
 
@@ -324,7 +464,7 @@ export default function InteractiveMap() {
             <span className="text-slate-300">/</span>
             <div className="flex items-center gap-1.5">
               <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" />
-              <span>Waypoints: <strong className="text-slate-900 font-semibold">9 Surveyed</strong></span>
+              <span>Waypoints: <strong className="text-slate-900 font-semibold">{mapDestinations.length} Surveyed</strong></span>
             </div>
           </div>
         </div>
@@ -483,39 +623,93 @@ export default function InteractiveMap() {
                         isMatchingFilter ? 'opacity-100' : 'opacity-20'
                       }`}
                     >
-                      {/* Active Waypoint Precision Targeting Rings */}
-                      {isPrimary && (
+                      {/* 1. Continuous Sonar / Radar Blinking Ping Ring for Active Spots */}
+                      {isMatchingFilter && (
                         <circle
-                          r="12"
+                          r="4"
                           fill="none"
                           stroke={pinColor}
-                          strokeWidth="1.4"
-                          strokeOpacity={isSelected ? 0.9 : 0.6}
+                          strokeWidth="1.5"
                           cx="0"
                           cy="0"
-                          className="transition-all duration-200"
-                        />
+                        >
+                          <animate
+                            attributeName="r"
+                            values={isPrimary ? '6;22' : '4;15'}
+                            dur={isPrimary ? '1.4s' : `${1.8 + (dest.svgX % 3) * 0.4}s`}
+                            begin={`${(dest.svgX % 5) * 0.25}s`}
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="opacity"
+                            values={isPrimary ? '0.9;0' : '0.75;0'}
+                            dur={isPrimary ? '1.4s' : `${1.8 + (dest.svgX % 3) * 0.4}s`}
+                            begin={`${(dest.svgX % 5) * 0.25}s`}
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="stroke-width"
+                            values={isPrimary ? '2;0.3' : '1.5;0.2'}
+                            dur={isPrimary ? '1.4s' : `${1.8 + (dest.svgX % 3) * 0.4}s`}
+                            begin={`${(dest.svgX % 5) * 0.25}s`}
+                            repeatCount="indefinite"
+                          />
+                        </circle>
                       )}
 
-                      {/* Waypoint Core Pin */}
+                      {/* 2. Secondary High-Intensity Radar Echo for Selected Spot */}
+                      {isPrimary && (
+                        <circle
+                          r="10"
+                          fill="none"
+                          stroke={pinColor}
+                          strokeWidth="1.2"
+                          strokeDasharray="2 2"
+                          cx="0"
+                          cy="0"
+                        >
+                          <animate
+                            attributeName="r"
+                            values="10;26"
+                            dur="2s"
+                            repeatCount="indefinite"
+                          />
+                          <animate
+                            attributeName="opacity"
+                            values="0.8;0"
+                            dur="2s"
+                            repeatCount="indefinite"
+                          />
+                        </circle>
+                      )}
+
+                      {/* 3. Waypoint Core Pin */}
                       <circle
-                        r={isPrimary ? '6' : '4.5'}
+                        r={isPrimary ? '6.5' : '4.5'}
                         fill={pinColor}
                         stroke="#FFFFFF"
-                        strokeWidth="1.6"
+                        strokeWidth={isPrimary ? '2' : '1.5'}
                         filter="url(#cartoPinShadow)"
                         cx="0"
                         cy="0"
                         className="transition-all duration-200"
                       />
 
-                      {/* Center Pinpoint Core */}
+                      {/* 4. Center Glowing Core Point with Synchronized Twinkle */}
                       <circle
-                        r="1.5"
+                        r={isPrimary ? '2.5' : '1.8'}
                         fill="#FFFFFF"
                         cx="0"
                         cy="0"
-                      />
+                      >
+                        <animate
+                          attributeName="opacity"
+                          values="1;0.4;1"
+                          dur={`${1.6 + (dest.svgY % 3) * 0.3}s`}
+                          begin={`${(dest.svgY % 4) * 0.3}s`}
+                          repeatCount="indefinite"
+                        />
+                      </circle>
 
                       {/* Authentic Editorial Geographic Label */}
                       <g
