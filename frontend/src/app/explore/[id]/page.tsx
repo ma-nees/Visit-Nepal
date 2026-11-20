@@ -254,16 +254,16 @@ function PackageDetailContent({
                 </span>
               </div>
 
-              {/* Connected Timeline: Perfectly aligned node badges on the vertical border */}
-              <div className="relative ml-3 sm:ml-4 border-l-2 border-blue-200/80 space-y-3 sm:space-y-4">
+              {/* Day-by-Day Stages List */}
+              <div className="space-y-3 sm:space-y-4">
                 {dest.itinerary.map((item) => (
-                  <div key={item.day} className="relative pl-5 sm:pl-7 group">
-                    {/* Timeline Node Badge: Centered directly over the 2px border */}
-                    <div className="absolute -left-[12px] sm:-left-[15px] top-0 flex h-5.5 w-5.5 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#0552A2] text-white text-[9.5px] sm:text-[11px] font-bold font-mono shadow-xs border-2 border-white shrink-0">
+                  <div key={item.day} className="flex items-start gap-3 sm:gap-4 group">
+                    {/* Stage Badge */}
+                    <div className="flex h-6 w-6 sm:h-7 sm:w-7 items-center justify-center rounded-full bg-[#0552A2] text-white text-[10px] sm:text-[11px] font-bold font-mono shadow-xs shrink-0 mt-0.5">
                       D{item.day}
                     </div>
 
-                    <div className="rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 sm:p-4 space-y-1 hover:border-slate-300 hover:bg-slate-50 transition-all">
+                    <div className="flex-1 min-w-0 rounded-xl border border-slate-200/80 bg-slate-50/70 p-3 sm:p-4 space-y-1 hover:border-slate-300 hover:bg-slate-50 transition-all">
                       <div className="flex items-start justify-between gap-2">
                         <h3 className="font-poppins text-xs sm:text-sm font-semibold text-slate-900 leading-snug">
                           {item.title}
