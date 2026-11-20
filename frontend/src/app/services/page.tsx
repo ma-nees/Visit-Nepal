@@ -1,6 +1,7 @@
 'use client';
 
 import { Suspense, useState, useCallback } from 'react';
+import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import {
   Hotel as HotelIcon,
@@ -167,25 +168,12 @@ function ServicesContent() {
                     </span>
                   </div>
 
-                  <button
-                    onClick={() =>
-                      addBooking({
-                        title: `${h.name}: Standard Suite`,
-                        provider: h.name,
-                        category: 'Stay',
-                        date: 'Nov 18 - Nov 20, 2026',
-                        status: 'Confirmed',
-                        amount: `$${h.priceNum * 2}`,
-                        color: '#16A34A',
-                        meetingPoint: `${h.location} Front Desk, 02:00 PM`,
-                        assignedGuide: 'Front Desk Concierge',
-                        contactPhone: '+977 1 4479488',
-                      })
-                    }
+                  <Link
+                    href={`/hotels/${h.id}`}
                     className="inline-flex items-center justify-center rounded-lg bg-[#0552A2] px-3 py-1.5 text-xs font-bold text-white hover:bg-[#044182] active:scale-[0.98] transition-all shadow-xs cursor-pointer"
                   >
                     Reserve Stay
-                  </button>
+                  </Link>
                 </div>
               </div>
             </div>

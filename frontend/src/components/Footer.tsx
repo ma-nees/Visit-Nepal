@@ -6,7 +6,6 @@ import {
   Mail,
   ArrowUpRight,
   MapPin,
-  Map,
 } from 'lucide-react';
 
 export default function Footer() {
@@ -17,7 +16,7 @@ export default function Footer() {
 
   return (
     <footer className="w-full border-t border-white/10 bg-[#031526] text-white font-inter">
-      <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-6 sm:py-8 space-y-5 sm:space-y-6">
+      <div className="max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-6 sm:py-7 space-y-5 sm:space-y-6">
         {/* 1. Compact Brand Identity & Official Tourism Desk Header */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 sm:pb-5 border-b border-white/10">
           <div className="space-y-1.5 max-w-xl">
@@ -54,13 +53,13 @@ export default function Footer() {
         </div>
 
         {/* 2. Compact 4-Column Directory Grid */}
-        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-x-6 sm:gap-x-8 gap-y-5 sm:gap-y-6 pb-5 sm:pb-6 border-b border-white/10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-x-6 sm:gap-x-8 lg:gap-10 gap-y-6 pb-5 sm:pb-6 border-b border-white/10">
           {/* Column 1 – Destinations */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <h4 className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#92C4EA]">
               Destinations
             </h4>
-            <ul className="space-y-1 sm:space-y-1.5 text-xs text-slate-300 font-light">
+            <ul className="space-y-1.5 text-xs text-slate-300 font-light">
               <li>
                 <Link href="/explore/dest_ebc" className="hover:text-white transition-colors">
                   Everest Region
@@ -94,21 +93,21 @@ export default function Footer() {
               <li>
                 <Link
                   href="/map"
-                  className="inline-flex items-center gap-1 font-medium text-[#FDB716] hover:underline"
+                  className="inline-flex items-center gap-1 font-semibold text-[#FDB716] hover:underline pt-0.5 transition-colors"
                 >
-                  <Map className="h-3 w-3" />
                   <span>Himalayan Atlas</span>
+                  <ArrowUpRight className="h-3 w-3 shrink-0" />
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Column 2 – Experiences */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <h4 className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#92C4EA]">
               Experiences
             </h4>
-            <ul className="space-y-1 sm:space-y-1.5 text-xs text-slate-300 font-light">
+            <ul className="space-y-1.5 text-xs text-slate-300 font-light">
               <li>
                 <Link href="/culture" className="hover:text-white transition-colors">
                   Cultural Heritage
@@ -137,40 +136,44 @@ export default function Footer() {
               <li>
                 <Link
                   href="/custom-plan"
-                  className="inline-flex items-center gap-1 font-medium text-[#FDB716] hover:underline"
+                  className="inline-flex items-center gap-1 font-semibold text-[#FDB716] hover:underline pt-0.5 transition-colors"
                 >
                   <span>Custom Trip</span>
-                  <ArrowUpRight className="h-3 w-3" />
+                  <ArrowUpRight className="h-3 w-3 shrink-0" />
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Column 3 – Traveler Resources */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <h4 className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#92C4EA]">
               Traveler Resources
             </h4>
-            <ul className="space-y-1 sm:space-y-1.5 text-xs text-slate-300 font-light">
+            <ul className="space-y-1.5 text-xs text-slate-300 font-light">
               <li>
                 <Link href="/community" className="hover:text-white transition-colors">
                   Traveler Community
                 </Link>
               </li>
               <li>
-                <Link href="/services?tab=hotel" className="hover:text-white transition-colors">
-                  Stay &amp; Hotel Booking
+                <Link
+                  href="/services?tab=hotel"
+                  className="inline-flex items-center gap-1 font-semibold text-[#FDB716] hover:underline pt-0.5 transition-colors"
+                >
+                  <span>Stay &amp; Hotel Booking</span>
+                  <ArrowUpRight className="h-3 w-3 shrink-0" />
                 </Link>
               </li>
             </ul>
           </div>
 
           {/* Column 4 – Company & Info */}
-          <div className="space-y-2">
+          <div className="space-y-2.5">
             <h4 className="text-[10px] sm:text-[10.5px] font-bold uppercase tracking-[0.16em] text-[#92C4EA]">
               Company &amp; Info
             </h4>
-            <ul className="space-y-1 sm:space-y-1.5 text-xs text-slate-300 font-light">
+            <ul className="space-y-1.5 text-xs text-slate-300 font-light">
               <li>
                 <Link href="/about" className="hover:text-white transition-colors">
                   About Visit Nepal
@@ -189,10 +192,10 @@ export default function Footer() {
               <li>
                 <a
                   href="mailto:info@visitnepal.ai"
-                  className="inline-flex items-center gap-1 text-[#92C4EA] hover:text-white transition-colors"
+                  className="inline-flex items-center gap-1 font-semibold text-[#FDB716] hover:underline pt-0.5 transition-colors"
                 >
                   <span>Contact Support</span>
-                  <ArrowUpRight className="h-3 w-3" />
+                  <ArrowUpRight className="h-3 w-3 shrink-0" />
                 </a>
               </li>
             </ul>

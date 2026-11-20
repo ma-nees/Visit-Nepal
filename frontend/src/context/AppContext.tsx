@@ -72,7 +72,7 @@ interface AppContextType {
   setCurrentUser: (user: CurrentUser | null) => void;
   bookings: Booking[];
   addBooking: (booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'> & Partial<Booking>) => Promise<Booking>;
-  cancelBooking: (id: string) => Promise<void>;
+  cancelBooking: (id: string, reason?: string) => Promise<any>;
   customPlans: any[];
   refreshCustomPlans: () => Promise<void>;
   createCustomTrip: (data: any) => Promise<any>;
@@ -138,7 +138,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           id: b.id,
           title: b.title,
           provider: b.provider || 'Himalayan Sherpa Expeditions',
-          category: (b.category as any) || 'Trek',
+          category: (b.category as any) || (b.hotelId ? 'Stay' : 'Trek'),
           date: b.date || 'Spring 2026',
           bookedBy: b.userName || 'Aayush Pradhan',
           status: (b.status === 'confirmed'
@@ -147,23 +147,43 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               ? 'Completed'
               : b.status === 'cancelled'
                 ? 'Cancelled'
-                : b.status === 'paid'
-                  ? 'Paid'
-                  : b.status === 'quoted'
-                    ? 'Quoted'
-                    : 'Confirmed') as any,
-          amount: `NPR ${(b.totalAmountNpr || 50000).toLocaleString()}`,
+                : b.status === 'awaiting_payment'
+                  ? 'Awaiting Payment'
+                  : b.status === 'paid'
+                    ? 'Paid'
+                    : b.status === 'quoted'
+                      ? 'Quoted'
+                      : 'Confirmed') as any,
+          amount: b.totalAmountNpr ? `NPR ${b.totalAmountNpr.toLocaleString()}` : b.amount || 'NPR 50,000',
           qrCode: b.qrCode || `VN-PASS-${b.id}`,
-          color: '#0552A2',
-          meetingPoint: b.meetingPoint || 'Kathmandu Rendezvous Base',
-          assignedGuide: b.assignedGuideName || 'Pasang Nuru Sherpa (IFMGA)',
+          color: b.category === 'Stay' || b.hotelId ? '#16A34A' : '#0552A2',
+          meetingPoint: b.meetingPoint || (b.category === 'Stay' ? 'Hotel Reception Desk' : 'Kathmandu Rendezvous Base'),
+          assignedGuide: b.assignedGuideName || (b.category === 'Stay' ? 'Hotel Reception Concierge' : 'Pasang Nuru Sherpa (IFMGA)'),
           contactPhone: b.contactPhone || '+977-1-4412345',
-          bookingType: b.bookingType || 'standard',
+          bookingType: b.bookingType || (b.hotelId ? 'hotel' : 'standard'),
           customTripId: b.customTripId,
           invoiceNumber: b.invoiceNumber,
           optionsAndAddons: b.optionsAndAddons,
           priceBreakdown: b.priceBreakdown,
           travelerDetails: b.travelerDetails,
+          hotelId: b.hotelId,
+          hotelName: b.hotelName,
+          roomId: b.roomId,
+          roomName: b.roomName,
+          checkInDate: b.checkInDate,
+          checkOutDate: b.checkOutDate,
+          nightsCount: b.nightsCount,
+          roomsCount: b.roomsCount,
+          adultsCount: b.adultsCount,
+          childrenCount: b.childrenCount,
+          specialRequests: b.specialRequests,
+          arrivalTime: b.arrivalTime,
+          cancellationPolicy: b.cancellationPolicy,
+          refundAmountNpr: b.refundAmountNpr,
+          refundStatus: b.refundStatus,
+          paymentMode: b.paymentMode,
+          paymentStatus: b.paymentStatus,
+          paymentMethod: b.paymentMethod,
         }));
         setBookings(mappedBookings);
       }
@@ -422,7 +442,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const cancelBooking = async (id: string) => {
+  const cancelBooking = async (id: string, reason?: string) => {
+    const booking = bookings.find((b) => b.id === id);
+    const isHotel = booking?.category === 'Stay' || !!booking?.hotelId;
+
+    let refundText = '';
+    if (isHotel) {
+      try {
+        const res = await api.hotels.cancel(id, reason);
+        if (res && res.refundPercentage) {
+          refundText = ` (${res.refundPercentage} refund: NPR ${res.refundAmountNpr?.toLocaleString() || 0})`;
+        }
+      } catch (err) {
+        console.warn('[cancelBooking] Hotel cancel API fallback:', err);
+      }
+    } else {
+      try {
+        await api.bookings.cancel(id);
+      } catch (err) {
+        console.warn('[cancelBooking] Synced locally:', err);
+      }
+    }
+
     setBookings((prev) =>
       prev.map((b) =>
         b.id === id
@@ -431,18 +472,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
             status: 'Cancelled',
             qrCode: `VN-PASS-${id}-VOID`,
             color: '#EF4444',
+            paymentStatus: 'refunded',
           }
           : b
       )
     );
-    showToast(`Booking ${id} cancelled and refund initiated.`);
-
-    // Call real backend
-    try {
-      await api.bookings.cancel(id);
-    } catch (err) {
-      console.warn('[cancelBooking] Synced locally:', err);
-    }
+    showToast(`Booking ${id} cancelled${refundText}.`);
+    refreshData();
   };
 
   const addPost = async (content: string, location: string, mediaUrl?: string) => {

@@ -16,6 +16,7 @@ import chatRouter from './routes/chat';
 import schedulesRouter from './routes/schedules';
 import notificationsRouter from './routes/notifications';
 import safetyRouter from './routes/safety';
+import hotelsRouter from './routes/hotels';
 
 const app = express();
 
@@ -74,6 +75,7 @@ app.use('/api/chat', chatRouter);
 app.use('/api/schedules', schedulesRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/safety', safetyRouter);
+app.use('/api/hotels', hotelsRouter);
 
 app.listen(env.port, () => {
   console.log(

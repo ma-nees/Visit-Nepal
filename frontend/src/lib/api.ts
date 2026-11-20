@@ -266,7 +266,7 @@ export const api = {
       businessId?: string;
       meetingPoint?: string;
       contactPhone?: string;
-      bookingType?: 'standard' | 'custom';
+      bookingType?: 'standard' | 'custom' | 'hotel';
       customTripId?: string;
       optionsAndAddons?: Array<{ name: string; priceNpr?: number; costNpr?: number; note?: string }>;
       priceBreakdown?: {
@@ -463,25 +463,131 @@ export const api = {
   // ============================================================================
 
   community: {
-    async getPosts(): Promise<{ count: number; posts: any[] }> {
-      return request('/community');
+    async getPosts(params?: {
+      feed?: 'all' | 'following' | 'saved' | 'popular' | 'media';
+      tag?: string;
+      destination?: string;
+      q?: string;
+      authorId?: string;
+      page?: number;
+      limit?: number;
+    }): Promise<{ count: number; total: number; page: number; totalPages: number; posts: any[] }> {
+      const query = new URLSearchParams();
+      if (params?.feed) query.append('feed', params.feed);
+      if (params?.tag) query.append('tag', params.tag);
+      if (params?.destination) query.append('destination', params.destination);
+      if (params?.q) query.append('q', params.q);
+      if (params?.authorId) query.append('authorId', params.authorId);
+      if (params?.page) query.append('page', String(params.page));
+      if (params?.limit) query.append('limit', String(params.limit));
+      const qs = query.toString();
+      return request(`/community${qs ? `?${qs}` : ''}`);
     },
 
-    async createPost(data: { content: string; location?: string; mediaUrl?: string }): Promise<{ post: any }> {
+    async getTrending(): Promise<{
+      trendingDestinations: { name: string; count: number; tag: string }[];
+      trendingHashtags: { tag: string; count: number }[];
+      suggestedTravelers: any[];
+      popularPosts: any[];
+    }> {
+      return request('/community/trending');
+    },
+
+    async getUserProfile(userId: string): Promise<{ user: any; posts: any[]; isFollowing: boolean }> {
+      return request(`/community/users/${userId}`);
+    },
+
+    async updateProfile(data: {
+      bio?: string;
+      location?: string;
+      travelInterests?: string[];
+      avatarUrl?: string;
+      coverUrl?: string;
+    }): Promise<{ user: any; message: string }> {
+      return request('/community/users/profile', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async toggleFollow(userId: string): Promise<{ following: boolean; followersCount: number; user: any }> {
+      return request(`/community/users/${userId}/follow`, {
+        method: 'POST',
+      });
+    },
+
+    async createPost(data: {
+      content: string;
+      location?: string;
+      destinationTag?: string;
+      mediaUrls?: string[];
+      mediaUrl?: string;
+      mediaType?: 'image' | 'video';
+      hashtags?: string[];
+    }): Promise<{ post: any }> {
       return request('/community', {
         method: 'POST',
         body: JSON.stringify(data),
       });
     },
 
-    async toggleLike(id: string): Promise<{ liked: boolean; likesCount: number }> {
+    async editPost(id: string, data: {
+      content?: string;
+      location?: string;
+      destinationTag?: string;
+      hashtags?: string[];
+    }): Promise<{ post: any }> {
+      return request(`/community/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async deletePost(id: string): Promise<{ success: boolean; message: string }> {
+      return request(`/community/${id}`, {
+        method: 'DELETE',
+      });
+    },
+
+    async toggleLike(id: string): Promise<{ liked: boolean; likesCount: number; post: any }> {
       return request(`/community/${id}/like`, { method: 'POST' });
     },
 
-    async addComment(id: string, text: string): Promise<{ comment: any; commentsCount: number }> {
+    async toggleSave(id: string): Promise<{ saved: boolean; savedCount: number; post: any }> {
+      return request(`/community/${id}/save`, { method: 'POST' });
+    },
+
+    async addComment(id: string, textOrData: string | { text: string; parentId?: string }): Promise<{ comment: any; commentsCount: number; post: any }> {
+      const payload = typeof textOrData === 'string' ? { text: textOrData } : textOrData;
       return request(`/community/${id}/comment`, {
         method: 'POST',
+        body: JSON.stringify(payload),
+      });
+    },
+
+    async editComment(id: string, commentId: string, text: string): Promise<{ comment: any; post: any }> {
+      return request(`/community/${id}/comment/${commentId}`, {
+        method: 'PUT',
         body: JSON.stringify({ text }),
+      });
+    },
+
+    async deleteComment(id: string, commentId: string): Promise<{ success: boolean; commentsCount: number; post: any }> {
+      return request(`/community/${id}/comment/${commentId}`, {
+        method: 'DELETE',
+      });
+    },
+
+    async toggleCommentLike(id: string, commentId: string): Promise<{ liked: boolean; likesCount: number; comment: any }> {
+      return request(`/community/${id}/comment/${commentId}/like`, {
+        method: 'POST',
+      });
+    },
+
+    async reportPost(id: string, reason?: string, details?: string): Promise<{ success: boolean; message: string }> {
+      return request(`/community/${id}/report`, {
+        method: 'POST',
+        body: JSON.stringify({ reason, details }),
       });
     },
   },
@@ -559,6 +665,138 @@ export const api = {
         method: 'POST',
         body: JSON.stringify(data),
       });
+    },
+  },
+
+  hotels: {
+    async list(params?: {
+      page?: number;
+      limit?: number;
+      q?: string;
+      category?: string;
+      district?: string;
+      region?: string;
+      minPrice?: number;
+      maxPrice?: number;
+      minRating?: number;
+      amenities?: string;
+      sortBy?: string;
+      scale?: boolean;
+    }): Promise<{ count: number; page: number; limit: number; totalPages: number; hotels: any[] }> {
+      const query = new URLSearchParams();
+      if (params) {
+        Object.entries(params).forEach(([key, val]) => {
+          if (val !== undefined && val !== null && val !== '') {
+            query.append(key, String(val));
+          }
+        });
+      }
+      const qs = query.toString();
+      return request(`/hotels${qs ? `?${qs}` : ''}`);
+    },
+
+    async get(id: string): Promise<{ hotel: any }> {
+      return request(`/hotels/${id}`);
+    },
+
+    async checkAvailability(id: string, data: {
+      checkIn: string;
+      checkOut: string;
+      roomId?: string;
+      quantity?: number;
+      adults?: number;
+      children?: number;
+    }): Promise<{
+      available: boolean;
+      remainingInventory: number;
+      requestedRooms: number;
+      capacityLimit: number;
+      nights: number;
+      priceBreakdown: any;
+    }> {
+      return request(`/hotels/${id}/check-availability`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async reserve(data: {
+      hotelId: string;
+      roomId?: string;
+      checkIn: string;
+      checkOut: string;
+      roomsCount?: number;
+      adultsCount?: number;
+      childrenCount?: number;
+      guestInfo: {
+        fullName: string;
+        email: string;
+        phone: string;
+        country?: string;
+        nationality?: string;
+      };
+      specialRequests?: string;
+      arrivalTime?: string;
+      paymentMode?: 'full' | 'advance_deposit' | 'pay_at_property';
+    }): Promise<{
+      success: boolean;
+      bookingReference: string;
+      booking: any;
+      payableNowNpr: number;
+      totalAmountNpr: number;
+      paymentOptions: any;
+    }> {
+      return request('/hotels/reserve', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async pay(bookingId: string, data: {
+      provider: 'Khalti' | 'eSewa' | 'Stripe' | 'Bank Transfer';
+      amountPaidNpr?: number;
+      transactionToken?: string;
+      paymentMode?: 'full' | 'advance_deposit' | 'pay_at_property';
+    }): Promise<{
+      success: boolean;
+      verified: boolean;
+      bookingReference: string;
+      booking: any;
+      transaction: any;
+      voucher: any;
+    }> {
+      return request(`/hotels/bookings/${bookingId}/pay`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async cancel(bookingId: string, reason?: string): Promise<{
+      success: boolean;
+      message: string;
+      refundPercentage: string;
+      refundAmountNpr: number;
+      booking: any;
+    }> {
+      return request(`/hotels/bookings/${bookingId}/cancel`, {
+        method: 'POST',
+        body: JSON.stringify({ reason }),
+      });
+    },
+
+    async getAdminDashboard(): Promise<any> {
+      return request('/hotels/admin/dashboard');
+    },
+
+    async getAdminReservations(params?: {
+      page?: number;
+      limit?: number;
+      q?: string;
+      status?: string;
+      hotelId?: string;
+    }): Promise<{ count: number; page: number; totalPages: number; reservations: any[] }> {
+      const query = new URLSearchParams(params as any).toString();
+      return request(`/hotels/admin/reservations${query ? `?${query}` : ''}`);
     },
   },
 };

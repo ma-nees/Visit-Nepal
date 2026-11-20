@@ -109,14 +109,14 @@ export interface Booking {
   category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Expedition' | 'Guide' | 'Butler' | 'Tour';
   date: string;
   bookedBy: string;
-  status: 'Confirmed' | 'Completed' | 'Cancelled' | 'Pending' | 'Quoted' | 'Paid';
+  status: 'Confirmed' | 'Completed' | 'Cancelled' | 'Pending' | 'Quoted' | 'Paid' | 'Awaiting Payment';
   amount: string;
   qrCode: string;
   color: string;
   meetingPoint: string;
   assignedGuide: string;
   contactPhone: string;
-  bookingType?: 'standard' | 'custom';
+  bookingType?: 'standard' | 'custom' | 'hotel';
   customTripId?: string;
   invoiceNumber?: string;
   optionsAndAddons?: Array<{ name: string; priceNpr?: number; costNpr?: number; note?: string }>;
@@ -137,6 +137,25 @@ export interface Booking {
     emergencyContactPhone?: string;
     dietaryOrMedicalNotes?: string;
   };
+  // Hotel reservation specific fields
+  hotelId?: string;
+  hotelName?: string;
+  roomId?: string;
+  roomName?: string;
+  checkInDate?: string;
+  checkOutDate?: string;
+  nightsCount?: number;
+  roomsCount?: number;
+  adultsCount?: number;
+  childrenCount?: number;
+  specialRequests?: string;
+  arrivalTime?: string;
+  cancellationPolicy?: string;
+  refundAmountNpr?: number;
+  refundStatus?: 'none' | 'pending' | 'approved' | 'processed' | 'rejected';
+  paymentMode?: 'full' | 'advance_deposit' | 'pay_at_property';
+  paymentStatus?: 'unpaid' | 'pending' | 'successful' | 'failed' | 'refunded';
+  paymentMethod?: string;
 }
 
 export interface PostComment {
@@ -2024,18 +2043,34 @@ export const initialBookings: Booking[] = [
   },
   {
     id: 'BKG-88102',
-    title: "The Dwarika's Hotel - Heritage Suite",
+    title: "The Dwarika's Hotel - Heritage Junior Suite",
     provider: "The Dwarika's Hotel Kathmandu",
     category: 'Stay',
     date: 'Nov 10 - Nov 12, 2026',
     bookedBy: 'Aayush Pradhan',
     status: 'Confirmed',
-    amount: '$520',
-    qrCode: 'DWARIKAS-SUITE-88102-CHECKIN',
+    amount: 'NPR 69,000',
+    qrCode: 'VN-HOTEL-2026-DWARIKAS-88102',
     color: '#16A34A',
     meetingPoint: 'Battisputali Front Desk, 02:00 PM Check-in',
     assignedGuide: 'Front Desk Concierge',
     contactPhone: '+977 1 4479488',
+    hotelId: 'htl_dwarikas',
+    hotelName: "The Dwarika's Hotel",
+    roomId: 'room_dwarika_heritage_suite',
+    roomName: 'Heritage Junior Suite',
+    checkInDate: '2026-11-10',
+    checkOutDate: '2026-11-12',
+    nightsCount: 2,
+    roomsCount: 1,
+    adultsCount: 2,
+    childrenCount: 0,
+    specialRequests: 'High floor, quiet courtyard facing, late check-in at 3 PM',
+    arrivalTime: '03:00 PM',
+    cancellationPolicy: 'Free cancellation up to 48 hours prior to arrival',
+    paymentStatus: 'successful',
+    paymentMode: 'full',
+    paymentMethod: 'Khalti (NPR Verified)',
   },
   {
     id: 'BKG-77401',

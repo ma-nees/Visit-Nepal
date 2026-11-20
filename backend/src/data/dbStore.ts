@@ -8,11 +8,18 @@ export interface UserAccount {
   email: string;
   passwordHash: string;
   name: string;
+  username?: string;
   role: 'traveler' | 'business' | 'guide' | 'butler' | 'admin';
   status: 'active' | 'suspended' | 'banned';
   phone?: string;
   avatarUrl?: string;
+  coverUrl?: string;
   bio?: string;
+  location?: string;
+  travelInterests?: string[];
+  followers?: string[];
+  following?: string[];
+  savedPosts?: string[];
   emergencyContact?: string;
   kycStatus: 'not_submitted' | 'submitted' | 'under_review' | 'verified' | 'rejected';
   createdAt: string;
@@ -122,6 +129,79 @@ export interface ServiceListing {
   reviewsCount: number;
   imageUrl: string;
   availability: string[];
+}
+
+export interface HotelRoom {
+  id: string;
+  hotelId: string;
+  name: string;
+  description: string;
+  capacityAdults: number;
+  capacityChildren: number;
+  bedType: string;
+  roomSizeM2: number;
+  pricePerNightNpr: number;
+  pricePerNightUsd: number;
+  availableInventory: number;
+  totalInventory: number;
+  images: string[];
+  amenities: string[];
+  cancellationPolicy: string;
+  mealPlan: 'Room Only' | 'Breakfast Included' | 'Half Board' | 'All-Inclusive';
+}
+
+export interface HotelReview {
+  id: string;
+  hotelId: string;
+  userId: string;
+  userName: string;
+  userAvatar?: string;
+  rating: number;
+  ratingsBreakdown: {
+    cleanliness: number;
+    comfort: number;
+    location: number;
+    service: number;
+    value: number;
+  };
+  reviewText: string;
+  tripType: 'Solo' | 'Couple' | 'Family' | 'Friends' | 'Business';
+  createdAt: string;
+}
+
+export interface HotelListing {
+  id: string;
+  businessId?: string;
+  name: string;
+  tagline: string;
+  description: string;
+  location: string;
+  district: string;
+  region: string;
+  address: string;
+  coordinates: { lat: number; lng: number };
+  rating: number;
+  reviewsCount: number;
+  starRating: number;
+  category: 'Luxury Heritage' | 'Resort & Spa' | 'Boutique Lodge' | 'Mountain Teahouse' | 'Eco Retreat';
+  basePriceNpr: number;
+  basePriceUsd: number;
+  heroImage: string;
+  images: string[];
+  amenities: string[];
+  propertyHighlights: string[];
+  checkInTime: string;
+  checkOutTime: string;
+  policies: {
+    cancellation: string;
+    childPolicy: string;
+    pets: string;
+    smoking: string;
+  };
+  contactPhone: string;
+  contactEmail: string;
+  rooms: HotelRoom[];
+  reviews: HotelReview[];
 }
 
 export interface Quotation {
@@ -298,6 +378,23 @@ export interface Booking {
   meetingPoint: string;
   contactPhone: string;
   cancellationReason?: string;
+  // Hotel reservation specific fields
+  hotelId?: string;
+  hotelName?: string;
+  roomId?: string;
+  roomName?: string;
+  checkInDate?: string;
+  checkOutDate?: string;
+  nightsCount?: number;
+  roomsCount?: number;
+  adultsCount?: number;
+  childrenCount?: number;
+  specialRequests?: string;
+  arrivalTime?: string;
+  cancellationPolicy?: string;
+  refundAmountNpr?: number;
+  refundStatus?: 'none' | 'pending' | 'approved' | 'processed' | 'rejected';
+  paymentMode?: 'full' | 'advance_deposit' | 'pay_at_property';
   createdAt: string;
   updatedAt: string;
 }
@@ -381,20 +478,53 @@ export interface Message {
   isRead: boolean;
 }
 
+export interface PostReply {
+  id: string;
+  userId: string;
+  authorName: string;
+  authorUsername?: string;
+  authorAvatar: string;
+  text: string;
+  createdAt: string;
+}
+
+export interface PostComment {
+  id: string;
+  userId?: string;
+  authorName: string;
+  authorUsername?: string;
+  authorAvatar: string;
+  text: string;
+  createdAt: string;
+  likesCount?: number;
+  likedBy?: string[];
+  parentId?: string;
+  replies?: PostReply[];
+}
+
 export interface CommunityPost {
   id: string;
   userId: string;
   authorName: string;
+  authorUsername?: string;
   authorAvatar: string;
   authorRole: string;
+  authorVerified?: boolean;
   location: string;
+  destinationTag?: string;
   content: string;
   mediaUrl: string;
+  mediaUrls?: string[];
+  mediaType?: 'image' | 'video';
+  hashtags?: string[];
   likesCount: number;
   likedBy: string[];
+  savedBy?: string[];
   commentsCount: number;
-  comments: Array<{ id: string; authorName: string; authorAvatar: string; text: string; createdAt: string }>;
+  comments: PostComment[];
+  sharesCount?: number;
   createdAt: string;
+  updatedAt?: string;
 }
 
 export interface NotificationItem {
@@ -402,7 +532,7 @@ export interface NotificationItem {
   userId: string;
   title: string;
   body: string;
-  type: 'booking' | 'payment' | 'permit' | 'kyc' | 'message' | 'assignment' | 'alert';
+  type: 'booking' | 'payment' | 'permit' | 'kyc' | 'message' | 'assignment' | 'alert' | 'like' | 'comment' | 'reply' | 'follow' | 'mention';
   link: string;
   isRead: boolean;
   createdAt: string;
@@ -428,6 +558,7 @@ export interface DatabaseState {
   destinations: Destination[];
   packages: TrekkingPackage[];
   services: ServiceListing[];
+  hotels: HotelListing[];
   customPlans: CustomPlan[];
   bookings: Booking[];
   permits: PermitApplication[];
@@ -1415,6 +1546,7 @@ function getInitialSeedData(): DatabaseState {
     destinations,
     packages,
     services,
+    hotels: getInitialHotels(),
     customPlans,
     bookings,
     permits,
@@ -1428,6 +1560,609 @@ function getInitialSeedData(): DatabaseState {
   };
 }
 
+export function getInitialHotels(): HotelListing[] {
+  return [
+    {
+      id: 'htl_dwarikas',
+      businessId: 'biz_1',
+      name: "The Dwarika's Hotel",
+      tagline: 'Living Museum of 13th-Century Newari Heritage & Royal Hospitality',
+      description:
+        "The Dwarika's Hotel is a living architectural sanctuary in Kathmandu, meticulously constructed around salvaged 13th-to-16th-century carved wood and terracotta artifacts. Nestled in Battisputali, the property offers world-class Ayurvedic wellness treatments, tranquil brick courtyards, an organic farm-to-table dining experience, and deeply personalized Sherpa concierge service.",
+      location: 'Battisputali, Kathmandu',
+      district: 'Kathmandu Valley',
+      region: 'Central Nepal',
+      address: 'Battisputali Road, Kathmandu 44600, Nepal',
+      coordinates: { lat: 27.7058, lng: 85.3444 },
+      rating: 4.96,
+      reviewsCount: 382,
+      starRating: 5,
+      category: 'Luxury Heritage',
+      basePriceNpr: 34500,
+      basePriceUsd: 260,
+      heroImage: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'Heritage Courtyard Pool',
+        'Pancha Kosha Himalayan Spa',
+        'Krishnarpan Organic Dining (6-22 Courses)',
+        'Fusion Bar & Cigar Lounge',
+        'Complimentary High-Speed Wi-Fi',
+        '24/7 Butler & Front Desk Concierge',
+        'Airport Limousine Service',
+        'Valet Parking',
+      ],
+      propertyHighlights: [
+        'Preserved 13th-century hand-carved Newari woodwork throughout property',
+        'Organic farm produce sourced daily from their private Dhulikhel estate',
+        '10 minutes from Pashupatinath Temple and 15 minutes from Tribhuvan Airport',
+        'Authentic Ayurvedic wellness treatments supervised by resident physicians',
+      ],
+      checkInTime: '14:00',
+      checkOutTime: '12:00',
+      policies: {
+        cancellation: 'Free cancellation up to 48 hours prior to check-in. Cancellations within 48 hours incur 1 night charge.',
+        childPolicy: 'Children up to 5 years stay free of charge using existing bedding.',
+        pets: 'Pets are not allowed on property.',
+        smoking: 'Non-smoking rooms. Dedicated heritage courtyard smoking pavilions available.',
+      },
+      contactPhone: '+977 1 4479488',
+      contactEmail: 'reservations@dwarikas.com',
+      rooms: [
+        {
+          id: 'rm_dwarikas_heritage_deluxe',
+          hotelId: 'htl_dwarikas',
+          name: 'Heritage Deluxe Room',
+          description: 'Spacious suite featuring original terracotta floor tiles, hand-woven linens, and custom brass bath fixtures.',
+          capacityAdults: 2,
+          capacityChildren: 1,
+          bedType: '1 King Bed or 2 Twin Beds',
+          roomSizeM2: 44,
+          pricePerNightNpr: 34500,
+          pricePerNightUsd: 260,
+          availableInventory: 8,
+          totalInventory: 10,
+          images: [
+            'https://images.unsplash.com/photo-1590490360182-c33d57733427?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Private Balcony', 'Deep Soaking Bathtub', 'Hand-Crafted Organic Toiletries', 'Nespresso Coffee Machine', 'In-Room Safe'],
+          cancellationPolicy: 'Free cancellation until 48h before arrival',
+          mealPlan: 'Breakfast Included',
+        },
+        {
+          id: 'rm_dwarikas_junior_suite',
+          hotelId: 'htl_dwarikas',
+          name: 'Heritage Junior Suite',
+          description: 'Expansive historic suite with separated lounge parlor, custom Newari wooden four-poster bed, and courtyard garden views.',
+          capacityAdults: 3,
+          capacityChildren: 1,
+          bedType: '1 King Four-Poster Bed + Daybed',
+          roomSizeM2: 68,
+          pricePerNightNpr: 48000,
+          pricePerNightUsd: 360,
+          availableInventory: 5,
+          totalInventory: 6,
+          images: [
+            'https://images.unsplash.com/photo-1578683010236-d716f9a3f461?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Separate Living Area', 'Courtyard Garden View', 'Complimentary Evening Cocktails', 'Rain Shower & Tub', 'Daily Fresh Fruit Basket'],
+          cancellationPolicy: 'Free cancellation until 48h before arrival',
+          mealPlan: 'Breakfast Included',
+        },
+        {
+          id: 'rm_dwarikas_royal_suite',
+          hotelId: 'htl_dwarikas',
+          name: 'Royal Heritage Executive Suite',
+          description: 'A palatial residence spanning two levels with private open-air terrace, dedicated 24-hour butler, and antique museum artifacts.',
+          capacityAdults: 4,
+          capacityChildren: 2,
+          bedType: '2 King Beds',
+          roomSizeM2: 120,
+          pricePerNightNpr: 85000,
+          pricePerNightUsd: 640,
+          availableInventory: 2,
+          totalInventory: 2,
+          images: [
+            'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Private Butler', 'Private Open-Air Terrace', 'Double Rain Shower & Whirlpool', 'Executive Bar', 'VIP Airport Transfer'],
+          cancellationPolicy: 'Free cancellation until 7 days before arrival',
+          mealPlan: 'All-Inclusive',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_dw_1',
+          hotelId: 'htl_dwarikas',
+          userId: 'usr_traveler_1',
+          userName: 'Dr. Alistair Finch',
+          userAvatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 4.8, service: 5, value: 4.9 },
+          reviewText: 'Stepping into Dwarika’s feels like time-traveling into an ancient Malla palace. Krishnarpan 9-course dinner was unforgettable.',
+          tripType: 'Couple',
+          createdAt: '2026-02-10T14:30:00Z',
+        },
+        {
+          id: 'rev_dw_2',
+          hotelId: 'htl_dwarikas',
+          userId: 'usr_traveler_2',
+          userName: 'Sunita Sharma',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 5, service: 5, value: 4.8 },
+          reviewText: 'Impeccable Ayurvedic spa and courteous staff. The best hotel in Nepal without question.',
+          tripType: 'Solo',
+          createdAt: '2026-01-22T09:15:00Z',
+        },
+      ],
+    },
+    {
+      id: 'htl_barpeepal',
+      businessId: 'biz_2',
+      name: 'Bar Peepal Resort',
+      tagline: 'Phewa Lake Infinity Vista & Himalayan Sunrise Sanctuary',
+      description:
+        'Perched atop Sarangkot hill overlooking tranquil Phewa Lake and the dramatic Fishtail (Machhapuchhre) and Annapurna mountain range. Features a heated hillside infinity pool, private balconies for every room, and farm-fresh organic dining.',
+      location: 'Sarangkot Road, Pokhara',
+      district: 'Pokhara & Annapurna',
+      region: 'Western Nepal',
+      address: 'Sarangkot Hillside, Pokhara 33700, Nepal',
+      coordinates: { lat: 28.238, lng: 83.9556 },
+      rating: 4.9,
+      reviewsCount: 295,
+      starRating: 5,
+      category: 'Resort & Spa',
+      basePriceNpr: 19200,
+      basePriceUsd: 145,
+      heroImage: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'Hillside Heated Infinity Pool',
+        'Annapurna Panorama Yoga Deck',
+        'Ayurveda Herbal Sauna',
+        'Organic Mountain View Restaurant',
+        'Free Airport Shuttle (Pokhara Int’l)',
+        'High-Speed Wi-Fi',
+      ],
+      propertyHighlights: [
+        'Direct sunrise views over Fishtail & Annapurna without leaving your bed',
+        'Heated outdoor infinity pool looking down onto Phewa Lake',
+        'Close to paragliding take-off point at Sarangkot',
+      ],
+      checkInTime: '14:00',
+      checkOutTime: '11:00',
+      policies: {
+        cancellation: 'Free cancellation up to 48 hours before arrival. 1 night charge for late cancellation.',
+        childPolicy: 'Children under 6 stay free.',
+        pets: 'Small pets allowed upon prior notice.',
+        smoking: 'Smoking permitted on open balconies only.',
+      },
+      contactPhone: '+977 61 465220',
+      contactEmail: 'contact@barpeepalresort.com',
+      rooms: [
+        {
+          id: 'rm_barpeepal_deluxe_lake',
+          hotelId: 'htl_barpeepal',
+          name: 'Deluxe Lake View Room',
+          description: 'Contemporary room with private wood-deck balcony overlooking Phewa Lake and the World Peace Pagoda.',
+          capacityAdults: 2,
+          capacityChildren: 1,
+          bedType: '1 King Bed',
+          roomSizeM2: 38,
+          pricePerNightNpr: 19200,
+          pricePerNightUsd: 145,
+          availableInventory: 12,
+          totalInventory: 14,
+          images: [
+            'https://images.unsplash.com/photo-1540541338287-41700207dee6?auto=format&fit=crop&w=800&q=80',
+            'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Private Balcony', 'Lake & Mountain View', 'Rain Shower', 'Espresso Maker'],
+          cancellationPolicy: 'Free cancellation until 48h before check-in',
+          mealPlan: 'Breakfast Included',
+        },
+        {
+          id: 'rm_barpeepal_annapurna_suite',
+          hotelId: 'htl_barpeepal',
+          name: 'Annapurna Sunrise Executive Suite',
+          description: 'Corner luxury suite with wrap-around glass floor-to-ceiling windows and panoramic Annapurna mountain vistas.',
+          capacityAdults: 3,
+          capacityChildren: 1,
+          bedType: '1 King Bed + 1 Daybed',
+          roomSizeM2: 58,
+          pricePerNightNpr: 29500,
+          pricePerNightUsd: 220,
+          availableInventory: 6,
+          totalInventory: 8,
+          images: [
+            'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Wrap-around Glass Balcony', 'Jacuzzi with Mountain View', 'Complimentary Minibar', 'Butler on Call'],
+          cancellationPolicy: 'Free cancellation until 48h before check-in',
+          mealPlan: 'Breakfast Included',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_bp_1',
+          hotelId: 'htl_barpeepal',
+          userId: 'usr_traveler_1',
+          userName: 'Marcus Vance',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 5, service: 4.9, value: 4.8 },
+          reviewText: 'Waking up to the golden dawn on Machhapuchhre was a spiritual experience. The infinity pool is breathtaking.',
+          tripType: 'Couple',
+          createdAt: '2026-02-14T08:00:00Z',
+        },
+      ],
+    },
+    {
+      id: 'htl_yeti_namche',
+      businessId: 'biz_1',
+      name: 'Yeti Mountain Home Namche',
+      tagline: 'Luxury Alpine Lodge at 3,440m Altitude in the Heart of Sherpa Country',
+      description:
+        'Yeti Mountain Home in Namche Bazaar combines warm Sherpa stone architecture with alpine luxury. Heated under-blankets, on-site oxygen concentrators, panoramic sun terraces facing Kongde Ri peak, and hearty high-altitude cuisine prepare trekkers for the heights of Everest.',
+      location: 'Namche Bazaar, Everest',
+      district: 'Solukhumbu (Everest Region)',
+      region: 'Eastern Himalaya',
+      address: 'Namche Bazaar 56002, Sagarmatha National Park, Nepal',
+      coordinates: { lat: 27.8069, lng: 86.714 },
+      rating: 4.92,
+      reviewsCount: 184,
+      starRating: 4.5,
+      category: 'Mountain Teahouse',
+      basePriceNpr: 26000,
+      basePriceUsd: 195,
+      heroImage: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1516306580123-e6e52b1b7b5f?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'Heated Electric Blankets',
+        'Medical Oxygen Concentrators on Call',
+        'Kongde Ri Sun Terrace',
+        'Cozy Wood-Fired Fireplace Lounge',
+        'Hot High-Pressure En-Suite Showers',
+        'Sherpa Herbal Tea Bar',
+        'Satellite Wi-Fi',
+      ],
+      propertyHighlights: [
+        'Direct Kongde Ri and Thamserku mountain views from the dining lounge',
+        'Electric heated beds in all rooms — essential comfort at 3,440m',
+        '5-minute walk to Namche Saturday market and Sherpa Cultural Museum',
+      ],
+      checkInTime: '13:00',
+      checkOutTime: '10:00',
+      policies: {
+        cancellation: 'Free cancellation up to 72 hours before arrival. Weather flight delays covered without penalty.',
+        childPolicy: 'Suitable for children over 8 years due to altitude acclimatization.',
+        pets: 'Pets not permitted.',
+        smoking: 'Strictly non-smoking property.',
+      },
+      contactPhone: '+977 38 540123',
+      contactEmail: 'namche@yetimountainhome.com',
+      rooms: [
+        {
+          id: 'rm_yeti_alpine_twin',
+          hotelId: 'htl_yeti_namche',
+          name: 'Alpine Heated Twin Room',
+          description: 'Wood-paneled alpine room with individual electric mattress warmers, thermal duvets, and private attached bathroom with continuous hot water.',
+          capacityAdults: 2,
+          capacityChildren: 0,
+          bedType: '2 Single Heated Beds',
+          roomSizeM2: 28,
+          pricePerNightNpr: 26000,
+          pricePerNightUsd: 195,
+          availableInventory: 10,
+          totalInventory: 12,
+          images: [
+            'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Electric Heated Blankets', 'Attached Hot Shower', 'Thermal Insulation', 'Oxygen Monitor on Request'],
+          cancellationPolicy: 'Free cancellation until 72h before check-in',
+          mealPlan: 'Breakfast Included',
+        },
+        {
+          id: 'rm_yeti_himalayan_king',
+          hotelId: 'htl_yeti_namche',
+          name: 'Himalayan Vista King Room',
+          description: 'Spacious king bedroom with picture windows framing Kongde Ri and the high amphitheater of Namche Bazaar.',
+          capacityAdults: 2,
+          capacityChildren: 1,
+          bedType: '1 King Heated Bed',
+          roomSizeM2: 35,
+          pricePerNightNpr: 32000,
+          pricePerNightUsd: 240,
+          availableInventory: 6,
+          totalInventory: 6,
+          images: [
+            'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Kongde Ri Mountain View', 'Electric Heated Bed', 'Plush Down Duvet', 'Hot Water Bottle Service'],
+          cancellationPolicy: 'Free cancellation until 72h before check-in',
+          mealPlan: 'Half Board',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_ymh_1',
+          hotelId: 'htl_yeti_namche',
+          userId: 'usr_traveler_1',
+          userName: 'Elena Rostova',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 5, service: 5, value: 4.8 },
+          reviewText: 'After hiking up the steep hill from Phakding, stepping into Yeti Mountain Home with hot showers and warm heated blankets was paradise.',
+          tripType: 'Solo',
+          createdAt: '2026-02-18T16:00:00Z',
+        },
+      ],
+    },
+    {
+      id: 'htl_shinta_mani',
+      businessId: 'biz_1',
+      name: 'Shinta Mani Mustang - A Bensley Collection',
+      tagline: 'Ultra-Luxury Sanctuary Designed by Bill Bensley in Ancient Mustang',
+      description:
+        'An extraordinary 29-suite luxury sanctuary in the rain-shadow kingdom of Mustang. Each suite boasts panoramic views of Mount Nilgiri, bespoke Tibetan hand-knotted textiles, private Sherpa butler service, all-inclusive gourmet dining, and curated private expeditions into the walled medieval capital of Lo Manthang.',
+      location: 'Marpha & Jomsom, Mustang',
+      district: 'Mustang (Kingdom of Lo)',
+      region: 'Trans-Himalayan Plateau',
+      address: 'Nilgiri View Ridge, Jomsom 33100, Mustang, Nepal',
+      coordinates: { lat: 28.784, lng: 83.743 },
+      rating: 4.99,
+      reviewsCount: 128,
+      starRating: 5,
+      category: 'Luxury Heritage',
+      basePriceNpr: 112000,
+      basePriceUsd: 850,
+      heroImage: 'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'All-Inclusive Experiential Stays',
+        'Private Dedicated Sherpa Butler',
+        'Nilgiri Spa by Tibetan Traditional Amchi',
+        'Helicopter Pad On-Site',
+        'Curated 4x4 Overland Expeditions',
+        'Fine Dining Himalayan Wine Cellar',
+        'Personalized Trekking Permits Coordination',
+      ],
+      propertyHighlights: [
+        'Awarded World’s Best High-Altitude Luxury Resort by Condé Nast Traveler',
+        'Personal Amchi (Tibetan medicine doctor) wellness consultations included',
+        'Private helicopter access directly onto the resort’s private mountain pad',
+      ],
+      checkInTime: '14:00',
+      checkOutTime: '12:00',
+      policies: {
+        cancellation: 'Free cancellation up to 14 days before arrival. 50% deposit required at reservation.',
+        childPolicy: 'Welcome for children over 10 years of age.',
+        pets: 'Pets not permitted.',
+        smoking: 'Non-smoking suites throughout.',
+      },
+      contactPhone: '+977 69 440120',
+      contactEmail: 'mustang@shintamani.com',
+      rooms: [
+        {
+          id: 'rm_shinta_nilgiri_suite',
+          hotelId: 'htl_shinta_mani',
+          name: 'Nilgiri Mountain View Suite',
+          description: 'A masterpiece of sustainable architecture with floor-to-ceiling vistas of Mount Nilgiri, handcrafted Yak bone and stone furniture, and open fireplace.',
+          capacityAdults: 2,
+          capacityChildren: 1,
+          bedType: '1 Super King Bed',
+          roomSizeM2: 68,
+          pricePerNightNpr: 112000,
+          pricePerNightUsd: 850,
+          availableInventory: 5,
+          totalInventory: 6,
+          images: [
+            'https://images.unsplash.com/photo-1570789210967-2cac24afeb00?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Nilgiri View Fireplace', 'Personal Butler', 'All Excursions Included', 'Copper Soaking Tub', 'Daily High-Altitude Massage'],
+          cancellationPolicy: 'Free cancellation up to 14 days before arrival',
+          mealPlan: 'All-Inclusive',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_sm_1',
+          hotelId: 'htl_shinta_mani',
+          userId: 'usr_traveler_1',
+          userName: 'Lord Arthur Sterling',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 5, service: 5, value: 5 },
+          reviewText: 'One of the most extraordinary hotel experiences on planet Earth. The private excursions with their master guides were phenomenal.',
+          tripType: 'Couple',
+          createdAt: '2026-02-05T12:00:00Z',
+        },
+      ],
+    },
+    {
+      id: 'htl_barahi',
+      businessId: 'biz_2',
+      name: 'Barahi Jungle Lodge',
+      tagline: 'Riverfront Eco-Luxury & Wild Tiger Safaris on the Rapti River',
+      description:
+        'Nestled along the Rapti River facing the primary jungle of Chitwan National Park. Features standalone thatched eco-cottages, an infinity swimming pool right on the riverbank, and guided walking safaris with legendary local naturalists.',
+      location: 'Meghauli, Chitwan',
+      district: 'Chitwan National Park',
+      region: 'Southern Terai',
+      address: 'Andrauli, Meghauli, Chitwan 44200, Nepal',
+      coordinates: { lat: 27.578, lng: 84.225 },
+      rating: 4.88,
+      reviewsCount: 240,
+      starRating: 5,
+      category: 'Eco Retreat',
+      basePriceNpr: 29000,
+      basePriceUsd: 220,
+      heroImage: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1588714477688-cf28a50e94f7?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'Riverbank Infinity Swimming Pool',
+        'Private Wooden River Decks',
+        'Jeep & River Boat Safaris with Naturalists',
+        'Tharu Cultural Performances',
+        'Banyan Bush Dinners under Stars',
+        'Tiger & Rhino Tracking Excursions',
+      ],
+      propertyHighlights: [
+        'Watch wild rhinos and crocodiles drinking from the river straight from your cottage',
+        '100% solar-assisted eco-sustainable resort architecture',
+        'Private canoe boat safaris at golden sunrise',
+      ],
+      checkInTime: '13:00',
+      checkOutTime: '11:00',
+      policies: {
+        cancellation: 'Free cancellation up to 48 hours prior to check-in.',
+        childPolicy: 'Children of all ages welcome. Baby cots available upon request.',
+        pets: 'Pets not permitted due to national park wildlife regulations.',
+        smoking: 'Outdoor areas only.',
+      },
+      contactPhone: '+977 56 695333',
+      contactEmail: 'info@barahijunglelodge.com',
+      rooms: [
+        {
+          id: 'rm_barahi_river_cottage',
+          hotelId: 'htl_barahi',
+          name: 'Deluxe Riverfront Safari Cottage',
+          description: 'Stand-alone luxury cottage built from local bamboo, mud, and thatch with private wooden veranda gazing into Chitwan National Park.',
+          capacityAdults: 2,
+          capacityChildren: 1,
+          bedType: '1 King Bed or 2 Twin Beds',
+          roomSizeM2: 48,
+          pricePerNightNpr: 29000,
+          pricePerNightUsd: 220,
+          availableInventory: 14,
+          totalInventory: 16,
+          images: [
+            'https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Private River Veranda', 'Deep Soaking Tub', 'Complimentary Jungle Safari', 'Binoculars in Room'],
+          cancellationPolicy: 'Free cancellation until 48h before arrival',
+          mealPlan: 'All-Inclusive',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_bj_1',
+          hotelId: 'htl_barahi',
+          userId: 'usr_traveler_1',
+          userName: 'Nadia Petrov',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 4.9, comfort: 5, location: 5, service: 5, value: 4.8 },
+          reviewText: 'We saw two one-horned rhinos crossing the river right in front of our balcony during afternoon tea! Exceptional naturalists.',
+          tripType: 'Family',
+          createdAt: '2026-01-30T10:00:00Z',
+        },
+      ],
+    },
+    {
+      id: 'htl_everest_view',
+      businessId: 'biz_1',
+      name: 'Hotel Everest View',
+      tagline: 'Guinness World Record Holder at 3,880m with Direct Everest Summit Panorama',
+      description:
+        'Established in 1971 and opened by legendary mountaineers, Hotel Everest View sits on a forested ridge above Namche Bazaar. Recognized by the Guinness Book of World Records as the highest placed luxury hotel in the world, every single room commands an unobstructed direct view of Mount Everest, Lhotse, and Ama Dablam.',
+      location: 'Syangboche (3,880m), Everest',
+      district: 'Solukhumbu',
+      region: 'Everest Region',
+      address: 'Syangboche Ridge, Sagarmatha National Park, Nepal',
+      coordinates: { lat: 27.82, lng: 86.72 },
+      rating: 4.98,
+      reviewsCount: 310,
+      starRating: 5,
+      category: 'Boutique Lodge',
+      basePriceNpr: 42000,
+      basePriceUsd: 315,
+      heroImage: 'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=1400&q=85',
+      images: [
+        'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=1200&q=80',
+        'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=1200&q=80',
+      ],
+      amenities: [
+        'Direct Everest Terrace Dining',
+        'Pressurized Oxygen En-Suite Rooms',
+        'Private Helicopter Landing Pad',
+        'Japanese Stone Garden in High Alpine',
+        'Authentic Dining with Organic Bakery',
+        'Satellite Wi-Fi',
+      ],
+      propertyHighlights: [
+        'Every single room has a private balcony directly facing Mount Everest',
+        'Private helipad connecting directly to Kathmandu Tribhuvan Airport in 45 mins',
+        'Oxygen concentrators in all bedrooms for restful sleep at 3,880m',
+      ],
+      checkInTime: '13:00',
+      checkOutTime: '11:00',
+      policies: {
+        cancellation: 'Free cancellation up to 5 days before arrival.',
+        childPolicy: 'Suitable for travelers acclimatized above 3,000m.',
+        pets: 'Pets not allowed.',
+        smoking: 'Non-smoking.',
+      },
+      contactPhone: '+977 1 4412508',
+      contactEmail: 'hev@himalayan-hotel.com',
+      rooms: [
+        {
+          id: 'rm_ev_everest_facing',
+          hotelId: 'htl_everest_view',
+          name: 'Everest Panorama Luxury Room',
+          description: 'Iconic room with floor-to-ceiling glass doors opening directly toward Mt. Everest, Lhotse, and Ama Dablam.',
+          capacityAdults: 2,
+          capacityChildren: 0,
+          bedType: '1 King Bed or 2 Twins',
+          roomSizeM2: 34,
+          pricePerNightNpr: 42000,
+          pricePerNightUsd: 315,
+          availableInventory: 12,
+          totalInventory: 12,
+          images: [
+            'https://images.unsplash.com/photo-1585409677983-0f6c41ca9c3b?auto=format&fit=crop&w=800&q=80',
+          ],
+          amenities: ['Direct Everest Balcony', 'Oxygen Enriched System', 'Attached Hot Shower', 'Thermal Fleece Blankets'],
+          cancellationPolicy: 'Free cancellation until 5 days before arrival',
+          mealPlan: 'Breakfast Included',
+        },
+      ],
+      reviews: [
+        {
+          id: 'rev_hev_1',
+          hotelId: 'htl_everest_view',
+          userId: 'usr_traveler_1',
+          userName: 'Captain Thomas Reed',
+          rating: 5,
+          ratingsBreakdown: { cleanliness: 5, comfort: 5, location: 5, service: 5, value: 5 },
+          reviewText: 'Having morning cappuccino on the terrace while watching the morning sun illuminate Everest summit is something I will remember for the rest of my life.',
+          tripType: 'Couple',
+          createdAt: '2026-02-12T07:45:00Z',
+        },
+      ],
+    },
+  ];
+}
+
 class DatabaseManager {
   private state: DatabaseState;
 
@@ -1439,7 +2174,12 @@ class DatabaseManager {
     try {
       if (fs.existsSync(DATA_FILE)) {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
-        return JSON.parse(raw);
+        const state = JSON.parse(raw);
+        if (!state.hotels || !Array.isArray(state.hotels) || state.hotels.length === 0) {
+          state.hotels = getInitialHotels();
+          this.saveDirect(state);
+        }
+        return state;
       }
     } catch (err) {
       console.error('[dbStore] Error reading persistent storage, initializing defaults:', err);
