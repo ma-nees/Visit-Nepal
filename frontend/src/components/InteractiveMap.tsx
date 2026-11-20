@@ -288,7 +288,7 @@ export default function InteractiveMap() {
   };
 
   return (
-    <div className="w-full bg-[#FAF9F6] text-slate-900 rounded-xl p-5 sm:p-8 lg:p-10 border border-slate-200/80 font-inter select-none">
+    <div className="w-full bg-white text-slate-900 rounded-xl p-5 sm:p-8 lg:p-10 border border-slate-200/80 font-inter select-none shadow-xs">
       {/* =========================================================================
           1. EDITORIAL HEADER & CARTOGRAPHIC ATLAS IDENTIFIER
           ========================================================================= */}
