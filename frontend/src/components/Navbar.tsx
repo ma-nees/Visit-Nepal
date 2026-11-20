@@ -177,7 +177,7 @@ export default function Navbar() {
     <header
       className={`${positionClass} z-50 w-full transition-all duration-300 ease-in-out ${headerBgClass} border-t-0 m-0`}
     >
-      <div className="flex h-12 sm:h-13 lg:h-[52px] w-full items-center justify-between px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20">
+      <div className="flex h-11 sm:h-12 lg:h-[52px] w-full items-center justify-between px-3 sm:px-6 lg:px-12 xl:px-16 2xl:px-20">
         {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled or open) */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group py-0.5">
           <img
@@ -186,7 +186,7 @@ export default function Navbar() {
             onError={(e) => {
               (e.target as HTMLImageElement).src = '/logo-brand.webp';
             }}
-            className="h-6 sm:h-7 w-auto object-contain transition-transform group-hover:scale-[1.02]"
+            className="h-5 sm:h-6 lg:h-7 w-auto max-w-[130px] sm:max-w-none object-contain transition-transform group-hover:scale-[1.02]"
           />
         </Link>
 
@@ -222,7 +222,7 @@ export default function Navbar() {
         </nav>
 
         {/* Right Controls: Sign In or Authenticated User Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {currentUser ? (
             <>
               {/* Messages shortcut (desktop) */}
@@ -240,27 +240,27 @@ export default function Navbar() {
               {/* Role Badge Indicator: Direct shortcut to user's dashboard */}
               <Link
                 href={getRolePortalPath(currentUser.role || role)}
-                className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold tracking-wide transition-all active:scale-95 ${isTransparent
+                className={`inline-flex items-center gap-1 sm:gap-1.5 px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-md text-[11px] sm:text-xs font-semibold tracking-tight transition-all active:scale-95 shrink-0 ${isTransparent
                   ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
                   : 'bg-blue-50 hover:bg-blue-100/80 text-[#0552A2] border border-blue-200/80'
                   }`}
                 title={`Open ${currentUser.role || role || 'Traveler'} Dashboard`}
               >
-                <LayoutDashboard className="h-3 w-3" />
-                <span className="capitalize">{currentUser.role || role || 'Traveler'}</span>
+                <LayoutDashboard className="h-3 w-3 shrink-0" />
+                <span className="capitalize truncate max-w-[65px] sm:max-w-none">{currentUser.role || role || 'Traveler'}</span>
               </Link>
 
               {/* User Profile: Direct redirect to /profile */}
               <Link
                 href="/profile"
-                className={`flex h-8 w-8 items-center justify-center rounded-lg transition-colors cursor-pointer ${isTransparent
+                className={`flex h-7.5 w-7.5 sm:h-8 sm:w-8 items-center justify-center rounded-lg transition-colors cursor-pointer shrink-0 ${isTransparent
                   ? 'text-white/90 hover:text-white hover:bg-white/10'
                   : 'text-slate-700 hover:text-[#0552A2] hover:bg-slate-100'
                   }`}
                 title="My Profile & Switch User"
                 aria-label="My Profile & Switch User"
               >
-                <UserCircle2 className="h-5 w-5" />
+                <UserCircle2 className="h-4.5 w-4.5 sm:h-5 sm:w-5" />
               </Link>
             </>
           ) : (
@@ -268,7 +268,7 @@ export default function Navbar() {
               {/* Logged Out Visitor State: Sign In Button */}
               <Link
                 href="/login"
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg text-xs font-medium font-inter tracking-wide transition-colors cursor-pointer ${isTransparent
+                className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1 sm:py-1.5 rounded-lg text-xs font-medium font-inter tracking-wide transition-colors cursor-pointer shrink-0 ${isTransparent
                   ? 'bg-white/15 hover:bg-white/25 text-white border border-white/25'
                   : 'bg-white hover:bg-slate-50 text-[#0552A2] border border-slate-200 shadow-xs'
                   }`}
@@ -283,7 +283,7 @@ export default function Navbar() {
           <button
             type="button"
             onClick={toggleMobile}
-            className={`lg:hidden relative flex h-9 w-9 items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer select-none ${
+            className={`lg:hidden relative flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-lg transition-colors duration-150 cursor-pointer select-none shrink-0 ${
               isTransparent
                 ? 'text-white hover:bg-white/10'
                 : 'text-[#10243A] hover:bg-slate-100'
@@ -291,20 +291,20 @@ export default function Navbar() {
             aria-label={mobileOpen ? 'Close Navigation Menu' : 'Open Navigation Menu'}
             aria-expanded={mobileOpen}
           >
-            <div className="relative w-5 h-4 flex flex-col justify-between items-center pointer-events-none">
+            <div className="relative w-4.5 h-3.5 flex flex-col justify-between items-center pointer-events-none">
               <span
-                className={`block h-[2px] w-5 rounded-full transition-all duration-200 origin-center ${
-                  mobileOpen ? 'translate-y-[7px] rotate-45' : ''
+                className={`block h-[2px] w-4.5 rounded-full transition-all duration-250 origin-center ${
+                  mobileOpen ? 'translate-y-[5.5px] rotate-45' : ''
                 } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
               <span
-                className={`block h-[2px] w-5 rounded-full transition-all duration-150 ${
-                  mobileOpen ? 'opacity-0 -translate-x-2' : 'opacity-100'
+                className={`block h-[2px] w-4.5 rounded-full transition-all duration-200 ${
+                  mobileOpen ? 'opacity-0 scale-x-0' : 'opacity-100'
                 } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
               <span
-                className={`block h-[2px] w-5 rounded-full transition-all duration-200 origin-center ${
-                  mobileOpen ? '-translate-y-[7px] -rotate-45' : ''
+                className={`block h-[2px] w-4.5 rounded-full transition-all duration-250 origin-center ${
+                  mobileOpen ? '-translate-y-[5.5px] -rotate-45' : ''
                 } ${isTransparent ? 'bg-white' : 'bg-slate-800'}`}
               />
             </div>
@@ -312,7 +312,7 @@ export default function Navbar() {
         </div>
       </div>
 
-      {/* Mobile Shutter Overlay & Dropdown Menu with Cinematic Zoom-In & Staggered Reveal */}
+      {/* Mobile Shutter Overlay & Dropdown Menu with Smooth Spring Reveal */}
       <AnimatePresence onExitComplete={() => setIsMenuExiting(false)}>
         {mobileOpen && (
           <>
@@ -322,9 +322,9 @@ export default function Navbar() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
+              transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
               onClick={closeMobile}
-              className="lg:hidden fixed inset-0 top-12 sm:top-13 lg:top-[52px] bg-slate-950/50 backdrop-blur-sm z-40"
+              className="lg:hidden fixed inset-0 top-11 sm:top-12 lg:top-[52px] bg-slate-950/50 backdrop-blur-sm z-40"
               aria-hidden="true"
             />
 
@@ -342,7 +342,7 @@ export default function Navbar() {
                 y: -6,
                 transition: { duration: 0.15, ease: 'easeIn' },
               }}
-              className="lg:hidden relative z-50 border-t border-slate-200 bg-white px-5 pt-3.5 pb-6 space-y-3 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-xl rounded-b-2xl border-b border-slate-200/90"
+              className="lg:hidden relative z-50 border-t border-slate-200 bg-white px-4 sm:px-6 pt-3 pb-5 space-y-2.5 text-[#10243A] max-h-[85vh] overflow-y-auto font-inter shadow-xl rounded-b-2xl border-b border-slate-200/90"
             >
               <div className="space-y-0.5">
                 {/* Direct Dashboard Shortcut for Signed-in User on Mobile */}
