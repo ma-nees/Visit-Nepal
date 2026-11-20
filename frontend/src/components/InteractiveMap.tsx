@@ -377,7 +377,7 @@ export default function InteractiveMap() {
       <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-stretch">
         {/* Left: Authentic Vector Map Canvas (Col 1 to 7) */}
         <div className="lg:col-span-7 flex flex-col">
-          <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] rounded-lg bg-[#F3F6F9] border border-slate-200/90 overflow-hidden flex items-center justify-center select-none shadow-xs flex-1">
+          <div className="relative w-full aspect-[16/11] sm:aspect-[16/10] rounded-lg bg-white border border-slate-200/90 overflow-hidden flex items-center justify-center select-none shadow-xs flex-1">
             {/* Top Left: Authentic Cartographic Survey Notation */}
             <div className="absolute top-3.5 left-4 z-20 hidden sm:flex items-center gap-2 text-[10px] tracking-wider text-slate-500 font-mono">
               <Compass className="h-3 w-3 text-[#0552A2]" />

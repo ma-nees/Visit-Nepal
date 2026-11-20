@@ -353,7 +353,7 @@ export default function DestinationsPage() {
       </section>
 
       {/* 3. Interactive Nepal Map Embedded */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-16">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-16 bg-white">
         <ScrollReveal direction="up" duration={700} distance={20}>
           <InteractiveMap />
         </ScrollReveal>

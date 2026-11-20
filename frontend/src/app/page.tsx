@@ -769,7 +769,7 @@ export default function HomePage() {
       {/* =========================================================================
           7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
           ========================================================================= */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
+      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20 bg-white">
         <ScrollReveal direction="up" duration={700} distance={20}>
           <InteractiveMap />
         </ScrollReveal>
