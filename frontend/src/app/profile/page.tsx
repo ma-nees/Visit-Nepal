@@ -19,9 +19,6 @@ import {
   Shield,
   ShieldAlert,
   X,
-  Printer,
-  Maximize2,
-  QrCode,
   ShieldCheck,
   MapPin,
   Sparkles,
@@ -49,11 +46,6 @@ import {
   type LucideIcon,
 } from 'lucide-react';
 import { useApp, UserRole } from '@/context/AppContext';
-import {
-  printOfficialReceipt,
-  downloadOfficialReceiptHtml,
-  sanitizeName,
-} from '@/lib/receiptGenerator';
 
 interface PersonaProfile {
   role: UserRole;
@@ -196,51 +188,6 @@ const personaProfiles: PersonaProfile[] = [
   },
 ];
 
-/* Crisp Barcode Pattern Generator */
-function BarcodePattern({ value, height = 36 }: { value: string; height?: number }) {
-  const bars = [
-    3, 1, 2, 2, 1, 3, 1, 2, 3, 1, 1, 2, 2, 3, 1, 2, 1, 1, 3, 2, 1, 2, 3, 1,
-    2, 1, 1, 3, 2, 2, 1, 3, 1, 1, 2, 3, 2, 1, 1, 2, 3, 1, 2, 2, 1, 3, 1, 2,
-    1, 3, 2, 1, 2, 2, 3, 1, 1, 2, 3, 2, 1, 1, 3, 2, 1, 2, 3, 1, 2, 1, 1, 3,
-  ];
-
-  let currentX = 2;
-  const rects: React.ReactNode[] = [];
-
-  bars.forEach((width, idx) => {
-    if (idx % 2 === 0) {
-      rects.push(
-        <rect
-          key={idx}
-          x={currentX}
-          y="0"
-          width={width * 1.15}
-          height={height}
-          fill="#0f172a"
-        />
-      );
-    }
-    currentX += width * 1.6;
-  });
-
-  return (
-    <div className="flex flex-col items-center">
-      <svg
-        style={{ height: `${height}px` }}
-        className="w-full max-w-[260px]"
-        viewBox={`0 0 ${currentX + 4} ${height}`}
-        preserveAspectRatio="none"
-        shapeRendering="crispEdges"
-      >
-        {rects}
-      </svg>
-      <span className="mt-1 font-mono text-[9px] font-bold tracking-widest text-slate-500 uppercase">
-        {value}
-      </span>
-    </div>
-  );
-}
-
 export default function ProfilePage() {
   const router = useRouter();
   const { currentUser, role, setRole, bookings, logout, showToast } = useApp();
@@ -303,7 +250,6 @@ export default function ProfilePage() {
   const [isEditPreferencesOpen, setIsEditPreferencesOpen] = useState(false);
   const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
-  const [isTimsModalOpen, setIsTimsModalOpen] = useState(false);
   const [isSavedPlacesOpen, setIsSavedPlacesOpen] = useState(false);
   const [isReviewsOpen, setIsReviewsOpen] = useState(false);
   const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
@@ -360,7 +306,6 @@ export default function ProfilePage() {
         setIsEditPreferencesOpen(false);
         setIsChangePasswordOpen(false);
         setIsAvatarModalOpen(false);
-        setIsTimsModalOpen(false);
         setIsSavedPlacesOpen(false);
         setIsReviewsOpen(false);
         setIsDocumentsOpen(false);
@@ -431,38 +376,6 @@ export default function ProfilePage() {
     logout();
     if (showToast) showToast('Signed out of session');
     router.push('/login');
-  };
-
-  // Download QR Code utility
-  const handleDownloadQr = () => {
-    const canvas = document.createElement('canvas');
-    canvas.width = 320;
-    canvas.height = 320;
-    const ctx = canvas.getContext('2d');
-    if (ctx) {
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, 320, 320);
-      ctx.fillStyle = '#0552A2';
-      ctx.font = 'bold 16px sans-serif';
-      ctx.fillText('VISIT NEPAL TIMS 2026', 45, 40);
-      ctx.fillStyle = '#031526';
-      for (let i = 0; i < 18; i++) {
-        for (let j = 0; j < 18; j++) {
-          if ((i + j) % 2 === 0 || (i * j) % 3 === 0) {
-            ctx.fillRect(52 + i * 12, 60 + j * 12, 11, 11);
-          }
-        }
-      }
-      ctx.font = '12px monospace';
-      ctx.fillStyle = '#64748b';
-      ctx.fillText(`TOKEN: VN-2026-${activeRole.toUpperCase()}`, 50, 300);
-
-      const a = document.createElement('a');
-      a.download = `TIMS-QR-${activeRole.toUpperCase()}.png`;
-      a.href = canvas.toDataURL('image/png');
-      a.click();
-      if (showToast) showToast('QR Code saved to downloads');
-    }
   };
 
   const bookingCount = Array.isArray(bookings) && bookings.length > 0 ? bookings.length : 12;
@@ -821,7 +734,14 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* 6. Personal Information Card */}
+          </div>
+
+          {/* -----------------------------------------------------------------------
+              RIGHT COLUMN (lg:col-span-5): Identity Details, Preferences & Security
+              ----------------------------------------------------------------------- */}
+          <div className="lg:col-span-5 space-y-5 sm:space-y-6">
+
+            {/* 1. Personal Information Card */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
@@ -891,7 +811,7 @@ export default function ProfilePage() {
               </dl>
             </div>
 
-            {/* 7. Travel Preferences Card */}
+            {/* 2. Travel Preferences Card */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-4">
               <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
@@ -952,207 +872,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-          </div>
-
-          {/* -----------------------------------------------------------------------
-              RIGHT COLUMN (lg:col-span-5): The Iconic Digital TIMS Pass Ticket Card
-              ----------------------------------------------------------------------- */}
-          <div className="lg:col-span-5 space-y-6">
-            
-            {/* THE DIGITAL TIMS PASS TICKET CARD (Image 1 Exact Match) */}
-            <div className="relative w-full max-w-[420px] lg:max-w-[440px] xl:max-w-[460px] mx-auto pt-3">
-              
-              {/* Floating "Click to inspect full details" Pill Button */}
-              <div className="flex justify-center -mb-3.5 z-30 relative">
-                <button
-                  type="button"
-                  onClick={() => setIsTimsModalOpen(true)}
-                  className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full bg-[#0552A2] hover:bg-[#044182] text-white text-xs font-bold shadow-md hover:shadow-lg transition-all cursor-pointer transform hover:-translate-y-0.5 active:translate-y-0"
-                >
-                  <Maximize2 className="h-3.5 w-3.5" />
-                  <span>Click to inspect full details</span>
-                </button>
-              </div>
-
-              {/* Ticket Card Container with Authentic Physical Notches */}
-              <div
-                onClick={() => setIsTimsModalOpen(true)}
-                className="group relative cursor-pointer select-none rounded-2xl bg-white text-slate-900 border border-slate-200/90 shadow-md hover:shadow-xl transition-all overflow-hidden"
-              >
-                {/* Top Himalayan Tricolor Dash Strip */}
-                <div className="h-2 bg-[repeating-linear-gradient(90deg,#0552A2_0_24px,#EC1F27_24px_48px,#FDB716_48px_72px,#0552A2_72px_96px,#ffffff_96px_110px)]" />
-
-                {/* Upper Section */}
-                <div className="p-5 sm:p-6 pb-4 space-y-3 relative">
-                  <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-center gap-2.5">
-                      <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#031526] text-[#FDB716] shadow-xs">
-                        <Compass className="h-5 w-5" />
-                      </div>
-                      <div>
-                        <h4 className="font-poppins text-base font-bold text-slate-900 leading-none">
-                          Visit Nepal
-                        </h4>
-                        <p className="mt-1 text-[11px] font-medium text-slate-500">
-                          Digital TIMS pass
-                        </p>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center gap-1.5">
-                      <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-emerald-100/90 px-2.5 py-0.5 text-xs font-semibold text-emerald-800">
-                        <Check className="h-3.5 w-3.5 stroke-[2.5]" />
-                        Verified
-                      </span>
-                      <Maximize2 className="h-3.5 w-3.5 text-blue-600 group-hover:scale-110 transition-transform" />
-                    </div>
-                  </div>
-
-                  {/* Holder Identity */}
-                  <div className="pt-2">
-                    <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">
-                      HOLDER
-                    </p>
-                    <p className="font-poppins text-lg sm:text-xl font-bold text-slate-900 leading-tight">
-                      {profileData.name}
-                    </p>
-                    <p className="text-xs sm:text-sm font-semibold text-[#0552A2]">
-                      {profileData.title || 'Traveler'}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Perforated Seam with Genuine Cutout Notches */}
-                <div className="relative py-1">
-                  {/* Left Semi-Circular Notch */}
-                  <span className="absolute -left-3.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-[#F8FAFC] border-r border-slate-200/90 shadow-inner z-20 pointer-events-none" />
-                  {/* Right Semi-Circular Notch */}
-                  <span className="absolute -right-3.5 top-1/2 -translate-y-1/2 h-7 w-7 rounded-full bg-[#F8FAFC] border-l border-slate-200/90 shadow-inner z-20 pointer-events-none" />
-                  {/* Dashed Line */}
-                  <div className="border-t-2 border-dashed border-slate-200 mx-5" />
-                </div>
-
-                {/* Lower Section with Key Telemetry */}
-                <div className="p-5 sm:p-6 pt-3 space-y-3.5 text-xs">
-                  {/* Registered Email */}
-                  <div className="flex items-start gap-2.5">
-                    <Mail className="h-4 w-4 text-[#0552A2] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                        REGISTERED EMAIL
-                      </span>
-                      <span className="font-semibold text-slate-800 break-all text-xs sm:text-[13px]">
-                        {profileData.email}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Emergency Hotline & Jurisdiction */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-0.5">
-                    <div className="flex items-start gap-2">
-                      <Phone className="h-4 w-4 text-red-600 shrink-0 mt-0.5" />
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                          EMERGENCY HOTLINE
-                        </span>
-                        <span className="font-bold text-red-600 text-xs">
-                          +977 1 4256909 / 1144
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="flex items-start gap-2">
-                      <Globe className="h-4 w-4 text-[#0552A2] shrink-0 mt-0.5" />
-                      <div>
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                          JURISDICTION
-                        </span>
-                        <span className="font-semibold text-slate-800 text-xs">
-                          Nepal Tourism Authority
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bookings */}
-                  <div className="flex items-start gap-2.5 pt-0.5">
-                    <Calendar className="h-4 w-4 text-[#0552A2] shrink-0 mt-0.5" />
-                    <div>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
-                        BOOKINGS
-                      </span>
-                      <span className="font-semibold text-slate-800 text-xs">
-                        {bookingCount} bookings
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Crisp Barcode Pattern */}
-                  <div className="pt-3 border-t border-slate-100 flex flex-col items-center">
-                    <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} height={38} />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Quick Actions Bar for Ticket & Documents */}
-            <div className="flex flex-wrap items-center justify-between gap-2.5 bg-white rounded-2xl border border-slate-200/90 p-4 shadow-xs">
-              <button
-                type="button"
-                onClick={() => setIsTimsModalOpen(true)}
-                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-3.5 py-2 text-xs font-semibold shadow-xs transition-colors cursor-pointer flex-1 justify-center"
-              >
-                <Maximize2 className="h-3.5 w-3.5" />
-                <span>Inspect Pass</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() =>
-                  printOfficialReceipt({
-                    invoiceNumber: `VN-TIMS-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                    bookingId: `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                    qrCode: `VN-TIMS-${activeRole.toUpperCase()}-VERIFIED-2026`,
-                    travelerName: sanitizeName(profileData.name),
-                    travelerEmail: profileData.email,
-                    travelerPhone: profileData.phone,
-                    packageTitle: `Official TIMS Permit & Clearance (${profileData.title})`,
-                    departureDate: '2026-05-15',
-                    provider: 'Nepal Tourism Board Desks',
-                    assignedGuide: 'IFMGA Certified Sherpa Guide',
-                    meetingPoint: 'Kathmandu Departure Base / Lukla Hub',
-                    items: [
-                      {
-                        description: 'Government TIMS Trekking Clearance Pass',
-                        details: 'Official checkpoint entry documentation',
-                        qty: '1 Pass',
-                        amountNpr: 15000,
-                      },
-                    ],
-                    subtotalNpr: 15000,
-                    serviceChargeNpr: 750,
-                    vatNpr: 1950,
-                    totalNpr: 17700,
-                  })
-                }
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 px-3.5 py-2 text-xs font-semibold shadow-2xs transition-colors cursor-pointer flex-1 justify-center"
-              >
-                <Printer className="h-3.5 w-3.5 text-[#0552A2]" />
-                <span>Print Pass</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex items-center gap-1.5 rounded-xl border border-slate-200 bg-white hover:bg-red-50 text-slate-600 hover:text-red-600 px-3 py-2 text-xs font-medium transition-colors cursor-pointer"
-                title="Sign out of account"
-              >
-                <LogOut className="h-3.5 w-3.5" />
-                <span className="hidden sm:inline">Sign Out</span>
-              </button>
-            </div>
-
-            {/* Emergency & Mountain Safety Details */}
+            {/* 3. Emergency & Mountain Safety Details */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 space-y-3">
               <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/80">
                 <ShieldCheck className="h-4 w-4 text-red-600" />
@@ -1192,7 +912,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            {/* Account Security & Privacy Card */}
+            {/* 4. Account Security & Privacy Card */}
             <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 space-y-3">
               <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/80">
                 <div className="flex items-center gap-2">
@@ -1231,6 +951,19 @@ export default function ProfilePage() {
                   <span className="h-2 w-2 rounded-full bg-emerald-500" />
                 </div>
               </div>
+
+              {/* Sign Out Action */}
+              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
+                <span className="text-[11px] text-slate-400 font-medium">Session Control</span>
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50/70 hover:bg-red-100 text-red-600 text-xs font-semibold transition-colors cursor-pointer"
+                >
+                  <LogOut className="h-3.5 w-3.5" />
+                  <span>Sign Out</span>
+                </button>
+              </div>
             </div>
 
           </div>
@@ -1263,248 +996,6 @@ export default function ProfilePage() {
           <span>Account</span>
         </Link>
       </nav>
-
-      {/* =========================================================================
-          MODAL 1: FULL DIGITAL TIMS PASS INSPECTOR MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isTimsModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.25, ease: 'easeInOut' }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-2 sm:p-4 md:p-6 overflow-hidden bg-slate-950/80 backdrop-blur-md"
-            onClick={() => setIsTimsModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.94, y: 15, opacity: 0 }}
-              animate={{ scale: 1, y: 0, opacity: 1 }}
-              exit={{ scale: 0.95, y: 10, opacity: 0 }}
-              transition={{ duration: 0.32, ease: [0.16, 1, 0.3, 1] }}
-              onClick={(e) => e.stopPropagation()}
-              className="relative flex flex-col w-full max-w-xl xl:max-w-2xl bg-white shadow-2xl border border-slate-200/90 text-slate-900 rounded-2xl sm:rounded-3xl overflow-hidden font-inter"
-              style={{
-                maxHeight: 'min(94dvh, calc(100dvh - 1.5rem))',
-                width: 'min(100%, 42rem)',
-              }}
-            >
-              {/* Top Himalayan Tricolor Dash Strip */}
-              <div className="h-2 sm:h-2.5 bg-[repeating-linear-gradient(90deg,#0552A2_0_30px,#FDB716_30px_60px,#EC1F27_60px_90px,#ffffff_90px_120px)] shrink-0" />
-
-              {/* Fixed Header Bar */}
-              <div className="shrink-0 px-4 sm:px-6 py-3 sm:py-3.5 border-b border-slate-200/80 flex items-center justify-between gap-3 bg-white z-20">
-                <div className="flex items-center gap-3 min-w-0">
-                  <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl bg-[#031526] text-[#FDB716] shadow-xs shrink-0">
-                    <Compass className="h-5 w-5 sm:h-6 sm:w-6" />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-[#0552A2] truncate">
-                        Government of Nepal · Ministry of Tourism
-                      </span>
-                      <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2 py-0.5 text-[9px] sm:text-[10px] font-bold text-emerald-800">
-                        <CheckCircle2 className="h-2.5 w-2.5 stroke-[2.5]" />
-                        OFFICIAL VERIFIED
-                      </span>
-                    </div>
-                    <h2 className="font-poppins text-base sm:text-lg lg:text-xl font-bold text-slate-900 truncate">
-                      Visit Nepal Official Digital TIMS Pass
-                    </h2>
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsTimsModalOpen(false)}
-                  className="h-8 w-8 sm:h-9 sm:w-9 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-900 transition-colors cursor-pointer shrink-0"
-                  aria-label="Close pass details"
-                >
-                  <X className="h-4 w-4 sm:h-5 sm:w-5" />
-                </button>
-              </div>
-
-              {/* Middle Scrollable Content Area */}
-              <div className="flex-1 min-h-0 overflow-y-auto px-4 sm:px-6 py-3 sm:py-4 space-y-3 sm:space-y-3.5 scrollbar-thin">
-                <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4 space-y-2.5">
-                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0552A2]">
-                      1. Traveler Information
-                    </span>
-                    <span className="font-mono text-[10px] sm:text-xs font-bold text-slate-500">
-                      Pass ID: VN-2026-{activeRole.toUpperCase()}-8848
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Full Name</span>
-                      <p className="font-poppins font-bold text-slate-900 text-xs sm:text-sm mt-0.5 truncate">{profileData.name}</p>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Traveler Category</span>
-                      <p className="font-semibold text-[#0552A2] capitalize text-xs sm:text-[13px] mt-0.5">{profileData.title || 'Traveler'}</p>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Registered Email</span>
-                      <p className="font-medium text-slate-800 text-xs mt-0.5 truncate">{profileData.email}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50/70 p-3 sm:p-4 space-y-2.5">
-                  <div className="flex items-center justify-between border-b border-slate-200/80 pb-1.5">
-                    <span className="text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#0552A2]">
-                      2. Emergency &amp; Checkpoint Telemetry
-                    </span>
-                    <span className="text-[10px] font-bold text-red-600 bg-red-50 border border-red-200/70 px-2 py-0.5 rounded-full">
-                      Himalayan Rescue Active
-                    </span>
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 sm:gap-3 text-xs">
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Emergency Contact</span>
-                      <p className="font-semibold text-slate-900 text-xs sm:text-sm mt-0.5">{documents.emergencyPrimary}</p>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Satellite Messenger</span>
-                      <p className="font-mono font-semibold text-slate-900 text-xs mt-0.5">{documents.satelliteDevice}</p>
-                    </div>
-
-                    <div>
-                      <span className="text-slate-400 font-medium text-[10px] sm:text-[11px]">Total Active Bookings</span>
-                      <p className="font-bold text-[#0552A2] text-xs sm:text-sm mt-0.5">{bookingCount} Registered Routes</p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-xl sm:rounded-2xl border border-slate-200 bg-slate-50/70 p-3.5 sm:p-4">
-                  <div className="flex flex-col sm:flex-row items-center justify-between gap-4 sm:gap-6">
-                    <div className="space-y-1.5 flex-1 min-w-0">
-                      <div className="flex items-center gap-1.5">
-                        <ShieldCheck className="h-4 w-4 text-[#0552A2] shrink-0" />
-                        <span className="text-xs font-bold uppercase tracking-wider text-slate-900">
-                          Official Verification &amp; Checkpost Seal
-                        </span>
-                      </div>
-                      <p className="text-[11px] sm:text-xs text-slate-600 leading-relaxed">
-                        Authorized by Nepal Tourism Authority. Present this pass at Lukla, Namche, or Besisahar checkposts.
-                      </p>
-                      <div className="pt-1">
-                        <BarcodePattern value={`VN-2026-${activeRole.toUpperCase()}-SECURE`} height={36} />
-                      </div>
-                    </div>
-
-                    <div className="flex flex-col items-center justify-center rounded-xl bg-white p-2.5 shadow-sm border border-slate-200 shrink-0">
-                      <QrCode className="h-20 w-20 sm:h-24 sm:w-24 text-[#031526]" />
-                      <span className="mt-1 font-mono text-[8px] sm:text-[9px] font-bold text-slate-500 uppercase tracking-widest">
-                        CHECKPOST SCAN
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Fixed Action Footer */}
-              <div className="shrink-0 px-4 sm:px-6 py-2.5 sm:py-3 bg-white border-t border-slate-200/90 flex flex-wrap items-center justify-between gap-2.5 z-20">
-                <div className="flex flex-wrap items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() =>
-                      printOfficialReceipt({
-                        invoiceNumber: `VN-TIMS-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                        bookingId: `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                        qrCode: `VN-TIMS-${activeRole.toUpperCase()}-VERIFIED-2026`,
-                        travelerName: sanitizeName(profileData.name),
-                        travelerEmail: profileData.email,
-                        travelerPhone: profileData.phone,
-                        packageTitle: `Official TIMS Permit & Clearance (${profileData.title})`,
-                        departureDate: '2026-05-15',
-                        provider: 'Nepal Tourism Board Desks',
-                        assignedGuide: 'IFMGA Certified Sherpa Guide',
-                        meetingPoint: 'Kathmandu Departure Base / Lukla Hub',
-                        items: [
-                          {
-                            description: 'Government TIMS Trekking Clearance Pass',
-                            details: 'Official checkpoint entry documentation',
-                            qty: '1 Pass',
-                            amountNpr: 15000,
-                          },
-                        ],
-                        subtotalNpr: 15000,
-                        serviceChargeNpr: 750,
-                        vatNpr: 1950,
-                        totalNpr: 17700,
-                      })
-                    }
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] px-3.5 py-2 text-xs font-semibold text-white shadow-xs transition-colors"
-                  >
-                    <Printer className="h-3.5 w-3.5" />
-                    <span>Print Pass</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() =>
-                      downloadOfficialReceiptHtml({
-                        invoiceNumber: `VN-TIMS-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                        bookingId: `VN-BKG-2026-${Math.floor(10000 + Math.random() * 89999)}`,
-                        qrCode: `VN-TIMS-${activeRole.toUpperCase()}-VERIFIED-2026`,
-                        travelerName: sanitizeName(profileData.name),
-                        travelerEmail: profileData.email,
-                        travelerPhone: profileData.phone,
-                        packageTitle: `Official TIMS Permit & Clearance (${profileData.title})`,
-                        departureDate: '2026-05-15',
-                        provider: 'Nepal Tourism Board Desks',
-                        assignedGuide: 'IFMGA Certified Sherpa Guide',
-                        meetingPoint: 'Kathmandu Departure Base / Lukla Hub',
-                        items: [
-                          {
-                            description: 'Government TIMS Trekking Clearance Pass',
-                            details: 'Official checkpoint entry documentation',
-                            qty: '1 Pass',
-                            amountNpr: 15000,
-                          },
-                        ],
-                        subtotalNpr: 15000,
-                        serviceChargeNpr: 750,
-                        vatNpr: 1950,
-                        totalNpr: 17700,
-                      })
-                    }
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 transition-colors shadow-2xs"
-                  >
-                    <Download className="h-3.5 w-3.5 text-[#0552A2]" />
-                    <span>Download Receipt</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadQr}
-                    className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 px-3.5 py-2 text-xs font-semibold text-slate-700 transition-colors shadow-2xs"
-                  >
-                    <QrCode className="h-3.5 w-3.5 text-slate-500" />
-                    <span>Download QR</span>
-                  </button>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={() => setIsTimsModalOpen(false)}
-                  className="inline-flex cursor-pointer items-center gap-1.5 rounded-xl border border-slate-200 bg-slate-100 hover:bg-slate-200 px-3.5 py-2 text-xs font-semibold text-slate-700 transition-colors"
-                >
-                  <ArrowRight className="h-3.5 w-3.5 rotate-180 text-slate-500" />
-                  <span>Back to Ticket</span>
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
 
       {/* =========================================================================
           MODAL 2: EDIT PROFILE MODAL
@@ -2024,16 +1515,7 @@ export default function ProfilePage() {
                     <span className="font-semibold text-slate-800 block">Digital TIMS Permit</span>
                     <span className="text-[11px] text-slate-500 font-mono">{documents.timsPermitId}</span>
                   </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setIsDocumentsOpen(false);
-                      setIsTimsModalOpen(true);
-                    }}
-                    className="px-2.5 py-1 rounded-lg bg-[#0552A2] text-white text-xs font-semibold cursor-pointer"
-                  >
-                    View
-                  </button>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active Permit</span>
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
