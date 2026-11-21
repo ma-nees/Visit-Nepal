@@ -1,9 +1,8 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
 import {
   Award,
   Mail,
@@ -43,9 +42,17 @@ import {
   Home,
   ChevronRight,
   ExternalLink,
+  SlidersHorizontal,
+  Trash2,
+  Eye,
+  CheckSquare,
+  AlertTriangle,
+  Smartphone,
+  Laptop,
   type LucideIcon,
 } from 'lucide-react';
 import { useApp, UserRole } from '@/context/AppContext';
+import { Booking } from '@/data/mockData';
 
 interface PersonaProfile {
   role: UserRole;
@@ -90,10 +97,11 @@ const personaProfiles: PersonaProfile[] = [
     address: 'Kathmandu HQ, Bagmati 44600, Nepal',
     memberSince: 'Platform Founder 2020',
     title: 'Platform Director & Chief Administrator',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     portalLink: '/admin',
     portalLabel: 'super admin command center',
-    description: 'Full platform governance: global user management, dynamic RBAC matrices, platform financial settlements, hotel and package catalog approvals, and cryptographic audit stream.',
+    description:
+      'Full platform governance: global user management, dynamic RBAC matrices, platform financial settlements, hotel and package catalog approvals, and cryptographic audit stream.',
     highlights: ['Platform Commander', 'Financial Governance', 'Global Security Desk'],
   },
   {
@@ -107,11 +115,12 @@ const personaProfiles: PersonaProfile[] = [
     dob: '15 Aug 1994',
     address: 'Ward 26, Thamel Marg, Kathmandu 44600, Nepal',
     memberSince: 'March 2024',
-    title: 'Traveler',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+    title: 'Alpine Trekker & Photographer',
+    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
     portalLink: '/dashboard',
     portalLabel: 'my bookings & passes',
-    description: 'Passionate Himalayan trekker, photographer, and tea enthusiast. Exploring high-altitude glacial passes, Annapurna sanctuary, and ancient monastic trails.',
+    description:
+      'Passionate Himalayan trekker, photographer, and tea enthusiast. Exploring high-altitude glacial passes, Annapurna sanctuary, and ancient monastic trails.',
     highlights: ['Annapurna Circuit Pass', 'TIMS Verified 2026', 'High Altitude Clearance (5,416m)'],
   },
   {
@@ -126,10 +135,11 @@ const personaProfiles: PersonaProfile[] = [
     address: 'Namche Bazaar, Solukhumbu, Nepal',
     memberSince: 'January 2022',
     title: 'NMA & IFMGA Lead Mountain Guide',
-    avatar: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=300&q=80',
+    avatar: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=400&q=80',
     portalLink: '/portals/guide',
     portalLabel: 'mountain guide portal',
-    description: 'Assigned expedition rosters, client altitude telemetry, daily rate payouts, and 14x 8,000m summit leader.',
+    description:
+      'Assigned expedition rosters, client altitude telemetry, daily rate payouts, and 14x 8,000m summit leader.',
     highlights: ['14x Everest Summits', 'IFMGA Lead Badge', 'Wilderness First Responder'],
   },
   {
@@ -144,10 +154,11 @@ const personaProfiles: PersonaProfile[] = [
     address: 'Khumjung Village, Solukhumbu, Nepal',
     memberSince: 'June 2023',
     title: 'Dedicated Sherpa Butler & VIP Concierge',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
     portalLink: '/portals/butler',
     portalLabel: 'Sherpa butler portal',
-    description: 'Guest gear portage itineraries, VIP teahouse reservations, warm bedding logistics, and baggage tracking.',
+    description:
+      'Guest gear portage itineraries, VIP teahouse reservations, warm bedding logistics, and baggage tracking.',
     highlights: ['VIP Teahouse Desk', 'Khumbu Route Concierge', 'Portage Operations'],
   },
   {
@@ -162,10 +173,11 @@ const personaProfiles: PersonaProfile[] = [
     address: 'Durbar Marg, Kathmandu, Nepal',
     memberSince: 'November 2021',
     title: 'Licensed Tour Operator & Expedition Suite',
-    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+    avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
     portalLink: '/portals/business',
     portalLabel: 'agency operations hub',
-    description: 'Manage client group bookings, guide allocations, permit filings, and financial settlements.',
+    description:
+      'Manage client group bookings, guide allocations, permit filings, and financial settlements.',
     highlights: ['TAAN Certified Agency', 'Helicopter Fleet Access', 'B2B Operator Portal'],
   },
   {
@@ -180,11 +192,65 @@ const personaProfiles: PersonaProfile[] = [
     address: 'Bhrikutimandap, Kathmandu, Nepal',
     memberSince: 'January 2020',
     title: 'Nepal Tourism Board (NTB) Government Admin Desk',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=300&q=80',
+    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
     portalLink: '/portals/admin',
     portalLabel: 'NTB government desk',
-    description: 'National real-time traveler tracking, TIMS and restricted permit queues, and compliance logs.',
+    description:
+      'National real-time traveler tracking, TIMS and restricted permit queues, and compliance logs.',
     highlights: ['National Security Desk', 'Permit Approval Authority', 'Rescue Coordination'],
+  },
+];
+
+type ProfileTab =
+  | 'overview'
+  | 'personal'
+  | 'preferences'
+  | 'trips'
+  | 'saved'
+  | 'documents'
+  | 'security';
+
+interface SavedDestination {
+  id: string;
+  title: string;
+  region: string;
+  category: string;
+  image: string;
+  link: string;
+}
+
+const INITIAL_SAVED: SavedDestination[] = [
+  {
+    id: 'dest_phewa',
+    title: 'Phewa Lake & Sarangkot Ridge',
+    region: 'Pokhara, Gandaki Province',
+    category: 'Lakes & Himalayan Views',
+    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
+    link: '/explore?q=Pokhara',
+  },
+  {
+    id: 'dest_ebc',
+    title: 'Everest Base Camp & Kala Patthar',
+    region: 'Solukhumbu, Sagarmatha NP',
+    category: 'High Altitude Expedition',
+    image: 'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=800&q=80',
+    link: '/explore/dest_ebc',
+  },
+  {
+    id: 'htl_dwarikas',
+    title: "The Dwarika's Hotel",
+    region: 'Battisputali, Kathmandu',
+    category: 'Heritage Luxury Stay',
+    image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=800&q=80',
+    link: '/hotels/htl_dwarikas',
+  },
+  {
+    id: 'dest_mustang',
+    title: 'Lo Manthang Walled Kingdom',
+    region: 'Upper Mustang, Annapurna',
+    category: 'Tibetan Cultural Circuit',
+    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=800&q=80',
+    link: '/explore?q=Mustang',
   },
 ];
 
@@ -196,30 +262,40 @@ export default function ProfilePage() {
   const currentPersona =
     personaProfiles.find((p) => p.role === activeRole) || personaProfiles[0];
 
+  // Active Tab
+  const [activeTab, setActiveTab] = useState<ProfileTab>('overview');
+
   // Editable Profile State
   const [profileData, setProfileData] = useState({
     name: currentPersona.name,
+    username: '@aayush.pradhan',
+    travelerId: 'VN-TRV-2026-89104',
     email: currentPersona.email,
     phone: currentPersona.phone,
     nationality: currentPersona.nationality,
     country: currentPersona.country,
     dob: currentPersona.dob,
+    gender: 'Male',
+    preferredLanguage: 'English / Nepali',
     address: currentPersona.address,
     title: currentPersona.title,
     bio: currentPersona.description,
     avatar: currentPersona.avatar,
     memberSince: currentPersona.memberSince,
+    emailVerified: true,
+    phoneVerified: true,
   });
 
   // Travel Preferences State
   const [preferences, setPreferences] = useState({
-    destinations: ['Everest Khumbu', 'Annapurna Sanctuary', 'Upper Mustang', 'Langtang Valley', 'Manaslu Circuit'],
+    destinations: ['Everest Khumbu', 'Annapurna Sanctuary', 'Upper Mustang', 'Langtang Valley'],
     travelStyle: 'Alpine Trekker & Cultural Explorer',
     adventureLevel: 'Strenuous / High Altitude (5,000m+)',
     accommodation: 'Mountain Eco-Lodges & Authentic Teahouses',
-    interests: ['High Altitude Passes', 'Monastic Heritage', 'Alpine Photography', 'Glacial Lakes', 'Wildlife Safaris'],
+    interests: ['High Altitude Passes', 'Monastic Heritage', 'Alpine Photography', 'Glacial Lakes'],
     preferredSeason: 'Autumn (Sep – Nov) & Spring (Mar – May)',
     dietary: 'Vegetarian / High-Carb High-Altitude Trail Diet',
+    groupPreference: 'Small Group Guided (4–8 Trekkers)',
   });
 
   // Travel Documents State
@@ -227,37 +303,37 @@ export default function ProfilePage() {
     passportNo: 'NP-89241088',
     passportCountry: 'Nepal',
     passportExpiry: '14 Nov 2031',
-    visaStatus: 'Citizen Exemption · Valid National ID #NID-7729-104',
+    visaStatus: 'Citizen Exemption • Valid National ID #NID-7729-104',
     timsPermitId: 'TIMS-2026-7814',
     timsPermitCoverage: 'Annapurna Conservation Area & Sagarmatha National Park',
-    emergencyPrimary: 'Sunita Pradhan (Spouse) · +977 9851-098765',
-    emergencySecondary: 'Pasang Nuru Sherpa (Lead Guide) · +977 9801-778899',
+    emergencyPrimary: 'Sunita Pradhan (Spouse) • +977 9851-098765',
+    emergencySecondary: 'Pasang Nuru Sherpa (Lead Guide) • +977 9801-778899',
     satelliteDevice: 'Garmin inReach #8816-NEPAL-EBC',
-    medicalClearance: 'Cleared for >5,400m AMS · Blood Group: O+',
+    medicalClearance: 'Cleared for >5,400m AMS • Blood Group: O+',
   });
 
-  // Account Security State
-  const [securityData] = useState({
+  // Saved destinations
+  const [savedDestinations, setSavedDestinations] = useState<SavedDestination[]>(INITIAL_SAVED);
+
+  // Security & Settings State
+  const [securitySettings, setSecuritySettings] = useState({
+    twoFactor: true,
+    publicProfile: true,
+    smsAlerts: true,
+    emailAlerts: true,
     passwordLastChanged: '42 days ago',
-    twoFactorEnabled: true,
     kycLevel: 'Level 3 NTB Government Verified',
-    activeSessions: '2 active devices (MacBook Pro · Kathmandu; iPhone 15 · Pokhara)',
-    privacySetting: 'Public Explorer Profile active on Community Feed',
   });
 
-  // Modals State
+  // Modals
   const [isEditProfileOpen, setIsEditProfileOpen] = useState(false);
-  const [isEditPreferencesOpen, setIsEditPreferencesOpen] = useState(false);
-  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
   const [isAvatarModalOpen, setIsAvatarModalOpen] = useState(false);
-  const [isSavedPlacesOpen, setIsSavedPlacesOpen] = useState(false);
-  const [isReviewsOpen, setIsReviewsOpen] = useState(false);
-  const [isDocumentsOpen, setIsDocumentsOpen] = useState(false);
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [switchingRole, setSwitchingRole] = useState<UserRole | null>(null);
 
-  // Forms Temporary States
+  // Temp Form States
   const [tempProfile, setTempProfile] = useState({ ...profileData });
-  const [tempPreferences, setTempPreferences] = useState({ ...preferences });
   const [passwordForm, setPasswordForm] = useState({
     currentPassword: '',
     newPassword: '',
@@ -298,17 +374,14 @@ export default function ProfilePage() {
     }
   }, [activeRole]);
 
-  // Escape key closes modals
+  // Close modals on Escape
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         setIsEditProfileOpen(false);
-        setIsEditPreferencesOpen(false);
-        setIsChangePasswordOpen(false);
         setIsAvatarModalOpen(false);
-        setIsSavedPlacesOpen(false);
-        setIsReviewsOpen(false);
-        setIsDocumentsOpen(false);
+        setIsChangePasswordOpen(false);
+        setIsDeleteModalOpen(false);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
@@ -324,38 +397,40 @@ export default function ProfilePage() {
       // Ignore
     }
     setIsEditProfileOpen(false);
-    if (showToast) showToast('Profile details updated successfully');
+    showToast('Profile details updated successfully');
   };
 
-  const handleSavePreferences = (e: React.FormEvent) => {
-    e.preventDefault();
-    setPreferences({ ...tempPreferences });
+  const handleSavePreferences = () => {
     try {
-      localStorage.setItem(`vn_preferences_${activeRole}`, JSON.stringify(tempPreferences));
+      localStorage.setItem(`vn_preferences_${activeRole}`, JSON.stringify(preferences));
     } catch {
       // Ignore
     }
-    setIsEditPreferencesOpen(false);
-    if (showToast) showToast('Travel preferences updated');
+    showToast('Travel preferences saved');
   };
 
   const handleChangePassword = (e: React.FormEvent) => {
     e.preventDefault();
     if (!passwordForm.currentPassword) {
-      if (showToast) showToast('Please enter your current password');
+      showToast('Please enter your current password');
       return;
     }
     if (passwordForm.newPassword.length < 8) {
-      if (showToast) showToast('New password must be at least 8 characters');
+      showToast('New password must be at least 8 characters');
       return;
     }
     if (passwordForm.newPassword !== passwordForm.confirmPassword) {
-      if (showToast) showToast('New passwords do not match');
+      showToast('New passwords do not match');
       return;
     }
     setPasswordForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
     setIsChangePasswordOpen(false);
-    if (showToast) showToast('Password changed successfully');
+    showToast('Password changed successfully');
+  };
+
+  const handleRemoveSaved = (id: string) => {
+    setSavedDestinations((prev) => prev.filter((d) => d.id !== id));
+    showToast('Removed from saved destinations');
   };
 
   const handleSwitchUser = async (targetRole: UserRole) => {
@@ -363,10 +438,8 @@ export default function ProfilePage() {
     setSwitchingRole(targetRole);
     try {
       await setRole(targetRole);
-      if (showToast) {
-        const target = personaProfiles.find((p) => p.role === targetRole);
-        showToast(`Switched persona to ${target?.name || targetRole}`);
-      }
+      const target = personaProfiles.find((p) => p.role === targetRole);
+      showToast(`Switched persona to ${target?.name || targetRole}`);
     } finally {
       setSwitchingRole(null);
     }
@@ -374,26 +447,41 @@ export default function ProfilePage() {
 
   const handleLogout = () => {
     logout();
-    if (showToast) showToast('Signed out of session');
+    showToast('Signed out of session');
     router.push('/login');
   };
 
-  const bookingCount = Array.isArray(bookings) && bookings.length > 0 ? bookings.length : 12;
+  // Find next upcoming adventure
+  const upcomingBooking: Booking | undefined = useMemo(() => {
+    return bookings.find(
+      (b) => b.status === 'Confirmed' || b.status === 'Checked In' || b.status === 'Pending'
+    );
+  }, [bookings]);
+
+  // Profile completion calculation
+  const completionPercentage = useMemo(() => {
+    let score = 0;
+    if (profileData.avatar) score += 20;
+    if (profileData.name && profileData.email) score += 20;
+    if (profileData.emailVerified && profileData.phoneVerified) score += 20;
+    if (documents.emergencyPrimary) score += 20;
+    if (preferences.destinations.length > 0) score += 20;
+    return score;
+  }, [profileData, documents, preferences]);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] pb-20 sm:pb-12 pt-4 sm:pt-6 lg:pt-8 px-4 sm:px-6 md:px-8 lg:px-10 font-inter text-slate-900 antialiased">
-      <div className="w-full space-y-6 sm:space-y-8">
-        
+    <div className="min-h-screen bg-[#FDFBF7] pb-24 sm:pb-16 pt-4 sm:pt-6 font-inter text-slate-900 antialiased">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-6">
         {/* =========================================================================
-            TOP UTILITY BAR: Breadcrumb & Persona Switcher
+            TOP UTILITY BAR: Breadcrumb & Compact Persona Switcher
             ========================================================================= */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-3 border-b border-slate-200/80">
           <div className="flex items-center gap-2 text-xs text-slate-500">
             <Link href="/" className="hover:text-[#0552A2] transition-colors">
-              Visit Nepal
+              Home
             </Link>
-            <span className="text-slate-300">/</span>
-            <span className="font-semibold text-slate-800">Account &amp; Traveler Identity</span>
+            <ChevronRight className="h-3 w-3 text-slate-400" />
+            <span className="font-semibold text-slate-800">Traveler Profile &amp; Hub</span>
           </div>
 
           {/* Compact Persona Switcher */}
@@ -426,26 +514,100 @@ export default function ProfilePage() {
         </div>
 
         {/* =========================================================================
-            MAIN BALANCED LAYOUT: LEFT ACCOUNT/MENU + RIGHT DIGITAL TIMS PASS
+            1. REFINED HORIZONTAL PROFILE HEADER (Desktop Horizontal, Mobile Stacked)
             ========================================================================= */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-8 items-start">
-          
-          {/* -----------------------------------------------------------------------
-              LEFT COLUMN (lg:col-span-7): Account Overview, Stats, Explore & Menu
-              ----------------------------------------------------------------------- */}
-          <div className="lg:col-span-7 space-y-5 sm:space-y-6">
-            
-            {/* 1. Account Header with Settings */}
-            <div className="flex items-center justify-between">
-              <div>
-                <h1 className="font-poppins text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">
-                  Account
-                </h1>
-                <p className="text-xs text-slate-500 mt-0.5">
-                  Manage your personal travel profile, preferences, and verified bookings
-                </p>
+        <header className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-5 sm:p-6 lg:p-7">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            {/* Left: Avatar & Identity Details */}
+            <div className="flex flex-col sm:flex-row sm:items-center gap-5 min-w-0">
+              {/* Avatar with Camera Overlay & Verification Check */}
+              <div className="relative group shrink-0 self-start sm:self-auto">
+                <img
+                  src={profileData.avatar}
+                  alt={profileData.name}
+                  className="h-20 w-20 sm:h-24 sm:w-24 rounded-full object-cover border-2 border-slate-100 shadow-sm"
+                />
+                <div
+                  className="absolute bottom-0 right-0 h-6 w-6 rounded-full bg-[#0552A2] text-white flex items-center justify-center shadow-xs border-2 border-white"
+                  title="Verified Profile"
+                >
+                  <Check className="h-3.5 w-3.5 stroke-[3]" />
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsAvatarModalOpen(true)}
+                  className="absolute inset-0 rounded-full bg-slate-950/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
+                  title="Change Profile Photo"
+                >
+                  <Camera className="h-5 w-5" />
+                </button>
               </div>
 
+              {/* Identity & Badges */}
+              <div className="space-y-1.5 min-w-0">
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="font-poppins text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+                    {profileData.name}
+                  </h1>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10.5px] font-bold text-emerald-800 uppercase tracking-wider">
+                    PRO TRAVELER
+                  </span>
+                  <span className="inline-flex items-center gap-1 rounded-md bg-blue-50 border border-blue-200 px-2 py-0.5 text-[10.5px] font-bold text-[#0552A2] uppercase tracking-wider">
+                    <ShieldCheck className="h-3 w-3 text-[#0552A2]" />
+                    <span>NTB VERIFIED</span>
+                  </span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-slate-500 font-medium">
+                  <span className="font-mono text-slate-600">{profileData.username}</span>
+                  <span className="text-slate-300">•</span>
+                  <span className="font-mono text-slate-500">{profileData.travelerId}</span>
+                  <span className="text-slate-300">•</span>
+                  <span>{profileData.nationality}</span>
+                  <span className="text-slate-300">•</span>
+                  <span>{profileData.memberSince}</span>
+                </div>
+
+                <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-slate-600 pt-1">
+                  <div className="flex items-center gap-1.5">
+                    <Mail className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                    <span>{profileData.email}</span>
+                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.2 rounded">
+                      Verified
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-1.5">
+                    <Phone className="h-3.5 w-3.5 text-slate-400 shrink-0" />
+                    <span>{profileData.phone}</span>
+                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-1.5 py-0.2 rounded">
+                      Verified
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Profile Completion & Actions */}
+            <div className="flex flex-col sm:flex-row sm:items-center lg:flex-col lg:items-end justify-between gap-4 shrink-0 pt-4 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+              {/* Profile Completion Indicator */}
+              <div className="space-y-1.5 sm:min-w-[180px]">
+                <div className="flex items-center justify-between text-xs">
+                  <span className="font-bold text-slate-700">Profile Readiness</span>
+                  <span className="font-bold text-[#0552A2]">{completionPercentage}%</span>
+                </div>
+                <div className="h-2 w-full bg-slate-100 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-gradient-to-r from-[#0552A2] to-emerald-600 rounded-full transition-all duration-500"
+                    style={{ width: `${completionPercentage}%` }}
+                  />
+                </div>
+                <span className="text-[10.5px] text-slate-400 block">
+                  All mandatory permits &amp; IDs verified
+                </span>
+              </div>
+
+              {/* Action Buttons */}
               <div className="flex items-center gap-2">
                 <button
                   type="button"
@@ -453,1102 +615,1156 @@ export default function ProfilePage() {
                     setTempProfile({ ...profileData });
                     setIsEditProfileOpen(true);
                   }}
-                  className="h-10 w-10 rounded-full bg-white border border-slate-200/90 shadow-2xs hover:bg-slate-50 flex items-center justify-center text-slate-700 hover:text-[#0552A2] transition-colors cursor-pointer"
-                  title="Profile Settings"
-                >
-                  <Settings className="h-5 w-5" />
-                </button>
-              </div>
-            </div>
-
-            {/* 2. Profile Overview Card (Exact Match to User Reference) */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-5 transition-shadow hover:shadow-sm">
-              <div className="flex items-start sm:items-center gap-4">
-                {/* Avatar with Verified Checkmark & Camera Overlay */}
-                <div className="relative group shrink-0">
-                  <img
-                    src={profileData.avatar}
-                    alt={profileData.name}
-                    className="h-16 w-16 sm:h-20 sm:w-20 rounded-full object-cover border-2 border-slate-100 shadow-sm"
-                  />
-                  {/* Verified Checkmark Badge */}
-                  <div
-                    className="absolute bottom-0 right-0 h-5 w-5 rounded-full bg-[#0552A2] text-white flex items-center justify-center shadow-xs border-2 border-white"
-                    title="Verified Traveler"
-                  >
-                    <Check className="h-3 w-3 stroke-[3]" />
-                  </div>
-                  {/* Quick Change Avatar Button */}
-                  <button
-                    type="button"
-                    onClick={() => setIsAvatarModalOpen(true)}
-                    className="absolute inset-0 rounded-full bg-slate-900/40 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white transition-opacity cursor-pointer"
-                    title="Change Photo"
-                  >
-                    <Camera className="h-5 w-5" />
-                  </button>
-                </div>
-
-                {/* Info & Metadata */}
-                <div className="min-w-0 flex-1 space-y-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <h2 className="font-poppins text-lg sm:text-xl font-bold text-slate-900 truncate">
-                      {profileData.name}
-                    </h2>
-                    <span className="rounded-md bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 text-[10px] font-bold text-emerald-700 uppercase tracking-wide">
-                      PRO
-                    </span>
-                    <span className="rounded-md bg-blue-50 border border-blue-200/80 px-2 py-0.5 text-[10px] font-bold text-[#0552A2] uppercase tracking-wide">
-                      {activeRole.toUpperCase()}
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-slate-500 truncate font-mono">
-                    {profileData.email}
-                  </p>
-
-                  <p className="text-xs text-slate-600 line-clamp-2 leading-relaxed pt-0.5">
-                    {profileData.bio}
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* 3. Quick Stats & Activity Counters */}
-            <div className="relative bg-white rounded-2xl border border-slate-200/90 shadow-xs p-4 sm:p-5">
-              <div className="grid grid-cols-4 gap-2 text-center">
-                {/* 0 Saved Places */}
-                <button
-                  type="button"
-                  onClick={() => setIsSavedPlacesOpen(true)}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mb-1 group-hover:bg-blue-100 transition-colors">
-                    <Bookmark className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">0</span>
-                  <span className="text-[11px] font-medium text-slate-500">Saved Places</span>
-                </button>
-
-                {/* Upcoming Bookings */}
-                <Link
-                  href="/dashboard"
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mb-1 group-hover:bg-emerald-100 transition-colors">
-                    <Calendar className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">{bookingCount}</span>
-                  <span className="text-[11px] font-medium text-slate-500">Upcoming Bookings</span>
-                </Link>
-
-                {/* Past Bookings */}
-                <Link
-                  href="/dashboard"
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-amber-50 text-amber-600 flex items-center justify-center mb-1 group-hover:bg-amber-100 transition-colors">
-                    <Ticket className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">0</span>
-                  <span className="text-[11px] font-medium text-slate-500">Past Bookings</span>
-                </Link>
-
-                {/* Reviews */}
-                <button
-                  type="button"
-                  onClick={() => setIsReviewsOpen(true)}
-                  className="flex flex-col items-center group cursor-pointer"
-                >
-                  <div className="h-10 w-10 sm:h-11 sm:w-11 rounded-full bg-rose-50 text-rose-600 flex items-center justify-center mb-1 group-hover:bg-rose-100 transition-colors">
-                    <Heart className="h-5 w-5" />
-                  </div>
-                  <span className="text-sm font-bold text-slate-900">0</span>
-                  <span className="text-[11px] font-medium text-slate-500">Reviews</span>
-                </button>
-              </div>
-
-              {/* Status Pill Overlay */}
-              <div className="mt-3.5 flex justify-center">
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50/80 border border-emerald-300 text-emerald-700 text-xs font-semibold shadow-2xs">
-                  <Lock className="h-3.5 w-3.5 text-emerald-600" />
-                  <span>Sign in to save activity · Verified Active</span>
-                </div>
-              </div>
-            </div>
-
-            {/* 4. "Plan Your Dream Trip" Banner Card */}
-            <div className="bg-[#EDF5FD] border border-blue-200/90 rounded-2xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-xs">
-              <div className="flex items-center gap-3.5 min-w-0">
-                <div className="h-11 w-11 sm:h-12 sm:w-12 rounded-full bg-white text-[#0552A2] flex items-center justify-center shadow-2xs shrink-0">
-                  <Map className="h-5 w-5 sm:h-6 sm:w-6" />
-                </div>
-                <div className="min-w-0">
-                  <h3 className="font-poppins text-sm sm:text-base font-bold text-slate-900 leading-snug">
-                    Plan Your Dream Trip
-                  </h3>
-                  <p className="text-xs text-slate-600 line-clamp-1 mt-0.5">
-                    Discover top destinations, create your itinerary and get personalized advice...
-                  </p>
-                </div>
-              </div>
-
-              <Link
-                href="/explore"
-                className="shrink-0 inline-flex items-center justify-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-4 py-2 text-xs font-semibold shadow-xs transition-colors"
-              >
-                <span>Explore Now</span>
-                <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-            </div>
-
-            {/* 5. Menu List Items (Exact Set from User Reference) */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs divide-y divide-slate-100 overflow-hidden">
-              {/* My Bookings */}
-              <Link
-                href="/dashboard"
-                className="flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-blue-100/70 text-[#0552A2] flex items-center justify-center shrink-0">
-                    <Ticket className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      My Bookings
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      View and manage your bookings
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </Link>
-
-              {/* Saved Places */}
-              <button
-                type="button"
-                onClick={() => setIsSavedPlacesOpen(true)}
-                className="w-full flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-emerald-100/70 text-emerald-700 flex items-center justify-center shrink-0">
-                    <Bookmark className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      Saved Places
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      Destinations and experiences you've saved
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </button>
-
-              {/* My Itinerary */}
-              <Link
-                href="/schedule"
-                className="flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-purple-100/70 text-purple-700 flex items-center justify-center shrink-0">
-                    <Map className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      My Itinerary
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      View your planned trips
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </Link>
-
-              {/* Reviews & Ratings */}
-              <button
-                type="button"
-                onClick={() => setIsReviewsOpen(true)}
-                className="w-full flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-amber-100/70 text-amber-700 flex items-center justify-center shrink-0">
-                    <Star className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      Reviews &amp; Ratings
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      Your feedback helps others
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </button>
-
-              {/* Help & Support */}
-              <Link
-                href="/chat"
-                className="flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-cyan-100/70 text-cyan-700 flex items-center justify-center shrink-0">
-                    <Headset className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      Help &amp; Support
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      FAQs, contact us and support
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </Link>
-
-              {/* My Documents */}
-              <button
-                type="button"
-                onClick={() => setIsDocumentsOpen(true)}
-                className="w-full flex items-center justify-between p-4 hover:bg-slate-50/80 transition-colors group cursor-pointer text-left"
-              >
-                <div className="flex items-center gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-indigo-100/70 text-indigo-700 flex items-center justify-center shrink-0">
-                    <Folder className="h-5 w-5" />
-                  </div>
-                  <div>
-                    <h4 className="font-poppins text-sm font-bold text-slate-900">
-                      My Documents
-                    </h4>
-                    <p className="text-xs text-slate-500">
-                      Store your required documents
-                    </p>
-                  </div>
-                </div>
-                <ChevronRight className="h-4 w-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </button>
-            </div>
-
-          </div>
-
-          {/* -----------------------------------------------------------------------
-              RIGHT COLUMN (lg:col-span-5): Identity Details, Preferences & Security
-              ----------------------------------------------------------------------- */}
-          <div className="lg:col-span-5 space-y-5 sm:space-y-6">
-
-            {/* 1. Personal Information Card */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">
-                    Personal Information
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTempProfile({ ...profileData });
-                    setIsEditProfileOpen(true);
-                  }}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0552A2] hover:text-[#044182] cursor-pointer"
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
                 >
                   <Edit3 className="h-3.5 w-3.5" />
-                  <span>Edit</span>
+                  <span>Edit Profile</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setActiveTab('security')}
+                  className="h-8.5 w-8.5 rounded-xl border border-slate-200 bg-white hover:bg-slate-50 flex items-center justify-center text-slate-600 hover:text-[#0552A2] transition-colors cursor-pointer shadow-2xs"
+                  title="Account Security Settings"
+                >
+                  <Settings className="h-4 w-4" />
                 </button>
               </div>
+            </div>
+          </div>
+        </header>
 
-              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-3.5 text-xs">
-                <div>
-                  <dt className="text-slate-400 font-medium text-[11px] uppercase tracking-wider">
-                    Full Legal Name
-                  </dt>
-                  <dd className="font-semibold text-slate-900 text-xs sm:text-sm mt-0.5">
-                    {profileData.name}
-                  </dd>
+        {/* =========================================================================
+            2. PROFILE SECTION NAVIGATION TABS
+            ========================================================================= */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2 border-b border-slate-200/70 no-scrollbar">
+          {[
+            { id: 'overview', label: 'Overview', icon: Compass },
+            { id: 'personal', label: 'Personal Information', icon: User },
+            { id: 'preferences', label: 'Travel Preferences', icon: SlidersHorizontal },
+            { id: 'trips', label: 'Trips & Bookings', icon: Ticket, badge: bookings.length },
+            { id: 'saved', label: 'Saved Destinations', icon: Bookmark, badge: savedDestinations.length },
+            { id: 'documents', label: 'Documents & Passes', icon: FileText, badge: '5' },
+            { id: 'security', label: 'Security & Settings', icon: Lock },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const isCurrent = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                onClick={() => setActiveTab(tab.id as ProfileTab)}
+                className={`h-9.5 inline-flex items-center gap-2 px-3.5 rounded-xl text-xs font-semibold whitespace-nowrap transition-all cursor-pointer ${
+                  isCurrent
+                    ? 'bg-[#0552A2] text-white shadow-2xs'
+                    : 'bg-white border border-slate-200/90 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
+                }`}
+              >
+                <Icon className="h-3.5 w-3.5 shrink-0" />
+                <span>{tab.label}</span>
+                {tab.badge !== undefined && (
+                  <span
+                    className={`px-1.5 py-0.2 rounded-md text-[10px] font-bold ${
+                      isCurrent ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {/* =========================================================================
+            3. TAB CONTENT VIEWS
+            ========================================================================= */}
+
+        {/* -------------------------------------------------------------------------
+            TAB 1: OVERVIEW
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            {/* Quick Metrics Bar */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3">
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Total Bookings
+                </span>
+                <p className="font-poppins text-xl font-bold text-slate-900">{bookings.length}</p>
+                <span className="text-[11px] text-slate-500">Expeditions &amp; Stays</span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Completed Stays
+                </span>
+                <p className="font-poppins text-xl font-bold text-emerald-700">
+                  {bookings.filter((b) => b.status === 'Completed').length || 3}
+                </p>
+                <span className="text-[11px] text-slate-500">Verified Completed</span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Saved Places
+                </span>
+                <p className="font-poppins text-xl font-bold text-slate-900">{savedDestinations.length}</p>
+                <span className="text-[11px] text-slate-500">Himalayan Wishlist</span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1">
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Active Passes
+                </span>
+                <p className="font-poppins text-xl font-bold text-[#0552A2]">2 Active</p>
+                <span className="text-[11px] text-emerald-600 font-semibold">TIMS &amp; ACAP Pass</span>
+              </div>
+
+              <div className="p-4 rounded-2xl bg-white border border-slate-200/90 shadow-2xs space-y-1 col-span-2 sm:col-span-1">
+                <span className="text-[10.5px] uppercase font-bold text-slate-400 block tracking-wider">
+                  Identity KYC
+                </span>
+                <p className="font-poppins text-sm font-bold text-emerald-700 mt-1 flex items-center gap-1">
+                  <ShieldCheck className="h-4 w-4 text-emerald-600" />
+                  <span>Level 3 NTB</span>
+                </p>
+                <span className="text-[11px] text-slate-500">Government Verified</span>
+              </div>
+            </div>
+
+            {/* Next Adventure Spotlight */}
+            <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-5 sm:p-6 space-y-4">
+              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+                <div className="flex items-center gap-2">
+                  <Compass className="h-4 w-4 text-[#0552A2]" />
+                  <h2 className="font-poppins text-base font-bold text-slate-900">
+                    Next Adventure &amp; Upcoming Stay
+                  </h2>
+                </div>
+                <Link
+                  href="/bookings"
+                  className="text-xs font-semibold text-[#0552A2] hover:underline flex items-center gap-1"
+                >
+                  <span>All Bookings ({bookings.length})</span>
+                  <ArrowRight className="h-3 w-3" />
+                </Link>
+              </div>
+
+              {upcomingBooking ? (
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 p-4 rounded-xl bg-slate-50 border border-slate-200/80">
+                  <div className="space-y-1 min-w-0">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10.5px] font-bold text-[#0552A2] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                        {upcomingBooking.id}
+                      </span>
+                      <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 text-[10.5px] font-bold border border-emerald-200">
+                        {upcomingBooking.status}
+                      </span>
+                    </div>
+                    <h3 className="font-poppins text-base font-bold text-slate-900">
+                      {upcomingBooking.title}
+                    </h3>
+                    <p className="text-xs text-slate-500 flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5 text-slate-400" />
+                      <span>{upcomingBooking.date}</span>
+                      <span className="text-slate-300">•</span>
+                      <MapPin className="h-3.5 w-3.5 text-slate-400" />
+                      <span>{upcomingBooking.meetingPoint}</span>
+                    </p>
+                  </div>
+
+                  <Link
+                    href="/bookings"
+                    className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-4 py-2 text-xs font-bold shadow-2xs transition-colors shrink-0"
+                  >
+                    <span>View Booking Voucher</span>
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
+                </div>
+              ) : (
+                <div className="text-center py-8 space-y-3">
+                  <div className="h-12 w-12 rounded-full bg-blue-50 text-[#0552A2] mx-auto flex items-center justify-center">
+                    <Compass className="h-6 w-6" />
+                  </div>
+                  <h3 className="font-bold text-slate-800 text-sm">No upcoming adventures scheduled</h3>
+                  <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                    Explore high-altitude trekking packages, heritage hotel stays, and custom itineraries across Nepal.
+                  </p>
+                  <div className="pt-1 flex items-center justify-center gap-2">
+                    <Link
+                      href="/hotels"
+                      className="px-4 py-2 rounded-xl bg-[#0552A2] text-white text-xs font-bold hover:bg-[#044182]"
+                    >
+                      Book a Stay
+                    </Link>
+                    <Link
+                      href="/explore"
+                      className="px-4 py-2 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold hover:bg-slate-200"
+                    >
+                      Browse Treks
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Profile Checklist & Explorer Badges */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {/* Profile Completion Tasks */}
+              <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                  <h3 className="font-poppins text-sm font-bold text-slate-900">
+                    Traveler Profile Checklist
+                  </h3>
+                  <span className="text-xs font-bold text-emerald-700">4 of 5 Completed</span>
                 </div>
 
-                <div>
-                  <dt className="text-slate-400 font-medium text-[11px] uppercase tracking-wider">
-                    Registered Email
-                  </dt>
-                  <dd className="font-medium text-slate-800 text-xs mt-0.5 break-all">
-                    {profileData.email}
-                  </dd>
+                <div className="space-y-2 text-xs">
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      <span>Primary Email &amp; Phone Verified</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-700">Verified</span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      <span>National Identity &amp; Passport Registered</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-700">Verified</span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      <span>Himalayan Travel Preferences Configured</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-700">Complete</span>
+                  </div>
+
+                  <div className="flex items-center justify-between p-2.5 rounded-xl bg-slate-50">
+                    <div className="flex items-center gap-2 text-slate-700">
+                      <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                      <span>TIMS Clearance Card Paired</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-emerald-700">Active</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab('documents')}
+                    className="w-full flex items-center justify-between p-2.5 rounded-xl bg-amber-50/70 border border-amber-200 text-amber-900 hover:bg-amber-100 transition-colors text-left cursor-pointer"
+                  >
+                    <div className="flex items-center gap-2">
+                      <AlertCircle className="h-4 w-4 text-amber-600" />
+                      <span>Upload Backup Travel Insurance Policy</span>
+                    </div>
+                    <span className="text-[10px] font-bold text-amber-800 underline">Add Now</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Verified Clearances & Badges */}
+              <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-5 space-y-3">
+                <div className="flex items-center justify-between pb-2.5 border-b border-slate-100">
+                  <h3 className="font-poppins text-sm font-bold text-slate-900">
+                    Verified Clearances &amp; Badges
+                  </h3>
+                  <span className="text-xs text-slate-400">NTB Statutory</span>
                 </div>
 
-                <div>
-                  <dt className="text-slate-400 font-medium text-[11px] uppercase tracking-wider">
-                    Mobile Phone
-                  </dt>
-                  <dd className="font-medium text-slate-800 text-xs mt-0.5">
-                    {profileData.phone}
-                  </dd>
-                </div>
+                <div className="space-y-2.5 text-xs">
+                  <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-emerald-100 text-emerald-800 flex items-center justify-center shrink-0">
+                      <ShieldCheck className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-bold text-slate-900">TIMS Clearance Pass 2026</p>
+                      <p className="text-[11px] text-slate-500 font-mono">Token: TIMS-2026-7814</p>
+                      <p className="text-[11px] text-slate-600 mt-0.5">
+                        Authorized for Annapurna Conservation Area &amp; Sagarmatha National Park checkpoints.
+                      </p>
+                    </div>
+                  </div>
 
+                  <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-start gap-3">
+                    <div className="h-9 w-9 rounded-lg bg-blue-100 text-[#0552A2] flex items-center justify-center shrink-0">
+                      <Award className="h-5 w-5" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="font-bold text-slate-900">High Altitude Clearance (5,416m)</p>
+                      <p className="text-[11px] text-slate-500 font-mono">Thorong La Pass Completed</p>
+                      <p className="text-[11px] text-slate-600 mt-0.5">
+                        Certified high-altitude trekking readiness verified by IFMGA lead guides.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------------------
+            TAB 2: PERSONAL INFORMATION
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'personal' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="space-y-1">
+                <h2 className="font-poppins text-lg font-bold text-slate-900">
+                  Personal Information &amp; Legal Identity
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Official traveler records used for hotel front desk check-in, park permits, and high-altitude manifests.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setTempProfile({ ...profileData });
+                  setIsEditProfileOpen(true);
+                }}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              >
+                <Edit3 className="h-3.5 w-3.5" />
+                <span>Edit Information</span>
+              </button>
+            </div>
+
+            {/* 1. Basic Information */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                1. Basic Information
+              </h3>
+              <dl className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200/80">
                 <div>
-                  <dt className="text-slate-400 font-medium text-[11px] uppercase tracking-wider">
-                    Nationality &amp; Citizenship
-                  </dt>
-                  <dd className="font-medium text-slate-800 text-xs mt-0.5">
+                  <dt className="text-slate-400 font-medium">Full Legal Name</dt>
+                  <dd className="font-bold text-slate-900 text-sm mt-0.5">{profileData.name}</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Traveler Title / Role</dt>
+                  <dd className="font-semibold text-slate-800 mt-0.5">{profileData.title}</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Date of Birth</dt>
+                  <dd className="font-semibold text-slate-800 mt-0.5">{profileData.dob}</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Gender</dt>
+                  <dd className="font-semibold text-slate-800 mt-0.5">{profileData.gender}</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Nationality &amp; Citizenship</dt>
+                  <dd className="font-semibold text-slate-800 mt-0.5">
                     {profileData.nationality} ({profileData.country})
                   </dd>
                 </div>
-
-                <div className="sm:col-span-2 pt-2 border-t border-slate-100">
-                  <dt className="text-slate-400 font-medium text-[11px] uppercase tracking-wider">
-                    Permanent Address
-                  </dt>
-                  <dd className="font-medium text-slate-700 text-xs mt-0.5">
-                    {profileData.address}
-                  </dd>
+                <div>
+                  <dt className="text-slate-400 font-medium">Preferred Languages</dt>
+                  <dd className="font-semibold text-slate-800 mt-0.5">{profileData.preferredLanguage}</dd>
+                </div>
+                <div className="sm:col-span-3 pt-1 border-t border-slate-200/60">
+                  <dt className="text-slate-400 font-medium">Traveler Biography &amp; Expedition Focus</dt>
+                  <dd className="text-slate-700 mt-1 leading-relaxed">{profileData.bio}</dd>
                 </div>
               </dl>
             </div>
 
-            {/* 2. Travel Preferences Card */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 sm:p-6 space-y-4">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
-                <div className="flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">
-                    Travel Preferences
-                  </h3>
+            {/* 2. Contact Information */}
+            <div className="space-y-3 pt-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                2. Contact Information
+              </h3>
+              <dl className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-slate-50 p-4 rounded-xl border border-slate-200/80">
+                <div>
+                  <dt className="text-slate-400 font-medium">Registered Email Address</dt>
+                  <dd className="font-medium text-slate-900 text-sm mt-0.5 flex items-center gap-1.5">
+                    <span>{profileData.email}</span>
+                    <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-1.5 py-0.2 rounded">
+                      Verified
+                    </span>
+                  </dd>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setTempPreferences({ ...preferences });
-                    setIsEditPreferencesOpen(true);
-                  }}
-                  className="inline-flex items-center gap-1 text-xs font-semibold text-[#0552A2] hover:text-[#044182] cursor-pointer"
-                >
-                  <Edit3 className="h-3.5 w-3.5" />
-                  <span>Update</span>
-                </button>
+
+                <div>
+                  <dt className="text-slate-400 font-medium">Primary Mobile Phone</dt>
+                  <dd className="font-medium text-slate-900 text-sm mt-0.5 flex items-center gap-1.5">
+                    <span>{profileData.phone}</span>
+                    <span className="text-[10px] text-emerald-700 font-bold bg-emerald-100 px-1.5 py-0.2 rounded">
+                      Verified
+                    </span>
+                  </dd>
+                </div>
+
+                <div className="sm:col-span-2">
+                  <dt className="text-slate-400 font-medium">Residential / Mailing Address</dt>
+                  <dd className="font-medium text-slate-800 mt-0.5">{profileData.address}</dd>
+                </div>
+              </dl>
+            </div>
+
+            {/* 3. Emergency & Safety Contacts */}
+            <div className="space-y-3 pt-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                3. Emergency &amp; Mountain Rescue Contacts
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs bg-red-50/50 p-4 rounded-xl border border-red-200/80">
+                <div>
+                  <span className="text-slate-500 font-medium block">Primary Next-of-Kin Contact</span>
+                  <p className="font-bold text-slate-900 text-sm mt-0.5">{documents.emergencyPrimary}</p>
+                </div>
+                <div>
+                  <span className="text-slate-500 font-medium block">Secondary Field Contact</span>
+                  <p className="font-bold text-slate-900 text-sm mt-0.5">{documents.emergencySecondary}</p>
+                </div>
+                <div>
+                  <span className="text-slate-500 font-medium block">Satellite Telemetry Beacon</span>
+                  <p className="font-mono font-bold text-slate-800 mt-0.5">{documents.satelliteDevice}</p>
+                </div>
+                <div>
+                  <span className="text-slate-500 font-medium block">Himalayan Rescue (HRA) 24/7 Hotline</span>
+                  <p className="font-mono font-bold text-red-600 mt-0.5">+977 1 4256909 / 1144</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------------------
+            TAB 3: TRAVEL PREFERENCES
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'preferences' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-6">
+            <div className="flex items-center justify-between pb-4 border-b border-slate-100">
+              <div className="space-y-1">
+                <h2 className="font-poppins text-lg font-bold text-slate-900">
+                  Himalayan Travel Preferences
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Customizes personalized expedition recommendations, guide allocations, and hotel suggestions.
+                </p>
               </div>
 
-              <div className="space-y-3 text-xs">
-                <div>
-                  <span className="text-slate-400 font-medium text-[11px] uppercase tracking-wider block mb-1.5">
-                    Preferred Destinations
-                  </span>
-                  <div className="flex flex-wrap gap-1.5">
-                    {preferences.destinations.map((dest) => (
-                      <span
+              <button
+                type="button"
+                onClick={handleSavePreferences}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-4 py-2 text-xs font-semibold shadow-2xs transition-colors cursor-pointer"
+              >
+                <span>Save Preferences</span>
+              </button>
+            </div>
+
+            <div className="space-y-5 text-xs">
+              {/* Preferred Destinations */}
+              <div className="space-y-2">
+                <label className="font-bold text-slate-700 block">Preferred Trekking Regions &amp; Valleys:</label>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    'Everest Khumbu',
+                    'Annapurna Sanctuary',
+                    'Upper Mustang',
+                    'Langtang Valley',
+                    'Manaslu Circuit',
+                    'Dolpo High Plateau',
+                    'Kanchenjunga Wilderness',
+                    'Chitwan Wildlife Reserve',
+                  ].map((dest) => {
+                    const isSelected = preferences.destinations.includes(dest);
+                    return (
+                      <button
                         key={dest}
-                        className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-blue-50 text-[#0552A2] font-semibold text-xs border border-blue-200/60"
+                        type="button"
+                        onClick={() => {
+                          setPreferences((prev) => ({
+                            ...prev,
+                            destinations: isSelected
+                              ? prev.destinations.filter((d) => d !== dest)
+                              : [...prev.destinations, dest],
+                          }));
+                        }}
+                        className={`px-3 py-1.5 rounded-xl text-xs font-semibold transition-all cursor-pointer ${
+                          isSelected
+                            ? 'bg-[#0552A2] text-white shadow-2xs'
+                            : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        }`}
                       >
-                        <MapPin className="h-3 w-3" />
-                        <span>{dest}</span>
-                      </span>
-                    ))}
-                  </div>
+                        {dest} {isSelected ? '✓' : '+'}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Travel Style & Adventure Level */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="font-bold text-slate-700 block">Primary Travel Style:</label>
+                  <select
+                    value={preferences.travelStyle}
+                    onChange={(e) => setPreferences({ ...preferences, travelStyle: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
+                  >
+                    <option value="Alpine Trekker & Cultural Explorer">Alpine Trekker &amp; Cultural Explorer</option>
+                    <option value="Luxury Heritage & Boutique Stays">Luxury Heritage &amp; Boutique Stays</option>
+                    <option value="Fastpacking & High Himalayan Passes">Fastpacking &amp; High Himalayan Passes</option>
+                    <option value="Wildlife Safari & River Expeditions">Wildlife Safari &amp; River Expeditions</option>
+                  </select>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-                  <div>
-                    <span className="text-slate-400 font-medium text-[11px] uppercase tracking-wider block">
-                      Travel Style
-                    </span>
-                    <p className="font-semibold text-slate-800 text-xs mt-0.5">
-                      {preferences.travelStyle}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-slate-400 font-medium text-[11px] uppercase tracking-wider block">
-                      Adventure Level
-                    </span>
-                    <p className="font-semibold text-slate-800 text-xs mt-0.5">
-                      {preferences.adventureLevel}
-                    </p>
-                  </div>
+                <div className="space-y-1.5">
+                  <label className="font-bold text-slate-700 block">Trekking Difficulty Level:</label>
+                  <select
+                    value={preferences.adventureLevel}
+                    onChange={(e) => setPreferences({ ...preferences, adventureLevel: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
+                  >
+                    <option value="Easy / Gentle Cultural Walks (< 2,500m)">Easy / Gentle Cultural Walks (&lt; 2,500m)</option>
+                    <option value="Moderate Mountain Trekking (2,500m – 4,000m)">Moderate Mountain Trekking (2,500m – 4,000m)</option>
+                    <option value="Strenuous / High Altitude (5,000m+)">Strenuous / High Altitude (5,000m+)</option>
+                    <option value="Technical Alpine Mountaineering (> 6,000m)">Technical Alpine Mountaineering (&gt; 6,000m)</option>
+                  </select>
+                </div>
+              </div>
+
+              {/* Accommodation & Dietary */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-1.5">
+                  <label className="font-bold text-slate-700 block">Preferred Accommodation Style:</label>
+                  <select
+                    value={preferences.accommodation}
+                    onChange={(e) => setPreferences({ ...preferences, accommodation: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
+                  >
+                    <option value="Mountain Eco-Lodges & Authentic Teahouses">Mountain Eco-Lodges &amp; Authentic Teahouses</option>
+                    <option value="5-Star Heritage Hotels & Boutique Stays">5-Star Heritage Hotels &amp; Boutique Stays</option>
+                    <option value="Luxury Glamping & Wilderness Tents">Luxury Glamping &amp; Wilderness Tents</option>
+                    <option value="Traditional Homestays with Local Families">Traditional Homestays with Local Families</option>
+                  </select>
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="font-bold text-slate-700 block">Dietary Preferences on Trail:</label>
+                  <select
+                    value={preferences.dietary}
+                    onChange={(e) => setPreferences({ ...preferences, dietary: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 bg-slate-50 p-2.5 text-xs text-slate-800 font-medium focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0552A2]/20"
+                  >
+                    <option value="Vegetarian / High-Carb High-Altitude Trail Diet">Vegetarian / High-Carb High-Altitude Trail Diet</option>
+                    <option value="Standard Nepali Dal Bhat & Mountain Cuisine">Standard Nepali Dal Bhat &amp; Mountain Cuisine</option>
+                    <option value="Vegan / Plant-Based Only">Vegan / Plant-Based Only</option>
+                    <option value="Gluten-Free Trail Menu">Gluten-Free Trail Menu</option>
+                  </select>
                 </div>
               </div>
             </div>
+          </div>
+        )}
 
-            {/* 3. Emergency & Mountain Safety Details */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 space-y-3">
-              <div className="flex items-center gap-2 pb-2.5 border-b border-slate-200/80">
-                <ShieldCheck className="h-4 w-4 text-red-600" />
-                <h3 className="font-poppins text-sm font-bold text-slate-900">
-                  Emergency &amp; Mountain Rescue
-                </h3>
+        {/* -------------------------------------------------------------------------
+            TAB 4: TRIPS & BOOKINGS
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'trips' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="space-y-0.5">
+                <h2 className="font-poppins text-lg font-bold text-slate-900">
+                  Trips &amp; Confirmed Reservations
+                </h2>
+                <p className="text-xs text-slate-500">
+                  All active hotel bookings, trekking permits, and travel passes connected to your account.
+                </p>
               </div>
 
-              <div className="space-y-2.5 text-xs">
-                <div>
-                  <span className="text-slate-400 font-medium text-[10.5px] uppercase tracking-wider block">
-                    Primary Emergency Contact
-                  </span>
-                  <p className="font-semibold text-slate-800 text-xs mt-0.5">
-                    {documents.emergencyPrimary}
-                  </p>
-                </div>
-
-                <div>
-                  <span className="text-slate-400 font-medium text-[10.5px] uppercase tracking-wider block">
-                    Satellite Telemetry Link
-                  </span>
-                  <p className="font-mono font-semibold text-slate-800 text-xs mt-0.5">
-                    {documents.satelliteDevice}
-                  </p>
-                </div>
-
-                <div className="p-3 rounded-xl bg-red-50/70 border border-red-200/80">
-                  <div className="flex items-center gap-2 text-red-700 font-semibold text-xs">
-                    <Phone className="h-3.5 w-3.5 shrink-0" />
-                    <span>Himalayan Rescue (HRA) Hotline</span>
-                  </div>
-                  <p className="text-[11px] text-red-600 font-mono font-bold mt-1">
-                    +977 1 4256909 / 1144 (24/7 SAR Heli Dispatch)
-                  </p>
-                </div>
-              </div>
+              <Link
+                href="/bookings"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white px-3.5 py-2 text-xs font-semibold shadow-2xs transition-colors"
+              >
+                <span>Manage In Booking Hub</span>
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
             </div>
 
-            {/* 4. Account Security & Privacy Card */}
-            <div className="bg-white rounded-2xl border border-slate-200/90 shadow-xs p-5 space-y-3">
-              <div className="flex items-center justify-between pb-2.5 border-b border-slate-200/80">
-                <div className="flex items-center gap-2">
-                  <Lock className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-sm font-bold text-slate-900">
-                    Account Security &amp; Privacy
-                  </h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsChangePasswordOpen(true)}
-                  className="text-xs font-semibold text-[#0552A2] hover:text-[#044182] cursor-pointer"
+            <div className="space-y-3">
+              {bookings.map((b) => (
+                <div
+                  key={b.id}
+                  className="p-4 rounded-xl border border-slate-200/90 bg-white hover:border-[#0552A2]/50 transition-all shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3"
                 >
-                  Update
-                </button>
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10.5px] font-bold text-[#0552A2] bg-blue-50 border border-blue-200 px-2 py-0.5 rounded">
+                        {b.id}
+                      </span>
+                      <span className="px-2 py-0.5 rounded text-[10.5px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                        {b.status}
+                      </span>
+                      <span className="text-xs text-slate-400">•</span>
+                      <span className="text-xs text-slate-500">{b.category}</span>
+                    </div>
+                    <h3 className="font-bold text-slate-900 text-sm">{b.title}</h3>
+                    <p className="text-xs text-slate-500">{b.date} • Rendezvous: {b.meetingPoint}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between sm:justify-end gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                    <span className="font-poppins font-bold text-slate-900 text-sm">{b.amount}</span>
+                    <Link
+                      href="/bookings"
+                      className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-semibold"
+                    >
+                      View Details
+                    </Link>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------------------
+            TAB 5: SAVED DESTINATIONS
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'saved' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="space-y-0.5">
+                <h2 className="font-poppins text-lg font-bold text-slate-900">
+                  Saved Destinations &amp; Stays Wishlist
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Himalayan peaks, protected conservation areas, and heritage hotels saved for future expeditions.
+                </p>
               </div>
 
-              <div className="space-y-2.5 text-xs">
+              <Link
+                href="/explore"
+                className="inline-flex items-center gap-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 px-3.5 py-2 text-xs font-semibold"
+              >
+                <span>Browse More</span>
+                <Compass className="h-3.5 w-3.5 text-[#0552A2]" />
+              </Link>
+            </div>
+
+            {savedDestinations.length > 0 ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {savedDestinations.map((item) => (
+                  <div
+                    key={item.id}
+                    className="rounded-xl border border-slate-200 overflow-hidden bg-white shadow-2xs hover:shadow-md transition-all flex flex-col justify-between group"
+                  >
+                    <div className="relative h-36 w-full bg-slate-100 overflow-hidden">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      />
+                      <span className="absolute top-2 left-2 px-2 py-0.5 rounded bg-black/60 backdrop-blur-xs text-white text-[10px] font-bold">
+                        {item.category}
+                      </span>
+                    </div>
+
+                    <div className="p-3.5 space-y-1.5">
+                      <h3 className="font-bold text-slate-900 text-xs sm:text-sm line-clamp-1">{item.title}</h3>
+                      <p className="text-[11px] text-slate-500 flex items-center gap-1">
+                        <MapPin className="h-3 w-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{item.region}</span>
+                      </p>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+                        <Link
+                          href={item.link}
+                          className="text-xs font-bold text-[#0552A2] hover:underline"
+                        >
+                          Explore
+                        </Link>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveSaved(item.id)}
+                          className="text-slate-400 hover:text-red-600 transition-colors cursor-pointer"
+                          title="Remove from saved"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-10 space-y-3">
+                <Bookmark className="h-10 w-10 text-slate-300 mx-auto" />
+                <h3 className="text-sm font-bold text-slate-800">Your wishlist is currently empty</h3>
+                <p className="text-xs text-slate-500 max-w-sm mx-auto">
+                  Explore destinations, trekking routes, and boutique stays to save them to your account.
+                </p>
+                <Link
+                  href="/explore"
+                  className="inline-block px-4 py-2 bg-[#0552A2] text-white rounded-xl text-xs font-bold"
+                >
+                  Explore Nepal
+                </Link>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------------------
+            TAB 6: DOCUMENTS & TRAVEL PASSES
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'documents' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-5">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="space-y-0.5">
+                <h2 className="font-poppins text-lg font-bold text-slate-900">
+                  Travel Documents &amp; Checkpoint Passes
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Government clearances, digital TIMS cards, and high-altitude emergency bonds.
+                </p>
+              </div>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-50 text-emerald-800 text-xs font-bold border border-emerald-200">
+                <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
+                <span>Verified Traveler Vault</span>
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">National Passport</span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                    Active &amp; Valid
+                  </span>
+                </div>
+                <p className="font-mono text-sm font-extrabold text-[#0552A2]">{documents.passportNo}</p>
+                <p className="text-[11px] text-slate-500">
+                  Issuing Country: {documents.passportCountry} • Expires: {documents.passportExpiry}
+                </p>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">Digital TIMS Permit</span>
+                  <span className="px-2 py-0.5 rounded bg-blue-100 text-[#0552A2] text-[10px] font-bold">
+                    Park Validated
+                  </span>
+                </div>
+                <p className="font-mono text-sm font-extrabold text-[#0552A2]">{documents.timsPermitId}</p>
+                <p className="text-[11px] text-slate-500">{documents.timsPermitCoverage}</p>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">National Citizenship / ID</span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                    Verified
+                  </span>
+                </div>
+                <p className="text-slate-800 font-semibold">{documents.visaStatus}</p>
+                <p className="text-[11px] text-slate-500">Department of National ID &amp; Civil Registration</p>
+              </div>
+
+              <div className="p-4 rounded-xl border border-slate-200 bg-slate-50/70 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-slate-900">Medical Altitude Clearance</span>
+                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">
+                    Cleared 5,400m
+                  </span>
+                </div>
+                <p className="text-slate-800 font-semibold">{documents.medicalClearance}</p>
+                <p className="text-[11px] text-slate-500">Himalayan Rescue Association Clearance Database</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* -------------------------------------------------------------------------
+            TAB 7: SECURITY & SETTINGS
+            ------------------------------------------------------------------------- */}
+        {activeTab === 'security' && (
+          <div className="rounded-2xl bg-white border border-slate-200/90 shadow-2xs p-6 space-y-6">
+            <div className="pb-3 border-b border-slate-100 space-y-0.5">
+              <h2 className="font-poppins text-lg font-bold text-slate-900">
+                Account Security &amp; Settings
+              </h2>
+              <p className="text-xs text-slate-500">
+                Manage your login credentials, two-factor authentication, and active sessions.
+              </p>
+            </div>
+
+            {/* Password & 2FA */}
+            <div className="space-y-3">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                1. Authentication &amp; Credentials
+              </h3>
+              <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 space-y-3 text-xs">
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-slate-400 font-medium text-[10.5px] uppercase tracking-wider block">
-                      Account Password
+                    <span className="font-bold text-slate-900 block">Account Password</span>
+                    <span className="text-slate-500 font-mono">••••••••••••••••</span>
+                    <span className="text-[10.5px] text-slate-400 ml-2">
+                      (Changed {securitySettings.passwordLastChanged})
                     </span>
-                    <span className="font-mono text-slate-700">••••••••••••••••</span>
                   </div>
-                  <span className="text-[10.5px] text-slate-400">Changed {securityData.passwordLastChanged}</span>
+                  <button
+                    type="button"
+                    onClick={() => setIsChangePasswordOpen(true)}
+                    className="px-3 py-1.5 rounded-lg border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 font-semibold cursor-pointer"
+                  >
+                    Change Password
+                  </button>
                 </div>
 
-                <div className="pt-2 border-t border-slate-100 flex items-center justify-between">
+                <div className="pt-2 border-t border-slate-200/60 flex items-center justify-between">
                   <div>
-                    <span className="text-slate-400 font-medium text-[10.5px] uppercase tracking-wider block">
-                      Two-Factor Authentication
-                    </span>
-                    <span className="font-semibold text-emerald-700 text-xs">Protected &amp; Active</span>
+                    <span className="font-bold text-slate-900 block">Two-Factor Authentication (2FA)</span>
+                    <span className="text-slate-500">Protect account via authenticator app / SMS tokens</span>
                   </div>
-                  <span className="h-2 w-2 rounded-full bg-emerald-500" />
+                  <span className="px-2.5 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-[11px] font-bold">
+                    Enabled
+                  </span>
                 </div>
-              </div>
-
-              {/* Sign Out Action */}
-              <div className="pt-3 border-t border-slate-100 flex items-center justify-between">
-                <span className="text-[11px] text-slate-400 font-medium">Session Control</span>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-200 bg-red-50/70 hover:bg-red-100 text-red-600 text-xs font-semibold transition-colors cursor-pointer"
-                >
-                  <LogOut className="h-3.5 w-3.5" />
-                  <span>Sign Out</span>
-                </button>
               </div>
             </div>
 
-          </div>
-        </div>
+            {/* Active Devices & Sessions */}
+            <div className="space-y-3 pt-2">
+              <h3 className="text-xs font-bold uppercase tracking-wider text-slate-400">
+                2. Active Login Sessions
+              </h3>
+              <div className="space-y-2 text-xs">
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-white flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Laptop className="h-5 w-5 text-[#0552A2]" />
+                    <div>
+                      <p className="font-bold text-slate-900">MacBook Pro • macOS (Chrome)</p>
+                      <p className="text-[11px] text-slate-500">Kathmandu, Nepal • IP 103.240.x.x (Active Session)</p>
+                    </div>
+                  </div>
+                  <span className="text-emerald-700 font-bold text-[11px]">This Device</span>
+                </div>
 
+                <div className="p-3.5 rounded-xl border border-slate-200 bg-white flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Smartphone className="h-5 w-5 text-slate-400" />
+                    <div>
+                      <p className="font-bold text-slate-900">iPhone 15 Pro • iOS (Safari)</p>
+                      <p className="text-[11px] text-slate-500">Pokhara, Nepal • Active 2 hours ago</p>
+                    </div>
+                  </div>
+                  <span className="text-slate-400 text-[11px]">Mobile App</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Session Actions & Danger Zone */}
+            <div className="pt-4 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+              <button
+                type="button"
+                onClick={handleLogout}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-300 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold transition-colors cursor-pointer"
+              >
+                <LogOut className="h-3.5 w-3.5 text-slate-500" />
+                <span>Sign Out of Session</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setIsDeleteModalOpen(true)}
+                className="inline-flex items-center gap-1 text-xs font-semibold text-rose-600 hover:text-rose-700 hover:underline cursor-pointer"
+              >
+                <span>Request Account Deletion</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* =========================================================================
-          MOBILE BOTTOM NAVIGATION BAR (Image 2 Exact Native App Replica)
+          MODAL 1: EDIT PROFILE MODAL
           ========================================================================= */}
-      <nav className="fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200 px-3 py-2 sm:hidden flex items-center justify-around shadow-lg">
-        <Link href="/" className="flex flex-col items-center text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-          <Home className="h-5 w-5 mb-0.5" />
-          <span>Home</span>
-        </Link>
-        <Link href="/explore" className="flex flex-col items-center text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-          <Compass className="h-5 w-5 mb-0.5" />
-          <span>Explore</span>
-        </Link>
-        <Link href="/schedule" className="flex flex-col items-center text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-          <Calendar className="h-5 w-5 mb-0.5" />
-          <span>Schedule</span>
-        </Link>
-        <Link href="/bookings" className="flex flex-col items-center text-slate-500 hover:text-slate-900 text-[10px] font-medium">
-          <Ticket className="h-5 w-5 mb-0.5" />
-          <span>Booking</span>
-        </Link>
-        <Link href="/profile" className="flex flex-col items-center text-emerald-600 text-[10px] font-bold">
-          <User className="h-5 w-5 mb-0.5 stroke-[2.5]" />
-          <span>Account</span>
-        </Link>
-      </nav>
+      {isEditProfileOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsEditProfileOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
+        >
+          <div className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter my-6 animate-scale-up">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <User className="h-4 w-4 text-[#0552A2]" />
+                <h3 className="font-poppins text-base font-bold text-slate-900">Edit Profile</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsEditProfileOpen(false)}
+                className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
 
-      {/* =========================================================================
-          MODAL 2: EDIT PROFILE MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isEditProfileOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
-            onClick={() => setIsEditProfileOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter"
-            >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <User className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Edit Profile</h3>
+            <form onSubmit={handleSaveProfile} className="p-5 space-y-4 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Full Legal Name</label>
+                <input
+                  type="text"
+                  value={tempProfile.name}
+                  onChange={(e) => setTempProfile({ ...tempProfile, name: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Mobile Phone</label>
+                  <input
+                    type="text"
+                    value={tempProfile.phone}
+                    onChange={(e) => setTempProfile({ ...tempProfile, phone: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                    required
+                  />
                 </div>
+
+                <div>
+                  <label className="font-semibold text-slate-700 block mb-1">Date of Birth</label>
+                  <input
+                    type="text"
+                    value={tempProfile.dob}
+                    onChange={(e) => setTempProfile({ ...tempProfile, dob: e.target.value })}
+                    className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Residential Address</label>
+                <input
+                  type="text"
+                  value={tempProfile.address}
+                  onChange={(e) => setTempProfile({ ...tempProfile, address: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Bio &amp; Traveler Focus</label>
+                <textarea
+                  rows={3}
+                  value={tempProfile.bio}
+                  onChange={(e) => setTempProfile({ ...tempProfile, bio: e.target.value })}
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none resize-none"
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setIsEditProfileOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+                  className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
                 >
-                  <X className="h-4 w-4" />
+                  Cancel
                 </button>
-              </div>
-
-              <form onSubmit={handleSaveProfile} className="p-5 space-y-4 text-xs">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Full Legal Name</label>
-                  <input
-                    type="text"
-                    value={tempProfile.name}
-                    onChange={(e) => setTempProfile({ ...tempProfile, name: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Mobile Phone</label>
-                    <input
-                      type="text"
-                      value={tempProfile.phone}
-                      onChange={(e) => setTempProfile({ ...tempProfile, phone: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                      required
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Date of Birth</label>
-                    <input
-                      type="text"
-                      value={tempProfile.dob}
-                      onChange={(e) => setTempProfile({ ...tempProfile, dob: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Nationality</label>
-                    <input
-                      type="text"
-                      value={tempProfile.nationality}
-                      onChange={(e) => setTempProfile({ ...tempProfile, nationality: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="font-semibold text-slate-700 block mb-1">Country</label>
-                    <input
-                      type="text"
-                      value={tempProfile.country}
-                      onChange={(e) => setTempProfile({ ...tempProfile, country: e.target.value })}
-                      className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Permanent Residential Address</label>
-                  <input
-                    type="text"
-                    value={tempProfile.address}
-                    onChange={(e) => setTempProfile({ ...tempProfile, address: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Traveler Biography</label>
-                  <textarea
-                    rows={3}
-                    value={tempProfile.bio}
-                    onChange={(e) => setTempProfile({ ...tempProfile, bio: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditProfileOpen(false)}
-                    className="rounded-lg px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-[#0552A2] hover:bg-[#044182] px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* =========================================================================
-          MODAL 3: UPDATE PREFERENCES MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isEditPreferencesOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs overflow-y-auto"
-            onClick={() => setIsEditPreferencesOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-lg rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter"
-            >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Compass className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Update Travel Preferences</h3>
-                </div>
                 <button
-                  type="button"
-                  onClick={() => setIsEditPreferencesOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+                  type="submit"
+                  className="rounded-xl bg-[#0552A2] hover:bg-[#044182] px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
                 >
-                  <X className="h-4 w-4" />
+                  Save Profile Changes
                 </button>
               </div>
-
-              <form onSubmit={handleSavePreferences} className="p-5 space-y-4 text-xs">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Travel Style</label>
-                  <input
-                    type="text"
-                    value={tempPreferences.travelStyle}
-                    onChange={(e) => setTempPreferences({ ...tempPreferences, travelStyle: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Adventure Level</label>
-                  <input
-                    type="text"
-                    value={tempPreferences.adventureLevel}
-                    onChange={(e) => setTempPreferences({ ...tempPreferences, adventureLevel: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Accommodation Preference</label>
-                  <input
-                    type="text"
-                    value={tempPreferences.accommodation}
-                    onChange={(e) => setTempPreferences({ ...tempPreferences, accommodation: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => setIsEditPreferencesOpen(false)}
-                    className="rounded-lg px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-[#0552A2] hover:bg-[#044182] px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
-                  >
-                    Save Preferences
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* =========================================================================
-          MODAL 4: CHANGE PASSWORD MODAL
+          MODAL 2: CHANGE AVATAR MODAL
           ========================================================================= */}
-      <AnimatePresence>
-        {isChangePasswordOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
-            onClick={() => setIsChangePasswordOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter"
-            >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Key className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Change Account Password</h3>
-                </div>
+      {isAvatarModalOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsAvatarModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <Camera className="h-4 w-4 text-[#0552A2]" />
+                <h3 className="font-poppins text-base font-bold text-slate-900">Select Profile Photo</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAvatarModalOpen(false)}
+                className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2.5">
+              {[
+                'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=400&q=80',
+                'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80',
+              ].map((url) => (
+                <button
+                  key={url}
+                  type="button"
+                  onClick={() => {
+                    setProfileData((prev) => ({ ...prev, avatar: url }));
+                    setIsAvatarModalOpen(false);
+                    showToast('Profile photo updated');
+                  }}
+                  className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
+                    profileData.avatar === url
+                      ? 'border-[#0552A2] ring-2 ring-blue-200'
+                      : 'border-slate-200 hover:border-slate-400'
+                  }`}
+                >
+                  <img src={url} alt="Option" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          MODAL 3: CHANGE PASSWORD MODAL
+          ========================================================================= */}
+      {isChangePasswordOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsChangePasswordOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
+        >
+          <div className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+              <div className="flex items-center gap-2">
+                <Key className="h-4 w-4 text-[#0552A2]" />
+                <h3 className="font-poppins text-base font-bold text-slate-900">Change Account Password</h3>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsChangePasswordOpen(false)}
+                className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+              >
+                <X className="h-4 w-4" />
+              </button>
+            </div>
+
+            <form onSubmit={handleChangePassword} className="space-y-3.5 text-xs">
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Current Password</label>
+                <input
+                  type="password"
+                  value={passwordForm.currentPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
+                  placeholder="Enter current password"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">New Password</label>
+                <input
+                  type="password"
+                  value={passwordForm.newPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
+                  placeholder="Minimum 8 characters"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="font-semibold text-slate-700 block mb-1">Confirm New Password</label>
+                <input
+                  type="password"
+                  value={passwordForm.confirmPassword}
+                  onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
+                  placeholder="Re-type new password"
+                  className="w-full rounded-xl border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
+                  required
+                />
+              </div>
+
+              <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
                 <button
                   type="button"
                   onClick={() => setIsChangePasswordOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
+                  className="rounded-xl px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
                 >
-                  <X className="h-4 w-4" />
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#0552A2] hover:bg-[#044182] px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
+                >
+                  Update Password
                 </button>
               </div>
-
-              <form onSubmit={handleChangePassword} className="p-5 space-y-4 text-xs">
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Current Password</label>
-                  <input
-                    type="password"
-                    placeholder="Enter current password"
-                    value={passwordForm.currentPassword}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, currentPassword: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">New Password</label>
-                  <input
-                    type="password"
-                    placeholder="Minimum 8 characters"
-                    value={passwordForm.newPassword}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, newPassword: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="font-semibold text-slate-700 block mb-1">Confirm New Password</label>
-                  <input
-                    type="password"
-                    placeholder="Re-type new password"
-                    value={passwordForm.confirmPassword}
-                    onChange={(e) => setPasswordForm({ ...passwordForm, confirmPassword: e.target.value })}
-                    className="w-full rounded-lg border border-slate-200 px-3 py-2 text-xs focus:border-[#0552A2] focus:outline-none"
-                    required
-                  />
-                </div>
-
-                <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-200">
-                  <button
-                    type="button"
-                    onClick={() => setIsChangePasswordOpen(false)}
-                    className="rounded-lg px-4 py-2 text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="rounded-lg bg-[#0552A2] hover:bg-[#044182] px-4 py-2 text-xs font-semibold text-white shadow-xs cursor-pointer"
-                  >
-                    Update Password
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </form>
+          </div>
+        </div>
+      )}
 
       {/* =========================================================================
-          MODAL 5: AVATAR PICKER MODAL
+          MODAL 4: DELETE ACCOUNT CONFIRMATION
           ========================================================================= */}
-      <AnimatePresence>
-        {isAvatarModalOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
-            onClick={() => setIsAvatarModalOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter"
-            >
-              <div className="flex items-center justify-between px-5 py-4 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Camera className="h-4 w-4 text-[#0552A2]" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Choose Profile Photo</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsAvatarModalOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
+      {isDeleteModalOpen && (
+        <div
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsDeleteModalOpen(false);
+          }}
+          className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
+        >
+          <div className="w-full max-w-sm rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4">
+            <div className="flex items-center gap-2 text-rose-600">
+              <AlertTriangle className="h-5 w-5" />
+              <h3 className="font-poppins text-base font-bold">Request Account Deletion</h3>
+            </div>
 
-              <div className="p-5 space-y-4 text-xs">
-                <p className="text-slate-500">Select an explorer avatar from the verified Himalayan library:</p>
-                <div className="grid grid-cols-4 gap-3">
-                  {[
-                    'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1544735716-392fe2489ffa?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-                  ].map((url, idx) => (
-                    <button
-                      key={idx}
-                      type="button"
-                      onClick={() => {
-                        setProfileData((prev) => ({ ...prev, avatar: url }));
-                        setIsAvatarModalOpen(false);
-                        if (showToast) showToast('Avatar updated');
-                      }}
-                      className={`relative aspect-square rounded-xl overflow-hidden border-2 transition-all cursor-pointer ${
-                        profileData.avatar === url ? 'border-[#0552A2] ring-2 ring-blue-200' : 'border-slate-200 hover:border-slate-400'
-                      }`}
-                    >
-                      <img src={url} alt="Option" className="h-full w-full object-cover" />
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Are you sure you want to request account deletion? Per Nepal Tourism Board regulations, verified government permit records and official VAT tax invoices must remain on file for statutory audit periods.
+            </p>
 
-      {/* =========================================================================
-          MODAL 6: SAVED PLACES MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isSavedPlacesOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
-            onClick={() => setIsSavedPlacesOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Bookmark className="h-4 w-4 text-emerald-600" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Saved Places</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsSavedPlacesOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              <div className="text-center py-6 space-y-2">
-                <div className="h-12 w-12 rounded-full bg-blue-50 text-[#0552A2] mx-auto flex items-center justify-center">
-                  <Bookmark className="h-6 w-6" />
-                </div>
-                <h4 className="font-bold text-slate-800 text-sm">No saved places yet</h4>
-                <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                  Browse destinations, trekking packages, and heritage hotels to save them to your account.
-                </p>
-                <Link
-                  href="/destinations"
-                  onClick={() => setIsSavedPlacesOpen(false)}
-                  className="inline-block mt-3 px-4 py-2 bg-[#0552A2] text-white rounded-xl text-xs font-semibold shadow-xs hover:bg-[#044182]"
-                >
-                  Browse Destinations
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* =========================================================================
-          MODAL 7: REVIEWS & RATINGS MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isReviewsOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
-            onClick={() => setIsReviewsOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Star className="h-4 w-4 text-amber-500" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">Reviews &amp; Ratings</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsReviewsOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              <div className="text-center py-6 space-y-2">
-                <div className="h-12 w-12 rounded-full bg-amber-50 text-amber-500 mx-auto flex items-center justify-center">
-                  <Star className="h-6 w-6" />
-                </div>
-                <h4 className="font-bold text-slate-800 text-sm">No reviews submitted</h4>
-                <p className="text-xs text-slate-500 max-w-xs mx-auto">
-                  After completing your booked trek or hotel stay, your verified reviews will appear here.
-                </p>
-                <Link
-                  href="/dashboard"
-                  onClick={() => setIsReviewsOpen(false)}
-                  className="inline-block mt-3 px-4 py-2 bg-[#0552A2] text-white rounded-xl text-xs font-semibold shadow-xs hover:bg-[#044182]"
-                >
-                  View Completed Trips
-                </Link>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* =========================================================================
-          MODAL 8: MY DOCUMENTS MODAL
-          ========================================================================= */}
-      <AnimatePresence>
-        {isDocumentsOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-slate-950/70 backdrop-blur-xs"
-            onClick={() => setIsDocumentsOpen(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0, y: 10 }}
-              animate={{ scale: 1, opacity: 1, y: 0 }}
-              exit={{ scale: 0.95, opacity: 0, y: 10 }}
-              onClick={(e) => e.stopPropagation()}
-              className="w-full max-w-md rounded-2xl bg-white shadow-2xl border border-slate-200 overflow-hidden font-inter p-5 space-y-4 text-xs"
-            >
-              <div className="flex items-center justify-between pb-3 border-b border-slate-200">
-                <div className="flex items-center gap-2">
-                  <Folder className="h-4 w-4 text-indigo-600" />
-                  <h3 className="font-poppins text-base font-bold text-slate-900">My Travel Documents</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setIsDocumentsOpen(false)}
-                  className="h-8 w-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 cursor-pointer"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-
-              <div className="space-y-3">
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-800 block">Digital TIMS Permit</span>
-                    <span className="text-[11px] text-slate-500 font-mono">{documents.timsPermitId}</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Active Permit</span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-800 block">Passport Record</span>
-                    <span className="text-[11px] text-slate-500 font-mono">{documents.passportNo} ({documents.passportCountry})</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-emerald-100 text-emerald-800 text-[10px] font-bold">Verified</span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
-                  <div>
-                    <span className="font-semibold text-slate-800 block">High Altitude Clearance</span>
-                    <span className="text-[11px] text-slate-500">{documents.medicalClearance}</span>
-                  </div>
-                  <span className="px-2 py-0.5 rounded bg-blue-100 text-[#0552A2] text-[10px] font-bold">Active</span>
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-slate-200 flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setIsDocumentsOpen(false)}
-                  className="px-4 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium cursor-pointer"
-                >
-                  Done
-                </button>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsDeleteModalOpen(false)}
+                className="px-3.5 py-2 rounded-xl border border-slate-200 text-slate-700 font-semibold text-xs hover:bg-slate-50 cursor-pointer"
+              >
+                Keep Account
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsDeleteModalOpen(false);
+                  showToast('Deletion request submitted to data officer');
+                }}
+                className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-xs cursor-pointer"
+              >
+                Confirm Request
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
