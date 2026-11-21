@@ -17,7 +17,15 @@ import {
 import { api } from '@/lib/api';
 import { resetGlobalAuth } from '@/store/useTravelStore';
 
-export type UserRole = 'traveler' | 'business' | 'guide' | 'butler' | 'admin';
+export type UserRole =
+  | 'super_admin'
+  | 'ntb_admin'
+  | 'admin'
+  | 'agency'
+  | 'business'
+  | 'guide'
+  | 'butler'
+  | 'traveler';
 
 export interface CurrentUser {
   id: string;
@@ -27,26 +35,45 @@ export interface CurrentUser {
   phone?: string;
   avatarUrl?: string;
   kycStatus?: string;
+  impersonatedBy?: string;
 }
 
 const roleDefaultEmails: Record<UserRole, string> = {
-  traveler: 'aayush.traveler@visitnepal.com',
+  super_admin: 'superadmin@visitnepal.com',
+  ntb_admin: 'officer@ntb.gov.np',
+  admin: 'officer@ntb.gov.np',
+  agency: 'partner@himalayanexpeditions.com',
   business: 'partner@himalayanexpeditions.com',
   guide: 'pasang.sherpa@visitnepal.com',
   butler: 'sherpa.butler@visitnepal.com',
-  admin: 'officer@ntb.gov.np',
+  traveler: 'aayush.traveler@visitnepal.com',
 };
 
 export const personaDefaults: Record<UserRole, { name: string; email: string; title: string }> = {
-  traveler: {
-    name: 'Aayush Pradhan',
-    email: 'aayush.traveler@visitnepal.com',
-    title: 'Verified Himalayan Trekker',
+  super_admin: {
+    name: 'Govinda Thapa (Director)',
+    email: 'superadmin@visitnepal.com',
+    title: 'Super Admin · Executive Platform Director',
+  },
+  ntb_admin: {
+    name: 'Kritish Shrestha (Officer)',
+    email: 'officer@ntb.gov.np',
+    title: 'Nepal Tourism Board (NTB) Government Admin Desk',
+  },
+  admin: {
+    name: 'Kritish Shrestha (Officer)',
+    email: 'officer@ntb.gov.np',
+    title: 'Nepal Tourism Board (NTB) Government Admin Desk',
+  },
+  agency: {
+    name: 'Himalayan Sherpa Expeditions',
+    email: 'partner@himalayanexpeditions.com',
+    title: 'Licensed Tour Operator & Expedition Suite',
   },
   business: {
-    name: 'Himalayan Expeditions Partner',
+    name: 'Himalayan Sherpa Expeditions',
     email: 'partner@himalayanexpeditions.com',
-    title: 'Licensed Tour Operator Agency',
+    title: 'Licensed Tour Operator & Expedition Suite',
   },
   guide: {
     name: 'Pasang Nuru Sherpa',
@@ -58,10 +85,10 @@ export const personaDefaults: Record<UserRole, { name: string; email: string; ti
     email: 'sherpa.butler@visitnepal.com',
     title: 'VIP Sherpa Butler & Concierge',
   },
-  admin: {
-    name: 'Ministry Tourism Officer',
-    email: 'officer@ntb.gov.np',
-    title: 'Nepal Tourism Board (NTB) Government Admin Desk',
+  traveler: {
+    name: 'Aayush Pradhan',
+    email: 'aayush.traveler@visitnepal.com',
+    title: 'Verified Himalayan Trekker',
   },
 };
 
@@ -92,6 +119,10 @@ interface AppContextType {
   showToast: (msg: string) => void;
   refreshData: () => Promise<void>;
   logout: () => void;
+  impersonationSource: CurrentUser | null;
+  impersonateUser: (user: CurrentUser, token?: string) => void;
+  exitImpersonation: () => void;
+  hasPermission: (permission: string) => boolean;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -110,6 +141,53 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [notificationsList, setNotificationsList] =
     useState<NotificationItem[]>(initialNotifications);
   const [toast, setToast] = useState<string | null>(null);
+  const [impersonationSource, setImpersonationSource] = useState<CurrentUser | null>(null);
+
+  const impersonateUser = (target: CurrentUser, token?: string) => {
+    if (!currentUser) return;
+    setImpersonationSource(currentUser);
+    const impersonated = { ...target, impersonatedBy: currentUser.email };
+    setCurrentUser(impersonated);
+    setRoleState(target.role);
+    if (token) {
+      try {
+        localStorage.setItem('vn_auth_token', token);
+      } catch {
+        // Ignore
+      }
+    }
+    showToast(`Impersonating: ${target.name} (${target.role.toUpperCase()})`);
+  };
+
+  const exitImpersonation = () => {
+    if (!impersonationSource) return;
+    const restored = impersonationSource;
+    setImpersonationSource(null);
+    setCurrentUser(restored);
+    setRoleState(restored.role);
+    try {
+      localStorage.setItem('vn_auth_token', `token-${restored.role}`);
+      localStorage.setItem('vn_user', JSON.stringify(restored));
+    } catch {
+      // Ignore
+    }
+    showToast(`Exited impersonation. Restored session: ${restored.name}`);
+  };
+
+  const hasPermission = (permission: string): boolean => {
+    if (role === 'super_admin') return true;
+    const matrix: Record<string, string[]> = {
+      ntb_admin: ['destinations.manage', 'content.manage', 'reports.view', 'users.view', 'hotels.view', 'hotels.approve', 'packages.view', 'packages.approve', 'reviews.moderate'],
+      admin: ['destinations.manage', 'content.manage', 'reports.view', 'users.view', 'hotels.view', 'hotels.approve', 'packages.view', 'packages.approve', 'reviews.moderate'],
+      agency: ['packages.create', 'packages.update', 'packages.view_own', 'bookings.view_own', 'payouts.view_own'],
+      business: ['packages.create', 'packages.update', 'packages.view_own', 'bookings.view_own', 'payouts.view_own'],
+      guide: ['bookings.view_assigned', 'itinerary.view_assigned', 'reports.submit', 'availability.manage'],
+      butler: ['bookings.view_assigned', 'logistics.manage', 'reports.submit', 'availability.manage'],
+      traveler: ['bookings.create', 'bookings.view_own', 'bookings.cancel_own', 'profile.manage'],
+    };
+    const allowed = matrix[role] || [];
+    return allowed.includes('*') || allowed.includes(permission);
+  };
 
   const showToast = (msg: string) => {
     setToast(msg);
@@ -654,8 +732,31 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         showToast,
         refreshData,
         logout,
+        impersonationSource,
+        impersonateUser,
+        exitImpersonation,
+        hasPermission,
       }}
     >
+      {impersonationSource && (
+        <div className="fixed top-0 inset-x-0 z-[120] bg-amber-500 text-slate-950 font-inter px-4 py-2 flex items-center justify-between shadow-md text-xs font-semibold">
+          <div className="flex items-center gap-2">
+            <span className="px-2 py-0.5 rounded bg-slate-950 text-amber-400 uppercase text-[10px] font-bold">
+              AUDITED SUPPORT IMPERSONATION
+            </span>
+            <span>
+              Viewing platform as <u>{currentUser?.name}</u> ({currentUser?.role}) — Impersonated by {impersonationSource.name}
+            </span>
+          </div>
+          <button
+            type="button"
+            onClick={exitImpersonation}
+            className="px-3 py-1 bg-slate-950 hover:bg-slate-900 text-white text-xs font-bold rounded-lg transition-colors cursor-pointer"
+          >
+            Exit Impersonation
+          </button>
+        </div>
+      )}
       {children}
       {toast && (
         <div className="fixed bottom-5 inset-x-4 sm:inset-x-auto sm:right-6 sm:bottom-6 sm:max-w-md z-[100] animate-fade-in pointer-events-auto">

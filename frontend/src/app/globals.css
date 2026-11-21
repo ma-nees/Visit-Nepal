@@ -489,3 +489,45 @@ button, a {
     transform: none !important;
   }
 }
+
+/* 
+ * ==============================================================================
+ * VISIT NEPAL GLOBAL RESPONSIVE LAYOUT SYSTEM (Left-Aligned, Full-Width)
+ * ==============================================================================
+ */
+.site-page-full,
+.site-container-full,
+.site-container-wide,
+.site-container-content {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: clamp(16px, 2.5vw, 40px);
+  padding-right: clamp(16px, 2.5vw, 40px);
+}
+
+.site-section-full {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: clamp(16px, 2.5vw, 40px);
+  padding-right: clamp(16px, 2.5vw, 40px);
+}
+
+.site-container-readable {
+  width: 100%;
+  max-width: none;
+  margin-left: 0;
+  margin-right: 0;
+  padding-left: clamp(16px, 2.5vw, 40px);
+  padding-right: clamp(16px, 2.5vw, 40px);
+}
+
+.site-container-prose {
+  width: 100%;
+  max-width: 960px;
+  margin-left: 0;
+  margin-right: auto;
+}

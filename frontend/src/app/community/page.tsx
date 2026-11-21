@@ -932,7 +932,7 @@ export default function CommunityPage() {
           TOP BANNER: Official Visit Nepal Community Header with Live Notification Bell
           ========================================================================= */}
       <header className="sticky top-0 z-30 border-b border-slate-200/90 bg-white/95 backdrop-blur-md transition-shadow duration-200 shadow-xs">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+        <div className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10 py-3">
           <div className="flex items-center gap-3">
             <button
               onClick={() => {
@@ -1048,7 +1048,7 @@ export default function CommunityPage() {
       {/* =========================================================================
           MAIN 3-COLUMN LAYOUT
           ========================================================================= */}
-      <main className="mx-auto max-w-7xl px-3 py-5 sm:px-6 lg:px-8">
+      <main className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-5">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
           {/* =====================================================================
               LEFT SIDEBAR (col-span-3): Navigation & Traveler Profile Card

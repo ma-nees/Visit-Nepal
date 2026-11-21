@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import { UserRole, DEFAULT_ROLE_PERMISSIONS } from '../middleware/auth';
 
 // Types definition matching the comprehensive schema
 export interface UserAccount {
@@ -9,7 +10,7 @@ export interface UserAccount {
   passwordHash: string;
   name: string;
   username?: string;
-  role: 'traveler' | 'business' | 'guide' | 'butler' | 'admin';
+  role: UserRole;
   status: 'active' | 'suspended' | 'banned';
   phone?: string;
   avatarUrl?: string;
@@ -547,7 +548,91 @@ export interface AuditLog {
   targetType: string;
   targetId: string;
   details: Record<string, any>;
+  reason?: string;
+  previousValue?: any;
+  newValue?: any;
+  ipAddress?: string;
   timestamp: string;
+}
+
+export interface PayoutTransaction {
+  id: string;
+  recipientId: string;
+  recipientName: string;
+  recipientRole: 'agency' | 'business' | 'guide' | 'butler' | 'hotel';
+  amountNpr: number;
+  status: 'pending' | 'completed' | 'rejected';
+  bankDetails: {
+    bankName: string;
+    accountNumber: string;
+    accountName: string;
+    branch: string;
+  };
+  notes?: string;
+  processedBy?: string;
+  processedAt?: string;
+  createdAt: string;
+}
+
+export interface RefundRecord {
+  id: string;
+  bookingId: string;
+  travelerId: string;
+  travelerName: string;
+  amountNpr: number;
+  reason: string;
+  status: 'pending' | 'approved' | 'rejected';
+  processedBy?: string;
+  processedAt?: string;
+  createdAt: string;
+}
+
+export interface PlatformSettings {
+  commissions: {
+    agencyCommissionPercent: number; // e.g. 12%
+    hotelCommissionPercent: number; // e.g. 10%
+    guideCommissionPercent: number; // e.g. 5%
+    butlerDailyCompensationNpr: number; // e.g. 6000
+  };
+  taxes: {
+    vatPercent: number; // 13%
+    serviceChargePercent: number; // 5%
+  };
+  general: {
+    siteTitle: string;
+    supportEmail: string;
+    supportPhone: string;
+    emergencyHotline: string;
+    maintenanceMode: boolean;
+    currency: string;
+    enableRegistration: boolean;
+    requireKycApproval: boolean;
+  };
+}
+
+export interface CmsContent {
+  heroBanner: {
+    title: string;
+    subtitle: string;
+    badge: string;
+    ctaPrimaryText: string;
+    ctaPrimaryLink: string;
+  };
+  announcements: Array<{
+    id: string;
+    title: string;
+    body: string;
+    type: 'info' | 'warning' | 'alert';
+    active: boolean;
+    createdAt: string;
+  }>;
+  travelAdvisories: Array<{
+    id: string;
+    region: string;
+    condition: 'Open' | 'Caution' | 'Restricted';
+    notes: string;
+    updatedAt: string;
+  }>;
 }
 
 export interface DatabaseState {
@@ -569,6 +654,11 @@ export interface DatabaseState {
   communityPosts: CommunityPost[];
   notifications: NotificationItem[];
   auditLogs: AuditLog[];
+  rolePermissions: Record<string, string[]>;
+  payouts: PayoutTransaction[];
+  refunds: RefundRecord[];
+  platformSettings: PlatformSettings;
+  cmsContent: CmsContent;
 }
 
 const DATA_FILE = path.join(__dirname, '../../data/db.json');
@@ -578,6 +668,20 @@ function getInitialSeedData(): DatabaseState {
   const passwordHash = bcrypt.hashSync('NepalTourism2026!', 10);
 
   const users: UserAccount[] = [
+    {
+      id: 'usr_super_admin_1',
+      email: 'superadmin@visitnepal.com',
+      passwordHash,
+      name: 'Govinda Thapa (Platform Director)',
+      role: 'super_admin',
+      status: 'active',
+      phone: '+977-1-4499000',
+      emergencyContact: 'HQ Ministry Desk (+977-1-4499001)',
+      kycStatus: 'verified',
+      bio: 'Super Administrator & Executive Director with master governance over Visit Nepal platform ecosystem.',
+      createdAt: '2026-01-01T00:00:00Z',
+      updatedAt: '2026-01-01T00:00:00Z',
+    },
     {
       id: 'usr_traveler_1',
       email: 'aayush.traveler@visitnepal.com',
@@ -1538,6 +1642,157 @@ function getInitialSeedData(): DatabaseState {
     },
   ];
 
+  const payouts: PayoutTransaction[] = [
+    {
+      id: 'PAY-2026-001',
+      recipientId: 'biz_1',
+      recipientName: 'Himalayan Sherpa Expeditions',
+      recipientRole: 'agency',
+      amountNpr: 280000,
+      status: 'completed',
+      bankDetails: {
+        bankName: 'Nepal Investment Mega Bank',
+        accountNumber: '01800100293812',
+        accountName: 'Himalayan Sherpa Expeditions Pvt Ltd',
+        branch: 'Thamel Branch, Kathmandu',
+      },
+      notes: 'Settlement for Everest Base Camp bookings (Jan-Feb 2026 cycle)',
+      processedBy: 'usr_super_admin_1',
+      processedAt: '2026-02-15T10:00:00Z',
+      createdAt: '2026-02-14T09:00:00Z',
+    },
+    {
+      id: 'PAY-2026-002',
+      recipientId: 'gd_1',
+      recipientName: 'Pasang Nuru Sherpa',
+      recipientRole: 'guide',
+      amountNpr: 96000,
+      status: 'pending',
+      bankDetails: {
+        bankName: 'Nabil Bank Ltd',
+        accountNumber: '00291049281729',
+        accountName: 'Pasang Nuru Sherpa',
+        branch: 'Namche Bazaar / Kathmandu',
+      },
+      notes: 'Guide daily rate settlement for 8 days high-altitude guidance',
+      createdAt: '2026-02-18T14:20:00Z',
+    },
+    {
+      id: 'PAY-2026-003',
+      recipientId: 'bt_1',
+      recipientName: 'Pemba Tenzing Sherpa',
+      recipientRole: 'butler',
+      amountNpr: 42500,
+      status: 'pending',
+      bankDetails: {
+        bankName: 'Global IME Bank',
+        accountNumber: '11902049281920',
+        accountName: 'Pemba Tenzing Sherpa',
+        branch: 'Khumjung / Lukla Desk',
+      },
+      notes: 'Alpine concierge and gear portage completion allowance',
+      createdAt: '2026-02-19T11:00:00Z',
+    },
+    {
+      id: 'PAY-2026-004',
+      recipientId: 'htl_barpeepal',
+      recipientName: 'Bar Peepal Resort',
+      recipientRole: 'hotel',
+      amountNpr: 185000,
+      status: 'completed',
+      bankDetails: {
+        bankName: 'Sanima Bank',
+        accountNumber: '00401029384756',
+        accountName: 'Bar Peepal Resort Pvt Ltd',
+        branch: 'Lakeside Pokhara',
+      },
+      notes: 'Direct reservation payout after 10% platform commission',
+      processedBy: 'usr_super_admin_1',
+      processedAt: '2026-02-16T15:30:00Z',
+      createdAt: '2026-02-15T12:00:00Z',
+    },
+  ];
+
+  const refunds: RefundRecord[] = [
+    {
+      id: 'REF-2026-001',
+      bookingId: 'BKG-51042',
+      travelerId: 'usr_traveler_1',
+      travelerName: 'Aayush Pradhan',
+      amountNpr: 35000,
+      reason: 'Adverse weather grounding Lukla flights - partial cancellation authorized by NTB',
+      status: 'pending',
+      createdAt: '2026-02-16T08:30:00Z',
+    },
+  ];
+
+  const platformSettings: PlatformSettings = {
+    commissions: {
+      agencyCommissionPercent: 12,
+      hotelCommissionPercent: 10,
+      guideCommissionPercent: 5,
+      butlerDailyCompensationNpr: 6000,
+    },
+    taxes: {
+      vatPercent: 13,
+      serviceChargePercent: 5,
+    },
+    general: {
+      siteTitle: 'Visit Nepal Official National Tourism & Expedition Platform',
+      supportEmail: 'support@visitnepal.com',
+      supportPhone: '+977 1 4256909',
+      emergencyHotline: '+977 1 4256909 / 1144',
+      maintenanceMode: false,
+      currency: 'NPR',
+      enableRegistration: true,
+      requireKycApproval: true,
+    },
+  };
+
+  const cmsContent: CmsContent = {
+    heroBanner: {
+      title: 'Journey Through the Sacred Realm of the High Himalaya',
+      subtitle: 'Official Government of Nepal Tourism Platform connecting global travelers to verified IFMGA Sherpa guides, iconic trekking circuits, and authentic heritage stays.',
+      badge: 'Nepal Tourism Board 2026 · Official Digital Gateway',
+      ctaPrimaryText: 'Explore Certified Expeditions',
+      ctaPrimaryLink: '/explore',
+    },
+    announcements: [
+      {
+        id: 'ann_1',
+        title: 'Spring 2026 High Altitude Permits Queue Now Open',
+        body: 'Expedition permits for Everest, Annapurna, and Upper Mustang are now processed with real-time digital verification seals.',
+        type: 'info',
+        active: true,
+        createdAt: '2026-02-15T00:00:00Z',
+      },
+      {
+        id: 'ann_2',
+        title: 'Mandatory Guide Regulation Compliance',
+        body: 'All solo and group foreign trekkers in restricted conservation zones must be accompanied by an NMA/IFMGA certified mountain guide.',
+        type: 'warning',
+        active: true,
+        createdAt: '2026-02-10T00:00:00Z',
+      },
+    ],
+    travelAdvisories: [
+      {
+        id: 'adv_1',
+        region: 'Solukhumbu (Everest Base Camp & Gokyo)',
+        condition: 'Open',
+        notes: 'Clear skies in morning. Snow above Lobuche (4,940m). Crampons and microspikes advised.',
+        updatedAt: '2026-02-20T06:00:00Z',
+      },
+      {
+        id: 'adv_2',
+        region: 'Thorong La Pass (Annapurna Circuit)',
+        condition: 'Caution',
+        notes: 'High wind velocity reported above 5,000m. Crossing strictly permitted between 05:00 - 09:00 AM only.',
+        updatedAt: '2026-02-19T18:00:00Z',
+      },
+    ],
+  };
+
   return {
     users,
     businesses,
@@ -1557,6 +1812,11 @@ function getInitialSeedData(): DatabaseState {
     communityPosts,
     notifications,
     auditLogs,
+    rolePermissions: { ...DEFAULT_ROLE_PERMISSIONS },
+    payouts,
+    refunds,
+    platformSettings,
+    cmsContent,
   };
 }
 
@@ -2175,8 +2435,40 @@ class DatabaseManager {
       if (fs.existsSync(DATA_FILE)) {
         const raw = fs.readFileSync(DATA_FILE, 'utf-8');
         const state = JSON.parse(raw);
+        let modified = false;
+
         if (!state.hotels || !Array.isArray(state.hotels) || state.hotels.length === 0) {
           state.hotels = getInitialHotels();
+          modified = true;
+        }
+
+        const initial = getInitialSeedData();
+        if (!state.rolePermissions) {
+          state.rolePermissions = initial.rolePermissions;
+          modified = true;
+        }
+        if (!state.payouts) {
+          state.payouts = initial.payouts;
+          modified = true;
+        }
+        if (!state.refunds) {
+          state.refunds = initial.refunds;
+          modified = true;
+        }
+        if (!state.platformSettings) {
+          state.platformSettings = initial.platformSettings;
+          modified = true;
+        }
+        if (!state.cmsContent) {
+          state.cmsContent = initial.cmsContent;
+          modified = true;
+        }
+        if (!state.users.some((u: UserAccount) => u.role === 'super_admin')) {
+          state.users.unshift(initial.users[0]);
+          modified = true;
+        }
+
+        if (modified) {
           this.saveDirect(state);
         }
         return state;

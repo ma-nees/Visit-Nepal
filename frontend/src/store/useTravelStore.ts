@@ -42,16 +42,13 @@ export function resetGlobalAuth() {
 }
 
 export function useTravelStore() {
-  const [currentUser, setCurrentUser] = useState<TravelUser>(globalUser);
-
-  useEffect(() => {
-    // Sync with localStorage on client mount if available
+  const [currentUser, setCurrentUser] = useState<TravelUser>(() => {
+    if (typeof window === 'undefined') return globalUser;
     try {
       const isLoggedOut = localStorage.getItem('vn_logged_out') === 'true';
       if (isLoggedOut) {
         globalUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
-        setCurrentUser({ ...globalUser });
-        return;
+        return globalUser;
       }
       const stored = localStorage.getItem('vn_user');
       if (stored) {
@@ -65,15 +62,15 @@ export function useTravelStore() {
           otpVerified: true,
           avatarUrl: parsed.avatarUrl,
         };
-        setCurrentUser({ ...globalUser });
-      } else {
-        globalUser = { ...DEFAULT_USER, loggedIn: false, otpVerified: false };
-        setCurrentUser({ ...globalUser });
+        return globalUser;
       }
     } catch {
       // LocalStorage unavailable
     }
+    return globalUser;
+  });
 
+  useEffect(() => {
     const listener = (user: TravelUser) => setCurrentUser(user);
     listeners.add(listener);
     return () => {

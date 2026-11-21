@@ -799,4 +799,166 @@ export const api = {
       return request(`/hotels/admin/reservations${query ? `?${query}` : ''}`);
     },
   },
+
+  // ============================================================================
+  // SUPER ADMIN & RBAC GOVERNANCE
+  // ============================================================================
+
+  admin: {
+    async getOverview(): Promise<any> {
+      return request('/admin/overview');
+    },
+
+    async getUsers(params?: { role?: string; status?: string; q?: string }): Promise<{ count: number; users: any[] }> {
+      const query = new URLSearchParams(params as any).toString();
+      return request(`/admin/users${query ? `?${query}` : ''}`);
+    },
+
+    async createUser(data: any): Promise<{ success: boolean; user: any }> {
+      return request('/admin/users', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async updateUser(id: string, data: any): Promise<{ success: boolean; user: any }> {
+      return request(`/admin/users/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async impersonateUser(id: string): Promise<{ success: boolean; message: string; token: string; user: any }> {
+      return request(`/admin/users/${id}/impersonate`, {
+        method: 'POST',
+      });
+    },
+
+    async getHotels(): Promise<{ count: number; hotels: any[] }> {
+      return request('/admin/hotels');
+    },
+
+    async createHotel(data: any): Promise<{ success: boolean; hotel: any }> {
+      return request('/admin/hotels', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async updateHotel(id: string, data: any): Promise<{ success: boolean; hotel: any }> {
+      return request(`/admin/hotels/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async deleteHotel(id: string): Promise<{ success: boolean; message: string }> {
+      return request(`/admin/hotels/${id}`, {
+        method: 'DELETE',
+      });
+    },
+
+    async getPackages(): Promise<{ count: number; packages: any[] }> {
+      return request('/admin/packages');
+    },
+
+    async createPackage(data: any): Promise<{ success: boolean; package: any }> {
+      return request('/admin/packages', {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async updatePackage(id: string, data: any): Promise<{ success: boolean; package: any }> {
+      return request(`/admin/packages/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async deletePackage(id: string): Promise<{ success: boolean; message: string }> {
+      return request(`/admin/packages/${id}`, {
+        method: 'DELETE',
+      });
+    },
+
+    async getBookings(params?: { status?: string; q?: string }): Promise<{ count: number; bookings: any[] }> {
+      const query = new URLSearchParams(params as any).toString();
+      return request(`/admin/bookings${query ? `?${query}` : ''}`);
+    },
+
+    async updateBooking(id: string, data: any): Promise<{ success: boolean; booking: any }> {
+      return request(`/admin/bookings/${id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async refundBooking(id: string, data: { amountNpr?: number; reason?: string }): Promise<{ success: boolean; message: string; refund: any }> {
+      return request(`/admin/bookings/${id}/refund`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async getFinances(): Promise<any> {
+      return request('/admin/finances');
+    },
+
+    async updateCommissionRules(data: any): Promise<{ success: boolean; commissions: any }> {
+      return request('/admin/finances/commission-rules', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async processPayout(id: string, data: { decision: 'completed' | 'rejected'; notes?: string }): Promise<{ success: boolean; payout: any }> {
+      return request(`/admin/finances/payouts/${id}/process`, {
+        method: 'POST',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async getCms(): Promise<{ cms: any }> {
+      return request('/admin/cms');
+    },
+
+    async updateCms(data: any): Promise<{ success: boolean; cms: any }> {
+      return request('/admin/cms', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async getPermissions(): Promise<{ permissions: Record<string, string[]> }> {
+      return request('/admin/permissions');
+    },
+
+    async updatePermissions(data: { role: string; permissions: string[] }): Promise<{ success: boolean; role: string; permissions: string[] }> {
+      return request('/admin/permissions', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async getSettings(): Promise<{ settings: any }> {
+      return request('/admin/settings');
+    },
+
+    async updateSettings(data: any): Promise<{ success: boolean; settings: any }> {
+      return request('/admin/settings', {
+        method: 'PATCH',
+        body: JSON.stringify(data),
+      });
+    },
+
+    async getAuditLogs(params?: { action?: string; actorRole?: string; q?: string }): Promise<{ count: number; logs: any[] }> {
+      const query = new URLSearchParams(params as any).toString();
+      return request(`/admin/audit-logs${query ? `?${query}` : ''}`);
+    },
+
+    async getSystemHealth(): Promise<any> {
+      return request('/admin/system-health');
+    },
+  },
 };

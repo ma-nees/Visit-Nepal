@@ -17,6 +17,7 @@ import schedulesRouter from './routes/schedules';
 import notificationsRouter from './routes/notifications';
 import safetyRouter from './routes/safety';
 import hotelsRouter from './routes/hotels';
+import adminRouter from './routes/admin';
 
 const app = express();
 
@@ -76,6 +77,7 @@ app.use('/api/schedules', schedulesRouter);
 app.use('/api/notifications', notificationsRouter);
 app.use('/api/safety', safetyRouter);
 app.use('/api/hotels', hotelsRouter);
+app.use('/api/admin', adminRouter);
 
 app.listen(env.port, () => {
   console.log(

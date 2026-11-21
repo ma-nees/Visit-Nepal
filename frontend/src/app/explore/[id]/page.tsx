@@ -42,7 +42,7 @@ function PackageDetailContent({
 
   if (!dest) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-20 text-center font-inter">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-20 text-left font-inter">
         <h1 className="text-2xl font-bold text-slate-900 font-poppins">
           Expedition Not Found
         </h1>
@@ -80,7 +80,7 @@ function PackageDetailContent({
     <div className="min-h-screen bg-slate-50/50 pb-28 sm:pb-24 lg:pb-20 font-inter text-slate-900 antialiased">
       {/* Top Breadcrumb Navigation */}
       <div className="border-b border-slate-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-2.5 sm:py-3.5 flex items-center justify-between text-xs gap-2">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-2.5 sm:py-3.5 flex items-center justify-between text-xs gap-2">
           <Link
             href="/explore"
             className="inline-flex items-center gap-1.5 font-medium text-slate-600 hover:text-[#0552A2] transition-colors min-w-0"
@@ -104,7 +104,7 @@ function PackageDetailContent({
           1. SOPHISTICATED EDITORIAL HERO (Mobile-First & Balanced Desktop Composition)
           ========================================================================= */}
       <div className="bg-white border-b border-slate-200/80">
-        <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 py-4 sm:py-8 lg:py-10">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-8 lg:py-10">
           <div className="flex flex-col lg:flex-row items-center lg:items-start justify-between gap-5 sm:gap-8 lg:gap-12">
             {/* Left Column: Package Typography & Key Parameters (~56% width) */}
             <div className="w-full lg:w-[56%] space-y-3 sm:space-y-4">
@@ -221,7 +221,7 @@ function PackageDetailContent({
       {/* =========================================================================
           2. MAIN CONTENT STAGE (Two-Column Balanced Grid)
           ========================================================================= */}
-      <div className="mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 mt-5 sm:mt-8 lg:mt-10">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mt-5 sm:mt-8 lg:mt-10">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-8 lg:gap-10 items-start">
           {/* Left Column: Itinerary, Highlights & Expedition Notes (8 Columns) */}
           <div className="lg:col-span-8 space-y-5 sm:space-y-8">

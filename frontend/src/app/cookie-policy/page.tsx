@@ -9,7 +9,7 @@ export const metadata = {
 export default function CookiePolicyPage() {
   return (
     <div className="min-h-screen bg-slate-50/50 py-8 sm:py-12 font-inter text-slate-900 antialiased">
-      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-6 sm:space-y-8">
         {/* Navigation Breadcrumb */}
         <Link
           href="/"

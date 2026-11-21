@@ -16,14 +16,18 @@ import { useApp } from '@/context/AppContext';
 
 export const getRolePortalPath = (r?: string) => {
   switch (r?.toLowerCase()) {
+    case 'super_admin':
+      return '/admin';
+    case 'ntb_admin':
+    case 'admin':
+      return '/portals/admin';
+    case 'agency':
+    case 'business':
+      return '/portals/business';
     case 'guide':
       return '/portals/guide';
     case 'butler':
       return '/portals/butler';
-    case 'business':
-      return '/portals/business';
-    case 'admin':
-      return '/portals/admin';
     default:
       return '/dashboard';
   }
@@ -84,6 +88,11 @@ export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [isMenuExiting, setIsMenuExiting] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const openMobile = () => {
     setIsMenuExiting(false);
@@ -177,7 +186,7 @@ export default function Navbar() {
     <header
       className={`${positionClass} z-50 w-full transition-all duration-300 ease-in-out ${headerBgClass} border-t-0 m-0`}
     >
-      <div className="flex h-11 sm:h-12 lg:h-[52px] w-full items-center justify-between px-3 sm:px-6 lg:px-12 xl:px-16 2xl:px-20">
+      <div className="flex h-11 sm:h-12 lg:h-[52px] w-full items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10">
         {/* Brand: Visit Nepal Logo (White over hero, Royal Blue when scrolled or open) */}
         <Link href="/" className="flex items-center gap-2 shrink-0 group py-0.5">
           <img
@@ -223,7 +232,7 @@ export default function Navbar() {
 
         {/* Right Controls: Sign In or Authenticated User Controls */}
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
-          {currentUser ? (
+          {mounted && currentUser ? (
             <>
               {/* Messages shortcut (desktop) */}
               <Link
@@ -346,7 +355,7 @@ export default function Navbar() {
             >
               <div className="space-y-0.5">
                 {/* Direct Dashboard Shortcut for Signed-in User on Mobile */}
-                {currentUser && (
+                {mounted && currentUser && (
                   <motion.div
                     custom={0}
                     initial="hidden"
@@ -413,7 +422,7 @@ export default function Navbar() {
                   exit="exit"
                   variants={itemVariants}
                 >
-                  {currentUser ? (
+                  {mounted && currentUser ? (
                     <button
                       type="button"
                       onClick={() => {

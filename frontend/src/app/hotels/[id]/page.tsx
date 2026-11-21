@@ -348,7 +348,7 @@ function HotelDetailContent({ params }: { params: Promise<{ id: string }> }) {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-6xl px-4 py-20 text-center font-inter">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-20 text-left font-inter">
         <div className="inline-flex h-12 w-12 animate-spin items-center justify-center rounded-full border-4 border-slate-200 border-t-[#0552A2]" />
         <p className="mt-4 text-xs font-semibold text-slate-500">Loading hotel details and live room availability...</p>
       </div>
@@ -357,8 +357,8 @@ function HotelDetailContent({ params }: { params: Promise<{ id: string }> }) {
 
   if (error || !hotel) {
     return (
-      <div className="mx-auto max-w-4xl px-4 py-20 text-center font-inter">
-        <AlertCircle className="mx-auto h-12 w-12 text-red-500" />
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-20 text-left font-inter">
+        <AlertCircle className="h-12 w-12 text-red-500 mb-3" />
         <h2 className="mt-3 text-lg font-bold text-slate-900 font-poppins">Hotel Property Not Found</h2>
         <p className="mt-1 text-xs text-slate-500">
           The requested accommodation could not be retrieved from the Nepal Tourism Board registry.
@@ -381,7 +381,7 @@ function HotelDetailContent({ params }: { params: Promise<{ id: string }> }) {
     <div className="min-h-screen bg-[#F8FAFC] font-inter text-slate-800 antialiased pb-16">
       {/* Top Breadcrumb & Return Bar */}
       <div className="border-b border-slate-200/90 bg-white shadow-2xs">
-        <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6">
+        <div className="w-full flex items-center justify-between px-4 sm:px-6 md:px-8 lg:px-10 py-3">
           <Link
             href="/services?tab=hotel"
             className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 hover:text-[#0552A2] transition-colors"
@@ -398,7 +398,7 @@ function HotelDetailContent({ params }: { params: Promise<{ id: string }> }) {
         </div>
       </div>
 
-      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8 space-y-6">
+      <main className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-6 space-y-6">
         {/* =====================================================================
             1. HOTEL TITLE & LOCATION HEADER
             ===================================================================== */}
@@ -1466,7 +1466,7 @@ export default function HotelDetailPage({
   return (
     <Suspense
       fallback={
-        <div className="mx-auto max-w-5xl px-4 py-20 text-center font-inter">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-20 text-left font-inter">
           <div className="inline-flex h-10 w-10 animate-spin items-center justify-center rounded-full border-4 border-slate-200 border-t-[#0552A2]" />
           <p className="mt-3 text-xs font-semibold text-slate-500">Loading hotel reservation details...</p>
         </div>

@@ -82,7 +82,7 @@ export default function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             Official Country Overview
           </span>
@@ -96,7 +96,7 @@ export default function AboutPage() {
       </section>
 
       {/* 2. Numeric Dimension Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 border-b border-slate-100">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:py-12 border-b border-slate-100">
         <ScrollReveal direction="up" duration={650} distance={20}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {geographicalFacts.map((fact) => (
@@ -117,7 +117,7 @@ export default function AboutPage() {
       </section>
 
       {/* 3. Four Core Dimensions of Nepal */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 space-y-10 sm:space-y-14">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-10 sm:py-16 space-y-10 sm:space-y-14">
         {pillarsOfIdentity.map((pillar, idx) => {
           const isEven = idx % 2 === 1;
           return (
@@ -158,7 +158,7 @@ export default function AboutPage() {
 
       {/* 4. Practical Travel Essentials */}
       <section className="bg-[#F7F9FC] py-10 sm:py-14 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-6">
           <div className="max-w-2xl space-y-1.5">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Planning Essentials

@@ -404,7 +404,7 @@ export default function CustomTripPlannerPage() {
   };
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-3.5 sm:py-5 lg:py-6 space-y-3 sm:space-y-4 font-inter">
+    <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-3.5 sm:py-5 lg:py-6 space-y-3 sm:space-y-4 font-inter">
       {/* 1. Optimized & Clean Expedition Studio Header */}
       <div className="relative pb-3 sm:pb-4 border-b border-slate-200/80">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 sm:gap-4">

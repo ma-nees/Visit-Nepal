@@ -160,7 +160,7 @@ export default function TravelerDashboardPage() {
     <div className="min-h-screen bg-slate-50/60 pb-16 font-inter text-slate-900 antialiased">
       {/* 1. EDITORIAL HEADER BANNER */}
       <div className="border-b border-slate-200/80 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-10">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:py-10">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
             <div className="space-y-2 max-w-2xl">
               <div className="inline-flex items-center gap-2 text-xs font-semibold tracking-wider uppercase text-[#0552A2]">
@@ -240,7 +240,7 @@ export default function TravelerDashboardPage() {
       </div>
 
       {/* 2. MAIN WORKSPACE CONTAINER */}
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 sm:mt-8 space-y-6">
+      <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 mt-6 sm:mt-8 space-y-6">
         {/* Core Navigation Bar: 3 Clean, Purposeful Sections */}
         <div className="flex items-center justify-between border-b border-slate-200">
           <nav className="flex items-center gap-2 -mb-px">

@@ -222,7 +222,7 @@ export default function DestinationsPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-3">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             Geographical Catalogue
           </span>
@@ -258,7 +258,7 @@ export default function DestinationsPage() {
       </section>
 
       {/* 2. Destinations Asymmetrical Editorial Showcase */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-12 space-y-6 sm:space-y-8">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:py-12 space-y-6 sm:space-y-8">
         <div className="flex items-center justify-between border-b border-slate-100 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Curated Regions
@@ -353,14 +353,14 @@ export default function DestinationsPage() {
       </section>
 
       {/* 3. Interactive Nepal Map Embedded */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-16 bg-white">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-16 bg-white">
         <ScrollReveal direction="up" duration={700} distance={20}>
           <InteractiveMap />
         </ScrollReveal>
       </section>
 
       {/* 4. Editorial Trip Builder Callout */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pb-16 sm:pb-24">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 pb-16 sm:pb-24">
         <div className="rounded-xl bg-[#0552A2] text-white p-8 sm:p-12 relative overflow-hidden border border-blue-900 shadow-md">
           <div className="relative z-10 max-w-2xl space-y-4">
             <span className="text-[11px] font-semibold uppercase tracking-[0.25em] text-[#92C4EA] block">

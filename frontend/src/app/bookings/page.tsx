@@ -159,7 +159,7 @@ export default function BookingsPage() {
   const hotelBookingsCount = bookings.filter((b) => b.category === 'Stay' || !!b.hotelId).length;
 
   return (
-    <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-4 sm:py-6 space-y-5 font-inter">
+    <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-4 sm:py-6 space-y-5 font-inter">
       {/* 1. Optimized & Clean Editorial Header */}
       <div className="relative pb-4 border-b border-slate-200/80">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">

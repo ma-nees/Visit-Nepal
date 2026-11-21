@@ -3,7 +3,6 @@
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import {
-  MapPin,
   Mountain,
   Compass,
   ArrowRight,
@@ -15,7 +14,6 @@ import {
   ShieldCheck,
 } from 'lucide-react';
 import ScrollReveal from '@/components/ScrollReveal';
-import InteractiveMap from '@/components/InteractiveMap';
 import HeroBackgroundSlider from '@/components/features/hero/HeroBackgroundSlider';
 import HeroVideoTitle from '@/components/features/hero/HeroVideoTitle';
 
@@ -315,7 +313,7 @@ export default function HomePage() {
         <HeroBackgroundSlider scrollY={scrollY} intervalMs={5500} />
 
         {/* Hero Narrative: Left-aligned editorial typography - Edge-to-Edge */}
-        <div className="relative z-30 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 pt-16 sm:pt-24 pb-12 sm:pb-14 flex-1 flex flex-col justify-center pointer-events-auto">
+        <div className="relative z-30 w-full px-4 sm:px-6 md:px-8 lg:px-10 pt-16 sm:pt-24 pb-12 sm:pb-14 flex-1 flex flex-col justify-center pointer-events-auto">
           <ScrollReveal direction="up" duration={750} distance={24} className="max-w-4xl lg:max-w-5xl space-y-3.5 sm:space-y-5">
             {/* Minimal Eyebrow */}
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/45 backdrop-blur-md border border-white/15 text-[11px] sm:text-xs font-semibold tracking-[0.25em] uppercase text-[#92C4EA] shadow-md w-fit">
@@ -358,7 +356,7 @@ export default function HomePage() {
       {/* =========================================================================
           2. CREDIBILITY STRIP: Four High-Impact Mountain Pillars
           ========================================================================= */}
-      <section className="relative z-10 w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-8 sm:py-10 bg-white -mt-[1px]">
+      <section className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:py-10 bg-white -mt-[1px]">
         <ScrollReveal direction="up" duration={600} distance={16}>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8 items-center text-center">
             {/* Col 1: 8 of 14 */}
@@ -405,59 +403,75 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          3. DESTINATIONS SECTION: Explore the Extraordinary (Asymmetrical Editorial)
+          3. DESTINATIONS SECTION: Explore the Extraordinary (Editorial Discovery Grid)
           ========================================================================= */}
-      <section id="destinations" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-12 sm:py-16 space-y-8 sm:space-y-10">
-        {/* Section Heading */}
-        <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
-          <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
-            Iconic Destinations
-          </span>
-          <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
-            Explore the Extraordinary
-          </h2>
-          <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
-            From the world&apos;s highest glaciated massifs to ancient trans-Himalayan kingdoms and subtropical river valleys.
-          </p>
-        </ScrollReveal>
+      <section id="destinations" className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-12 sm:py-16 space-y-8 sm:space-y-10">
+        {/* Section Heading & Explore Directory Link */}
+        <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 border-b border-slate-200/70 pb-4">
+          <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-1.5">
+            <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
+              Iconic Destinations
+            </span>
+            <h2 className="font-poppins text-2xl sm:text-3xl lg:text-4xl font-semibold text-[#10243A] tracking-tight">
+              Explore the Extraordinary
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed">
+              From the world&apos;s highest glaciated massifs to ancient trans-Himalayan kingdoms and subtropical river valleys.
+            </p>
+          </ScrollReveal>
 
-        {/* Asymmetrical Editorial Composition 1: Panoramic Feature (Everest + Mustang) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-8 items-stretch">
-          {/* Everest Region — 7 Columns Panoramic Panel */}
+          <ScrollReveal direction="up" delay={80} duration={600} distance={20}>
+            <Link
+              href="/destinations"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] hover:text-[#044182] group shrink-0 transition-colors"
+            >
+              <span>View all 16 surveyed regions</span>
+              <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </ScrollReveal>
+        </div>
+
+        {/* Tier 1: Asymmetrical Editorial Lead (Featured 58% + Stacked Pair 42%) */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-stretch">
+          {/* Featured Destination Card (Everest Region) — 58% Grid Width */}
           <div className="lg:col-span-7">
             <ScrollReveal direction="up" duration={650} distance={20} className="h-full">
               <Link
                 href={editorialDestinations[0].link}
-                className="group flex flex-col h-full rounded-xl overflow-hidden bg-white border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200"
+                className="group flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-2xs hover:border-slate-300 hover:shadow-md transition-all duration-300"
               >
-                {/* Clean Photo Container at Top (100% Unobstructed Landscape) */}
+                {/* Proportional Landscape Photography Container */}
                 <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden bg-slate-900">
                   <img
                     src={editorialDestinations[0].image}
                     alt={editorialDestinations[0].name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
+                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-103"
                   />
+                  {/* Subtle Minimal Badges */}
+                  <div className="absolute top-3.5 inset-x-3.5 flex items-center justify-between pointer-events-none">
+                    <span className="inline-flex items-center rounded-full bg-white/95 backdrop-blur-md px-3 py-1 text-[11px] font-semibold text-[#0552A2] shadow-xs">
+                      {editorialDestinations[0].tag}
+                    </span>
+                    <span className="inline-flex items-center rounded-md bg-[#031526]/80 backdrop-blur-md px-2 py-0.5 text-[10.5px] font-mono text-[#FDB716]">
+                      {editorialDestinations[0].altitude}
+                    </span>
+                  </div>
                 </div>
 
-                {/* Content Cleanly UNDER the Image */}
-                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between space-y-3 bg-white">
+                {/* Compact, High-Density Information Section */}
+                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between gap-3 bg-white">
                   <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 font-medium">
-                        {editorialDestinations[0].region}
-                      </span>
-                      <span className="text-[11px] font-mono text-[#0552A2] font-semibold">
-                        {editorialDestinations[0].altitude}
-                      </span>
-                    </div>
-                    <h3 className="font-inter text-xl sm:text-2xl font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                    <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-medium">
+                      {editorialDestinations[0].region}
+                    </span>
+                    <h3 className="font-poppins text-xl sm:text-2xl font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
                       {editorialDestinations[0].name}
                     </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed line-clamp-2">
+                    <p className="text-xs sm:text-sm text-slate-600 font-inter leading-relaxed line-clamp-2">
                       {editorialDestinations[0].description}
                     </p>
                   </div>
-                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] group-hover:text-[#044182]">
+                  <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:text-[#044182] pt-1">
                     <span>Discover destination</span>
                     <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
                   </div>
@@ -466,119 +480,149 @@ export default function HomePage() {
             </ScrollReveal>
           </div>
 
-          {/* Mustang — 5 Columns Editorial Portrait Panel */}
-          <div className="lg:col-span-5">
-            <ScrollReveal direction="up" delay={100} duration={650} distance={20} className="h-full">
-              <Link
-                href={editorialDestinations[1].link}
-                className="group flex flex-col h-full rounded-xl overflow-hidden bg-white border border-slate-200 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all duration-200"
+          {/* Stacked Destination Pair (Upper Mustang + Annapurna) — 42% Grid Width */}
+          <div className="lg:col-span-5 flex flex-col gap-4 sm:gap-5 justify-between h-full">
+            {[editorialDestinations[1], editorialDestinations[2]].map((dest, i) => (
+              <ScrollReveal
+                key={dest.id}
+                direction="up"
+                delay={100 + i * 80}
+                duration={650}
+                distance={20}
+                className="flex-1"
               >
-                {/* Clean Photo Container at Top (100% Unobstructed Landscape) */}
-                <div className="relative aspect-[16/10] sm:aspect-[16/9] lg:aspect-[16/10] w-full overflow-hidden bg-slate-900">
-                  <img
-                    src={editorialDestinations[1].image}
-                    alt={editorialDestinations[1].name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                  />
-                </div>
+                <Link
+                  href={dest.link}
+                  className="group flex flex-col sm:flex-row h-full rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-2xs hover:border-slate-300 hover:shadow-md transition-all duration-300"
+                >
+                  {/* Proportional Image Container */}
+                  <div className="relative w-full sm:w-5/12 aspect-[16/10] sm:aspect-auto sm:min-h-[160px] overflow-hidden bg-slate-900 shrink-0">
+                    <img
+                      src={dest.image}
+                      alt={dest.name}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-103"
+                    />
+                    <span className="absolute top-2.5 left-2.5 inline-flex items-center rounded-md bg-[#031526]/80 backdrop-blur-md px-2 py-0.5 text-[10px] font-mono text-[#FDB716]">
+                      {dest.altitude}
+                    </span>
+                  </div>
 
-                {/* Content Cleanly UNDER the Image */}
-                <div className="p-5 sm:p-6 flex flex-col flex-1 justify-between space-y-3 bg-white">
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between gap-2">
-                      <span className="text-[11px] font-mono uppercase tracking-wider text-slate-500 font-medium">
-                        {editorialDestinations[1].region}
+                  {/* Compact Information Section */}
+                  <div className="p-4 sm:p-4.5 flex flex-col justify-between flex-1 space-y-2 bg-white">
+                    <div className="space-y-1">
+                      <div className="flex items-center justify-between gap-1 text-[10.5px] font-mono text-slate-400">
+                        <span className="uppercase tracking-wider">{dest.region}</span>
+                      </div>
+                      <h4 className="font-poppins text-base sm:text-lg font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors line-clamp-1">
+                        {dest.name}
+                      </h4>
+                      <p className="text-xs text-slate-600 font-inter leading-relaxed line-clamp-2">
+                        {dest.description}
+                      </p>
+                    </div>
+                    <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:text-[#044182]">
+                      <span>Explore</span>
+                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                    </div>
+                  </div>
+                </Link>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+
+        {/* Tier 2: Additional Curated Destinations Grid (Consistent, Balanced Columns) */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-5 lg:gap-6 pt-1">
+          {/* Triplet: Kathmandu, Pokhara, Chitwan — 1/3 Width Each on Desktop */}
+          {[editorialDestinations[3], editorialDestinations[4], editorialDestinations[5]].map((dest, i) => (
+            <div key={dest.id} className="lg:col-span-2">
+              <ScrollReveal direction="up" delay={i * 70} duration={600} distance={20} className="h-full">
+                <Link
+                  href={dest.link}
+                  className="group flex flex-col h-full rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-2xs hover:border-slate-300 hover:shadow-md transition-all duration-300"
+                >
+                  <div className="relative aspect-[16/10] w-full overflow-hidden bg-slate-900">
+                    <img
+                      src={dest.image}
+                      alt={dest.name}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-103"
+                    />
+                    <div className="absolute top-2.5 inset-x-2.5 flex items-center justify-between pointer-events-none">
+                      <span className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-semibold text-slate-800">
+                        {dest.tag}
                       </span>
-                      <span className="text-[11px] font-mono text-[#0552A2] font-semibold">
-                        {editorialDestinations[1].altitude}
+                      <span className="inline-flex items-center rounded-md bg-[#031526]/80 backdrop-blur-md px-2 py-0.5 text-[10px] font-mono text-[#FDB716]">
+                        {dest.altitude}
                       </span>
                     </div>
-                    <h3 className="font-inter text-lg sm:text-xl font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
-                      {editorialDestinations[1].name}
-                    </h3>
-                    <p className="text-xs sm:text-sm text-slate-600 font-normal font-inter leading-relaxed line-clamp-2">
-                      {editorialDestinations[1].description}
-                    </p>
                   </div>
-                  <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold font-inter text-[#0552A2] group-hover:text-[#044182]">
-                    <span>Discover destination</span>
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </div>
-              </Link>
-            </ScrollReveal>
-          </div>
-        </div>
 
-        {/* Asymmetrical Editorial Composition 2: Triplet Panel (Annapurna, Kathmandu, Pokhara) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8">
-          {[editorialDestinations[2], editorialDestinations[3], editorialDestinations[4]].map((dest, i) => (
-            <ScrollReveal key={dest.id} direction="up" delay={i * 80} duration={600} distance={20}>
-              <Link
-                href={dest.link}
-                className="group block space-y-3 cursor-pointer"
-              >
-                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
-                  <img
-                    src={dest.image}
-                    alt={dest.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                    <span className="uppercase tracking-wider">{dest.region}</span>
-                    <span>{dest.altitude}</span>
+                  <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between space-y-2 bg-white">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-medium">
+                        {dest.region}
+                      </span>
+                      <h4 className="font-poppins text-base sm:text-lg font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors line-clamp-1">
+                        {dest.name}
+                      </h4>
+                      <p className="text-xs text-slate-600 font-inter leading-relaxed line-clamp-2">
+                        {dest.description}
+                      </p>
+                    </div>
+                    <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:text-[#044182]">
+                      <span>Discover destination</span>
+                      <ArrowRight className="h-3 w-3 transition-transform group-hover:translate-x-1" />
+                    </div>
                   </div>
-                  <h3 className="font-inter text-lg font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors">
-                    {dest.name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed line-clamp-2">
-                    {dest.description}
-                  </p>
-                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
-                    <span>Discover destination</span>
-                    <ArrowRight className="h-3 w-3" />
-                  </div>
-                </div>
-              </Link>
-            </ScrollReveal>
+                </Link>
+              </ScrollReveal>
+            </div>
           ))}
-        </div>
 
-        {/* Asymmetrical Editorial Composition 3: The Southern Terai & Sacred Lakes (Chitwan, Lumbini, Rara Lake) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-5 lg:gap-8 pt-2">
-          {[editorialDestinations[5], editorialDestinations[6], editorialDestinations[7]].map((dest, i) => (
-            <ScrollReveal key={dest.id} direction="up" delay={i * 80} duration={600} distance={20}>
-              <Link
-                href={dest.link}
-                className="group block space-y-3 cursor-pointer"
-              >
-                <div className="relative aspect-[16/10] w-full rounded-xl overflow-hidden bg-slate-900 border border-slate-200">
-                  <img
-                    src={dest.image}
-                    alt={dest.name}
-                    className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-102"
-                  />
-                </div>
-                <div className="space-y-1">
-                  <div className="flex items-center justify-between text-[11px] font-mono text-slate-500">
-                    <span className="uppercase tracking-wider">{dest.region}</span>
-                    <span>{dest.altitude}</span>
+          {/* Panoramic Pair: Lumbini & Rara Lake — 1/2 Width Each on Desktop */}
+          {[editorialDestinations[6], editorialDestinations[7]].map((dest, i) => (
+            <div key={dest.id} className="lg:col-span-3">
+              <ScrollReveal direction="up" delay={i * 80} duration={600} distance={20} className="h-full">
+                <Link
+                  href={dest.link}
+                  className="group flex flex-col sm:flex-row h-full rounded-2xl overflow-hidden bg-white border border-slate-200/90 shadow-2xs hover:border-slate-300 hover:shadow-md transition-all duration-300"
+                >
+                  <div className="relative w-full sm:w-5/12 aspect-[16/10] sm:aspect-auto sm:min-h-[160px] overflow-hidden bg-slate-900 shrink-0">
+                    <img
+                      src={dest.image}
+                      alt={dest.name}
+                      className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-103"
+                    />
+                    <div className="absolute top-2.5 left-2.5 flex items-center gap-1 pointer-events-none">
+                      <span className="inline-flex items-center rounded-full bg-white/90 backdrop-blur-md px-2.5 py-0.5 text-[10px] font-semibold text-slate-800">
+                        {dest.tag}
+                      </span>
+                    </div>
+                    <span className="absolute bottom-2.5 left-2.5 inline-flex items-center rounded-md bg-[#031526]/80 backdrop-blur-md px-2 py-0.5 text-[10px] font-mono text-[#FDB716]">
+                      {dest.altitude}
+                    </span>
                   </div>
-                  <h3 className="font-inter text-lg font-semibold text-[#10243A] group-hover:text-[#0552A2] transition-colors">
-                    {dest.name}
-                  </h3>
-                  <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed line-clamp-2">
-                    {dest.description}
-                  </p>
-                  <div className="pt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:underline">
-                    <span>Discover destination</span>
-                    <ArrowRight className="h-3 w-3" />
+
+                  <div className="p-4 sm:p-5 flex flex-col justify-between flex-1 space-y-2 bg-white">
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-mono uppercase tracking-wider text-slate-400 font-medium">
+                        {dest.region}
+                      </span>
+                      <h4 className="font-poppins text-base sm:text-lg font-semibold tracking-tight text-[#10243A] group-hover:text-[#0552A2] transition-colors">
+                        {dest.name}
+                      </h4>
+                      <p className="text-xs sm:text-sm text-slate-600 font-inter leading-relaxed line-clamp-2">
+                        {dest.description}
+                      </p>
+                    </div>
+                    <div className="pt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[#0552A2] group-hover:text-[#044182]">
+                      <span>Discover destination</span>
+                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    </div>
                   </div>
-                </div>
-              </Link>
-            </ScrollReveal>
+                </Link>
+              </ScrollReveal>
+            </div>
           ))}
         </div>
       </section>
@@ -587,7 +631,7 @@ export default function HomePage() {
           4. EXPERIENCES SECTION: Experience Nepal (8 Visual Stories)
           ========================================================================= */}
       <section id="experiences" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-8 sm:space-y-10">
           {/* Section Heading */}
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
@@ -649,7 +693,7 @@ export default function HomePage() {
       {/* =========================================================================
           5. DISCOVER NEPAL: Immersive Storytelling Introduction
           ========================================================================= */}
-      <section id="discover" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20">
+      <section id="discover" className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-14 sm:py-20">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center">
           {/* Left: Editorial Narrative & Key Dimensions (Col 1-6) */}
           <div className="lg:col-span-6 space-y-5">
@@ -722,7 +766,7 @@ export default function HomePage() {
           6. CULTURE & HERITAGE: Living Traditions & Craftsmanship
           ========================================================================= */}
       <section id="culture" className="bg-[#F8FAFC] py-14 sm:py-20 border-y border-slate-200/80">
-        <div className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 space-y-8 sm:space-y-10">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-8 sm:space-y-10">
           {/* Section Heading */}
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">
             <span className="text-xs font-semibold uppercase tracking-[0.2em] text-[#0552A2]">
@@ -767,18 +811,9 @@ export default function HomePage() {
       </section>
 
       {/* =========================================================================
-          7. INTERACTIVE DESTINATION MAP: Cartographic Himalayan Discovery
+          7. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
           ========================================================================= */}
-      <section className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20 bg-white">
-        <ScrollReveal direction="up" duration={700} distance={20}>
-          <InteractiveMap />
-        </ScrollReveal>
-      </section>
-
-      {/* =========================================================================
-          8. STORIES & FIELD JOURNAL: Travel Guides & Cultural Chronicles
-          ========================================================================= */}
-      <section id="stories" className="w-full px-4 sm:px-8 lg:px-12 xl:px-16 2xl:px-20 py-14 sm:py-20 space-y-8 sm:space-y-10 border-t border-slate-100">
+      <section id="stories" className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-14 sm:py-20 space-y-8 sm:space-y-10">
         {/* Section Heading & Link */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
           <ScrollReveal direction="up" duration={600} distance={20} className="max-w-2xl space-y-2">

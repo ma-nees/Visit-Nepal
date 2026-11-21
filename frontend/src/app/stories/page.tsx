@@ -184,7 +184,7 @@ export default function StoriesPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-t from-[#031526] via-transparent to-[#031526]/80" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-3">
+        <div className="relative z-10 w-full px-4 sm:px-6 md:px-8 lg:px-10 space-y-3">
           <span className="text-[11px] font-bold uppercase tracking-[0.25em] text-[#92C4EA] inline-flex items-center gap-2">
             Field Dispatches &amp; Chronicles
           </span>
@@ -220,7 +220,7 @@ export default function StoriesPage() {
       </section>
 
       {/* 2. Main Story Catalogue */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-14 space-y-6 sm:space-y-8">
+      <section className="w-full px-4 sm:px-6 md:px-8 lg:px-10 py-8 sm:py-14 space-y-6 sm:space-y-8">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-3">
           <span className="text-xs font-mono uppercase tracking-wider text-slate-400">
             Showing {filtered.length} Editorial Articles
@@ -428,7 +428,7 @@ export default function StoriesPage() {
 
       {/* 3. Community Dispatches Strip */}
       <section className="bg-[#F7F9FC] py-16 sm:py-20 border-t border-slate-200/60">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
+        <div className="w-full px-4 sm:px-6 md:px-8 lg:px-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
           <div className="space-y-1">
             <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#0552A2]">
               Live Community Feed

@@ -21,6 +21,13 @@ import {
   Clock,
   ArrowRight,
   ShieldCheck,
+  Package,
+  Plus,
+  CreditCard,
+  TrendingUp,
+  Download,
+  MapPin,
+  Briefcase,
 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { api } from '@/lib/api';
@@ -30,13 +37,108 @@ export default function BusinessPortalPage() {
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
 
-  // Active view tab: 'bookings' | 'custom-trips'
-  const [activeTab, setActiveTab] = useState<'bookings' | 'custom-trips'>('bookings');
+  // Active view tab: 'bookings' | 'custom-trips' | 'packages' | 'finances' | 'profile'
+  const [activeTab, setActiveTab] = useState<'bookings' | 'custom-trips' | 'packages' | 'finances' | 'profile'>('bookings');
 
   // Search and filters
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('All');
   const [typeFilter, setTypeFilter] = useState('All');
+
+  // Packages state
+  const [packagesList, setPackagesList] = useState([
+    {
+      id: 'pkg-ebc-express',
+      title: 'Everest Base Camp & Kala Patthar Heli Return',
+      duration: '12 Days',
+      difficulty: 'Challenging',
+      priceNpr: 285000,
+      region: 'Solukhumbu (Everest)',
+      status: 'published',
+      departureDates: ['2026-04-15', '2026-05-01', '2026-05-15', '2026-10-05'],
+      maxGroupSize: 10,
+      assignedGuides: ['Pasang Nuru Sherpa (IFMGA)'],
+    },
+    {
+      id: 'pkg-annapurna-sanctuary',
+      title: 'Annapurna Sanctuary & Machapuchare Base Camp',
+      duration: '10 Days',
+      difficulty: 'Moderate',
+      priceNpr: 195000,
+      region: 'Annapurna Conservation Area',
+      status: 'published',
+      departureDates: ['2026-04-20', '2026-05-10', '2026-10-12'],
+      maxGroupSize: 12,
+      assignedGuides: ['Dawa Tenzing (IFMGA)'],
+    },
+    {
+      id: 'pkg-upper-mustang',
+      title: 'Lo Manthang & Hidden Caves of Upper Mustang',
+      duration: '14 Days',
+      difficulty: 'Moderate',
+      priceNpr: 340000,
+      region: 'Restricted Upper Mustang',
+      status: 'published',
+      departureDates: ['2026-05-01', '2026-09-15', '2026-10-01'],
+      maxGroupSize: 8,
+      assignedGuides: ['Lhakpa Norbu Sherpa'],
+    },
+    {
+      id: 'pkg-manaslu-circuit',
+      title: 'Manaslu Circuit & Larkya La Pass (5,106m)',
+      duration: '16 Days',
+      difficulty: 'Strenuous',
+      priceNpr: 260000,
+      region: 'Manaslu Conservation Area',
+      status: 'draft',
+      departureDates: ['2026-10-10'],
+      maxGroupSize: 8,
+      assignedGuides: ['Unassigned'],
+    },
+  ]);
+  const [isCreatePackageOpen, setIsCreatePackageOpen] = useState(false);
+  const [newPackage, setNewPackage] = useState({
+    title: '',
+    duration: '12 Days',
+    region: 'Solukhumbu',
+    priceNpr: 240000,
+    difficulty: 'Challenging',
+    maxGroupSize: 10,
+    inclusions: 'IFMGA Guide, TIMS & Park Permits, Porter, Tea-house Lodging, 3 meals daily',
+  });
+
+  // Financials & Payout state
+  const [payoutsList, setPayoutsList] = useState([
+    {
+      id: 'pay-agency-101',
+      date: '2026-03-28',
+      amountNpr: 650000,
+      feeNpr: 78000,
+      netNpr: 572000,
+      method: 'Nabil Bank ACH · Acct ****8921',
+      status: 'completed',
+    },
+    {
+      id: 'pay-agency-102',
+      date: '2026-04-12',
+      amountNpr: 1200000,
+      feeNpr: 144000,
+      netNpr: 1056000,
+      method: 'Nabil Bank ACH · Acct ****8921',
+      status: 'completed',
+    },
+    {
+      id: 'pay-agency-103',
+      date: '2026-05-02',
+      amountNpr: 840000,
+      feeNpr: 100800,
+      netNpr: 739200,
+      method: 'Standard Chartered Nepal · Acct ****3310',
+      status: 'processing',
+    },
+  ]);
+  const [isRequestPayoutOpen, setIsRequestPayoutOpen] = useState(false);
+  const [payoutAmount, setPayoutAmount] = useState(450000);
 
   // Quotation Modal State
   const [activeQuoteTrip, setActiveQuoteTrip] = useState<any | null>(null);
@@ -250,35 +352,71 @@ export default function BusinessPortalPage() {
         </div>
       </div>
 
-      {/* Toggle View Tabs: Reservations vs Custom Approval Workflow */}
-      <div className="flex border-b border-slate-200 bg-white rounded-xl p-1.5 shadow-xs gap-1.5">
+      {/* Toggle View Tabs: Reservations, Custom Workflow, Packages, Finances, Profile */}
+      <div className="flex border-b border-slate-200 bg-white rounded-xl p-1.5 shadow-xs gap-1.5 flex-wrap">
         <button
           type="button"
           onClick={() => setActiveTab('bookings')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'bookings'
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'bookings'
             ? 'bg-[#0552A2] text-white shadow-xs'
             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
         >
           <CalendarCheck className="h-4 w-4" />
-          <span>All Reservations ({allBookings.length})</span>
+          <span>Reservations ({allBookings.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab('custom-trips')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'custom-trips'
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'custom-trips'
             ? 'bg-[#0552A2] text-white shadow-xs'
             : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
             }`}
         >
           <Compass className="h-4 w-4" />
-          <span>Custom Itinerary Requests ({customPlans.length})</span>
+          <span>Custom Requests ({customPlans.length})</span>
           {customPlans.filter((p: any) => p.status === 'PENDING_REVIEW').length > 0 && (
             <span className="bg-amber-400 text-slate-950 font-extrabold px-1.5 py-0.2 rounded-full text-[10px]">
               {customPlans.filter((p: any) => p.status === 'PENDING_REVIEW').length}
             </span>
           )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('packages')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'packages'
+            ? 'bg-[#0552A2] text-white shadow-xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+        >
+          <Package className="h-4 w-4" />
+          <span>Our Packages ({packagesList.length})</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('finances')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'finances'
+            ? 'bg-[#0552A2] text-white shadow-xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+        >
+          <CreditCard className="h-4 w-4" />
+          <span>Finances &amp; Payouts</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab('profile')}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${activeTab === 'profile'
+            ? 'bg-[#0552A2] text-white shadow-xs'
+            : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+            }`}
+        >
+          <Briefcase className="h-4 w-4" />
+          <span>Agency Profile &amp; KYC</span>
         </button>
       </div>
 
@@ -566,6 +704,545 @@ export default function BusinessPortalPage() {
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 3: TOUR PACKAGES CATALOG */}
+      {activeTab === 'packages' && (
+        <div className="space-y-4">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
+            <div>
+              <h3 className="font-poppins font-bold text-base text-slate-900">
+                Agency Tour Packages Catalog
+              </h3>
+              <p className="text-xs text-slate-500">
+                Manage commercial trekking itineraries, departure dates, pricing, and assigned IFMGA staff.
+              </p>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => setIsCreatePackageOpen(true)}
+              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#0552A2] hover:bg-[#044182] text-white text-xs font-bold shadow-xs cursor-pointer"
+            >
+              <Plus className="h-4 w-4" />
+              <span>Create New Package</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {packagesList.map((pkg) => (
+              <div
+                key={pkg.id}
+                className="bg-white rounded-xl border border-slate-200/90 shadow-xs p-5 space-y-3.5 hover:border-slate-300 transition-all"
+              >
+                <div className="flex items-start justify-between gap-2">
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono text-[10px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                        {pkg.id}
+                      </span>
+                      <span
+                        className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider ${
+                          pkg.status === 'published'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {pkg.status}
+                      </span>
+                    </div>
+                    <h4 className="font-poppins font-bold text-slate-900 text-sm leading-snug">
+                      {pkg.title}
+                    </h4>
+                    <p className="flex items-center gap-1.5 text-xs text-slate-500">
+                      <MapPin className="h-3.5 w-3.5 text-[#0552A2]" />
+                      <span>{pkg.region}</span>
+                    </p>
+                  </div>
+
+                  <div className="text-right">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                      Price / Pax
+                    </span>
+                    <span className="font-poppins font-extrabold text-[#0552A2] text-base">
+                      NPR {pkg.priceNpr.toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-3 gap-2 py-2 px-3 rounded-lg bg-slate-50 border border-slate-100 text-xs">
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-medium">Duration</span>
+                    <span className="font-bold text-slate-800">{pkg.duration}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-medium">Difficulty</span>
+                    <span className="font-bold text-slate-800">{pkg.difficulty}</span>
+                  </div>
+                  <div>
+                    <span className="text-[10px] text-slate-400 block font-medium">Max Group</span>
+                    <span className="font-bold text-slate-800">{pkg.maxGroupSize} Trekkers</span>
+                  </div>
+                </div>
+
+                <div>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                    Upcoming Departures
+                  </span>
+                  <div className="flex flex-wrap gap-1.5">
+                    {pkg.departureDates.map((d) => (
+                      <span
+                        key={d}
+                        className="font-mono text-[11px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200"
+                      >
+                        {d}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between pt-2 border-t border-slate-100 text-xs">
+                  <div className="flex items-center gap-1.5 text-slate-600">
+                    <UserCheck className="h-3.5 w-3.5 text-[#0552A2]" />
+                    <span className="font-semibold text-[11px]">{pkg.assignedGuides[0]}</span>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setPackagesList((prev) =>
+                        prev.map((p) =>
+                          p.id === pkg.id
+                            ? { ...p, status: p.status === 'published' ? 'draft' : 'published' }
+                            : p
+                        )
+                      );
+                      showToast(
+                        `Package #${pkg.id} status toggled to ${
+                          pkg.status === 'published' ? 'DRAFT' : 'PUBLISHED'
+                        }`
+                      );
+                    }}
+                    className="text-xs font-semibold text-[#0552A2] hover:underline cursor-pointer"
+                  >
+                    {pkg.status === 'published' ? 'Unpublish' : 'Publish Live'}
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 4: AGENCY FINANCIALS & VENDOR PAYOUTS */}
+      {activeTab === 'finances' && (
+        <div className="space-y-5">
+          {/* Revenue Breakdown Cards */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block">
+                Gross Bookings Volume
+              </span>
+              <p className="text-xl font-extrabold text-slate-900 mt-1">
+                NPR {(metrics.totalRevenueNpr || 4850000).toLocaleString()}
+              </p>
+              <span className="text-[11px] text-slate-500 mt-1 block">14 verified traveler reservations</span>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-amber-600 block">
+                Platform Commission (12%)
+              </span>
+              <p className="text-xl font-extrabold text-amber-700 mt-1">
+                NPR {Math.round((metrics.totalRevenueNpr || 4850000) * 0.12).toLocaleString()}
+              </p>
+              <span className="text-[11px] text-slate-500 mt-1 block">Standard NTB platform service fee</span>
+            </div>
+
+            <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-600 block">
+                Net Settled Agency Revenue
+              </span>
+              <p className="text-xl font-extrabold text-emerald-700 mt-1">
+                NPR {Math.round((metrics.totalRevenueNpr || 4850000) * 0.88).toLocaleString()}
+              </p>
+              <span className="text-[11px] text-slate-500 mt-1 block">Disbursed directly to agency account</span>
+            </div>
+
+            <div className="rounded-xl border border-blue-200 bg-blue-50/70 p-4 shadow-xs">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-[#0552A2] block">
+                Available Payout Balance
+              </span>
+              <p className="text-xl font-extrabold text-[#0552A2] mt-1">
+                NPR 840,000
+              </p>
+              <button
+                type="button"
+                onClick={() => setIsRequestPayoutOpen(true)}
+                className="mt-2 w-full inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#0552A2] hover:bg-[#044182] text-white py-1.5 text-xs font-bold cursor-pointer"
+              >
+                <DollarSign className="h-3.5 w-3.5" />
+                <span>Request Payout</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Payouts History Table */}
+          <div className="bg-white rounded-xl border border-slate-200 shadow-xs overflow-hidden">
+            <div className="px-5 py-4 border-b border-slate-100 flex items-center justify-between">
+              <div>
+                <h4 className="font-poppins font-bold text-sm text-slate-900">
+                  Bank Settlement &amp; Payout History
+                </h4>
+                <p className="text-xs text-slate-500">
+                  Direct electronic ACH fund transfers to agency verified commercial account.
+                </p>
+              </div>
+              <span className="text-xs text-slate-500 font-mono">Currency: NPR (Nepalese Rupee)</span>
+            </div>
+
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-xs text-slate-600">
+                <thead className="bg-slate-50 text-[10px] font-bold uppercase tracking-wider text-slate-400 border-b border-slate-200">
+                  <tr>
+                    <th className="px-4 py-3">Payout Ref</th>
+                    <th className="px-4 py-3">Settlement Date</th>
+                    <th className="px-4 py-3">Gross Amount</th>
+                    <th className="px-4 py-3">Platform Fee (12%)</th>
+                    <th className="px-4 py-3">Net Disbursed</th>
+                    <th className="px-4 py-3">Destination Account</th>
+                    <th className="px-4 py-3">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {payoutsList.map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-50/80">
+                      <td className="px-4 py-3 font-mono font-bold text-slate-900">{p.id}</td>
+                      <td className="px-4 py-3">{p.date}</td>
+                      <td className="px-4 py-3 font-bold text-slate-800">
+                        NPR {p.amountNpr.toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 text-amber-600">
+                        - NPR {p.feeNpr.toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 font-extrabold text-emerald-700">
+                        NPR {p.netNpr.toLocaleString()}
+                      </td>
+                      <td className="px-4 py-3 font-medium text-slate-700">{p.method}</td>
+                      <td className="px-4 py-3">
+                        <span
+                          className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            p.status === 'completed'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-blue-100 text-[#0552A2]'
+                          }`}
+                        >
+                          <CheckCircle2 className="h-2.5 w-2.5" />
+                          {p.status}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* VIEW 5: AGENCY PROFILE & ACCREDITATION */}
+      {activeTab === 'profile' && (
+        <div className="bg-white rounded-xl border border-slate-200 shadow-xs p-6 space-y-6">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-4 border-b border-slate-100">
+            <div className="flex items-center gap-3.5">
+              <div className="h-12 w-12 rounded-xl bg-[#0552A2] text-white flex items-center justify-center font-bold text-lg">
+                <Building2 className="h-6 w-6" />
+              </div>
+              <div>
+                <h3 className="font-poppins text-lg font-bold text-slate-900">
+                  {business.name}
+                </h3>
+                <p className="text-xs text-slate-500">
+                  Category: Trekking, Mountaineering Expeditions &amp; Heli Tours
+                </p>
+              </div>
+            </div>
+
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 text-xs font-bold">
+              <BadgeCheck className="h-4 w-4" />
+              NTB &amp; TAAN Government Verified 2026
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-xs">
+            <div className="space-y-4">
+              <h4 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] pb-1 border-b border-slate-100">
+                Official Corporate Registration
+              </h4>
+              <dl className="space-y-2.5">
+                <div>
+                  <dt className="text-slate-400 font-medium">TAAN Membership License</dt>
+                  <dd className="font-mono font-bold text-slate-800 mt-0.5">TAAN-KTM-2024-8848</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Department of Tourism (DoT) ID</dt>
+                  <dd className="font-mono font-bold text-slate-800 mt-0.5">DoT/7721/Govt-NP</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Permanent Account Number (PAN)</dt>
+                  <dd className="font-mono font-bold text-slate-800 mt-0.5">{business.panNumber}</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Registered Office</dt>
+                  <dd className="font-medium text-slate-800 mt-0.5">
+                    Himalayan Suite, Durbar Marg, Ward 1, Kathmandu 44600, Nepal
+                  </dd>
+                </div>
+              </dl>
+            </div>
+
+            <div className="space-y-4">
+              <h4 className="font-bold text-slate-900 uppercase tracking-wider text-[11px] pb-1 border-b border-slate-100">
+                Operations &amp; Field Staff
+              </h4>
+              <dl className="space-y-2.5">
+                <div>
+                  <dt className="text-slate-400 font-medium">Managing Director</dt>
+                  <dd className="font-bold text-slate-800 mt-0.5">Lhakpa Tenzing Sherpa</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Active IFMGA Certified Guides</dt>
+                  <dd className="font-bold text-slate-800 mt-0.5">{guides.length} Certified Guides on Active Roster</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">24/7 Emergency Dispatch Center</dt>
+                  <dd className="font-mono font-bold text-red-600 mt-0.5">+977 1 4429988 / Radio Ch. 16 VHF</dd>
+                </div>
+                <div>
+                  <dt className="text-slate-400 font-medium">Settlement Bank Account</dt>
+                  <dd className="font-mono font-medium text-slate-800 mt-0.5">Nabil Bank Ltd. (Kathmandu Corporate Branch)</dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* CREATE PACKAGE MODAL */}
+      {isCreatePackageOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="relative w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl border border-slate-200 space-y-4 my-auto">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h3 className="font-poppins text-base font-bold text-slate-900">
+                Register New Tour Package
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsCreatePackageOpen(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                const id = `pkg-${newPackage.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').slice(0, 20)}`;
+                setPackagesList([
+                  ...packagesList,
+                  {
+                    id,
+                    title: newPackage.title,
+                    duration: newPackage.duration,
+                    difficulty: newPackage.difficulty,
+                    priceNpr: Number(newPackage.priceNpr),
+                    region: newPackage.region,
+                    status: 'published',
+                    departureDates: ['2026-05-01', '2026-10-15'],
+                    maxGroupSize: Number(newPackage.maxGroupSize),
+                    assignedGuides: ['Pasang Nuru Sherpa (IFMGA)'],
+                  },
+                ]);
+                showToast(`Package "${newPackage.title}" created successfully!`);
+                setIsCreatePackageOpen(false);
+                setNewPackage({
+                  title: '',
+                  duration: '12 Days',
+                  region: 'Solukhumbu',
+                  priceNpr: 240000,
+                  difficulty: 'Challenging',
+                  maxGroupSize: 10,
+                  inclusions: 'IFMGA Guide, TIMS & Park Permits, Porter, Tea-house Lodging, 3 meals daily',
+                });
+              }}
+              className="space-y-3 text-xs"
+            >
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                  Package Title *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g. Langtang Valley & Gosaikunda Holy Lakes"
+                  value={newPackage.title}
+                  onChange={(e) => setNewPackage({ ...newPackage, title: e.target.value })}
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 font-bold"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Region *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newPackage.region}
+                    onChange={(e) => setNewPackage({ ...newPackage, region: e.target.value })}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Duration *
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={newPackage.duration}
+                    onChange={(e) => setNewPackage({ ...newPackage, duration: e.target.value })}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Price in NPR (per person) *
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={newPackage.priceNpr}
+                    onChange={(e) => setNewPackage({ ...newPackage, priceNpr: Number(e.target.value) })}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 font-bold"
+                  />
+                </div>
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                    Difficulty Level
+                  </label>
+                  <select
+                    value={newPackage.difficulty}
+                    onChange={(e) => setNewPackage({ ...newPackage, difficulty: e.target.value })}
+                    className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 bg-white"
+                  >
+                    <option value="Easy">Easy</option>
+                    <option value="Moderate">Moderate</option>
+                    <option value="Challenging">Challenging</option>
+                    <option value="Strenuous">Strenuous</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+                <button
+                  type="button"
+                  onClick={() => setIsCreatePackageOpen(false)}
+                  className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="rounded-xl bg-[#0552A2] px-5 py-2 text-xs font-bold text-white hover:bg-[#044182] cursor-pointer"
+                >
+                  Register Package
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* REQUEST PAYOUT MODAL */}
+      {isRequestPayoutOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
+          <div className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl border border-slate-200 space-y-4 my-auto">
+            <div className="flex justify-between items-center border-b border-slate-100 pb-3">
+              <h3 className="font-poppins text-base font-bold text-slate-900">
+                Request Vendor Payout
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsRequestPayoutOpen(false)}
+                className="p-1 text-slate-400 hover:text-slate-600 cursor-pointer"
+              >
+                <X className="h-5 w-5" />
+              </button>
+            </div>
+
+            <div className="space-y-3 text-xs">
+              <p className="text-slate-600">
+                Submit a withdrawal request to transfer settled trekking package balances to your registered Nabil Bank ACH corporate account.
+              </p>
+
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-600 mb-1">
+                  Available Balance: NPR 840,000
+                </label>
+                <input
+                  type="number"
+                  max={840000}
+                  value={payoutAmount}
+                  onChange={(e) => setPayoutAmount(Number(e.target.value))}
+                  className="w-full rounded-xl border border-slate-300 px-3 py-2 text-slate-900 font-bold text-sm"
+                />
+              </div>
+
+              <div className="p-3 rounded-xl bg-slate-50 border border-slate-200 text-slate-600">
+                <span className="font-bold text-slate-800 block mb-0.5">Destination Bank:</span>
+                <span>Nabil Bank Ltd. • A/C #****8921 • Himalayan Sherpa Expeditions</span>
+              </div>
+            </div>
+
+            <div className="flex justify-end gap-2 pt-3 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setIsRequestPayoutOpen(false)}
+                className="rounded-xl border border-slate-300 px-4 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 cursor-pointer"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setPayoutsList([
+                    {
+                      id: `pay-agency-${Math.floor(104 + Math.random() * 890)}`,
+                      date: new Date().toISOString().split('T')[0],
+                      amountNpr: payoutAmount,
+                      feeNpr: Math.round(payoutAmount * 0.12),
+                      netNpr: Math.round(payoutAmount * 0.88),
+                      method: 'Nabil Bank ACH · Acct ****8921',
+                      status: 'processing',
+                    },
+                    ...payoutsList,
+                  ]);
+                  showToast(`Payout request for NPR ${payoutAmount.toLocaleString()} submitted to Super Admin.`);
+                  setIsRequestPayoutOpen(false);
+                }}
+                className="rounded-xl bg-[#0552A2] px-5 py-2 text-xs font-bold text-white hover:bg-[#044182] cursor-pointer"
+              >
+                Submit Payout Request
+              </button>
+            </div>
           </div>
         </div>
       )}
