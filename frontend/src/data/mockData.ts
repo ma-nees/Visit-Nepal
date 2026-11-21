@@ -106,10 +106,10 @@ export interface Booking {
   id: string;
   title: string;
   provider: string;
-  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Expedition' | 'Guide' | 'Butler' | 'Tour';
+  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Expedition' | 'Guide' | 'Butler' | 'Tour' | 'Experience' | 'Custom';
   date: string;
   bookedBy: string;
-  status: 'Confirmed' | 'Completed' | 'Cancelled' | 'Pending' | 'Quoted' | 'Paid' | 'Awaiting Payment';
+  status: 'Confirmed' | 'Completed' | 'Cancelled' | 'Pending' | 'Quoted' | 'Paid' | 'Awaiting Payment' | 'Pending Confirmation' | 'Checked In' | 'Refund Pending' | 'Refunded';
   amount: string;
   qrCode: string;
   color: string;
@@ -2071,6 +2071,38 @@ export const initialBookings: Booking[] = [
     paymentStatus: 'successful',
     paymentMode: 'full',
     paymentMethod: 'Khalti (NPR Verified)',
+  },
+  {
+    id: 'VN-HOTEL-2026-781920',
+    title: 'Bar Peepal Resort - Deluxe Himalayan View Room',
+    provider: 'Bar Peepal Resort Pokhara',
+    category: 'Stay',
+    bookingType: 'hotel',
+    date: 'Dec 15 - Dec 18, 2026',
+    bookedBy: 'Aayush Pradhan',
+    status: 'Confirmed',
+    amount: 'NPR 43,500',
+    qrCode: 'VN-HOTEL-2026-BARPEEPAL-781920',
+    color: '#16A34A',
+    meetingPoint: 'Sarangkot Road Front Desk, 02:00 PM Check-in',
+    assignedGuide: 'Front Desk Concierge',
+    contactPhone: '+977 61 465220',
+    hotelId: 'htl_barpeepal',
+    hotelName: 'Bar Peepal Resort',
+    roomId: 'room_barpeepal_deluxe',
+    roomName: 'Deluxe Himalayan View Room',
+    checkInDate: '2026-12-15',
+    checkOutDate: '2026-12-18',
+    nightsCount: 3,
+    roomsCount: 1,
+    adultsCount: 2,
+    childrenCount: 0,
+    specialRequests: 'Annapurna range view balcony, airport pickup needed',
+    arrivalTime: '02:00 PM',
+    cancellationPolicy: 'Free cancellation up to 48 hours prior to check-in.',
+    paymentStatus: 'successful',
+    paymentMode: 'full',
+    paymentMethod: 'Khalti Digital Wallet',
   },
   {
     id: 'BKG-77401',

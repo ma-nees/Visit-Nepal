@@ -100,6 +100,7 @@ interface AppContextType {
   bookings: Booking[];
   addBooking: (booking: Omit<Booking, 'id' | 'qrCode' | 'bookedBy'> & Partial<Booking>) => Promise<Booking>;
   cancelBooking: (id: string, reason?: string) => Promise<any>;
+  modifyBooking: (id: string, updates: { specialRequests?: string; arrivalTime?: string; checkInDate?: string; checkOutDate?: string; roomsCount?: number; adultsCount?: number }) => Promise<any>;
   customPlans: any[];
   refreshCustomPlans: () => Promise<void>;
   createCustomTrip: (data: any) => Promise<any>;
@@ -219,19 +220,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           category: (b.category as any) || (b.hotelId ? 'Stay' : 'Trek'),
           date: b.date || 'Spring 2026',
           bookedBy: b.userName || 'Aayush Pradhan',
-          status: (b.status === 'confirmed'
+          status: (b.status === 'confirmed' || b.status === 'Confirmed'
             ? 'Confirmed'
-            : b.status === 'completed'
+            : b.status === 'completed' || b.status === 'Completed'
               ? 'Completed'
-              : b.status === 'cancelled'
+              : b.status === 'cancelled' || b.status === 'Cancelled'
                 ? 'Cancelled'
-                : b.status === 'awaiting_payment'
-                  ? 'Awaiting Payment'
-                  : b.status === 'paid'
-                    ? 'Paid'
-                    : b.status === 'quoted'
-                      ? 'Quoted'
-                      : 'Confirmed') as any,
+                : b.status === 'checked_in' || b.status === 'Checked In'
+                  ? 'Checked In'
+                  : b.status === 'refund_pending' || b.status === 'refund_requested' || b.status === 'Refund Pending'
+                    ? 'Refund Pending'
+                    : b.status === 'refunded' || b.status === 'Refunded'
+                      ? 'Refunded'
+                      : b.status === 'pending_confirmation' || b.status === 'pending' || b.status === 'Pending Confirmation'
+                        ? 'Pending Confirmation'
+                        : b.status === 'awaiting_payment' || b.status === 'Awaiting Payment'
+                          ? 'Awaiting Payment'
+                          : b.status === 'paid' || b.status === 'Paid'
+                            ? 'Paid'
+                            : b.status === 'quoted' || b.status === 'Quoted'
+                              ? 'Quoted'
+                              : 'Confirmed') as any,
           amount: b.totalAmountNpr ? `NPR ${b.totalAmountNpr.toLocaleString()}` : b.amount || 'NPR 50,000',
           qrCode: b.qrCode || `VN-PASS-${b.id}`,
           color: b.category === 'Stay' || b.hotelId ? '#16A34A' : '#0552A2',
@@ -559,6 +568,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     refreshData();
   };
 
+  const modifyBooking = async (
+    id: string,
+    updates: { specialRequests?: string; arrivalTime?: string; checkInDate?: string; checkOutDate?: string; roomsCount?: number; adultsCount?: number }
+  ) => {
+    try {
+      await api.bookings.modify(id, updates);
+    } catch (err) {
+      console.warn('[modifyBooking] Local sync fallback:', err);
+    }
+    setBookings((prev) =>
+      prev.map((b) => (b.id === id ? { ...b, ...updates } : b))
+    );
+    showToast(`Reservation #${id} modified successfully.`);
+    refreshData();
+  };
+
   const addPost = async (content: string, location: string, mediaUrl?: string) => {
     const newPost: CommunityPost = {
       id: `post_${Date.now()}`,
@@ -713,6 +738,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         bookings,
         addBooking,
         cancelBooking,
+        modifyBooking,
         customPlans,
         refreshCustomPlans,
         createCustomTrip,

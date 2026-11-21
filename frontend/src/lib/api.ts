@@ -308,9 +308,17 @@ export const api = {
       });
     },
 
-    async cancel(id: string): Promise<{ success: boolean; booking: any }> {
+    async cancel(id: string, reason?: string): Promise<{ success: boolean; booking: any }> {
       return request(`/bookings/${id}/cancel`, {
         method: 'POST',
+        body: JSON.stringify({ reason }),
+      });
+    },
+
+    async modify(id: string, updates: { specialRequests?: string; arrivalTime?: string; checkInDate?: string; checkOutDate?: string; roomsCount?: number; adultsCount?: number }): Promise<{ success: boolean; booking: any }> {
+      return request(`/bookings/${id}/modify`, {
+        method: 'PATCH',
+        body: JSON.stringify(updates),
       });
     },
 

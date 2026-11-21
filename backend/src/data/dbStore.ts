@@ -316,7 +316,7 @@ export interface CustomPlan {
 
 export interface Booking {
   id: string;
-  bookingType?: 'standard' | 'custom';
+  bookingType?: 'standard' | 'custom' | 'hotel';
   customTripId?: string;
   invoiceNumber?: string;
   userId: string;
@@ -326,7 +326,7 @@ export interface Booking {
   serviceId?: string;
   title: string;
   provider: string;
-  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Guide' | 'Butler' | 'Custom Expedition';
+  category: 'Trek' | 'Stay' | 'Adventure' | 'Transport' | 'Guide' | 'Butler' | 'Custom Expedition' | 'Experience' | 'Tour';
   date: string;
   participantsCount: number;
   participants: Array<{ fullName: string; nationality: string; passportNumber?: string }>;
@@ -342,7 +342,7 @@ export interface Booking {
   optionsAndAddons?: Array<{ name: string; priceNpr: number }>;
   priceBreakdown?: {
     basePriceNpr: number;
-    addOnsNpr: number;
+    addOnsNpr?: number;
     taxVatNpr: number;
     serviceChargeNpr: number;
     totalAmountNpr: number;
@@ -1155,22 +1155,99 @@ function getInitialSeedData(): DatabaseState {
       userName: 'Aayush Pradhan',
       userEmail: 'aayush.traveler@visitnepal.com',
       serviceId: 'srv_hotel_dwarikas',
-      title: "The Dwarika's Hotel Heritage Courtyard Suite",
-      provider: "The Dwarika's Hotel",
+      hotelId: 'htl_dwarikas',
+      hotelName: "The Dwarika's Hotel",
+      roomId: 'room_dwarika_heritage_suite',
+      roomName: 'Heritage Junior Suite',
+      title: "The Dwarika's Hotel - Heritage Junior Suite",
+      provider: "The Dwarika's Hotel Kathmandu",
       category: 'Stay',
+      bookingType: 'hotel',
       date: '2026-03-30 to 2026-04-01',
+      checkInDate: '2026-03-30',
+      checkOutDate: '2026-04-01',
+      nightsCount: 2,
+      roomsCount: 1,
+      adultsCount: 2,
+      childrenCount: 0,
       participantsCount: 2,
       participants: [{ fullName: 'Aayush Pradhan', nationality: 'Nepali' }],
-      totalAmountNpr: 70000,
+      travelerDetails: {
+        fullName: 'Aayush Pradhan',
+        email: 'aayush.traveler@visitnepal.com',
+        phone: '+977 9811223344',
+        nationality: 'Nepali',
+      },
+      totalAmountNpr: 69000,
+      priceBreakdown: {
+        basePriceNpr: 56000,
+        serviceChargeNpr: 5600,
+        taxVatNpr: 7400,
+        totalAmountNpr: 69000,
+      },
       status: 'confirmed',
       paymentStatus: 'successful',
+      paymentMode: 'full',
       paymentId: 'TXN-CARD-11029',
-      paymentMethod: 'Credit Card (NPR)',
-      qrCode: 'VN-PASS-BKG-51042-VERIFIED-2026',
-      meetingPoint: 'Battisputali Front Desk Concierge',
+      paymentMethod: 'Khalti / Credit Card (NPR)',
+      qrCode: 'VN-HOTEL-2026-DWARIKAS-51042',
+      meetingPoint: 'Battisputali Front Desk Concierge, Kathmandu',
       contactPhone: '+977-1-4479488',
+      cancellationPolicy: 'Free cancellation up to 48 hours prior to check-in.',
+      specialRequests: 'High floor, quiet courtyard facing, late check-in at 3 PM',
+      arrivalTime: '15:00',
       createdAt: '2026-02-05T14:30:00Z',
       updatedAt: '2026-02-05T14:32:00Z',
+    },
+    {
+      id: 'VN-HOTEL-2026-781920',
+      userId: 'usr_traveler_1',
+      userName: 'Aayush Pradhan',
+      userEmail: 'aayush.traveler@visitnepal.com',
+      serviceId: 'srv_hotel_barpeepal',
+      hotelId: 'htl_barpeepal',
+      hotelName: 'Bar Peepal Resort',
+      roomId: 'room_barpeepal_deluxe',
+      roomName: 'Deluxe Himalayan View Room',
+      title: 'Bar Peepal Resort - Deluxe Himalayan View Room',
+      provider: 'Bar Peepal Resort',
+      category: 'Stay',
+      bookingType: 'hotel',
+      date: '2026-05-15 to 2026-05-18',
+      checkInDate: '2026-05-15',
+      checkOutDate: '2026-05-18',
+      nightsCount: 3,
+      roomsCount: 1,
+      adultsCount: 2,
+      childrenCount: 0,
+      participantsCount: 2,
+      participants: [{ fullName: 'Aayush Pradhan', nationality: 'Nepali' }],
+      travelerDetails: {
+        fullName: 'Aayush Pradhan',
+        email: 'aayush.traveler@visitnepal.com',
+        phone: '+977 9811223344',
+        nationality: 'Nepali',
+      },
+      totalAmountNpr: 43500,
+      priceBreakdown: {
+        basePriceNpr: 35000,
+        serviceChargeNpr: 3500,
+        taxVatNpr: 5000,
+        totalAmountNpr: 43500,
+      },
+      status: 'confirmed',
+      paymentStatus: 'successful',
+      paymentMode: 'full',
+      paymentId: 'TXN-KHL-78192',
+      paymentMethod: 'Khalti Digital Wallet',
+      qrCode: 'VN-HOTEL-2026-BARPEEPAL-781920',
+      meetingPoint: 'Sarangkot Road Front Desk, Pokhara',
+      contactPhone: '+977 61 465220',
+      cancellationPolicy: 'Free cancellation up to 48 hours prior to check-in.',
+      specialRequests: 'Annapurna range view balcony, airport pickup needed',
+      arrivalTime: '14:00',
+      createdAt: '2026-02-10T11:00:00Z',
+      updatedAt: '2026-02-10T11:00:00Z',
     },
     {
       id: 'BKG-99214',

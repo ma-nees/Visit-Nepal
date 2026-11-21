@@ -6,9 +6,10 @@ const router = Router();
 
 // GET /api/bookings (Role-aware listing with search & filters)
 router.get('/', requireAuth, (req: AuthRequest, res) => {
-  const { status, bookingType, q } = req.query as {
+  const { status, bookingType, category, q } = req.query as {
     status?: string;
     bookingType?: string;
+    category?: string;
     q?: string;
   };
   const user = req.user!;
@@ -19,7 +20,11 @@ router.get('/', requireAuth, (req: AuthRequest, res) => {
   if (user.role === 'admin') {
     results = state.bookings;
   } else if (user.role === 'traveler') {
-    results = state.bookings.filter((b) => b.userId === user.id);
+    results = state.bookings.filter(
+      (b) =>
+        b.userId === user.id ||
+        (user.email && (b.userEmail === user.email || b.travelerDetails?.email === user.email))
+    );
   } else if (user.role === 'business') {
     const business = state.businesses.find((b) => b.ownerId === user.id);
     results = state.bookings.filter((b) => b.businessId === business?.id || b.provider.includes(user.name));
@@ -36,18 +41,33 @@ router.get('/', requireAuth, (req: AuthRequest, res) => {
     results = results.filter((b) => b.status.toLowerCase() === status.toLowerCase());
   }
 
-  // Filter by bookingType ('standard' | 'custom')
+  // Filter by bookingType ('standard' | 'custom' | 'hotel')
   if (bookingType && bookingType !== 'All' && bookingType !== 'all') {
     results = results.filter((b) => (b.bookingType || 'standard').toLowerCase() === bookingType.toLowerCase());
   }
 
-  // Search by query (booking id, traveler name, or title)
+  // Filter by category
+  if (category && category !== 'All' && category !== 'all') {
+    const cat = category.toLowerCase();
+    if (cat === 'stay' || cat === 'hotels') {
+      results = results.filter((b) => b.category === 'Stay' || !!b.hotelId);
+    } else if (cat === 'trek' || cat === 'trekking') {
+      results = results.filter((b) => b.category === 'Trek' && !b.hotelId);
+    } else if (cat === 'custom') {
+      results = results.filter((b) => b.bookingType === 'custom' || b.category === 'Custom Expedition');
+    } else if (cat === 'experience' || cat === 'experiences') {
+      results = results.filter((b) => b.category === 'Adventure' || (b.category as any) === 'Experience' || (b.category as any) === 'Tour');
+    }
+  }
+
+  // Search by query (booking id, traveler name, hotel name, or title)
   if (q && q.trim()) {
     const term = q.trim().toLowerCase();
     results = results.filter((b) =>
       b.id.toLowerCase().includes(term) ||
       b.userName.toLowerCase().includes(term) ||
       b.title.toLowerCase().includes(term) ||
+      (b.hotelName && b.hotelName.toLowerCase().includes(term)) ||
       (b.invoiceNumber && b.invoiceNumber.toLowerCase().includes(term))
     );
   }
@@ -388,8 +408,39 @@ router.patch('/:id/assign', requireAuth, (req: AuthRequest, res) => {
   res.json({ booking });
 });
 
+// PATCH /api/bookings/:id/modify (Update guest requests, arrival time, or dates)
+router.patch('/:id/modify', requireAuth, (req: AuthRequest, res) => {
+  const { specialRequests, arrivalTime, checkInDate, checkOutDate, roomsCount, adultsCount } = req.body;
+  const state = db.getState();
+  const booking = state.bookings.find((b) => b.id === req.params.id);
+
+  if (!booking) {
+    res.status(404).json({ error: 'Booking not found' });
+    return;
+  }
+
+  const user = req.user!;
+  if (booking.userId !== user.id && user.role !== 'admin') {
+    res.status(403).json({ error: 'Unauthorized to modify this reservation' });
+    return;
+  }
+
+  if (specialRequests !== undefined) booking.specialRequests = specialRequests;
+  if (arrivalTime !== undefined) booking.arrivalTime = arrivalTime;
+  if (checkInDate !== undefined) booking.checkInDate = checkInDate;
+  if (checkOutDate !== undefined) booking.checkOutDate = checkOutDate;
+  if (roomsCount !== undefined) booking.roomsCount = Number(roomsCount);
+  if (adultsCount !== undefined) booking.adultsCount = Number(adultsCount);
+
+  booking.updatedAt = new Date().toISOString();
+  db.save();
+
+  res.json({ success: true, booking });
+});
+
 // POST /api/bookings/:id/cancel
 router.post('/:id/cancel', requireAuth, (req: AuthRequest, res) => {
+  const { reason } = req.body || {};
   const state = db.getState();
   const booking = state.bookings.find((b) => b.id === req.params.id);
 
@@ -399,6 +450,7 @@ router.post('/:id/cancel', requireAuth, (req: AuthRequest, res) => {
   }
 
   booking.status = 'cancelled';
+  booking.cancellationReason = reason || 'Cancelled by traveler';
   booking.qrCode = `VN-PASS-${booking.id}-CANCELLED`;
   booking.updatedAt = new Date().toISOString();
   db.save();
