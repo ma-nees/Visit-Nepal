@@ -180,7 +180,7 @@ export default function BookingsPage() {
 
           <div className="flex flex-wrap items-center gap-2 shrink-0">
             <Link
-              href="/services?tab=hotel"
+              href="/hotels"
               className="h-8 inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#0552A2] text-white hover:bg-[#044182] text-xs font-semibold shadow-xs transition-colors"
             >
               <Building2 className="h-3.5 w-3.5 shrink-0" />

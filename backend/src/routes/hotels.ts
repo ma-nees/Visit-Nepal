@@ -195,6 +195,56 @@ function getScaleHotels(baseHotels: HotelListing[], totalCount: number = 1000): 
 }
 
 // ============================================================================
+// HELPER: HIGH-TOLERANCE HOTEL ID & SLUG RESOLVER
+// Resolves canonical IDs ("htl_barpeepal"), prefixless IDs ("barpeepal"),
+// slugs ("bar-peepal-resort", "the-dwarikas-hotel"), and partial query names.
+// ============================================================================
+
+export function normalizeSlug(str: string): string {
+  if (!str) return '';
+  return str
+    .toLowerCase()
+    .replace(/^htl_/, '')
+    .replace(/[^a-z0-9]/g, '');
+}
+
+export function findHotelByIdOrSlug(query: string, hotelsList: HotelListing[]): HotelListing | undefined {
+  if (!query) return undefined;
+  const decoded = decodeURIComponent(query).trim().toLowerCase();
+  const qNorm = normalizeSlug(decoded);
+
+  // 1. Exact ID match (case-insensitive)
+  let found = hotelsList.find((h) => h.id.toLowerCase() === decoded);
+  if (found) return found;
+
+  // 2. Normalized ID match (e.g. "barpeepal" vs "htl_barpeepal")
+  found = hotelsList.find((h) => normalizeSlug(h.id) === qNorm);
+  if (found) return found;
+
+  // 3. Name slug match (e.g. "bar-peepal-resort")
+  found = hotelsList.find((h) => {
+    const nameSlug = h.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    return nameSlug === decoded || nameSlug.replace(/-/g, '') === qNorm;
+  });
+  if (found) return found;
+
+  // 4. Normalized hotel name match
+  found = hotelsList.find((h) => normalizeSlug(h.name) === qNorm);
+  if (found) return found;
+
+  // 5. Broad substring match if query length is reasonable
+  if (qNorm.length >= 3) {
+    found = hotelsList.find((h) => {
+      const hNorm = normalizeSlug(h.name);
+      const idNorm = normalizeSlug(h.id);
+      return hNorm.includes(qNorm) || qNorm.includes(hNorm) || idNorm.includes(qNorm);
+    });
+  }
+
+  return found;
+}
+
+// ============================================================================
 // 1. GET /api/hotels (List Hotels with Server-Side Pagination & Filtering)
 // ============================================================================
 
@@ -321,15 +371,15 @@ router.get('/:id', (req, res) => {
   const state = db.getState();
   const baseHotels = state.hotels || [];
 
-  // Search in base hotels, then scale catalog
-  let hotel = baseHotels.find((h) => h.id === id);
+  // Robust lookup across base hotels, then scale catalog
+  let hotel = findHotelByIdOrSlug(id, baseHotels);
   if (!hotel) {
     const scaleList = getScaleHotels(baseHotels, 1000);
-    hotel = scaleList.find((h) => h.id === id);
+    hotel = findHotelByIdOrSlug(id, scaleList);
   }
 
   if (!hotel) {
-    res.status(404).json({ error: `Hotel with ID "${id}" not found.` });
+    res.status(404).json({ error: `Hotel with ID or slug "${id}" not found in Nepal Tourism Board registry.` });
     return;
   }
 
@@ -368,13 +418,13 @@ router.post('/:id/check-availability', (req, res) => {
 
   const state = db.getState();
   const baseHotels = state.hotels || [];
-  let hotel = baseHotels.find((h) => h.id === id);
+  let hotel = findHotelByIdOrSlug(id, baseHotels);
   if (!hotel) {
-    hotel = getScaleHotels(baseHotels, 1000).find((h) => h.id === id);
+    hotel = findHotelByIdOrSlug(id, getScaleHotels(baseHotels, 1000));
   }
 
   if (!hotel) {
-    res.status(404).json({ error: 'Hotel not found' });
+    res.status(404).json({ error: `Hotel with ID or slug "${id}" not found in Nepal Tourism Board registry.` });
     return;
   }
 
@@ -484,13 +534,13 @@ router.post('/reserve', optionalAuth, (req: AuthRequest, res) => {
 
   const state = db.getState();
   const baseHotels = state.hotels || [];
-  let hotel = baseHotels.find((h) => h.id === hotelId);
+  let hotel = findHotelByIdOrSlug(hotelId, baseHotels);
   if (!hotel) {
-    hotel = getScaleHotels(baseHotels, 1000).find((h) => h.id === hotelId);
+    hotel = findHotelByIdOrSlug(hotelId, getScaleHotels(baseHotels, 1000));
   }
 
   if (!hotel) {
-    res.status(404).json({ error: `Hotel "${hotelId}" not found in registry.` });
+    res.status(404).json({ error: `Hotel "${hotelId}" not found in Nepal Tourism Board registry.` });
     return;
   }
 

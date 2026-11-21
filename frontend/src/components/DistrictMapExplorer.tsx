@@ -579,7 +579,7 @@ export default function DistrictMapExplorer({ initialDistrict = 'Solukhumbu' }: 
                         <div className="flex items-center justify-between pt-2 border-t border-slate-100">
                           <span className="font-bold text-slate-900 text-xs">{htl.price}</span>
                           <Link
-                            href="/services?tab=hotel"
+                            href={`/hotels/${htl.id}`}
                             className="text-xs font-semibold text-[#0552A2] hover:underline"
                           >
                             Book Stay &rarr;
